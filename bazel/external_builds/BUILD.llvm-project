@@ -10,6 +10,8 @@ cmake(
     lib_source = ":llvm_project_srcs",
     out_shared_libs = ["libclang.so"],
     out_include_dir = "include",
+    working_directory = "llvm",
+    build_args = ["-j"],
     generate_args = [
         "-DLLVM_ENABLE_PROJECTS=clang",
         "-DCMAKE_BUILD_TYPE=Release -G 'Unix Makefiles'",
