@@ -1,4 +1,7 @@
 
+    #include "TypeScriptLexerBase.h"
+
+
 // Generated from TypeScriptLexer.g4 by ANTLR 4.13.0
 
 
@@ -807,7 +810,7 @@ bool TypeScriptLexer::sempred(RuleContext *context, size_t ruleIndex, size_t pre
 
 void TypeScriptLexer::OpenBraceAction(antlr4::RuleContext *context, size_t actionIndex) {
   switch (actionIndex) {
-    case 0: this.ProcessOpenBrace(); break;
+    case 0: this->ProcessOpenBrace(); break;
 
   default:
     break;
@@ -816,7 +819,7 @@ void TypeScriptLexer::OpenBraceAction(antlr4::RuleContext *context, size_t actio
 
 void TypeScriptLexer::CloseBraceAction(antlr4::RuleContext *context, size_t actionIndex) {
   switch (actionIndex) {
-    case 1: this.ProcessCloseBrace(); break;
+    case 1: this->ProcessCloseBrace(); break;
 
   default:
     break;
@@ -825,7 +828,7 @@ void TypeScriptLexer::CloseBraceAction(antlr4::RuleContext *context, size_t acti
 
 void TypeScriptLexer::StringLiteralAction(antlr4::RuleContext *context, size_t actionIndex) {
   switch (actionIndex) {
-    case 2: this.ProcessStringLiteral(); break;
+    case 2: this->ProcessStringLiteral(); break;
 
   default:
     break;
@@ -834,7 +837,7 @@ void TypeScriptLexer::StringLiteralAction(antlr4::RuleContext *context, size_t a
 
 void TypeScriptLexer::BackTickAction(antlr4::RuleContext *context, size_t actionIndex) {
   switch (actionIndex) {
-    case 3: this.IncreaseTemplateDepth(); break;
+    case 3: this->IncreaseTemplateDepth(); break;
 
   default:
     break;
@@ -843,7 +846,7 @@ void TypeScriptLexer::BackTickAction(antlr4::RuleContext *context, size_t action
 
 void TypeScriptLexer::BackTickInsideAction(antlr4::RuleContext *context, size_t actionIndex) {
   switch (actionIndex) {
-    case 4: this.DecreaseTemplateDepth(); break;
+    case 4: this->DecreaseTemplateDepth(); break;
 
   default:
     break;
@@ -852,7 +855,7 @@ void TypeScriptLexer::BackTickInsideAction(antlr4::RuleContext *context, size_t 
 
 void TypeScriptLexer::TemplateStringStartExpressionAction(antlr4::RuleContext *context, size_t actionIndex) {
   switch (actionIndex) {
-    case 5: this.StartTemplateString(); break;
+    case 5: this->StartTemplateString(); break;
 
   default:
     break;
@@ -862,7 +865,7 @@ void TypeScriptLexer::TemplateStringStartExpressionAction(antlr4::RuleContext *c
 
 bool TypeScriptLexer::RegularExpressionLiteralSempred(antlr4::RuleContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 0: return this.IsRegexPossible();
+    case 0: return this->IsRegexPossible();
 
   default:
     break;
@@ -872,7 +875,7 @@ bool TypeScriptLexer::RegularExpressionLiteralSempred(antlr4::RuleContext *_loca
 
 bool TypeScriptLexer::TemplateCloseBraceSempred(antlr4::RuleContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 1: return this.IsInTemplateString();
+    case 1: return this->IsInTemplateString();
 
   default:
     break;
@@ -882,7 +885,7 @@ bool TypeScriptLexer::TemplateCloseBraceSempred(antlr4::RuleContext *_localctx, 
 
 bool TypeScriptLexer::OctalIntegerLiteralSempred(antlr4::RuleContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 2: return !this.IsStrictMode();
+    case 2: return !this->IsStrictMode();
 
   default:
     break;

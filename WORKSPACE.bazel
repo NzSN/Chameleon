@@ -24,3 +24,11 @@ http_archive(
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
 
 rules_foreign_cc_dependencies()
+
+# External Modules
+http_archive(
+    name = "antlr4_runtime",
+    urls =["https://www.antlr.org/download/antlr4-cpp-runtime-4.13.0-source.zip"],
+    sha256 = "2e5db62acdca9adc3329c485c3b9ce3029e40d13cc9c3e74ced354e818cb63e9",
+    build_file = "@//:bazel/external_builds/BUILD.antlr4_rumtime"
+)

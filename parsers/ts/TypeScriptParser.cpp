@@ -1,4 +1,7 @@
 
+    #include "TypeScriptParserBase.h"
+
+
 // Generated from TypeScriptParser.g4 by ANTLR 4.13.0
 
 
@@ -8012,7 +8015,7 @@ TypeScriptParser::ExpressionStatementContext* TypeScriptParser::expressionStatem
     enterOuterAlt(_localctx, 1);
     setState(912);
 
-    if (!(this.notOpenBraceAndNotFunction())) throw FailedPredicateException(this, "this.notOpenBraceAndNotFunction()");
+    if (!(this->notOpenBraceAndNotFunction())) throw FailedPredicateException(this, "this->notOpenBraceAndNotFunction()");
     setState(913);
     expressionSequence();
     setState(915);
@@ -8591,7 +8594,7 @@ TypeScriptParser::IterationStatementContext* TypeScriptParser::iterationStatemen
           match(TypeScriptParser::Identifier);
           setState(975);
 
-          if (!(this.p("of"))) throw FailedPredicateException(this, "this.p(\"of\")");
+          if (!(this->p("of"))) throw FailedPredicateException(this, "this->p(\"of\")");
           break;
         }
 
@@ -8632,7 +8635,7 @@ TypeScriptParser::IterationStatementContext* TypeScriptParser::iterationStatemen
           match(TypeScriptParser::Identifier);
           setState(988);
 
-          if (!(this.p("of"))) throw FailedPredicateException(this, "this.p(\"of\")");
+          if (!(this->p("of"))) throw FailedPredicateException(this, "this->p(\"of\")");
           break;
         }
 
@@ -8789,7 +8792,7 @@ TypeScriptParser::ContinueStatementContext* TypeScriptParser::continueStatement(
     case 1: {
       setState(1000);
 
-      if (!(this.notLineTerminator())) throw FailedPredicateException(this, "this.notLineTerminator()");
+      if (!(this->notLineTerminator())) throw FailedPredicateException(this, "this->notLineTerminator()");
       setState(1001);
       match(TypeScriptParser::Identifier);
       break;
@@ -8868,7 +8871,7 @@ TypeScriptParser::BreakStatementContext* TypeScriptParser::breakStatement() {
     case 1: {
       setState(1007);
 
-      if (!(this.notLineTerminator())) throw FailedPredicateException(this, "this.notLineTerminator()");
+      if (!(this->notLineTerminator())) throw FailedPredicateException(this, "this->notLineTerminator()");
       setState(1008);
       match(TypeScriptParser::Identifier);
       break;
@@ -8947,7 +8950,7 @@ TypeScriptParser::ReturnStatementContext* TypeScriptParser::returnStatement() {
     case 1: {
       setState(1014);
 
-      if (!(this.notLineTerminator())) throw FailedPredicateException(this, "this.notLineTerminator()");
+      if (!(this->notLineTerminator())) throw FailedPredicateException(this, "this->notLineTerminator()");
       setState(1015);
       expressionSequence();
       break;
@@ -9026,7 +9029,7 @@ TypeScriptParser::YieldStatementContext* TypeScriptParser::yieldStatement() {
     case 1: {
       setState(1021);
 
-      if (!(this.notLineTerminator())) throw FailedPredicateException(this, "this.notLineTerminator()");
+      if (!(this->notLineTerminator())) throw FailedPredicateException(this, "this->notLineTerminator()");
       setState(1022);
       expressionSequence();
       break;
@@ -9639,7 +9642,7 @@ TypeScriptParser::ThrowStatementContext* TypeScriptParser::throwStatement() {
     match(TypeScriptParser::Throw);
     setState(1072);
 
-    if (!(this.notLineTerminator())) throw FailedPredicateException(this, "this.notLineTerminator()");
+    if (!(this->notLineTerminator())) throw FailedPredicateException(this, "this->notLineTerminator()");
     setState(1073);
     expressionSequence();
     setState(1074);
@@ -15359,7 +15362,7 @@ TypeScriptParser::SingleExpressionContext* TypeScriptParser::singleExpression(in
           if (!(precpred(_ctx, 40))) throw FailedPredicateException(this, "precpred(_ctx, 40)");
           setState(1584);
 
-          if (!(this.notLineTerminator())) throw FailedPredicateException(this, "this.notLineTerminator()");
+          if (!(this->notLineTerminator())) throw FailedPredicateException(this, "this->notLineTerminator()");
           setState(1585);
           match(TypeScriptParser::PlusPlus);
           break;
@@ -15374,7 +15377,7 @@ TypeScriptParser::SingleExpressionContext* TypeScriptParser::singleExpression(in
           if (!(precpred(_ctx, 39))) throw FailedPredicateException(this, "precpred(_ctx, 39)");
           setState(1587);
 
-          if (!(this.notLineTerminator())) throw FailedPredicateException(this, "this.notLineTerminator()");
+          if (!(this->notLineTerminator())) throw FailedPredicateException(this, "this->notLineTerminator()");
           setState(1588);
           match(TypeScriptParser::MinusMinus);
           break;
@@ -17056,7 +17059,7 @@ TypeScriptParser::EosContext* TypeScriptParser::eos() {
       enterOuterAlt(_localctx, 3);
       setState(1682);
 
-      if (!(this.lineTerminatorAhead())) throw FailedPredicateException(this, "this.lineTerminatorAhead()");
+      if (!(this->lineTerminatorAhead())) throw FailedPredicateException(this, "this->lineTerminatorAhead()");
       break;
     }
 
@@ -17064,7 +17067,7 @@ TypeScriptParser::EosContext* TypeScriptParser::eos() {
       enterOuterAlt(_localctx, 4);
       setState(1683);
 
-      if (!(this.closeBrace())) throw FailedPredicateException(this, "this.closeBrace()");
+      if (!(this->closeBrace())) throw FailedPredicateException(this, "this->closeBrace()");
       break;
     }
 
@@ -17148,7 +17151,7 @@ bool TypeScriptParser::decoratorMemberExpressionSempred(DecoratorMemberExpressio
 
 bool TypeScriptParser::expressionStatementSempred(ExpressionStatementContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 6: return this.notOpenBraceAndNotFunction();
+    case 6: return this->notOpenBraceAndNotFunction();
 
   default:
     break;
@@ -17158,8 +17161,8 @@ bool TypeScriptParser::expressionStatementSempred(ExpressionStatementContext *_l
 
 bool TypeScriptParser::iterationStatementSempred(IterationStatementContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 7: return this.p("of");
-    case 8: return this.p("of");
+    case 7: return this->p("of");
+    case 8: return this->p("of");
 
   default:
     break;
@@ -17169,7 +17172,7 @@ bool TypeScriptParser::iterationStatementSempred(IterationStatementContext *_loc
 
 bool TypeScriptParser::continueStatementSempred(ContinueStatementContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 9: return this.notLineTerminator();
+    case 9: return this->notLineTerminator();
 
   default:
     break;
@@ -17179,7 +17182,7 @@ bool TypeScriptParser::continueStatementSempred(ContinueStatementContext *_local
 
 bool TypeScriptParser::breakStatementSempred(BreakStatementContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 10: return this.notLineTerminator();
+    case 10: return this->notLineTerminator();
 
   default:
     break;
@@ -17189,7 +17192,7 @@ bool TypeScriptParser::breakStatementSempred(BreakStatementContext *_localctx, s
 
 bool TypeScriptParser::returnStatementSempred(ReturnStatementContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 11: return this.notLineTerminator();
+    case 11: return this->notLineTerminator();
 
   default:
     break;
@@ -17199,7 +17202,7 @@ bool TypeScriptParser::returnStatementSempred(ReturnStatementContext *_localctx,
 
 bool TypeScriptParser::yieldStatementSempred(YieldStatementContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 12: return this.notLineTerminator();
+    case 12: return this->notLineTerminator();
 
   default:
     break;
@@ -17209,7 +17212,7 @@ bool TypeScriptParser::yieldStatementSempred(YieldStatementContext *_localctx, s
 
 bool TypeScriptParser::throwStatementSempred(ThrowStatementContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 13: return this.notLineTerminator();
+    case 13: return this->notLineTerminator();
 
   default:
     break;
@@ -17238,9 +17241,9 @@ bool TypeScriptParser::singleExpressionSempred(SingleExpressionContext *_localct
     case 30: return precpred(_ctx, 44);
     case 31: return precpred(_ctx, 41);
     case 32: return precpred(_ctx, 40);
-    case 33: return this.notLineTerminator();
+    case 33: return this->notLineTerminator();
     case 34: return precpred(_ctx, 39);
-    case 35: return this.notLineTerminator();
+    case 35: return this->notLineTerminator();
     case 36: return precpred(_ctx, 14);
     case 37: return precpred(_ctx, 1);
 
@@ -17252,8 +17255,8 @@ bool TypeScriptParser::singleExpressionSempred(SingleExpressionContext *_localct
 
 bool TypeScriptParser::eosSempred(EosContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 38: return this.lineTerminatorAhead();
-    case 39: return this.closeBrace();
+    case 38: return this->lineTerminatorAhead();
+    case 39: return this->closeBrace();
 
   default:
     break;

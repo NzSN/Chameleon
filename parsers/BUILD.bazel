@@ -1,0 +1,18 @@
+
+filegroup(
+    name = "ts_parser_srcs",
+    srcs = glob(["ts/**"]),
+    visibility = ["//visibility:public"]
+)
+
+cc_library(
+    name = "ts_parser",
+    srcs = [":ts_parser_srcs"],
+    linkstatic = True,
+    copts = [
+          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          "-std=c++20"
+          ],
+
+    deps = ["@antlr4_runtime//:antlr4_runtime"]
+)

@@ -1,4 +1,7 @@
 
+    #include "TypeScriptLexerBase.h"
+
+
 // Generated from TypeScriptLexer.g4 by ANTLR 4.13.0
 
 #pragma once
