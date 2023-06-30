@@ -2,6 +2,7 @@
 	path = third_party/llvm-project
 	url = https://github.com/llvm/llvm-project.git
 	branch = main
+	shallow = true
 [submodule "third_party/grammars-v4"]
 	path = third_party/grammars-v4
 	url = https://github.com/antlr/grammars-v4.git
