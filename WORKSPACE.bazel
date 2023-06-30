@@ -32,3 +32,9 @@ http_archive(
     sha256 = "2e5db62acdca9adc3329c485c3b9ce3029e40d13cc9c3e74ced354e818cb63e9",
     build_file = "@//:bazel/external_builds/BUILD.antlr4_rumtime"
 )
+
+new_local_repository(
+    name = "llvm_project",
+    path = "third_party/llvm-project",
+    build_file = "@//:bazel/external_builds/BUILD.llvm-project",
+)
