@@ -1,6 +1,6 @@
 cc_binary(
-    name = "ts_transformer",
-    srcs = ["TsTransformer.cc"],
+    name = "demo",
+    srcs = ["demo.cc"],
     copts = [
           "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           "-std=c++20"
