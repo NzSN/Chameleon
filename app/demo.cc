@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     antlr4::tree::ParseTree *tree = parser.program();
 
     // Print AST
-    std::cout << "AST: " << std::endl << std::endl;
+    std::cout << "ParseTree" << std::endl << std::endl;
     std::cout << tree->toStringTree(&parser) << std::endl;
     std::cout << std::endl << std::endl <<
       "=============================================" <<

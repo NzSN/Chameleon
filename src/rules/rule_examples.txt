@@ -1,0 +1,15 @@
+
+# Migrate TS code which before "=>"
+# to CPP code which after "=>"
+SetTimeoutWithCoro:
+
+    { SetTimeout(%A, %B) } => {
+
+        # Statements that place at the top
+        # of generated file.
+        <prologue
+        #include "...."
+        prologue>
+
+        SetTimeout_Coro(%A, %B)
+     }
