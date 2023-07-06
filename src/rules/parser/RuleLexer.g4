@@ -1,4 +1,21 @@
-lexer grammar XXX2CPP_Migration
+lexer grammar Chameleons
 
-OpenBrace:      '{';
-CloseBrace:     '}';
+ruleIdentifier
+    : [a-zA-Z][a-zA-Z0-9]*
+    ;
+
+colon
+    : ':'
+    ;
+
+openBrace
+    : '{'
+    ;
+
+closeBrace
+    : '}'
+    ;
+
+semanticEquivalent
+    : "<=>"
+    ;
