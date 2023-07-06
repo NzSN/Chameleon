@@ -1,15 +1,27 @@
+# Statements that place at the top
+# of generated file.
+%prologue
+#include "...."
+%prologue
 
 # Migrate TS code which before "=>"
 # to CPP code which after "=>"
 SetTimeoutWithCoro:
+    { SetTimeout(%A, %B); console.log(%A, %B); }
+    => {
+           SetTimeout_Coro(%A, %B);
 
-    { SetTimeout(%A, %B) } => {
+           # sentence follow '@' is commands
+           # which will run while migrating program
+           # and result of command will change the
+           # result of generated codes.
+           @if %A.type == primite_type:
+               std::cout << %A << %B << std::endl;
+           @else:
+               console_log(%A, %B);
+       }
 
-        # Statements that place at the top
-        # of generated file.
-        <prologue
-        #include "...."
-        prologue>
+# OR
 
-        SetTimeout_Coro(%A, %B)
-     }
+SetTimeoutConcurrent:
+    { SetTimeout(%A, %B); } => { SetTimeout_Concurrent(%A, %B); }

@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 
     // Print AST
     std::cout << "ParseTree" << std::endl << std::endl;
-    std::cout << tree->toStringTree(&parser) << std::endl;
+    std::cout << tree->toStringTree(&parser, true) << std::endl;
     std::cout << std::endl << std::endl <<
       "=============================================" <<
       std::endl;
