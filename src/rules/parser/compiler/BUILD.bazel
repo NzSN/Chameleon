@@ -1,0 +1,19 @@
+
+filegroup(
+    name = "chameleons_parser_srcs",
+    srcs = glob(["*.cpp", "*.h", "*.tokens", "*.interp"]),
+    visibility = ["//visibility:public"]
+)
+
+cc_test(
+    name = "chameleons_parser_tests",
+    srcs = [":chameleons_parser_srcs",
+            "ChameleonsParser_tests.cc"],
+    copts = [
+          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          "-std=c++2a"],
+    linkopts = ["-lglog", "-lfmt"],
+    deps = [
+         "@antlr4_runtime//:antlr4_runtime",
+         "@com_google_googletest//:gtest_main"],
+)

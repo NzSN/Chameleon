@@ -12,8 +12,8 @@
 class  ChameleonsParser : public antlr4::Parser {
 public:
   enum {
-    IDENTIFIER = 1, CODEBYTES = 2, COLON = 3, OPENBRACE = 4, CLOSEBRACE = 5, 
-    TRANSFORM = 6
+    IDENTIFIER = 1, COLON = 2, OPENBRACE = 3, TRANSFORM = 4, WS = 5, CODEBYTES = 6, 
+    CLOSEBRACE = 7
   };
 
   enum {

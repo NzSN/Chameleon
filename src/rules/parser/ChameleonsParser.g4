@@ -1,6 +1,6 @@
 parser grammar ChameleonsParser;
 
-tokens { IDENTIFIER, CODEBYTES, COLON, OPENBRACE, CLOSEBRACE, TRANSFORM }
+options { tokenVocab=ChameleonsLexer; }
 
 migrate
     : migrateRules
