@@ -2,6 +2,7 @@
 #define LANGUAGE_H
 
 #include <initializer_list>
+#include <memory>
 
 #include <string>
 #include <vector>
@@ -11,6 +12,8 @@
 #include <utility>
 
 #include "antlr4-runtime.h"
+#include "code_str.h"
+#include "generator.h"
 
 using std::string;
 
@@ -20,71 +23,44 @@ namespace Language {
 
 
 template<typename T>
-concept Language = requires(T t, std::istream& is, std::string str) {
+concept Language = requires(T t, std::istream& is,
+                            std::string str,
+                            antlr4::tree::ParseTree* tree) {
   { t.parseTreeFromStream(is) } -> std::same_as<antlr4::tree::ParseTree*>;
   { t.parseTreeFromString(str) } -> std::same_as<antlr4::tree::ParseTree*>;
+  { t.convertParseTreeToString(tree) } -> std::same_as<std::string>;
 };
 
 template<Language T>
-using MigrateInput = std::pair<const std::istream&, T>;
-
-
-///////////////////////////////////////////////////////////////////////////////
-//                                   Codes                                   //
-///////////////////////////////////////////////////////////////////////////////
-template<typename C>
-concept CodeStrT  = requires(C c) {
-  // Interface that gurantee that all escape in CodeString
-  // are trim to it's original form. If there are no escaped
-  // defined in your language then just return without any addition
-  // processing.
-  { c.withoutEscape() } -> std::convertible_to<string>;
-
-  // Mapping to std::string which escape cahracter remain exists
-  { c.toStr() } -> std::convertible_to<string>;
+struct MigrateInput {
+  std::istream& is;
+  T& language;
+  antlr4::tree::ParseTree* tree_need_migrated;
 };
-
-// A structure to contain Codes that
-template<CodeStrT T>
-class Code {
-public:
-  Code(T code): codebytes_{code} {}
-  string codebytes() const
-    { return codebytes_.withoutEscape(); }
-private:
-  const T codebytes_;
-};
-
-class CodeStr {
-public:
-  CodeStr(std::string codestr): code_string_{codestr} {}
-  virtual string toStr() const;
-  virtual string withoutEscape() const;
-private:
-  string code_string_;
-};
-
-using OriginCode = Code<CodeStr>;
-using TargetCode = Code<CodeStr>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                MigrateRule                                //
 ///////////////////////////////////////////////////////////////////////////////
 template<Language T>
-struct MigrateRule {
+class MigrateRule {
+public:
   MigrateRule(std::string ident, OriginCode ocode, TargetCode tcode):
-    identifier_(ident), origin_code_(ocode), target_code_(tcode) {}
+    identifier_(ident), origin_code_(ocode), target_code_(tcode) {
 
-  void operator()(MigrateInput<T> input, std::ostream& os) const {
-
+    target_generator_ = std::make_unique<Generator::Generator>(target_code_);
   }
 
-  antlr4::tree::ParseTree *origin_tree;
-  antlr4::tree::ParseTree *targetTree;
+  void operator()(MigrateInput<T> input, std::ostream& os) const;
 
+private:
   const std::string identifier_;
+
   OriginCode origin_code_;
-  TargetCode target_code_;
+  OriginCode target_code_;
+
+  // ParseTree used to matching the codes that you want to migrate
+  std::unique_ptr<antlr4::tree::ParseTree> origin_tree_;
+  std::unique_ptr<Generator::Generator> target_generator_;
 };
 
 template<Language T>

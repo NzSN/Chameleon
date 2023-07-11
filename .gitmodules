@@ -1,3 +1,6 @@
 [submodule "third_party/grammars-v4"]
 	path = third_party/grammars-v4
 	url = https://github.com/antlr/grammars-v4.git
+[submodule "third_party/plog"]
+	path = third_party/plog
+	url = https://github.com/SergiusTheBest/plog.git
