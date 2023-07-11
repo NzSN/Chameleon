@@ -78,6 +78,25 @@ TEST_F(LanguageTest, ReplacePlusByMulti_OneRule) {
     std::cout << s.str() << std::endl;
 }
 
+TEST_F(LanguageTest, WithCommand) {
+    Migrate<LanguageForTesting> migrate {
+        { "Plus2Multi",
+          OriginCode {
+              { "1 + 1" }
+          },
+          TargetCode {
+              { "1 * 1" }
+          }
+        }
+    };
+
+    stringstream s;
+    migrate(input, s);
+
+    std::cout << s.str() << std::endl;
+
+}
+
 
 } // Rule
 } // Interpreter
