@@ -15,6 +15,17 @@ namespace Rule {
 namespace Interpreter {
 namespace Language {
 
+class CodeStrImpl: public CodeStr {
+public:
+    string toStr() const final {
+        return "";
+    }
+
+    string withoutEscape() const final {
+        return "";
+    }
+};
+
 struct LanguageForTesting {
     LanguageForTesting() {}
 
@@ -48,8 +59,23 @@ struct LanguageTest: public ::testing::Test {
         stringstream{inputProgram}, LanguageForTesting{}};
 };
 
-TEST_F(LanguageTest, ReplacePlusByMulti) {
+TEST_F(LanguageTest, ReplacePlusByMulti_OneRule) {
+    Migrate<LanguageForTesting> migrate {
+        // Rule to replace all '1+1' to '1*1'
+        { "Plus2Multi",
+          OriginCode {
+              { "1 + 1" }
+          },
+          TargetCode {
+              { "1 * 1" }
+          }
+        }
+    };
 
+    stringstream s;
+    migrate(input, s);
+
+    std::cout << s.str() << std::endl;
 }
 
 
