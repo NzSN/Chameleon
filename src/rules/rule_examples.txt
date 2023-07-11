@@ -7,7 +7,11 @@
 # Migrate TS code which before "=>"
 # to CPP code which after "=>"
 SetTimeoutWithCoro:
-    { SetTimeout(%A, %B); console.log(%A, %B); } => {
+    {  \\{
+             SetTimeout(%A, %B); console.log(%A, %B);
+       \\} } => {
+
+       \\{
         SetTimeout_Coro(%A, %B);
 
         # sentence follow '@' is commands
@@ -18,6 +22,7 @@ SetTimeoutWithCoro:
             std::cout << %A << %B << std::endl;
         @else:
             console_log(%A, %B);
+       \\}
     }
 
 # OR
