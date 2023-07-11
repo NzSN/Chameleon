@@ -7,7 +7,7 @@
 # Migrate TS code which before "=>"
 # to CPP code which after "=>"
 SetTimeoutWithCoro:
-    { SetTimeout(%A, %B); console.log(%A, %B); } <=> {
+    { SetTimeout(%A, %B); console.log(%A, %B); } => {
         SetTimeout_Coro(%A, %B);
 
         # sentence follow '@' is commands

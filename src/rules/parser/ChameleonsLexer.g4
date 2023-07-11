@@ -10,6 +10,6 @@ WS: [ \t\r\n]+ -> skip;
 
 mode PROGRAM;
 CODEBYTES
-    : (~[{}])+
+    : ((~[{}])|'\\{'|'\\}')+
     ;
 CLOSEBRACE: '}' -> mode(DEFAULT_MODE);
