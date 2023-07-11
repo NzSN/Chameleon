@@ -1,0 +1,6 @@
+-std=c++2a
+-xc++
+-I.
+-Isrc
+-Iide_env/googletest-5ab508a01f9eb089207ee87fd547d290da39d015/googletest/include
+-Iide_env/antlr4-runtime/src
