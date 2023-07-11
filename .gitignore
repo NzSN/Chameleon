@@ -1,0 +1,4 @@
+ide_env
+.ccls
+.ccls-cache
+bazel-*
