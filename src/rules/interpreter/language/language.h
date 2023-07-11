@@ -48,20 +48,20 @@ concept CodeStrT  = requires(C c) {
 template<CodeStrT T>
 class Code {
 public:
-  Code(T code): codeBytes_{code} {}
-  string codeBytes() const
-    { return codeBytes_.withoutEscape(); }
+  Code(T code): codebytes_{code} {}
+  string codebytes() const
+    { return codebytes_.withoutEscape(); }
 private:
-  const T codeBytes_;
+  const T codebytes_;
 };
 
 class CodeStr {
 public:
-  CodeStr(std::string codestr): codeString_{codestr} {}
+  CodeStr(std::string codestr): code_string_{codestr} {}
   virtual string toStr() const;
   virtual string withoutEscape() const;
 private:
-  string codeString_;
+  string code_string_;
 };
 
 using OriginCode = Code<CodeStr>;
@@ -73,15 +73,18 @@ using TargetCode = Code<CodeStr>;
 template<Language T>
 struct MigrateRule {
   MigrateRule(std::string ident, OriginCode ocode, TargetCode tcode):
-    identifier(ident), originCode(ocode), targetCode(tcode) {}
+    identifier_(ident), origin_code_(ocode), target_code_(tcode) {}
 
   void operator()(MigrateInput<T> input, std::ostream& os) const {
 
   }
 
-  const std::string identifier;
-  OriginCode originCode;
-  TargetCode targetCode;
+  antlr4::tree::ParseTree *origin_tree;
+  antlr4::tree::ParseTree *targetTree;
+
+  const std::string identifier_;
+  OriginCode origin_code_;
+  TargetCode target_code_;
 };
 
 template<Language T>
@@ -109,9 +112,9 @@ struct MigrateRules {
 template<Language T>
 struct Migrate {
   Migrate(std::initializer_list<MigrateRule<T>> rule_list):
-    migrateRules{rule_list} {}
+    migrate_rules{rule_list} {}
 
-  MigrateRules<T> migrateRules;
+  MigrateRules<T> migrate_rules;
 
   // Evaluation of a 'Migrate' Entity is to perform actions to
   // migrating codes from 'istream' to 'ostream' with Rules within
