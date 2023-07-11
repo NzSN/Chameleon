@@ -29,26 +29,26 @@ public:
 
 
 int main(int argc, char *argv[]) {
-    std::ifstream stream;
-    stream.open(argv[1]);
+  std::ifstream stream;
+  stream.open(argv[1]);
 
-    antlr4::ANTLRInputStream input(stream);
-    TypeScriptLexer lexer(&input);
-    antlr4::CommonTokenStream tokens(&lexer);
-    TypeScriptParser parser(&tokens);
+  antlr4::ANTLRInputStream input(stream);
+  TypeScriptLexer lexer(&input);
+  antlr4::CommonTokenStream tokens(&lexer);
+  TypeScriptParser parser(&tokens);
 
 
-    antlr4::tree::ParseTree *tree = parser.program();
+  antlr4::tree::ParseTree *tree = parser.program();
 
-    // Print AST
-    std::cout << "ParseTree" << std::endl << std::endl;
-    std::cout << tree->toStringTree(&parser, true) << std::endl;
-    std::cout << std::endl << std::endl <<
-      "=============================================" <<
-      std::endl;
+  // Print AST
+  std::cout << "ParseTree" << std::endl << std::endl;
+  std::cout << tree->toStringTree(&parser, true) << std::endl;
+  std::cout << std::endl << std::endl <<
+    "=============================================" <<
+    std::endl;
 
-    MyListener listener;
-    antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
+  MyListener listener;
+  antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
 
-    return 0;
+  return 0;
 }

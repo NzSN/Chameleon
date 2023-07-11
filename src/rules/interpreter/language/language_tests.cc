@@ -85,7 +85,12 @@ TEST_F(LanguageTest, WithCommand) {
               { "1 + 1" }
           },
           TargetCode {
-              { "1 * 1" }
+              {
+                "1 * 1\n"
+                // @random_number is a command which is executing during
+                // migrating
+                "1 + @random_number\n"
+              }
           }
         }
     };
