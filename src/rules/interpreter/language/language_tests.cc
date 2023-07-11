@@ -3,7 +3,7 @@
 #include <string>
 #include <utility>
 
-#include "language.hh"
+#include "language.h"
 #include "testLanguage/TestLangLexer.h"
 #include "testLanguage/TestLangParser.h"
 
