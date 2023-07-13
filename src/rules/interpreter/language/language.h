@@ -28,7 +28,7 @@ concept Language = requires(T t, std::istream& is,
                             antlr4::tree::ParseTree* tree) {
   { t.parseTreeFromStream(is) } -> std::same_as<antlr4::tree::ParseTree*>;
   { t.parseTreeFromString(str) } -> std::same_as<antlr4::tree::ParseTree*>;
-  { t.convertParseTreeToString(tree) } -> std::same_as<std::string>;
+  { t.convertParseTreeToStr(tree) } -> std::same_as<std::string>;
 };
 
 template<Language T>

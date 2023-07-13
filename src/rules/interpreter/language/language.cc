@@ -41,11 +41,11 @@ void MigrateRule<T>::operator()(MigrateInput<T> input, std::ostream& os) const {
     PLOG_FATAL << "There are some errors occurs during migrating codes."
 
                << "Code ParseTree:\n"
-               << input.language.convertParseTreeToString(
+               << input.language.convertParseTreeToStr(
                  input.tree_need_migrated) << "\n"
 
                <<  "Match Tree:\n"
-               << input.language.convertParseTreeToString(
+               << input.language.convertParseTreeToStr(
                  origin_tree_) << "\n";
   }
 
