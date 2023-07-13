@@ -38,7 +38,7 @@ void MigrateRule<T>::operator()(MigrateInput<T> input, std::ostream& os) const {
   MigratedInfo info = iterateAndMigrate(
     input.tree_need_migrated, origin_tree_, target_generator_);
   if (!info.code.has_value()) {
-    PLOG_FATAL << "There are some errors occurs during migrating codes."
+    PLOG_FATAL << "There are some errors occurs during migrating codes.\n"
 
                << "Code ParseTree:\n"
                << input.language.convertParseTreeToStr(
