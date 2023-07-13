@@ -64,6 +64,9 @@ TEST_F(ChameleonsTest, EscapedBrace) {
       // Program
       "R: { \\{ SENTENCE \\} } => { \\{ Migrated SENTENCE \\} }",
       // Expected ParseTree
-      "(migrate (migrateRules (migrateRule R : { (originCode  \\{ SENTENCE \\} ) } => { (targetCode  \\{ Migrated SENTENCE \\} ) })))"
+      "(migrate (migrateRules "
+      "(migrateRule R : "
+      "{ (originCode  \\{ SENTENCE \\} ) } => { "
+      "(targetCode  \\{ Migrated SENTENCE \\} ) })))"
       ));
 }
