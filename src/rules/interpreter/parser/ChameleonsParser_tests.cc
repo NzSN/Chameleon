@@ -25,37 +25,39 @@ struct ChameleonsTest: public ::testing::Test {
 
 
 TEST_F(ChameleonsTest, Basic) {
-  EXPECT_TRUE(ParseTreeMatching(
-                // Program
-                "R: { Origin } => { Migrated }",
-                // ParseTree
-                "(migrate "
-                "(migrateRules "
-                "(migrateRule "
-                "R : { (originCode  Origin ) } => { (targetCode  Migrated ) })))"
-                ));
+  EXPECT_TRUE(
+    ParseTreeMatching(
+      // Program
+      "R: { Origin } => { Migrated }",
+      // ParseTree
+      "(migrate "
+      "(migrateRules "
+      "(migrateRule "
+      "R : { (originCode  Origin ) } => { (targetCode  Migrated ) })))"
+      ));
 }
 
 TEST_F(ChameleonsTest, WithSpaceCodes) {
-  EXPECT_TRUE(ParseTreeMatching(
-                // Program
-                "R: {"
+  EXPECT_TRUE(
+    ParseTreeMatching(
+      // Program
+      "R: {"
 
-                "setTimeout(%A, %B);"
-                "console.log(%A, %B); "
+      "setTimeout(%A, %B);"
+      "console.log(%A, %B); "
 
-                " } => { "
+      " } => { "
 
-                "SetTimeout_Coro(%A, %B)"
+      "SetTimeout_Coro(%A, %B)"
 
-                " }",
-                // Expected ParseTree
-                "(migrate "
-                "(migrateRules "
-                "(migrateRule "
-                "R : { (originCode setTimeout(%A, %B);console.log(%A, %B);  ) } "
-                "=> { (targetCode  SetTimeout_Coro(%A, %B) ) })))"
-                ));
+      " }",
+      // Expected ParseTree
+      "(migrate "
+      "(migrateRules "
+      "(migrateRule "
+      "R : { (originCode setTimeout(%A, %B);console.log(%A, %B);  ) } "
+      "=> { (targetCode  SetTimeout_Coro(%A, %B) ) })))"
+      ));
 }
 
 TEST_F(ChameleonsTest, EscapedBrace) {

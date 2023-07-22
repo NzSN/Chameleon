@@ -27,24 +27,27 @@ public:
 };
 
 struct LanguageForTesting {
-    LanguageForTesting() {}
+  LanguageForTesting() {}
 
-    antlr4::tree::ParseTree* GetParseTree(std::istream& is, bool pretty = false) {
-        antlr4::ANTLRInputStream input(is);
-        TestLangLexer lexer(&input);
-        antlr4::CommonTokenStream tokens(&lexer);
-        TestLangParser parser(&tokens);
+  antlr4::tree::ParseTree* GetParseTree(std::istream& is, bool pretty = false) {
+    antlr4::ANTLRInputStream input(is);
+    TestLangLexer lexer(&input);
+    antlr4::CommonTokenStream tokens(&lexer);
+    TestLangParser parser(&tokens);
 
-        return parser.prog();
-    }
+    return parser.prog();
+  }
 
-    antlr4::tree::ParseTree* parseTreeFromStream(std::istream& is) {
-        return GetParseTree(is);
-    }
-    antlr4::tree::ParseTree* parseTreeFromString(std::string codestr) {
-        std::stringstream ss {codestr};
-        return GetParseTree(ss);
-    }
+  antlr4::tree::ParseTree* parseTreeFromStream(std::istream& is) {
+    return GetParseTree(is);
+  }
+  antlr4::tree::ParseTree* parseTreeFromString(std::string codestr) {
+    std::stringstream ss {codestr};
+    return GetParseTree(ss);
+  }
+  std::string convertParseTreeToStr(antlr4::tree::ParseTree* tree) {
+    return "";
+  }
 };
 
 struct LanguageTest: public ::testing::Test {

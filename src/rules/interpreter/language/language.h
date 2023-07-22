@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <list>
 #include <istream>
 #include <ostream>
 #include <concepts>
@@ -15,12 +16,9 @@
 #include "code_str.h"
 #include "generator.h"
 
-using std::string;
-
-namespace Rule {
+namespace Rule{
 namespace Interpreter {
 namespace Language {
-
 
 template<typename T>
 concept Language = requires(T t, std::istream& is,
@@ -33,8 +31,8 @@ concept Language = requires(T t, std::istream& is,
 
 template<Language T>
 struct MigrateInput {
-  std::istream& is;
-  T& language;
+  const std::istream& is;
+  const T& language;
   antlr4::tree::ParseTree* tree_need_migrated;
 };
 
@@ -44,13 +42,16 @@ struct MigrateInput {
 template<Language T>
 class MigrateRule {
 public:
+
+  enum ERROR_CODE {
+    OK,
+    ERROR
+  };
+
   MigrateRule(std::string ident, OriginCode ocode, TargetCode tcode):
-    identifier_(ident), origin_code_(ocode), target_code_(tcode) {
+    identifier_(ident), origin_code_(ocode), target_code_(tcode) {}
 
-    target_generator_ = std::make_unique<Generator::Generator>(target_code_);
-  }
-
-  void operator()(MigrateInput<T> input, std::ostream& os) const;
+  std::unique_ptr<Generator::Generator> operator()(MigrateInput<T> input) const;
 
 private:
   const std::string identifier_;
@@ -60,7 +61,6 @@ private:
 
   // ParseTree used to matching the codes that you want to migrate
   std::unique_ptr<antlr4::tree::ParseTree> origin_tree_;
-  std::unique_ptr<Generator::Generator> target_generator_;
 };
 
 template<Language T>
@@ -75,10 +75,14 @@ struct MigrateRules {
   typename std::vector<MigrateRule<T>>::const_iterator
   end() const { return std::end(rules); }
 
-  void operator()(MigrateInput<T> input, std::ostream& os) const {
+  std::list<Generator::Generator> operator()(MigrateInput<T> input) const {
+    std::list<Generator::Generator> gens;
+
     for (auto& rule: rules) {
-      rule(input, os);
+      gens.push_back(std::move(rule(input)));
     }
+
+    return gens;
   }
 };
 
@@ -96,7 +100,9 @@ struct Migrate {
   // migrating codes from 'istream' to 'ostream' with Rules within
   // the 'Migrate' Entity.
   void operator()(MigrateInput<T> input, std::ostream& os) const {
-    migrateRules(input, os);
+    std::list<Generator::Generator> gens = migrateRules(input);
+
+    // Do migrating
   }
 };
 
