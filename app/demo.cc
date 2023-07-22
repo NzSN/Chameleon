@@ -24,6 +24,11 @@ public:
       std::cout << is << " ";
     }
     std::cout << "from " << fromModule << std::endl;
+
+    std::cout << ctx->getStart()->getCharPositionInLine()
+              << " "
+              << ctx->getStop()->getCharPositionInLine()
+              << std::endl;
   }
 };
 
