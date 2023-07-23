@@ -4,6 +4,8 @@
 
 #include "antlr4-runtime.h"
 #include <typeinfo>
+#include <ranges>
+#include <tuple>
 #include <memory>
 #include <vector>
 
@@ -16,13 +18,19 @@ public:
     type_{typeid(tree)}, childs_{} {}
 
   bool operator==(GenericParseTree& other) {
-    if (!(type_ == other.type_)) {
-      return false;
-    }
 
-    for (auto& c: childs_) {
+    auto equality_check = [&](GenericParseTree& other) {
+      // Check node type
+      if (!(type_ == other.type_)) {
+        return false;
+      }
 
-    }
+      // Check childs
+      if (childs_.size() != other.childs_.size()) {
+        return false;
+      }
+
+    };
 
     return true;
   }
