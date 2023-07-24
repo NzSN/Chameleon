@@ -1,0 +1,14 @@
+filegroup(
+    name = "utility_src",
+    srcs = ["utility.h", "utility.cc"],
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "interpreter_unittests",
+    srcs = [
+         ":utility_src",
+         "utility_unittests.cc"],
+    copts = ["-std=c++2a"],
+    deps = ["@com_google_googletest//:gtest_main"],
+)
