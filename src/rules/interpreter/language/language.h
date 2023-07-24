@@ -12,7 +12,7 @@
 #include <concepts>
 #include <utility>
 
-#include "antlr4-runtime.h"
+#include "generic_parsetree.h"
 #include "code_str.h"
 #include "generator.h"
 
@@ -23,9 +23,9 @@ namespace Language {
 template<typename T>
 concept Language = requires(T t, std::istream& is,
                             std::string str,
-                            antlr4::tree::ParseTree* tree) {
-  { t.parseTreeFromStream(is) } -> std::same_as<antlr4::tree::ParseTree*>;
-  { t.parseTreeFromString(str) } -> std::same_as<antlr4::tree::ParseTree*>;
+                            GenericParseTree* tree) {
+  { t.parseTreeFromStream(is) } -> std::same_as<GenericParseTree*>;
+  { t.parseTreeFromString(str) } -> std::same_as<GenericParseTree*>;
   { t.convertParseTreeToStr(tree) } -> std::same_as<std::string>;
 };
 
@@ -33,7 +33,7 @@ template<Language T>
 struct MigrateInput {
   const std::istream& is;
   const T& language;
-  antlr4::tree::ParseTree* tree_need_migrated;
+  GenericParseTree* tree_need_migrated;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@ private:
   OriginCode target_code_;
 
   // ParseTree used to matching the codes that you want to migrate
-  std::unique_ptr<antlr4::tree::ParseTree> origin_tree_;
+  std::unique_ptr<GenericParseTree> origin_tree_;
 };
 
 template<Language T>

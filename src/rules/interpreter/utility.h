@@ -5,6 +5,8 @@
 #include <tuple>
 #include <optional>
 
+namespace Rules::Interpreter::Utility {
+
 template<typename T1, typename T2>
 std::optional<std::vector<std::tuple<T1, T2>>>
 zip_vec(std::vector<T1>& l, std::vector<T2>& r) {
@@ -26,5 +28,7 @@ zip_vec(std::vector<T1>& l, std::vector<T2>& r) {
 
     return zipped;
 }
+
+} // Rules::Interpreter::Utility
 
 #endif /* UTILITY_H */
