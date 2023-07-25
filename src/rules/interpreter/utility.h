@@ -4,12 +4,18 @@
 #include <vector>
 #include <tuple>
 #include <optional>
+#include <concepts>
+#include <ranges>
 
 namespace Rules::Interpreter::Utility {
 
-template<typename T1, typename T2>
-std::optional<std::vector<std::tuple<T1, T2>>>
-zip_vec(std::vector<T1>& l, std::vector<T2>& r) {
+template<typename T, typename E>
+concept RangeAndPusable = std::ranges::range<T> && requires(T t, E e) {
+  t.push_back(e);
+};
+
+template<typename E, RangeAndPusable<E> T, RangeAndPusable<E> RT>
+RT zip_vec(T l, T r) {
     if (l.size() != r.size()) {
         return std::nullopt;
     }
@@ -17,7 +23,7 @@ zip_vec(std::vector<T1>& l, std::vector<T2>& r) {
     auto iter_l = std::begin(l);
     auto iter_r = std::begin(r);
 
-    std::vector<std::tuple<T1, T2>> zipped{};
+    RT zipped{};
 
     do {
         zipped.push_back({*iter_l, *iter_r});

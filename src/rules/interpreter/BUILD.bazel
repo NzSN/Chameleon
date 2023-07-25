@@ -10,5 +10,8 @@ cc_test(
          ":utility_src",
          "utility_unittests.cc"],
     copts = ["-std=c++2a"],
-    deps = ["@com_google_googletest//:gtest_main"],
+    deps = [
+         "@com_google_googletest//:gtest_main",
+         "@rapidcheck//:rapidcheck",
+         ],
 )
