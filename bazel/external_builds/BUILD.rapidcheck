@@ -1,0 +1,14 @@
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
+
+filegroup(
+    name = "rapidcheck_src",
+    srcs = glob(["**"]),
+)
+
+cmake(
+    name = "rapidcheck",
+    lib_source = "rapidcheck_src",
+    out_static_libs = ["librapidcheck.a"],
+    out_include_dir = "include",
+    visibility = ["//visibility:public"],
+)

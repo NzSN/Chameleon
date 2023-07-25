@@ -38,3 +38,9 @@ new_local_repository(
     path = "third_party/llvm-project",
     build_file = "@//:bazel/external_builds/BUILD.llvm-project",
 )
+
+new_local_repository(
+    name = "rapidcheck",
+    path = "third_party/rapidcheck",
+    build_file = "@//:bazel/external_builds/BUILD.rapidcheck"
+)
