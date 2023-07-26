@@ -1,0 +1,14 @@
+
+filegroup(
+    name = "generic_parsetree",
+    srcs = ["generic_parsetree.cc", "generic_parsetree.h"],
+)
+
+filegroup(
+    name = "language_unittests_src",
+    srcs = [
+         # Generic ParseTree
+         ":generic_parsetree",
+         "generic_parsetree_unittests.cc"],
+    visibility = ["//visibility:public"],
+)

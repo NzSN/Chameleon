@@ -6,6 +6,8 @@
 #include <optional>
 #include <concepts>
 #include <ranges>
+#include <concepts>
+#include <functional>
 
 namespace Rules::Interpreter::Utility {
 
@@ -20,20 +22,20 @@ concept Range = std::ranges::range<T>;
 
 template<typename E, RangeTuple<E> RT, Range<E> T>
 RT zip(T l, T r) {
-    if (l.size() != r.size()) {
-      return RT{};
-    }
+  if (l.size() != r.size()) {
+    return RT{};
+  }
 
-    RT zipped{};
-    auto iter_l = std::begin(l);
-    auto iter_r = std::begin(r);
+  RT zipped{};
+  auto iter_l = std::begin(l);
+  auto iter_r = std::begin(r);
 
-    while (iter_l != std::end(l)) {
-        zipped.push_back({*iter_l, *iter_r});
+  while (iter_l != std::end(l)) {
+    zipped.push_back({*iter_l, *iter_r});
 
-        ++iter_l;
-        ++iter_r;
-    }
+    ++iter_l;
+    ++iter_r;
+  }
 
     return zipped;
 }

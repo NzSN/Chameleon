@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
+#include <rapidcheck.h>
+#include <rapidcheck/gtest.h>
 #include <tuple>
 #include "utility.h"
-#include "rapidcheck.h"
-#include "rapidcheck/gtest.h"
 
 namespace Rules::Interpreter::Utility {
 

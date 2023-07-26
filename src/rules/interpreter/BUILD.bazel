@@ -7,9 +7,11 @@ filegroup(
 cc_test(
     name = "interpreter_unittests",
     srcs = [
-         ":utility_src",
-         "utility_unittests.cc"],
-    copts = ["-std=c++2a"],
+        ":utility_src",
+        "utility_unittests.cc",
+        "//src/rules/interpreter/language:language_unittests_src"
+        ],
+    copts = ["-std=c++2a", "-Isrc"],
     deps = [
          "@com_google_googletest//:gtest_main",
          "@rapidcheck//:rapidcheck",
