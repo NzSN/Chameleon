@@ -28,6 +28,7 @@ public:
 
   using Childs = std::vector<GenericParseTree>;
   using CharPosition = std::tuple<int, int>;
+  using GPTIterator = Childs::iterator;
 
   template<typename POS = int>
   constexpr static auto getRow = std::get<0, POS>;
@@ -43,11 +44,14 @@ public:
     type_{type} {}
 
   GenericParseTree& addChild(T type) {
-    return this->childs_.emplace_back(type);
+    return childs_.emplace_back(type);
   };
 
-  bool operator==(const GenericParseTree& other) const {
+  GPTIterator childs() const {
+    return std::begin(childs_);
+  }
 
+  bool operator==(const GenericParseTree& other) const {
     // GenericParseTree is recursive type which requrie that
     // equality check should be recursive too.
     std::function<bool(const GenericParseTree& l,
@@ -84,6 +88,31 @@ public:
     return equality_check(*this, other);
   }
 
+  GenericParseTree* select(
+    std::function<bool(GenericParseTree&)> predicate) {
+
+    GenericParseTree* tree = NULL;
+    traverse([&](GenericParseTree& node) {
+      if (predicate(node)) {
+        tree = &node;
+        return false;
+      } else {
+        return true;
+      }
+    });
+
+    return tree;
+  }
+
+  void traverse(
+    std::function<bool(GenericParseTree&)> proc) {
+
+    if (!proc(*this)) return;
+    for (auto& c: childs_) {
+      c.traverse(proc);
+    }
+  }
+
   CharPosition getStartPos() const {
     return std::get<0>(positions);
   }
@@ -93,6 +122,7 @@ public:
   }
 
 private:
+  friend struct GenericParseTreeTest;
   T type_;
   Childs childs_;
   // (pos of fisrt char, pos of last char)
