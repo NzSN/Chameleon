@@ -19,11 +19,11 @@ CODEBYTES
 CLOSEBRACE
 
 rule names:
-migrate
-migrateRules
-migrateRule
-originCode
-targetCode
+prog
+rewriteRules
+rewriteRule
+sourcePattern
+targetPattern
 
 
 atn:

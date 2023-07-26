@@ -52,7 +52,7 @@ void chameleonsparserParserInitialize() {
 #endif
   auto staticData = std::make_unique<ChameleonsParserStaticData>(
     std::vector<std::string>{
-      "migrate", "migrateRules", "migrateRule", "originCode", "targetCode"
+      "prog", "rewriteRules", "rewriteRule", "sourcePattern", "targetPattern"
     },
     std::vector<std::string>{
       "", "", "':'", "'{'", "'=>'", "", "", "'}'"
@@ -119,36 +119,36 @@ antlr4::atn::SerializedATNView ChameleonsParser::getSerializedATN() const {
 }
 
 
-//----------------- MigrateContext ------------------------------------------------------------------
+//----------------- ProgContext ------------------------------------------------------------------
 
-ChameleonsParser::MigrateContext::MigrateContext(ParserRuleContext *parent, size_t invokingState)
+ChameleonsParser::ProgContext::ProgContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-ChameleonsParser::MigrateRulesContext* ChameleonsParser::MigrateContext::migrateRules() {
-  return getRuleContext<ChameleonsParser::MigrateRulesContext>(0);
+ChameleonsParser::RewriteRulesContext* ChameleonsParser::ProgContext::rewriteRules() {
+  return getRuleContext<ChameleonsParser::RewriteRulesContext>(0);
 }
 
 
-size_t ChameleonsParser::MigrateContext::getRuleIndex() const {
-  return ChameleonsParser::RuleMigrate;
+size_t ChameleonsParser::ProgContext::getRuleIndex() const {
+  return ChameleonsParser::RuleProg;
 }
 
-void ChameleonsParser::MigrateContext::enterRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::ProgContext::enterRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->enterMigrate(this);
+    parserListener->enterProg(this);
 }
 
-void ChameleonsParser::MigrateContext::exitRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::ProgContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->exitMigrate(this);
+    parserListener->exitProg(this);
 }
 
-ChameleonsParser::MigrateContext* ChameleonsParser::migrate() {
-  MigrateContext *_localctx = _tracker.createInstance<MigrateContext>(_ctx, getState());
-  enterRule(_localctx, 0, ChameleonsParser::RuleMigrate);
+ChameleonsParser::ProgContext* ChameleonsParser::prog() {
+  ProgContext *_localctx = _tracker.createInstance<ProgContext>(_ctx, getState());
+  enterRule(_localctx, 0, ChameleonsParser::RuleProg);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -160,7 +160,7 @@ ChameleonsParser::MigrateContext* ChameleonsParser::migrate() {
   try {
     enterOuterAlt(_localctx, 1);
     setState(10);
-    migrateRules();
+    rewriteRules();
    
   }
   catch (RecognitionException &e) {
@@ -172,40 +172,40 @@ ChameleonsParser::MigrateContext* ChameleonsParser::migrate() {
   return _localctx;
 }
 
-//----------------- MigrateRulesContext ------------------------------------------------------------------
+//----------------- RewriteRulesContext ------------------------------------------------------------------
 
-ChameleonsParser::MigrateRulesContext::MigrateRulesContext(ParserRuleContext *parent, size_t invokingState)
+ChameleonsParser::RewriteRulesContext::RewriteRulesContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-ChameleonsParser::MigrateRuleContext* ChameleonsParser::MigrateRulesContext::migrateRule() {
-  return getRuleContext<ChameleonsParser::MigrateRuleContext>(0);
+ChameleonsParser::RewriteRuleContext* ChameleonsParser::RewriteRulesContext::rewriteRule() {
+  return getRuleContext<ChameleonsParser::RewriteRuleContext>(0);
 }
 
-ChameleonsParser::MigrateRulesContext* ChameleonsParser::MigrateRulesContext::migrateRules() {
-  return getRuleContext<ChameleonsParser::MigrateRulesContext>(0);
+ChameleonsParser::RewriteRulesContext* ChameleonsParser::RewriteRulesContext::rewriteRules() {
+  return getRuleContext<ChameleonsParser::RewriteRulesContext>(0);
 }
 
 
-size_t ChameleonsParser::MigrateRulesContext::getRuleIndex() const {
-  return ChameleonsParser::RuleMigrateRules;
+size_t ChameleonsParser::RewriteRulesContext::getRuleIndex() const {
+  return ChameleonsParser::RuleRewriteRules;
 }
 
-void ChameleonsParser::MigrateRulesContext::enterRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::RewriteRulesContext::enterRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->enterMigrateRules(this);
+    parserListener->enterRewriteRules(this);
 }
 
-void ChameleonsParser::MigrateRulesContext::exitRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::RewriteRulesContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->exitMigrateRules(this);
+    parserListener->exitRewriteRules(this);
 }
 
-ChameleonsParser::MigrateRulesContext* ChameleonsParser::migrateRules() {
-  MigrateRulesContext *_localctx = _tracker.createInstance<MigrateRulesContext>(_ctx, getState());
-  enterRule(_localctx, 2, ChameleonsParser::RuleMigrateRules);
+ChameleonsParser::RewriteRulesContext* ChameleonsParser::rewriteRules() {
+  RewriteRulesContext *_localctx = _tracker.createInstance<RewriteRulesContext>(_ctx, getState());
+  enterRule(_localctx, 2, ChameleonsParser::RuleRewriteRules);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -221,16 +221,16 @@ ChameleonsParser::MigrateRulesContext* ChameleonsParser::migrateRules() {
     case 1: {
       enterOuterAlt(_localctx, 1);
       setState(12);
-      migrateRule();
+      rewriteRule();
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
       setState(13);
-      migrateRule();
+      rewriteRule();
       setState(14);
-      migrateRules();
+      rewriteRules();
       break;
     }
 
@@ -248,68 +248,68 @@ ChameleonsParser::MigrateRulesContext* ChameleonsParser::migrateRules() {
   return _localctx;
 }
 
-//----------------- MigrateRuleContext ------------------------------------------------------------------
+//----------------- RewriteRuleContext ------------------------------------------------------------------
 
-ChameleonsParser::MigrateRuleContext::MigrateRuleContext(ParserRuleContext *parent, size_t invokingState)
+ChameleonsParser::RewriteRuleContext::RewriteRuleContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* ChameleonsParser::MigrateRuleContext::IDENTIFIER() {
+tree::TerminalNode* ChameleonsParser::RewriteRuleContext::IDENTIFIER() {
   return getToken(ChameleonsParser::IDENTIFIER, 0);
 }
 
-tree::TerminalNode* ChameleonsParser::MigrateRuleContext::COLON() {
+tree::TerminalNode* ChameleonsParser::RewriteRuleContext::COLON() {
   return getToken(ChameleonsParser::COLON, 0);
 }
 
-std::vector<tree::TerminalNode *> ChameleonsParser::MigrateRuleContext::OPENBRACE() {
+std::vector<tree::TerminalNode *> ChameleonsParser::RewriteRuleContext::OPENBRACE() {
   return getTokens(ChameleonsParser::OPENBRACE);
 }
 
-tree::TerminalNode* ChameleonsParser::MigrateRuleContext::OPENBRACE(size_t i) {
+tree::TerminalNode* ChameleonsParser::RewriteRuleContext::OPENBRACE(size_t i) {
   return getToken(ChameleonsParser::OPENBRACE, i);
 }
 
-ChameleonsParser::OriginCodeContext* ChameleonsParser::MigrateRuleContext::originCode() {
-  return getRuleContext<ChameleonsParser::OriginCodeContext>(0);
+ChameleonsParser::SourcePatternContext* ChameleonsParser::RewriteRuleContext::sourcePattern() {
+  return getRuleContext<ChameleonsParser::SourcePatternContext>(0);
 }
 
-std::vector<tree::TerminalNode *> ChameleonsParser::MigrateRuleContext::CLOSEBRACE() {
+std::vector<tree::TerminalNode *> ChameleonsParser::RewriteRuleContext::CLOSEBRACE() {
   return getTokens(ChameleonsParser::CLOSEBRACE);
 }
 
-tree::TerminalNode* ChameleonsParser::MigrateRuleContext::CLOSEBRACE(size_t i) {
+tree::TerminalNode* ChameleonsParser::RewriteRuleContext::CLOSEBRACE(size_t i) {
   return getToken(ChameleonsParser::CLOSEBRACE, i);
 }
 
-tree::TerminalNode* ChameleonsParser::MigrateRuleContext::TRANSFORM() {
+tree::TerminalNode* ChameleonsParser::RewriteRuleContext::TRANSFORM() {
   return getToken(ChameleonsParser::TRANSFORM, 0);
 }
 
-ChameleonsParser::TargetCodeContext* ChameleonsParser::MigrateRuleContext::targetCode() {
-  return getRuleContext<ChameleonsParser::TargetCodeContext>(0);
+ChameleonsParser::TargetPatternContext* ChameleonsParser::RewriteRuleContext::targetPattern() {
+  return getRuleContext<ChameleonsParser::TargetPatternContext>(0);
 }
 
 
-size_t ChameleonsParser::MigrateRuleContext::getRuleIndex() const {
-  return ChameleonsParser::RuleMigrateRule;
+size_t ChameleonsParser::RewriteRuleContext::getRuleIndex() const {
+  return ChameleonsParser::RuleRewriteRule;
 }
 
-void ChameleonsParser::MigrateRuleContext::enterRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::RewriteRuleContext::enterRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->enterMigrateRule(this);
+    parserListener->enterRewriteRule(this);
 }
 
-void ChameleonsParser::MigrateRuleContext::exitRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::RewriteRuleContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->exitMigrateRule(this);
+    parserListener->exitRewriteRule(this);
 }
 
-ChameleonsParser::MigrateRuleContext* ChameleonsParser::migrateRule() {
-  MigrateRuleContext *_localctx = _tracker.createInstance<MigrateRuleContext>(_ctx, getState());
-  enterRule(_localctx, 4, ChameleonsParser::RuleMigrateRule);
+ChameleonsParser::RewriteRuleContext* ChameleonsParser::rewriteRule() {
+  RewriteRuleContext *_localctx = _tracker.createInstance<RewriteRuleContext>(_ctx, getState());
+  enterRule(_localctx, 4, ChameleonsParser::RuleRewriteRule);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -327,7 +327,7 @@ ChameleonsParser::MigrateRuleContext* ChameleonsParser::migrateRule() {
     setState(20);
     match(ChameleonsParser::OPENBRACE);
     setState(21);
-    originCode();
+    sourcePattern();
     setState(22);
     match(ChameleonsParser::CLOSEBRACE);
     setState(23);
@@ -335,7 +335,7 @@ ChameleonsParser::MigrateRuleContext* ChameleonsParser::migrateRule() {
     setState(24);
     match(ChameleonsParser::OPENBRACE);
     setState(25);
-    targetCode();
+    targetPattern();
     setState(26);
     match(ChameleonsParser::CLOSEBRACE);
    
@@ -349,36 +349,36 @@ ChameleonsParser::MigrateRuleContext* ChameleonsParser::migrateRule() {
   return _localctx;
 }
 
-//----------------- OriginCodeContext ------------------------------------------------------------------
+//----------------- SourcePatternContext ------------------------------------------------------------------
 
-ChameleonsParser::OriginCodeContext::OriginCodeContext(ParserRuleContext *parent, size_t invokingState)
+ChameleonsParser::SourcePatternContext::SourcePatternContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* ChameleonsParser::OriginCodeContext::CODEBYTES() {
+tree::TerminalNode* ChameleonsParser::SourcePatternContext::CODEBYTES() {
   return getToken(ChameleonsParser::CODEBYTES, 0);
 }
 
 
-size_t ChameleonsParser::OriginCodeContext::getRuleIndex() const {
-  return ChameleonsParser::RuleOriginCode;
+size_t ChameleonsParser::SourcePatternContext::getRuleIndex() const {
+  return ChameleonsParser::RuleSourcePattern;
 }
 
-void ChameleonsParser::OriginCodeContext::enterRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::SourcePatternContext::enterRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->enterOriginCode(this);
+    parserListener->enterSourcePattern(this);
 }
 
-void ChameleonsParser::OriginCodeContext::exitRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::SourcePatternContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->exitOriginCode(this);
+    parserListener->exitSourcePattern(this);
 }
 
-ChameleonsParser::OriginCodeContext* ChameleonsParser::originCode() {
-  OriginCodeContext *_localctx = _tracker.createInstance<OriginCodeContext>(_ctx, getState());
-  enterRule(_localctx, 6, ChameleonsParser::RuleOriginCode);
+ChameleonsParser::SourcePatternContext* ChameleonsParser::sourcePattern() {
+  SourcePatternContext *_localctx = _tracker.createInstance<SourcePatternContext>(_ctx, getState());
+  enterRule(_localctx, 6, ChameleonsParser::RuleSourcePattern);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -402,36 +402,36 @@ ChameleonsParser::OriginCodeContext* ChameleonsParser::originCode() {
   return _localctx;
 }
 
-//----------------- TargetCodeContext ------------------------------------------------------------------
+//----------------- TargetPatternContext ------------------------------------------------------------------
 
-ChameleonsParser::TargetCodeContext::TargetCodeContext(ParserRuleContext *parent, size_t invokingState)
+ChameleonsParser::TargetPatternContext::TargetPatternContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* ChameleonsParser::TargetCodeContext::CODEBYTES() {
+tree::TerminalNode* ChameleonsParser::TargetPatternContext::CODEBYTES() {
   return getToken(ChameleonsParser::CODEBYTES, 0);
 }
 
 
-size_t ChameleonsParser::TargetCodeContext::getRuleIndex() const {
-  return ChameleonsParser::RuleTargetCode;
+size_t ChameleonsParser::TargetPatternContext::getRuleIndex() const {
+  return ChameleonsParser::RuleTargetPattern;
 }
 
-void ChameleonsParser::TargetCodeContext::enterRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::TargetPatternContext::enterRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->enterTargetCode(this);
+    parserListener->enterTargetPattern(this);
 }
 
-void ChameleonsParser::TargetCodeContext::exitRule(tree::ParseTreeListener *listener) {
+void ChameleonsParser::TargetPatternContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->exitTargetCode(this);
+    parserListener->exitTargetPattern(this);
 }
 
-ChameleonsParser::TargetCodeContext* ChameleonsParser::targetCode() {
-  TargetCodeContext *_localctx = _tracker.createInstance<TargetCodeContext>(_ctx, getState());
-  enterRule(_localctx, 8, ChameleonsParser::RuleTargetCode);
+ChameleonsParser::TargetPatternContext* ChameleonsParser::targetPattern() {
+  TargetPatternContext *_localctx = _tracker.createInstance<TargetPatternContext>(_ctx, getState());
+  enterRule(_localctx, 8, ChameleonsParser::RuleTargetPattern);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {

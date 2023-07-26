@@ -14,20 +14,20 @@
 class  ChameleonsParserListener : public antlr4::tree::ParseTreeListener {
 public:
 
-  virtual void enterMigrate(ChameleonsParser::MigrateContext *ctx) = 0;
-  virtual void exitMigrate(ChameleonsParser::MigrateContext *ctx) = 0;
+  virtual void enterProg(ChameleonsParser::ProgContext *ctx) = 0;
+  virtual void exitProg(ChameleonsParser::ProgContext *ctx) = 0;
 
-  virtual void enterMigrateRules(ChameleonsParser::MigrateRulesContext *ctx) = 0;
-  virtual void exitMigrateRules(ChameleonsParser::MigrateRulesContext *ctx) = 0;
+  virtual void enterRewriteRules(ChameleonsParser::RewriteRulesContext *ctx) = 0;
+  virtual void exitRewriteRules(ChameleonsParser::RewriteRulesContext *ctx) = 0;
 
-  virtual void enterMigrateRule(ChameleonsParser::MigrateRuleContext *ctx) = 0;
-  virtual void exitMigrateRule(ChameleonsParser::MigrateRuleContext *ctx) = 0;
+  virtual void enterRewriteRule(ChameleonsParser::RewriteRuleContext *ctx) = 0;
+  virtual void exitRewriteRule(ChameleonsParser::RewriteRuleContext *ctx) = 0;
 
-  virtual void enterOriginCode(ChameleonsParser::OriginCodeContext *ctx) = 0;
-  virtual void exitOriginCode(ChameleonsParser::OriginCodeContext *ctx) = 0;
+  virtual void enterSourcePattern(ChameleonsParser::SourcePatternContext *ctx) = 0;
+  virtual void exitSourcePattern(ChameleonsParser::SourcePatternContext *ctx) = 0;
 
-  virtual void enterTargetCode(ChameleonsParser::TargetCodeContext *ctx) = 0;
-  virtual void exitTargetCode(ChameleonsParser::TargetCodeContext *ctx) = 0;
+  virtual void enterTargetPattern(ChameleonsParser::TargetPatternContext *ctx) = 0;
+  virtual void exitTargetPattern(ChameleonsParser::TargetPatternContext *ctx) = 0;
 
 
 };

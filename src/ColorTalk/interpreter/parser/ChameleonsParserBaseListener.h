@@ -16,20 +16,20 @@
 class  ChameleonsParserBaseListener : public ChameleonsParserListener {
 public:
 
-  virtual void enterMigrate(ChameleonsParser::MigrateContext * /*ctx*/) override { }
-  virtual void exitMigrate(ChameleonsParser::MigrateContext * /*ctx*/) override { }
+  virtual void enterProg(ChameleonsParser::ProgContext * /*ctx*/) override { }
+  virtual void exitProg(ChameleonsParser::ProgContext * /*ctx*/) override { }
 
-  virtual void enterMigrateRules(ChameleonsParser::MigrateRulesContext * /*ctx*/) override { }
-  virtual void exitMigrateRules(ChameleonsParser::MigrateRulesContext * /*ctx*/) override { }
+  virtual void enterRewriteRules(ChameleonsParser::RewriteRulesContext * /*ctx*/) override { }
+  virtual void exitRewriteRules(ChameleonsParser::RewriteRulesContext * /*ctx*/) override { }
 
-  virtual void enterMigrateRule(ChameleonsParser::MigrateRuleContext * /*ctx*/) override { }
-  virtual void exitMigrateRule(ChameleonsParser::MigrateRuleContext * /*ctx*/) override { }
+  virtual void enterRewriteRule(ChameleonsParser::RewriteRuleContext * /*ctx*/) override { }
+  virtual void exitRewriteRule(ChameleonsParser::RewriteRuleContext * /*ctx*/) override { }
 
-  virtual void enterOriginCode(ChameleonsParser::OriginCodeContext * /*ctx*/) override { }
-  virtual void exitOriginCode(ChameleonsParser::OriginCodeContext * /*ctx*/) override { }
+  virtual void enterSourcePattern(ChameleonsParser::SourcePatternContext * /*ctx*/) override { }
+  virtual void exitSourcePattern(ChameleonsParser::SourcePatternContext * /*ctx*/) override { }
 
-  virtual void enterTargetCode(ChameleonsParser::TargetCodeContext * /*ctx*/) override { }
-  virtual void exitTargetCode(ChameleonsParser::TargetCodeContext * /*ctx*/) override { }
+  virtual void enterTargetPattern(ChameleonsParser::TargetPatternContext * /*ctx*/) override { }
+  virtual void exitTargetPattern(ChameleonsParser::TargetPatternContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

@@ -2,23 +2,23 @@ parser grammar ChameleonsParser;
 
 options { tokenVocab=ChameleonsLexer; }
 
-migrate
-    : migrateRules
+prog
+    : rewriteRules
     ;
 
-migrateRules
-    : migrateRule
-    | migrateRule migrateRules
+rewriteRules
+    : rewriteRule
+    | rewriteRule rewriteRules
     ;
 
-migrateRule
-    : IDENTIFIER COLON OPENBRACE originCode CLOSEBRACE TRANSFORM OPENBRACE targetCode CLOSEBRACE
+rewriteRule
+    : IDENTIFIER COLON OPENBRACE sourcePattern CLOSEBRACE TRANSFORM OPENBRACE targetPattern CLOSEBRACE
     ;
 
-originCode
+sourcePattern
     : CODEBYTES
     ;
 
-targetCode
+targetPattern
     : CODEBYTES
     ;

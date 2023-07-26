@@ -17,8 +17,8 @@ public:
   };
 
   enum {
-    RuleMigrate = 0, RuleMigrateRules = 1, RuleMigrateRule = 2, RuleOriginCode = 3, 
-    RuleTargetCode = 4
+    RuleProg = 0, RuleRewriteRules = 1, RuleRewriteRule = 2, RuleSourcePattern = 3, 
+    RuleTargetPattern = 4
   };
 
   explicit ChameleonsParser(antlr4::TokenStream *input);
@@ -38,63 +38,63 @@ public:
   antlr4::atn::SerializedATNView getSerializedATN() const override;
 
 
-  class MigrateContext;
-  class MigrateRulesContext;
-  class MigrateRuleContext;
-  class OriginCodeContext;
-  class TargetCodeContext; 
+  class ProgContext;
+  class RewriteRulesContext;
+  class RewriteRuleContext;
+  class SourcePatternContext;
+  class TargetPatternContext; 
 
-  class  MigrateContext : public antlr4::ParserRuleContext {
+  class  ProgContext : public antlr4::ParserRuleContext {
   public:
-    MigrateContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    ProgContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    MigrateRulesContext *migrateRules();
+    RewriteRulesContext *rewriteRules();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
    
   };
 
-  MigrateContext* migrate();
+  ProgContext* prog();
 
-  class  MigrateRulesContext : public antlr4::ParserRuleContext {
+  class  RewriteRulesContext : public antlr4::ParserRuleContext {
   public:
-    MigrateRulesContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    RewriteRulesContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    MigrateRuleContext *migrateRule();
-    MigrateRulesContext *migrateRules();
+    RewriteRuleContext *rewriteRule();
+    RewriteRulesContext *rewriteRules();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
    
   };
 
-  MigrateRulesContext* migrateRules();
+  RewriteRulesContext* rewriteRules();
 
-  class  MigrateRuleContext : public antlr4::ParserRuleContext {
+  class  RewriteRuleContext : public antlr4::ParserRuleContext {
   public:
-    MigrateRuleContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    RewriteRuleContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *COLON();
     std::vector<antlr4::tree::TerminalNode *> OPENBRACE();
     antlr4::tree::TerminalNode* OPENBRACE(size_t i);
-    OriginCodeContext *originCode();
+    SourcePatternContext *sourcePattern();
     std::vector<antlr4::tree::TerminalNode *> CLOSEBRACE();
     antlr4::tree::TerminalNode* CLOSEBRACE(size_t i);
     antlr4::tree::TerminalNode *TRANSFORM();
-    TargetCodeContext *targetCode();
+    TargetPatternContext *targetPattern();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
    
   };
 
-  MigrateRuleContext* migrateRule();
+  RewriteRuleContext* rewriteRule();
 
-  class  OriginCodeContext : public antlr4::ParserRuleContext {
+  class  SourcePatternContext : public antlr4::ParserRuleContext {
   public:
-    OriginCodeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    SourcePatternContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CODEBYTES();
 
@@ -103,11 +103,11 @@ public:
    
   };
 
-  OriginCodeContext* originCode();
+  SourcePatternContext* sourcePattern();
 
-  class  TargetCodeContext : public antlr4::ParserRuleContext {
+  class  TargetPatternContext : public antlr4::ParserRuleContext {
   public:
-    TargetCodeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TargetPatternContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CODEBYTES();
 
@@ -116,7 +116,7 @@ public:
    
   };
 
-  TargetCodeContext* targetCode();
+  TargetPatternContext* targetPattern();
 
 
   // By default the static state used to implement the parser is lazily initialized during the first
