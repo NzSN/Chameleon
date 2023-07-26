@@ -7,11 +7,13 @@
 namespace Rules::Interpreter::Language {
 
 using Antlr4Tree = antlr4::tree::ParseTree;
+using Antlr4GPT = GenericParseTree<const std::type_info&>;
 
-GenericParseTree fromAntlr4_TS(Antlr4Tree& tree);
-GenericParseTree fromAntlr4_CPP(Antlr4Tree& tree);
+Antlr4GPT fromAntlr4_TS(Antlr4Tree& tree);
+Antlr4GPT fromAntlr4_CPP(Antlr4Tree& tree);
 
-GenericParseTree GenericParseTree::fromAntlr4(
+template<>
+Antlr4GPT Antlr4GPT::fromAntlr4(
   Antlr4Tree& tree, SUPPORTED_LANGUAGE lang) {
   GenericParseTree root{};
 
@@ -32,7 +34,7 @@ GenericParseTree GenericParseTree::fromAntlr4(
   return root;
 }
 
-GenericParseTree fromAntlr4_TS(Antlr4Tree& tree) {
+Antlr4GPT fromAntlr4_TS(Antlr4Tree& tree) {
   /* Need to implement */
   PLOG_FATAL << "Parsing typescript is not implement";
   exit(1);

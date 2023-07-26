@@ -10,14 +10,14 @@ namespace Rules::Interpreter::Language {
 struct GenericParseTreeTest: public ::testing::Test {
   // Generate arbitary parsetree contains
   // only N nodes (include the root node).
-  GenericParseTree genTreeWithN(const int n) {
-    GenericParseTree root{typeid(int)};
+  GenericParseTree<int> genTreeWithN(const int n) {
+    GenericParseTree<int> root{1};
 
-    std::function<void(GenericParseTree*,int)>
-      genSubTreeWithN = [&](GenericParseTree* root, int nsubs) {
+    std::function<void(GenericParseTree<int>*,int)>
+      genSubTreeWithN = [&](GenericParseTree<int>* root, int nsubs) {
         while (nsubs > 0) {
           // Create directly child
-          GenericParseTree& child = root->addChild(typeid(int));
+          GenericParseTree<int>& child = root->addChild(1);
           nsubs -= 1;
           if (nsubs == 0) { return; }
 
@@ -36,16 +36,16 @@ struct GenericParseTreeTest: public ::testing::Test {
 
 RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
   // Check basic case
-  GenericParseTree terminal{typeid(int)};
+  GenericParseTree<int> terminal{1};
   RC_ASSERT(terminal == terminal);
 
   // Assume ParseTree with N node satisfy
   // reflexivity.
-  GenericParseTree root = genTreeWithN(10);
+  GenericParseTree<int> root = genTreeWithN(10);
   RC_ASSERT(root == root);
 
   // Check N + 1 case
-  root.addChild(typeid(char));
+  root.addChild(2);
   RC_ASSERT(root == root);
 }
 

@@ -9,11 +9,13 @@
 #include <vector>
 #include <functional>
 #include <algorithm>
+#include <concepts>
 #include "antlr4-runtime.h"
 #include "rules/interpreter/utility.h"
 
 namespace Rules::Interpreter::Language {
 
+template<std::equality_comparable T>
 class GenericParseTree {
 public:
 
@@ -25,14 +27,13 @@ public:
   };
 
   using Childs = std::vector<GenericParseTree>;
-  using NodeType = std::type_info;
   using CharPosition = std::tuple<int, int>;
 
-  template<typename T>
-  constexpr static auto getRow = std::get<0, T>;
+  template<typename POS = int>
+  constexpr static auto getRow = std::get<0, POS>;
 
-  template<typename T>
-  constexpr static auto getColumn = std::get<0, T>;
+  template<typename POS = int>
+  constexpr static auto getColumn = std::get<0, POS>;
 
   GenericParseTree fromAntlr4(antlr4::tree::ParseTree& tree,
                               SUPPORTED_LANGUAGE lang);
@@ -41,10 +42,10 @@ public:
   // typeinfo in later construction.
   GenericParseTree(): type_{typeid(void)} {}
   // Terminal
-  GenericParseTree(const NodeType& type):
+  GenericParseTree(T type):
     type_{type} {}
 
-  GenericParseTree& addChild(const NodeType& type) {
+  GenericParseTree& addChild(T type) {
     return this->childs_.emplace_back(type);
   };
 
@@ -95,7 +96,7 @@ public:
   }
 
 private:
-  const NodeType& type_;
+  T type_;
   Childs childs_;
   // (pos of fisrt char, pos of last char)
   std::tuple<CharPosition, CharPosition> positions;
