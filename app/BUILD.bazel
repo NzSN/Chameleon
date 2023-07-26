@@ -7,5 +7,7 @@ cc_binary(
     ],
     deps = [
          "//parsers:ts_parser",
-         "@antlr4_runtime//:antlr4_runtime"],
+         "@antlr4_runtime//:antlr4_runtime",
+         "@plog//:plog"
+         ],
 )

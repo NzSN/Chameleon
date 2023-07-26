@@ -11,9 +11,15 @@ cc_test(
         "utility_unittests.cc",
         "//src/rules/interpreter/language:language_unittests_src"
         ],
-    copts = ["-std=c++2a", "-Isrc"],
+    copts = [
+          "-std=c++2a", "-Isrc",
+          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          ],
     deps = [
          "@com_google_googletest//:gtest_main",
          "@rapidcheck//:rapidcheck",
+         "@antlr4_runtime//:antlr4_runtime",
+         "@plog//:plog",
+         "//parsers:ts_parser",
          ],
 )

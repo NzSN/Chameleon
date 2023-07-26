@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 #include <rapidcheck/gtest.h>
 #include <typeinfo>
+#include <plog/Log.h>
 #include "generic_parsetree.h"
+#include <iostream>
 
 namespace Rules::Interpreter::Language {
 

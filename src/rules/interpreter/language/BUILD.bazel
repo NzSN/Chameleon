@@ -1,7 +1,10 @@
 
 filegroup(
     name = "generic_parsetree",
-    srcs = ["generic_parsetree.cc", "generic_parsetree.h"],
+    srcs = [
+         "generic_parsetree_antlr4.cc",
+         "generic_parsetree_libclang.cc",
+         "generic_parsetree.h"],
 )
 
 filegroup(
