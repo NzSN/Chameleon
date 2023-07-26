@@ -44,3 +44,9 @@ new_local_repository(
     path = "third_party/rapidcheck",
     build_file = "@//:bazel/external_builds/BUILD.rapidcheck"
 )
+
+new_local_repository(
+    name = "plog",
+    path = "third_party/plog",
+    build_file = "@//:bazel/external_builds/BUILD.plog"
+)

@@ -2,6 +2,9 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <plog/Log.h>
+#include <plog/Initializers/ConsoleInitializer.h>
+#include <plog/Formatters/TxtFormatter.h>
 #include "parsers/ts/TypeScriptLexer.h"
 #include "parsers/ts/TypeScriptParser.h"
 #include "parsers/ts/TypeScriptParserBaseListener.h"
@@ -34,6 +37,9 @@ public:
 
 
 int main(int argc, char *argv[]) {
+  plog::init<plog::TxtFormatterUtcTime>(plog::info, plog::streamStdOut);
+  PLOG_INFO << "Done";
+
   std::ifstream stream;
   stream.open(argv[1]);
 
@@ -54,6 +60,5 @@ int main(int argc, char *argv[]) {
 
   MyListener listener;
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
-
   return 0;
 }
