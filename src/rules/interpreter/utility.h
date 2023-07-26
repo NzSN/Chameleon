@@ -24,10 +24,9 @@ RT zip(T l, T r) {
       return RT{};
     }
 
+    RT zipped{};
     auto iter_l = std::begin(l);
     auto iter_r = std::begin(r);
-
-    RT zipped{};
 
     while (iter_l != std::end(l)) {
         zipped.push_back({*iter_l, *iter_r});

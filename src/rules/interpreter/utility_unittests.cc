@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
-#include <optional>
 #include <tuple>
-#include <iostream>
 #include "utility.h"
 #include "rapidcheck.h"
 #include "rapidcheck/gtest.h"
