@@ -16,31 +16,29 @@
 #include "code_str.h"
 #include "generator.h"
 
-namespace Rule{
-namespace Interpreter {
-namespace Language {
+namespace Rules::Interpreter::Language {
 
-template<typename T>
-concept Language = requires(T t, std::istream& is,
+template<typename L, typename B>
+concept Language = requires(L t, std::istream& is,
                             std::string str,
-                            GenericParseTree* tree) {
-  { t.parseTreeFromStream(is) } -> std::same_as<GenericParseTree*>;
-  { t.parseTreeFromString(str) } -> std::same_as<GenericParseTree*>;
+                            GenericParseTree<B>* tree) {
+  { t.parseTreeFromStream(is) } -> std::same_as<GenericParseTree<B>*>;
+  { t.parseTreeFromString(str) } -> std::same_as<GenericParseTree<B>*>;
   { t.convertParseTreeToStr(tree) } -> std::same_as<std::string>;
 };
 
-template<Language T>
+template<typename Backend, Language<Backend> L>
 struct MigrateInput {
   const std::istream& is;
-  const T& language;
-  GenericParseTree* tree_need_migrated;
+  const L& language;
+  GenericParseTree<Backend>* tree_need_migrated;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                MigrateRule                                //
 ///////////////////////////////////////////////////////////////////////////////
-template<Language T>
-class MigrateRule {
+template<typename Backend, Language<Backend> L>
+class RewriteRule {
 public:
 
   enum ERROR_CODE {
@@ -48,10 +46,10 @@ public:
     ERROR
   };
 
-  MigrateRule(std::string ident, OriginCode ocode, TargetCode tcode):
+  RewriteRule(std::string ident, OriginCode ocode, TargetCode tcode):
     identifier_(ident), origin_code_(ocode), target_code_(tcode) {}
 
-  std::unique_ptr<Generator::Generator> operator()(MigrateInput<T> input) const;
+  Generator::Generator operator()(MigrateInput<Backend, L> input) const;
 
 private:
   const std::string identifier_;
@@ -60,22 +58,22 @@ private:
   OriginCode target_code_;
 
   // ParseTree used to matching the codes that you want to migrate
-  std::unique_ptr<GenericParseTree> origin_tree_;
+  std::unique_ptr<GenericParseTree<Backend>> origin_tree_;
 };
 
-template<Language T>
-struct MigrateRules {
-  std::vector<MigrateRule<T>> rules;
-  MigrateRules(std::initializer_list<MigrateRule<T>> rule_list):
+template<typename Backend, Language<Backend> T>
+struct RewriteRules {
+  std::vector<RewriteRule<Backend, T>> rules;
+  RewriteRules(std::initializer_list<RewriteRule<Backend, T>> rule_list):
     rules{rule_list} {}
 
-  typename std::vector<MigrateRule<T>>::const_iterator
+  typename std::vector<RewriteRule<Backend, T>>::const_iterator
   begin() const { return std::begin(rules); }
 
-  typename std::vector<MigrateRule<T>>::const_iterator
+  typename std::vector<RewriteRule<Backend, T>>::const_iterator
   end() const { return std::end(rules); }
 
-  std::list<Generator::Generator> operator()(MigrateInput<T> input) const {
+  std::list<Generator::Generator> operator()(MigrateInput<Backend, T> input) const {
     std::list<Generator::Generator> gens;
 
     for (auto& rule: rules) {
@@ -89,25 +87,23 @@ struct MigrateRules {
 ///////////////////////////////////////////////////////////////////////////////
 //                                  Migrate                                  //
 ///////////////////////////////////////////////////////////////////////////////
-template<Language T>
-struct Migrate {
-  Migrate(std::initializer_list<MigrateRule<T>> rule_list):
-    migrate_rules{rule_list} {}
+template<typename Backend, Language<Backend> L>
+struct Prog {
+  Prog(std::initializer_list<RewriteRule<Backend, L>> rule_list):
+    rewrite_rules{rule_list} {}
 
-  MigrateRules<T> migrate_rules;
+  RewriteRules<Backend, L> rewrite_rules;
 
   // Evaluation of a 'Migrate' Entity is to perform actions to
   // migrating codes from 'istream' to 'ostream' with Rules within
   // the 'Migrate' Entity.
-  void operator()(MigrateInput<T> input, std::ostream& os) const {
-    std::list<Generator::Generator> gens = migrateRules(input);
+  void operator()(MigrateInput<Backend, L> input, std::ostream& os) const {
+    std::list<Generator::Generator> gens = rewrite_rules(input);
 
     // Do migrating
   }
 };
 
-} // Rule
-} // Interpreter
-} // Language
+} // Rules::Interpreter::Language
 
 #endif /* LANGUAGE_H */

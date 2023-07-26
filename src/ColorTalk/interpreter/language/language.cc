@@ -3,18 +3,20 @@
 #include <optional>
 #include <plog/Log.h>
 
-namespace Rule {
+namespace Rules {
 namespace Interpreter {
 namespace Language {
 
 using std::string;
-using ParseTree = antlr4::tree::ParseTree;
+template<typename Backend>
+using ParseTree = GenericParseTree<Backend>;
 using Generator = Generator::Generator;
 
 namespace {
 
-bool applyRule(ParseTree* mtree, /* Migrate Tree */
-               ParseTree* scheme, /* Origin scheme */
+template<typename Backend>
+bool applyRule(ParseTree<Backend>* mtree, /* Migrate Tree */
+               ParseTree<Backend>* scheme, /* Origin scheme */
                Generator& gen) {
   // Scheme maching
 
@@ -24,14 +26,14 @@ bool applyRule(ParseTree* mtree, /* Migrate Tree */
 
 }
 
-template<Language T>
-Generator MigrateRule<T>::operator()(
-  MigrateInput<T> input) const {
+template<typename Backend, Language<Backend> T>
+Generator RewriteRule<Backend, T>::operator()(
+  MigrateInput<Backend, T> input) const {
 
   Generator gen{target_code_};
 
   // Build ParseTree for origin codes
-  origin_tree_ = std::make_unique<antlr4::tree::ParseTree>(
+  origin_tree_ = std::make_unique<GenericParseTree<Backend>>(
     input.language.parseTreeFromString(origin_code_.codebytes()));
 
   // Iterate over the parse tree from input to find scheme
@@ -39,12 +41,10 @@ Generator MigrateRule<T>::operator()(
   bool success = applyRule(
     input.tree_need_migrated, origin_tree_, gen);
   if (!success) {
-    PLOG_FATAL << "There are some errors occurs during migrating codes.\n"
-
+    PLOG_FATAL << "There are some errors occurs during migrating source codes.\n"
                << "Code ParseTree:\n"
                << input.language.convertParseTreeToStr(
                  input.tree_need_migrated) << "\n"
-
                <<  "Match Tree:\n"
                << input.language.convertParseTreeToStr(
                  origin_tree_) << "\n";
@@ -56,4 +56,4 @@ Generator MigrateRule<T>::operator()(
 
 } // Language
 } // Interpreter
-} // Rule
+} // Rules

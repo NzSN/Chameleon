@@ -97,11 +97,12 @@ RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
 
   // Assume ParseTree with N node satisfy
   // reflexivity.
-  std::optional<GenericParseTree<int>> root = genTreeWithN(10);
+  std::optional<GenericParseTree<int>> root =
+    genTreeWithN(*rc::gen::inRange(1, 100));
   RC_ASSERT(root.value() == root.value());
 
   // Check N + 1 case
-  // First to select a place to add
+  // Select a place to add
   // a node randomly.
   GenericParseTree<int>& node = getNodeRandomly(root.value());
   node.addChild(1);

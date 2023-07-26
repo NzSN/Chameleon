@@ -4,7 +4,7 @@
 
 #include "code_str.h"
 
-namespace Rule {
+namespace Rules {
 namespace Interpreter {
 namespace Generator {
 
@@ -18,6 +18,6 @@ private:
 
 } // Generator
 } // Interpreter
-} // Rule
+} // Rules
 
 #endif /* GENERATOR_H */

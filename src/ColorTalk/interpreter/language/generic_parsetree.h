@@ -10,12 +10,27 @@
 #include <functional>
 #include <algorithm>
 #include <concepts>
+#include <variant>
 #include "antlr4-runtime.h"
 #include "ColorTalk/interpreter/utility.h"
 
 namespace Rules::Interpreter::Language {
 
-template<std::equality_comparable T>
+/////////////////////////////////////////////////////////////////////////////
+//                                 Backends                                //
+/////////////////////////////////////////////////////////////////////////////
+using NodeType = std::variant<void*, int>;
+template<typename T>
+concept Backend = std::equality_comparable<T> &&
+  requires(T t, NodeType l, NodeType r) {
+    { t.instance } -> std::same_as<T>;
+    { t.typeEqual(l, r) } -> std::same_as<bool>;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+//                             GenericParseTree                            //
+/////////////////////////////////////////////////////////////////////////////
+template<Backend T>
 class GenericParseTree {
 public:
 
