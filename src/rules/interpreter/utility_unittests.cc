@@ -42,20 +42,20 @@ RC_GTEST_FIXTURE_PROP(ZipTest, EqualSize, ()) {
   }
 }
 
-RC_GTEST_FIXTURE_PROP(ZipTest, DifferentSize, ()) {
+RC_GTEST_FIXTURE_PROP(ZipTest, ArbitarySize, ()) {
   const int size_l = *rc::gen::inRange(0, 100);
   const int size_r = *rc::gen::inRange(0, 100);
-
-  if (size_l == size_r) {
-    return;
-  }
 
   l = rdValVector(size_l);
   r = rdValVector(size_r);
 
   auto zipped = zip_vector<int>(l, r);
 
-  RC_ASSERT(zipped.size() == 0);
+  if (size_l == size_r) {
+    RC_ASSERT(zipped.size() == size_l);
+  } else {
+    RC_ASSERT(zipped.size() == 0);
+  }
 }
 
 } // Rules::Interpreter::Utility
