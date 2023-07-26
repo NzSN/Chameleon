@@ -15,7 +15,8 @@ Antlr4GPT fromAntlr4_CPP(Antlr4Tree& tree);
 template<>
 Antlr4GPT Antlr4GPT::fromAntlr4(
   Antlr4Tree& tree, SUPPORTED_LANGUAGE lang) {
-  GenericParseTree root{};
+  // Type of root node should be replace soon.
+  GenericParseTree root{typeid(void)};
 
   switch (lang) {
   case CPP:

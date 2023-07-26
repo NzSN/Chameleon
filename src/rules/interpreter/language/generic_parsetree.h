@@ -38,9 +38,6 @@ public:
   GenericParseTree fromAntlr4(antlr4::tree::ParseTree& tree,
                               SUPPORTED_LANGUAGE lang);
 
-  // The type_ field should be re-assign by a new
-  // typeinfo in later construction.
-  GenericParseTree(): type_{typeid(void)} {}
   // Terminal
   GenericParseTree(T type):
     type_{type} {}
