@@ -9,7 +9,7 @@ cc_test(
     srcs = [
         ":utility_src",
         "utility_unittests.cc",
-        "//src/rules/interpreter/language:language_unittests_src"
+        "//src/ColorTalk/interpreter/language:language_unittests_src"
         ],
     copts = [
           "-std=c++2a", "-Isrc",

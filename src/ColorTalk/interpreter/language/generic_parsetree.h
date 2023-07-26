@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <concepts>
 #include "antlr4-runtime.h"
-#include "rules/interpreter/utility.h"
+#include "ColorTalk/interpreter/utility.h"
 
 namespace Rules::Interpreter::Language {
 
