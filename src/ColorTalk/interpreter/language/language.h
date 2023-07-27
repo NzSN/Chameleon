@@ -47,18 +47,18 @@ public:
   };
 
   RewriteRule(std::string ident, OriginCode ocode, TargetCode tcode):
-    identifier_(ident), origin_code_(ocode), target_code_(tcode) {}
+    identifier_(ident), source_code_(ocode), target_code_(tcode) {}
 
   Generator::Generator operator()(MigrateInput<M, L> input) const;
 
 private:
   const std::string identifier_;
 
-  OriginCode origin_code_;
+  OriginCode source_code_;
   OriginCode target_code_;
 
   // ParseTree used to matching the codes that you want to migrate
-  std::unique_ptr<GenericParseTree<M>> origin_tree_;
+  std::unique_ptr<GenericParseTree<M>> source_tree_;
 };
 
 template<GPTMeta M, Language<M> T>
