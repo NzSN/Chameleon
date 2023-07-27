@@ -67,6 +67,12 @@ public:
   }
 
   bool operator==(const GenericParseTree& other) const {
+
+    // Backend checking
+    if (typeid(this->backend_) != typeid(other->backend_)) {
+      return false;
+    }
+
     // GenericParseTree is recursive type which requrie that
     // equality check should be recursive too.
     std::function<bool(const GenericParseTree& l,
@@ -74,7 +80,7 @@ public:
       equality_check = [&equality_check](
         const GenericParseTree& l, const GenericParseTree& r) {
         // Check node type
-        if (!(l.type_ == r.type_)) {
+        if (!(l.backend_.typeEqual(l.type_,  r.type_))) {
           return false;
         }
 
@@ -138,7 +144,9 @@ public:
 
 private:
   friend struct GenericParseTreeTest;
-  T type_;
+  NodeType type_;
+
+  T backend_;
   Childs childs_;
   // (pos of fisrt char, pos of last char)
   std::tuple<CharPosition, CharPosition> positions;
