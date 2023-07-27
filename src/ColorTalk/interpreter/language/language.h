@@ -88,8 +88,8 @@ struct RewriteRules {
 //                                  Migrate                                  //
 ///////////////////////////////////////////////////////////////////////////////
 template<GPTMeta M, Language<M> L>
-struct Prog {
-  Prog(std::initializer_list<RewriteRule<M, L>> rule_list):
+struct Trans {
+  Trans(std::initializer_list<RewriteRule<M, L>> rule_list):
     rewrite_rules{rule_list} {}
 
   RewriteRules<M, L> rewrite_rules;

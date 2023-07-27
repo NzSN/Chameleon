@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>
 #include <string>
+#include <typeinfo>
 #include <utility>
 
 #include "language.h"
@@ -11,7 +12,7 @@
 using std::string;
 using std::stringstream;
 
-namespace Rule {
+namespace Rules {
 namespace Interpreter {
 namespace Language {
 
@@ -35,17 +36,19 @@ struct LanguageForTesting {
     antlr4::CommonTokenStream tokens(&lexer);
     TestLangParser parser(&tokens);
 
+    // Convert antlr4::tree::ParseTree
+    // to GenericParseTree.
     return parser.prog();
   }
 
-  antlr4::tree::ParseTree* parseTreeFromStream(std::istream& is) {
+  GenericParseTree<std::type_info>* parseTreeFromStream(std::istream& is) {
     return GetParseTree(is);
   }
-  antlr4::tree::ParseTree* parseTreeFromString(std::string codestr) {
+  GenericParseTree<std::type_info>* parseTreeFromString(std::string codestr) {
     std::stringstream ss {codestr};
     return GetParseTree(ss);
   }
-  std::string convertParseTreeToStr(antlr4::tree::ParseTree* tree) {
+  std::string convertParseTreeToStr(GenericParseTree<std::type_info>* tree) {
     return "";
   }
 };
@@ -63,7 +66,7 @@ struct LanguageTest: public ::testing::Test {
 };
 
 TEST_F(LanguageTest, ReplacePlusByMulti_OneRule) {
-    Migrate<LanguageForTesting> migrate {
+    Trans<int, LanguageForTesting> migrate {
         // Rule to replace all '1+1' to '1*1'
         { "Plus2Multi",
           OriginCode {
