@@ -37,6 +37,8 @@ public:
     MINIMUM_LANG_INDEX = 0,
     TYPESCRIPT = 0,
     CPP = 1,
+    // Testing purposes
+    TESTLANG = 2,
     NUM_OF_LANG_SUPPORTED,
   };
 
@@ -139,7 +141,7 @@ public:
   // You can treat mapping as a functor mapping between
   // GenericParseTree and another ParseTree.
   template<typename O>
-  GenericParseTree<O> mapping(O o) {
+  static GenericParseTree<O> mapping(O o) {
     throw std::runtime_error("Implement required");
   }
 

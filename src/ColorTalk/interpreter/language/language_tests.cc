@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "language.h"
+#include "generic_parsetree_antlr4.h"
 #include "testLanguage/TestLangLexer.h"
 #include "testLanguage/TestLangParser.h"
 
@@ -30,25 +31,26 @@ public:
 struct LanguageForTesting {
   LanguageForTesting() {}
 
-  antlr4::tree::ParseTree* GetParseTree(std::istream& is, bool pretty = false) {
+  GenericParseTree<Antlr4Node> GetParseTree(std::istream& is, bool pretty = false) {
     antlr4::ANTLRInputStream input(is);
     TestLangLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
     TestLangParser parser(&tokens);
 
-    // Convert antlr4::tree::ParseTree
-    // to GenericParseTree.
-    return parser.prog();
+    antlr4::tree::ParseTree* tree = parser.prog();
+
+    return Antlr4GPT::mapping(
+      Antlr4Node{Antlr4GPT::TESTLANG, tree});
   }
 
-  GenericParseTree<std::type_info>* parseTreeFromStream(std::istream& is) {
+  GenericParseTree<Antlr4Node> parseTreeFromStream(std::istream& is) {
     return GetParseTree(is);
   }
-  GenericParseTree<std::type_info>* parseTreeFromString(std::string codestr) {
+  GenericParseTree<Antlr4Node> parseTreeFromString(std::string codestr) {
     std::stringstream ss {codestr};
     return GetParseTree(ss);
   }
-  std::string convertParseTreeToStr(GenericParseTree<std::type_info>* tree) {
+  std::string convertParseTreeToStr(GenericParseTree<Antlr4Node>* tree) {
     return "";
   }
 };
@@ -61,12 +63,12 @@ struct LanguageTest: public ::testing::Test {
         "2 * 3 + 2\n"
     };
 
-    MigrateInput<LanguageForTesting> input = {
+    MigrateInput<Antlr4Node, LanguageForTesting> input = {
         stringstream{inputProgram}, LanguageForTesting{}};
 };
 
 TEST_F(LanguageTest, ReplacePlusByMulti_OneRule) {
-    Trans<int, LanguageForTesting> migrate {
+    Trans<Antlr4Node, LanguageForTesting> migrate {
         // Rule to replace all '1+1' to '1*1'
         { "Plus2Multi",
           OriginCode {
@@ -85,7 +87,7 @@ TEST_F(LanguageTest, ReplacePlusByMulti_OneRule) {
 }
 
 TEST_F(LanguageTest, WithCommand) {
-    Migrate<LanguageForTesting> migrate {
+    Trans<Antlr4Node, LanguageForTesting> migrate {
         { "Plus2Multi",
           OriginCode {
               { "1 + 1" }

@@ -22,8 +22,8 @@ template<typename L, typename M>
 concept Language = requires(L t, std::istream& is,
                             std::string str,
                             GenericParseTree<M>* tree) {
-  { t.parseTreeFromStream(is) } -> std::same_as<GenericParseTree<M>*>;
-  { t.parseTreeFromString(str) } -> std::same_as<GenericParseTree<M>*>;
+  { t.parseTreeFromStream(is) } -> std::same_as<GenericParseTree<M>>;
+  { t.parseTreeFromString(str) } -> std::same_as<GenericParseTree<M>>;
   { t.convertParseTreeToStr(tree) } -> std::same_as<std::string>;
 };
 
