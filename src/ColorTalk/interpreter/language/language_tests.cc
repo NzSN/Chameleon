@@ -68,7 +68,7 @@ struct LanguageTest: public ::testing::Test {
 };
 
 TEST_F(LanguageTest, ReplacePlusByMulti_OneRule) {
-    Trans<Antlr4Node, LanguageForTesting> migrate {
+    Trans<Antlr4Node, LanguageForTesting> trans {
         // Rule to replace all '1+1' to '1*1'
         { "Plus2Multi",
           OriginCode {
@@ -81,13 +81,13 @@ TEST_F(LanguageTest, ReplacePlusByMulti_OneRule) {
     };
 
     stringstream s;
-    migrate(input, s);
+    trans(input, s);
 
     std::cout << s.str() << std::endl;
 }
 
 TEST_F(LanguageTest, WithCommand) {
-    Trans<Antlr4Node, LanguageForTesting> migrate {
+    Trans<Antlr4Node, LanguageForTesting> trans {
         { "Plus2Multi",
           OriginCode {
               { "1 + 1" }
@@ -104,10 +104,9 @@ TEST_F(LanguageTest, WithCommand) {
     };
 
     stringstream s;
-    migrate(input, s);
+    trans(input, s);
 
     std::cout << s.str() << std::endl;
-
 }
 
 

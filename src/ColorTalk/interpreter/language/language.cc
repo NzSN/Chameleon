@@ -8,17 +8,18 @@ namespace Interpreter {
 namespace Language {
 
 using std::string;
-template<typename Backend>
-using ParseTree = GenericParseTree<Backend>;
+template<GPTMeta T>
+using ParseTree = GenericParseTree<T>;
 using Generator = Generator::Generator;
 
 namespace {
 
-template<typename Backend>
-bool applyRule(ParseTree<Backend>* mtree, /* Migrate Tree */
-               ParseTree<Backend>* scheme, /* Origin scheme */
+template<GPTMeta T>
+bool applyRule(ParseTree<T>* mtree, /* Migrate Tree */
+               ParseTree<T>* scheme, /* Origin scheme */
                Generator& gen) {
   // Scheme maching
+
 
   // Failed to migrate
   return false;
@@ -26,17 +27,17 @@ bool applyRule(ParseTree<Backend>* mtree, /* Migrate Tree */
 
 }
 
-template<typename Backend, Language<Backend> T>
-Generator RewriteRule<Backend, T>::operator()(
-  MigrateInput<Backend, T> input) const {
+template<GPTMeta M, Language<M> T>
+Generator RewriteRule<M, T>::operator()(
+  MigrateInput<M, T> input) const {
 
   Generator gen{target_code_};
 
-  // Build ParseTree for origin codes
-  origin_tree_ = std::make_unique<GenericParseTree<Backend>>(
+  // Build ParseTree for origin pattern
+  origin_tree_ = std::make_unique<GenericParseTree<M>>(
     input.language.parseTreeFromString(origin_code_.codebytes()));
 
-  // Iterate over the parse tree from input to find scheme
+  // Iterate over the parse tree from input to find pattern
   // need to migrated.
   bool success = applyRule(
     input.tree_need_migrated, origin_tree_, gen);
