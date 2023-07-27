@@ -19,18 +19,16 @@ namespace Rules::Interpreter::Language {
 /////////////////////////////////////////////////////////////////////////////
 //                                 Backends                                //
 /////////////////////////////////////////////////////////////////////////////
-using NodeType = std::variant<void*, int>;
 template<typename T>
-concept Backend = std::equality_comparable<T> &&
-  requires(T t, NodeType l, NodeType r) {
-    { t.instance } -> std::same_as<T>;
-    { t.typeEqual(l, r) } -> std::same_as<bool>;
+concept GPTMeta = std::equality_comparable<T> &&
+  requires(T l, T r) {
+    { l == r } -> std::same_as<bool>;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 //                             GenericParseTree                            //
 /////////////////////////////////////////////////////////////////////////////
-template<Backend T>
+template<GPTMeta T>
 class GenericParseTree {
 public:
 
@@ -55,8 +53,8 @@ public:
                               SUPPORTED_LANGUAGE lang);
 
   // Terminal
-  GenericParseTree(T type):
-    type_{type} {}
+  GenericParseTree(T meta):
+    meta_{meta} {}
 
   GenericParseTree& addChild(T type) {
     return childs_.emplace_back(type);
@@ -67,12 +65,6 @@ public:
   }
 
   bool operator==(const GenericParseTree& other) const {
-
-    // Backend checking
-    if (typeid(this->backend_) != typeid(other->backend_)) {
-      return false;
-    }
-
     // GenericParseTree is recursive type which requrie that
     // equality check should be recursive too.
     std::function<bool(const GenericParseTree& l,
@@ -80,7 +72,7 @@ public:
       equality_check = [&equality_check](
         const GenericParseTree& l, const GenericParseTree& r) {
         // Check node type
-        if (!(l.backend_.typeEqual(l.type_,  r.type_))) {
+        if (!(l.meta == r.meta_)) {
           return false;
         }
 
@@ -144,9 +136,8 @@ public:
 
 private:
   friend struct GenericParseTreeTest;
-  NodeType type_;
+  T meta_;
 
-  T backend_;
   Childs childs_;
   // (pos of fisrt char, pos of last char)
   std::tuple<CharPosition, CharPosition> positions;
