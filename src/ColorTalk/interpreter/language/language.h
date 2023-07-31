@@ -12,9 +12,9 @@
 #include <concepts>
 #include <utility>
 
-#include "generic_parsetree.h"
-#include "code_str.h"
 #include "generator.h"
+#include "generic_parsetree_inl.h"
+#include "code_str.h"
 
 namespace Rules::Interpreter::Language {
 
@@ -49,7 +49,7 @@ public:
   RewriteRule(std::string ident, OriginCode ocode, TargetCode tcode):
     identifier_(ident), source_code_(ocode), target_code_(tcode) {}
 
-  Generator::Generator operator()(MigrateInput<M, L> input) const;
+  Generator operator()(MigrateInput<M, L> input) const;
 
 private:
   const std::string identifier_;
@@ -73,8 +73,8 @@ struct RewriteRules {
   typename std::vector<RewriteRule<M, T>>::const_iterator
   end() const { return std::end(rules); }
 
-  std::list<Generator::Generator> operator()(MigrateInput<M, T> input) const {
-    std::list<Generator::Generator> gens;
+  std::list<Generator> operator()(MigrateInput<M, T> input) const {
+    std::list<Generator> gens;
 
     for (auto& rule: rules) {
       gens.push_back(std::move(rule(input)));
@@ -98,7 +98,7 @@ struct Trans {
   // migrating codes from 'istream' to 'ostream' with Rules within
   // the 'Migrate' Entity.
   void operator()(MigrateInput<M, L> input, std::ostream& os) const {
-    std::list<Generator::Generator> gens = rewrite_rules(input);
+    std::list<Generator> gens = rewrite_rules(input);
 
     // Do migrating
   }

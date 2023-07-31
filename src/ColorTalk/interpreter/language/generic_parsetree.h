@@ -18,7 +18,7 @@
 namespace Rules::Interpreter::Language {
 
 /////////////////////////////////////////////////////////////////////////////
-//                                 Backends                                //
+//                                 Concepts                                //
 /////////////////////////////////////////////////////////////////////////////
 template<typename T>
 concept GPTMeta = std::equality_comparable<T> &&
@@ -26,13 +26,23 @@ concept GPTMeta = std::equality_comparable<T> &&
     { l == r } -> std::same_as<bool>;
 };
 
+using CharPosition = std::tuple<int, int>;
+using SrcRange = std::tuple<CharPosition, CharPosition>;
+template<typename T>
+concept GPTMappable = GPTMeta<T> && requires(T t) {
+  // Traversable
+  { t.childs() } -> std::ranges::range;
+  // Source information
+  { t.sourceRange() } -> std::same_as<SrcRange>;
+};
+
+
 /////////////////////////////////////////////////////////////////////////////
 //                             GenericParseTree                            //
 /////////////////////////////////////////////////////////////////////////////
 template<GPTMeta T>
 class GenericParseTree {
 public:
-
   enum SUPPORTED_LANGUAGE {
     MINIMUM_LANG_INDEX = 0,
     TYPESCRIPT = 0,
@@ -43,16 +53,10 @@ public:
   };
 
   using Childs = std::vector<GenericParseTree>;
-  using CharPosition = std::tuple<int, int>;
   using GPTIterator = Childs::iterator;
 
-  template<typename POS = int>
-  constexpr static auto getRow = std::get<0, POS>;
-  template<typename POS = int>
-  constexpr static auto getColumn = std::get<0, POS>;
-
   // Terminal
-  GenericParseTree(T meta):
+  GenericParseTree(T* meta):
     meta_{meta} {}
 
   GenericParseTree& addChild(T type) {
@@ -63,67 +67,13 @@ public:
     return std::begin(childs_);
   }
 
-  bool operator==(const GenericParseTree& other) const {
-    // GenericParseTree is recursive type which requrie that
-    // equality check should be recursive too.
-    std::function<bool(const GenericParseTree& l,
-                       const GenericParseTree& r)>
-      equality_check = [&equality_check](
-        const GenericParseTree& l, const GenericParseTree& r) {
-        // Check node type
-        if (!(l.meta_ == r.meta_)) {
-          return false;
-        }
-
-        // Check equality of childs
-        if (l.childs_.size() != r.childs_.size()) {
-          return false;
-        } else {
-          // Terminal
-          if (l.childs_.size() == 0) {
-            return true;
-          }
-
-          auto zipped = Utility::zip_vector<GenericParseTree>(
-            l.childs_, r.childs_);
-          if (zipped.size() == 0) { return false; }
-
-          for (auto& [thisChilds, otherChilds]: zipped) {
-            if (!equality_check(thisChilds, otherChilds)) {
-              return false;
-            }
-          }
-          return true;
-        }
-    };
-
-    return equality_check(*this, other);
-  }
+  bool operator==(const GenericParseTree& other) const;
 
   GenericParseTree* select(
-    std::function<bool(GenericParseTree&)> predicate) {
-
-    GenericParseTree* tree = NULL;
-    traverse([&](GenericParseTree& node) {
-      if (predicate(node)) {
-        tree = &node;
-        return false;
-      } else {
-        return true;
-      }
-    });
-
-    return tree;
-  }
+    std::function<bool(GenericParseTree&)> predicate);
 
   void traverse(
-    std::function<bool(GenericParseTree&)> proc) {
-
-    if (!proc(*this)) return;
-    for (auto& c: childs_) {
-      c.traverse(proc);
-    }
-  }
+    std::function<bool(GenericParseTree&)> proc);
 
   CharPosition getStartPos() const {
     return std::get<0>(positions);
@@ -140,19 +90,18 @@ public:
   //
   // You can treat mapping as a functor mapping between
   // GenericParseTree and another ParseTree.
-  template<typename O>
-  static GenericParseTree<O> mapping(O o) {
-    throw std::runtime_error("Implement required");
-  }
-
+  static GenericParseTree mapping(T& o)
+  requires GPTMappable<T>;
 
 private:
   friend struct GenericParseTreeTest;
-  T meta_;
-
+  // GenericParseTree does not owning resource
+  // of a specific tree which contain metainfo
+  // of sentence, just let the type to be T* .
+  T* meta_;
   Childs childs_;
   // (pos of fisrt char, pos of last char)
-  std::tuple<CharPosition, CharPosition> positions;
+  SrcRange positions;
 };
 
 } // Rules::Interpreter::Language
