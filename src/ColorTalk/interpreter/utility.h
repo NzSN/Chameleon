@@ -73,16 +73,14 @@ template<std::derived_from<antlr4::Lexer> Lexer,
          std::derived_from<antlr4::Parser> Parser,
          typename Entry>
 using Antlr4ParseEnvUniquePtr = std::unique_ptr<Antlr4ParseEnv<Lexer, Parser, Entry>>;
+
 template<std::derived_from<antlr4::Lexer> Lexer,
          std::derived_from<antlr4::Parser> Parser,
          typename Entry>
-std::unique_ptr<Antlr4ParseEnv<Lexer, Parser, Entry>>
-Antlr4_GenParseTree(
-  std::string sentences, Entry entry) {
-
-  std::unique_ptr<Antlr4ParseEnv<Lexer, Parser, Entry>> env =
-    std::make_unique<Antlr4ParseEnv<Lexer, Parser, Entry>>(sentences, entry);
-  return env;
+Antlr4ParseEnvUniquePtr<Lexer, Parser, Entry>
+Antlr4_GenParseTree(std::string sentences, Entry entry) {
+  return std::make_unique<
+    Antlr4ParseEnv<Lexer, Parser, Entry>>(sentences, entry);
 }
 
 } // Rules::Interpreter::Utility

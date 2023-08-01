@@ -1,0 +1,6 @@
+
+filegroup(
+    name = "testLang_parser_srcs",
+    srcs = glob(["*.cpp", "*.h", "*.tokens", "*.interp"]),
+    visibility = ["//visibility:public"]
+)
