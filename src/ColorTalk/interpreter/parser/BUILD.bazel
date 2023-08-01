@@ -8,9 +8,11 @@ filegroup(
 cc_test(
     name = "chameleons_parser_tests",
     srcs = [":chameleons_parser_srcs",
-            "ChameleonsParser_tests.cc"],
+            "ChameleonsParser_unittests.cc",
+            "//src/ColorTalk/interpreter:utility_src"],
     copts = [
           "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          "-Isrc",
           "-std=c++2a"],
     linkopts = ["-lglog", "-lfmt"],
     deps = [
