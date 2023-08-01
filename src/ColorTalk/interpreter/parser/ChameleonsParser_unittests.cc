@@ -7,17 +7,23 @@
 namespace Utility = Rules::Interpreter::Utility;
 
 struct ChameleonsTest: public ::testing::Test {
+  typedef ChameleonsParser::ProgContext* (ChameleonsParser::*Entry)();
   std::string GetParseTree(std::string prog, bool pretty = false) {
-    ChameleonsParser::ProgContext* (ChameleonsParser::*entry)();
+    Entry entry;
     entry = &ChameleonsParser::prog;
 
-    return Utility::Antlr4_GenParseTree<
+    env = Utility::Antlr4_GenParseTree<
       ChameleonsLexer, ChameleonsParser>(prog, entry);
+
+    return env->tree->toStringTree(&env->parser, pretty);
   }
 
   bool ParseTreeMatching(std::string prog, std::string parseTree) {
     return GetParseTree(prog) == parseTree;
   }
+
+  Utility::Antlr4ParseEnvUniquePtr<
+    ChameleonsLexer, ChameleonsParser, Entry> env;
 
 };
 

@@ -42,6 +42,29 @@ RT zip(T l, T r) {
     return zipped;
 }
 
+
+template<std::derived_from<antlr4::Lexer> Lexer,
+         std::derived_from<antlr4::Parser> Parser,
+         typename Entry>
+struct Antlr4ParseEnv {
+  Antlr4ParseEnv(std::string sentences, Entry entry):
+    inputStream{sentences},
+    input{inputStream},
+    tokens{&lexer},
+    lexer{&input},
+    parser{&tokens} {
+
+    tree = (parser.*(entry))();
+  }
+
+  std::istringstream inputStream;
+  antlr4::ANTLRInputStream input;
+  antlr4::CommonTokenStream tokens;
+  Lexer lexer;
+  Parser parser;
+  antlr4::tree::ParseTree* tree;
+};
+
 template<typename T>
 const auto& zip_vector =
   zip<T, std::vector<std::tuple<T, T>>, const std::vector<T>&>;
@@ -49,17 +72,17 @@ const auto& zip_vector =
 template<std::derived_from<antlr4::Lexer> Lexer,
          std::derived_from<antlr4::Parser> Parser,
          typename Entry>
-std::string Antlr4_GenParseTree(
+using Antlr4ParseEnvUniquePtr = std::unique_ptr<Antlr4ParseEnv<Lexer, Parser, Entry>>;
+template<std::derived_from<antlr4::Lexer> Lexer,
+         std::derived_from<antlr4::Parser> Parser,
+         typename Entry>
+std::unique_ptr<Antlr4ParseEnv<Lexer, Parser, Entry>>
+Antlr4_GenParseTree(
   std::string sentences, Entry entry) {
 
-  std::stringstream ss(sentences);
-  antlr4::ANTLRInputStream input(ss);
-  Lexer lexer(&input);
-  antlr4::CommonTokenStream tokens(&lexer);
-  Parser parser(&tokens);
-
-  antlr4::tree::ParseTree* tree = (parser.*(entry))();
-  return tree->toStringTree(&parser);
+  std::unique_ptr<Antlr4ParseEnv<Lexer, Parser, Entry>> env =
+    std::make_unique<Antlr4ParseEnv<Lexer, Parser, Entry>>(sentences, entry);
+  return env;
 }
 
 } // Rules::Interpreter::Utility

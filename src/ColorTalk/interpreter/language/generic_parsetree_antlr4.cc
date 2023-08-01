@@ -36,7 +36,7 @@ SrcRange Antlr4Node::sourceRange() const {
     {
       rctx->getStop()->getLine(),
       rctx->getStop()->getCharPositionInLine(),
-    }}
+    }};
 }
 
 } // Rules::Interpreter::Language

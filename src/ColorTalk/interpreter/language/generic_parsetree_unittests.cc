@@ -2,14 +2,21 @@
 #include <rapidcheck/gtest.h>
 #include <typeinfo>
 #include <plog/Log.h>
+#include <plog/Initializers/ConsoleInitializer.h>
+#include <plog/Formatters/TxtFormatter.h>
 #include "generic_parsetree_inl.h"
 #include "generic_parsetree_antlr4.h"
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include <optional>
+#include <memory>
+
+#include "testLanguage/TestLangLexer.h"
+#include "testLanguage/TestLangParser.h"
 
 #include "ColorTalk/interpreter/utility.h"
+#include "misc/Interval.h"
 
 namespace Rules::Interpreter::Language {
 
@@ -119,16 +126,24 @@ RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
 namespace Utility = Rules::Interpreter::Utility;
 
 struct Antlr4GPTTests: public ::testing::Test {
+  typedef TestLangParser::ProgContext* (TestLangParser::*Entry)();
   void SetUp() final {
-    ss = std::istringstream{
-      "1+1\n"
-      "1*1\n"
-    };
+    plog::init<plog::TxtFormatterUtcTime>(plog::debug, plog::streamStdOut);
+    Entry entry;
+    entry = &TestLangParser::prog;
+
+    env = Utility::Antlr4_GenParseTree<
+      TestLangLexer, TestLangParser>(
+          "1+1\n", entry);
   }
-  std::istringstream ss;
+
+  std::unique_ptr<
+    Utility::Antlr4ParseEnv<
+      TestLangLexer, TestLangParser, Entry>> env;
 };
 
 RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, Basics, ()) {
+  RC_ASSERT_FALSE(env->tree == nullptr);
 
 }
 
