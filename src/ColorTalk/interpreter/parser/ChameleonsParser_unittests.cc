@@ -7,7 +7,7 @@
 namespace Utility = Rules::Interpreter::Utility;
 
 struct ChameleonsTest: public ::testing::Test {
-  typedef ChameleonsParser::ProgContext* (ChameleonsParser::*Entry)();
+  using Entry = ChameleonsParser::ProgContext* (ChameleonsParser::*)();
   std::string GetParseTree(std::string prog, bool pretty = false) {
     Entry entry;
     entry = &ChameleonsParser::prog;

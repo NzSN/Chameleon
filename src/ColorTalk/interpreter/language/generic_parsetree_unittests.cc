@@ -126,7 +126,7 @@ RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
 namespace Utility = Rules::Interpreter::Utility;
 
 struct Antlr4GPTTests: public ::testing::Test {
-  typedef TestLangParser::ProgContext* (TestLangParser::*Entry)();
+  using Entry = TestLangParser::ProgContext* (TestLangParser::*)();
   void SetUp() final {
     plog::init<plog::TxtFormatterUtcTime>(plog::debug, plog::streamStdOut);
     Entry entry;
