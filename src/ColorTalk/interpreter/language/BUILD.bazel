@@ -3,7 +3,9 @@ filegroup(
     name = "generic_parsetree",
     srcs = [
          "generic_parsetree_antlr4.cc",
+         "generic_parsetree_antlr4.h",
          "generic_parsetree_libclang.cc",
+         "generic_parsetree_inl.h",
          "generic_parsetree.h"],
 )
 

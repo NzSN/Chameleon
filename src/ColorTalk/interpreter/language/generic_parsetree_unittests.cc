@@ -2,10 +2,14 @@
 #include <rapidcheck/gtest.h>
 #include <typeinfo>
 #include <plog/Log.h>
-#include "generic_parsetree.h"
+#include "generic_parsetree_inl.h"
+#include "generic_parsetree_antlr4.h"
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <optional>
+
+#include "ColorTalk/interpreter/utility.h"
 
 namespace Rules::Interpreter::Language {
 
@@ -107,6 +111,25 @@ RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
   GenericParseTree<int>& node = getNodeRandomly(root.value());
   node.addChild(1);
   RC_ASSERT(root.value() == root.value());
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//                           Antlr4GPT Unittests                           //
+/////////////////////////////////////////////////////////////////////////////
+namespace Utility = Rules::Interpreter::Utility;
+
+struct Antlr4GPTTests: public ::testing::Test {
+  void SetUp() final {
+    ss = std::istringstream{
+      "1+1\n"
+      "1*1\n"
+    };
+  }
+  std::istringstream ss;
+};
+
+RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, Basics, ()) {
+
 }
 
 } // Rules::Interpreter::Language

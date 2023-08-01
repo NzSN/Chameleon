@@ -12,18 +12,17 @@ namespace Rules::Interpreter::Language {
 // With Antlr4Node, user able to spawn a
 // GenericParseTree from Antlr4Node by calling to
 // method Antlr4GPT::mapping().
-struct Antlr4Node {
+class Antlr4Node {
+public:
   const int lang;
-  antlr4::tree::ParseTree* tree;
-
   Antlr4Node(int lang1, antlr4::tree::ParseTree* t1):
     lang{lang1}, tree{t1} {}
 
-  Antlr4Node& preorder_traverse();
-  SrcRange sourceRange();
-
+  SrcRange sourceRange() const;
   std::vector<antlr4::tree::ParseTree> childs();
   bool operator==(const Antlr4Node&) const;
+private:
+  antlr4::tree::ParseTree* tree;
 };
 using Antlr4GPT = GenericParseTree<Antlr4Node>;
 

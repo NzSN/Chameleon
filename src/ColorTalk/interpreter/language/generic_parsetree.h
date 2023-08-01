@@ -58,6 +58,8 @@ public:
   // Terminal
   GenericParseTree(T* meta):
     meta_{meta} {}
+  GenericParseTree(const T& meta):
+    meta_{}, metaRef{meta} {}
 
   GenericParseTree& addChild(T type) {
     return childs_.emplace_back(type);
@@ -98,7 +100,9 @@ private:
   // GenericParseTree does not owning resource
   // of a specific tree which contain metainfo
   // of sentence, just let the type to be T* .
-  T* meta_;
+  const T* meta_;
+  const T& metaRef;
+
   Childs childs_;
   // (pos of fisrt char, pos of last char)
   SrcRange positions;
