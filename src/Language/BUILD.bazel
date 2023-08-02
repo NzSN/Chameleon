@@ -1,0 +1,26 @@
+filegroup(
+    name = "language_srcs",
+    srcs = ["language.h", "language_inl.h", "language.cc"],
+    visibility = ["//visibility:public"]
+)
+
+cc_test(
+    name = "language_unittests",
+    srcs = [
+         ":language_srcs",
+         "language_unittests.cc",
+         "//src/Misc/testLanguage:testLang_parser_srcs",
+         "//src:utility_src"],
+    copts = [
+          "-Isrc",
+          "-std=c++2a",
+          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          ],
+    deps = [
+         "@com_google_googletest//:gtest_main",
+         "@rapidcheck//:rapidcheck",
+         "@antlr4_runtime//:antlr4_runtime",
+         "@plog//:plog",
+         ]
+)

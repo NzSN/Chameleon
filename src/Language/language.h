@@ -1,5 +1,6 @@
 #include <concepts>
 #include <string>
+#include <memory>
 
 #ifndef LANGUAGE_H
 #define LANGUAGE_H
@@ -7,29 +8,37 @@
 namespace Language {
 
 template<typename T>
-concept TreelikeStruct = requires(T t) {
-  { t.childs() } -> std::ranges::range;
+concept Treelike = requires(T t) {
+  { t.children } -> std::ranges::range;
 };
-
 template<typename T, typename TR>
-concept Parser = TreelikeStruct<TR> && requires(T t, std::string sentences) {
-  { t.parse(sentences) } -> std::same_as<TR>;
+concept Parser = Treelike<TR> &&
+  requires(T t, std::string sentences) {
+    { t.parse(sentences) } -> std::same_as<TR*>;
 };
 
 
-template<TreelikeStruct T, Parser<T> P>
+template<Treelike T, Parser<T> P>
 class Language {
 public:
-  // The caller of Language<T,P>::parse should
-  // not owning the parsetree return from it. Due
-  // to the varity of exists parsers, the parsetree
-  // may owning by another entity reside in the
-  // parser we used to parse the input sentences.
-  T* parse(std::string sentences);
+  // Default constructor may be implicit delted
+  // just make it explicit so interface could be
+  // consistency even if 'P' is varing.
+  Language() = delete;
 
+  Language(std::string sentence): tree_{} {
+    parser_ = std::make_unique<P>(sentence);
+    tree_ = parser_->parse(sentence);
+  };
 
+  T* tree() {
+    return tree_;
+  }
+
+private:
+  T* tree_;
+  std::unique_ptr<P> parser_;
 };
-
 
 } // Language
 
