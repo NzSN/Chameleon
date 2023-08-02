@@ -15,6 +15,6 @@ filegroup(
          # Generic ParseTree
          ":generic_parsetree",
          "generic_parsetree_unittests.cc",
-         "//src/Base/testLanguage:testLang_parser_srcs"],
+         "//src/Misc/testLanguage:testLang_parser_srcs"],
     visibility = ["//visibility:public"],
 )

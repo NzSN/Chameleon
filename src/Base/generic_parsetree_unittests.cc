@@ -12,8 +12,8 @@
 #include <optional>
 #include <memory>
 
-#include "testLanguage/TestLangLexer.h"
-#include "testLanguage/TestLangParser.h"
+#include "Misc/testLanguage/TestLangLexer.h"
+#include "Misc/testLanguage/TestLangParser.h"
 
 #include "utility.h"
 #include "misc/Interval.h"
