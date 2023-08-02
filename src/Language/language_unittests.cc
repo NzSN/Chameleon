@@ -47,6 +47,7 @@ struct TestWithTestLang: public ::testing::Test {
 RC_GTEST_FIXTURE_PROP(TestWithTestLang, Basics, ()) {
   ANTLRLang lang = getLang("1+1\n");
   RC_ASSERT(lang.tree() != nullptr);
+  RC_ASSERT(lang.tree()->getText() == "1+1\n");
 }
 
 } // Language
