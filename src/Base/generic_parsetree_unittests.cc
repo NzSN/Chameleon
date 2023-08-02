@@ -15,7 +15,7 @@
 #include "testLanguage/TestLangLexer.h"
 #include "testLanguage/TestLangParser.h"
 
-#include "ColorTalk/interpreter/utility.h"
+#include "utility.h"
 #include "misc/Interval.h"
 
 namespace Rules::Interpreter::Language {

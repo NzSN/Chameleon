@@ -9,7 +9,7 @@ cc_test(
     name = "chameleons_parser_tests",
     srcs = [":chameleons_parser_srcs",
             "ChameleonsParser_unittests.cc",
-            "//src/ColorTalk/interpreter:utility_src"],
+            "//src:utility_src"],
     copts = [
           "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           "-Isrc",

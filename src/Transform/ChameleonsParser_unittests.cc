@@ -1,6 +1,6 @@
 #include <sstream>
 #include <gtest/gtest.h>
-#include "ColorTalk/interpreter/utility.h"
+#include "utility.h"
 #include "ChameleonsLexer.h"
 #include "ChameleonsParser.h"
 

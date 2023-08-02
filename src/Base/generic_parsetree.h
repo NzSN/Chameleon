@@ -13,7 +13,7 @@
 #include <variant>
 #include <exception>
 #include "antlr4-runtime.h"
-#include "ColorTalk/interpreter/utility.h"
+#include "utility.h"
 
 namespace Rules::Interpreter::Language {
 

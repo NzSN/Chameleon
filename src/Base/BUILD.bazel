@@ -15,6 +15,6 @@ filegroup(
          # Generic ParseTree
          ":generic_parsetree",
          "generic_parsetree_unittests.cc",
-         "//src/ColorTalk/interpreter/language/testLanguage:testLang_parser_srcs"],
+         "//src/Base/testLanguage:testLang_parser_srcs"],
     visibility = ["//visibility:public"],
 )
