@@ -57,6 +57,9 @@ struct Antlr4ParseEnv {
     tree = (parser.*(entry))();
   }
 
+  /* Caution: Order is important here, don't
+   *          change the order of those declarations
+   *          unless you know what you are doing. */
   std::istringstream inputStream;
   antlr4::ANTLRInputStream input;
   antlr4::CommonTokenStream tokens;
