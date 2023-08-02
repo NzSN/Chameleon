@@ -3,7 +3,7 @@
 
 #include "generic_parsetree.h"
 
-namespace Rules::Interpreter::Language {
+namespace Base {
 
 template<GPTMeta T>
 bool GenericParseTree<T>::operator==(
@@ -95,6 +95,6 @@ GenericParseTree<T>::mapping(T& other)
 }
 
 
-} // Rules::Interpreter::Language
+} // Base
 
 #endif /* GENERIC_PARSETREE_INL_H */

@@ -11,7 +11,7 @@
 
 #include "antlr4-runtime.h"
 
-namespace Rules::Interpreter::Utility {
+namespace Utility {
 
 template<typename T, typename E>
 concept RangeTuple = std::ranges::range<T> &&
@@ -86,6 +86,6 @@ Antlr4_GenParseTree(std::string sentences, Entry entry) {
     Antlr4ParseEnv<Lexer, Parser, Entry>>(sentences, entry);
 }
 
-} // Rules::Interpreter::Utility
+} // Utility
 
 #endif /* UTILITY_H */

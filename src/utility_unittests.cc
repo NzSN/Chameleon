@@ -4,7 +4,7 @@
 #include <tuple>
 #include "utility.h"
 
-namespace Rules::Interpreter::Utility {
+namespace Utility {
 
 struct ZipTest: public ::testing::Test {
   std::vector<int> rdValVector(int size) {
@@ -56,4 +56,4 @@ RC_GTEST_FIXTURE_PROP(ZipTest, ArbitarySize, ()) {
   }
 }
 
-} // Rules::Interpreter::Utility
+} // Utility

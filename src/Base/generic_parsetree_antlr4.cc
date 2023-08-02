@@ -1,7 +1,7 @@
 #include "tree/ParseTreeType.h"
 #include "generic_parsetree_antlr4.h"
 
-namespace Rules::Interpreter::Language {
+namespace Base {
 
 bool Antlr4Node::operator==(const Antlr4Node& node) const {
   if (this->tree->getTreeType() !=
@@ -39,4 +39,4 @@ SrcRange Antlr4Node::sourceRange() const {
     }};
 }
 
-} // Rules::Interpreter::Language
+} // Base

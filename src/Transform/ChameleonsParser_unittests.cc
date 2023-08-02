@@ -4,8 +4,6 @@
 #include "ChameleonsLexer.h"
 #include "ChameleonsParser.h"
 
-namespace Utility = Rules::Interpreter::Utility;
-
 struct ChameleonsTest: public ::testing::Test {
   using Entry = ChameleonsParser::ProgContext* (ChameleonsParser::*)();
   std::string GetParseTree(std::string prog, bool pretty = false) {

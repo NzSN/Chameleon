@@ -15,7 +15,7 @@
 #include "antlr4-runtime.h"
 #include "utility.h"
 
-namespace Rules::Interpreter::Language {
+namespace Base {
 
 /////////////////////////////////////////////////////////////////////////////
 //                                 Concepts                                //
@@ -108,6 +108,6 @@ private:
   SrcRange positions;
 };
 
-} // Rules::Interpreter::Language
+} // Base
 
 #endif /* GENERIC_PARSETREE_H */

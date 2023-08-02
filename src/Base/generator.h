@@ -4,9 +4,7 @@
 
 #include "code_str.h"
 
-namespace Rules {
-namespace Interpreter {
-namespace Generator {
+namespace Base {
 
 // Generator responsible to generate target code string.
 class Generator {
@@ -16,8 +14,6 @@ public:
 private:
 };
 
-} // Generator
-} // Interpreter
 } // Rules
 
 #endif /* GENERATOR_H */

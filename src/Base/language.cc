@@ -3,12 +3,9 @@
 #include <optional>
 #include <plog/Log.h>
 
-namespace Rules {
-namespace Interpreter {
-namespace Language {
+namespace Base {
 
 using std::string;
-using Generator = Generator::Generator;
 
 namespace {
 
@@ -52,6 +49,4 @@ Generator RewriteRule<M, T>::operator()(
   return gen;
 }
 
-} // Language
-} // Interpreter
-} // Rules
+} // Base

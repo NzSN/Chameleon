@@ -18,7 +18,7 @@
 #include "utility.h"
 #include "misc/Interval.h"
 
-namespace Rules::Interpreter::Language {
+namespace Base {
 
 struct GenericParseTreeTest: public ::testing::Test {
   // Generate arbitary parsetree contains
@@ -123,8 +123,6 @@ RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
 /////////////////////////////////////////////////////////////////////////////
 //                           Antlr4GPT Unittests                           //
 /////////////////////////////////////////////////////////////////////////////
-namespace Utility = Rules::Interpreter::Utility;
-
 struct Antlr4GPTTests: public ::testing::Test {
   using Entry = TestLangParser::ProgContext* (TestLangParser::*)();
   void SetUp() final {
@@ -147,4 +145,4 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, Basics, ()) {
 
 }
 
-} // Rules::Interpreter::Language
+} // Base

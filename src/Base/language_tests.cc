@@ -6,16 +6,14 @@
 
 #include "language.h"
 #include "generic_parsetree_antlr4.h"
-#include "testLanguage/TestLangLexer.h"
-#include "testLanguage/TestLangParser.h"
+#include "Misc/testLanguage/TestLangLexer.h"
+#include "Misc/testLanguage/TestLangParser.h"
 
 
 using std::string;
 using std::stringstream;
 
-namespace Rules {
-namespace Interpreter {
-namespace Language {
+namespace Base {
 
 class CodeStrImpl: public CodeStr {
 public:
@@ -110,6 +108,4 @@ TEST_F(LanguageTest, WithCommand) {
 }
 
 
-} // Rule
-} // Interpreter
-} // Language
+} // Base

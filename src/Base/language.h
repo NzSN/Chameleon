@@ -16,7 +16,7 @@
 #include "generic_parsetree_inl.h"
 #include "code_str.h"
 
-namespace Rules::Interpreter::Language {
+namespace Base {
 
 template<typename L, typename M>
 concept Language = requires(L t, std::istream& is,
