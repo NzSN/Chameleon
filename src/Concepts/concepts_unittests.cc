@@ -8,6 +8,7 @@
 
 
 namespace Concepts {
+namespace NAryTree {
 
 struct NAryTreeTests: public ::testing::Test {
   struct TreeNary_T1 {
@@ -76,5 +77,5 @@ RC_GTEST_FIXTURE_PROP(NAryTreeTests, Equal, ()) {
   RC_ASSERT(isEqual);
 }
 
-
+} // NAryTree
 } // Concepts

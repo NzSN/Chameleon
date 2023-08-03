@@ -7,7 +7,7 @@
 #include <functional>
 #include <utility>
 
-namespace Concepts {
+namespace Concepts::NAryTree {
 
 template<typename T, typename V>
 concept Children_t = std::ranges::range<T> &&
@@ -74,7 +74,7 @@ bool equal(const T& l, const R& r,
     const T& lchild = deferIfPossible(*lcurrent);
     const R& rchild = deferIfPossible(*rcurrent);
 
-    isEqual &= Concepts::equal(lchild, rchild, equal_fn);
+    isEqual &= Concepts::NAryTree::equal(lchild, rchild, equal_fn);
     if (!isEqual) return isEqual;
 
     ++lcurrent;
@@ -84,7 +84,7 @@ bool equal(const T& l, const R& r,
   return isEqual;
 }
 
-} // Concepts
+} // Concepts::NAryTree
 
 
 #endif /* N_ARY_TREE_H */
