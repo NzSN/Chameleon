@@ -10,6 +10,8 @@ namespace Language {
 template<typename T>
 concept Treelike = requires(T t) {
   { t.children } -> std::ranges::range;
+} || requires(T t) {
+  { t.children() } -> std::ranges::range;
 };
 template<typename T, typename TR>
 concept Parser = Treelike<TR> &&
