@@ -1,16 +1,42 @@
 #ifndef N_ARY_TREE_H
 #define N_ARY_TREE_H
 
+#include <iostream>
 #include <ranges>
 #include <concepts>
 #include <functional>
 
 namespace Concepts {
 
+template<typename T, typename V>
+concept Children_t = std::ranges::range<T> &&
+  (std::same_as<std::ranges::range_value_t<T>, V> ||
+   std::same_as<std::ranges::range_value_t<T>, V*>);
+
+
 template<typename T>
-concept NAryTree = requires(T t) {
-  { t.children() } -> std::ranges::range;
+concept WalkByFunction = requires(T t) {
+  { t.getChildren() } -> Children_t<T>;
 };
+
+template<typename T>
+concept WalkByDataMember = requires(T t) {
+  { t.children } -> Children_t<T>;
+};
+
+template<typename T>
+concept NAryTree =
+  WalkByFunction<T> || WalkByDataMember<T>;
+
+template<WalkByFunction T>
+auto& getChildren(const T& t) {
+  return const_cast<T&>(t).getChildren();
+}
+
+template<WalkByDataMember T>
+auto& getChildren(const T& t) {
+  return const_cast<T&>(t).children;
+}
 
 /* Algorithms */
 template<NAryTree T, NAryTree R>
@@ -18,10 +44,9 @@ bool equal(const T& l, const R& r,
            std::function<bool(const T&, const R&)> equal_fn) {
   bool isEqual = equal_fn(l, r);
 
-  auto& children_l =
-    const_cast<T&>(l).children();
-  auto& children_r =
-    const_cast<R&>(r).children();
+  const auto& children_l = getChildren(l);
+  const auto& children_r = getChildren(r);
+
   if (std::ranges::size(children_l) !=
       std::ranges::size(children_r)) {
     return false;
@@ -33,7 +58,14 @@ bool equal(const T& l, const R& r,
     rend = std::ranges::cend(children_r);
 
   while (lcurrent != lend && rcurrent != rend) {
-    isEqual &= equal(*lcurrent, *rcurrent, equal_fn);
+    // const T& lchild = std::is_pointer_v<
+    //   std::ranges::range_value_t<decltype(children_l)>> ?
+    //   **lcurrent : *lcurrent;
+    // const R& rchild = std::is_pointer_v<
+    //   std::ranges::range_value_t<decltype(children_l)>> ?
+    //   **rcurrent : *rcurrent;
+
+    isEqual &= Concepts::equal(*lcurrent, *rcurrent, equal_fn);
     if (!isEqual) return isEqual;
 
     ++lcurrent;
