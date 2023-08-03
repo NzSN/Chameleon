@@ -131,9 +131,32 @@ struct Antlr4GPTTests: public ::testing::Test {
     Entry entry;
     entry = &TestLangParser::prog;
 
+    std::function<std::string(unsigned)>
+    randomSentences = [&](unsigned numOfOperands) -> std::string {
+      constexpr int NumOfOperators = 5;
+      static std::string operators[] ={
+        "+", "-", "*", "/", "\n"
+      };
+
+      if (numOfOperands == 0) return {};
+
+
+      std::string sentence = std::to_string(*rc::gen::inRange(0, 100));
+      --numOfOperands;
+      if (numOfOperands == 0) {
+        return sentence;
+      } else {
+        sentence += operators[*rc::gen::inRange(0, NumOfOperators)];
+        sentence += randomSentences(numOfOperands);
+      }
+
+      return sentence;
+    };
+
+    // Generate ParseTree randomly
     env = Utility::Antlr4_GenParseTree<
       TestLangLexer, TestLangParser>(
-          "1+1\n", entry);
+        randomSentences(*rc::gen::inRange(1, 10)), entry);
   }
 
   std::unique_ptr<
@@ -141,6 +164,8 @@ struct Antlr4GPTTests: public ::testing::Test {
       TestLangLexer, TestLangParser, Entry>> env;
 };
 
+// foreach s in TestLang, correspond antlr4::tree::ParseTree
+// and Antlr4Node is isomorphic.
 RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToAntlr4Node, ()) {
   RC_ASSERT_FALSE(env->tree == nullptr);
 
