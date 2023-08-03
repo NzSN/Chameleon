@@ -1,0 +1,16 @@
+
+filegroup(
+    name = "concepts_srcs",
+    srcs = ["n_ary_tree.h"],
+)
+
+cc_test(
+    name = "concepts_unittests",
+    srcs = [
+         "concepts_unittests.cc",
+         ":concepts_srcs"],
+    deps = [
+         "@com_google_googletest//:gtest_main",
+         "@rapidcheck//:rapidcheck"
+         ]
+)

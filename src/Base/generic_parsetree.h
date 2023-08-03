@@ -9,6 +9,7 @@
 #include <functional>
 
 #include "Language/language.h"
+#include "Concepts/n_ary_tree.h"
 
 namespace Base {
 
@@ -16,17 +17,14 @@ namespace Base {
 //                                 Concepts                                //
 /////////////////////////////////////////////////////////////////////////////
 template<typename T>
-concept GPTMeta = std::equality_comparable<T> &&
-  requires(T l, T r) {
-    { l == r } -> std::same_as<bool>;
-};
+concept GPTMeta = std::equality_comparable<T>;
 
 using CharPosition = std::tuple<int, int>;
 using SrcRange = std::tuple<CharPosition, CharPosition>;
 template<typename T>
 concept GPTMappable =
   GPTMeta<T> &&
-  Language::Treelike<T> &&
+  Concepts::NAryTree<T> &&
   requires(T t) {
     // Source information
     { t.sourceRange() } -> std::same_as<SrcRange>;
