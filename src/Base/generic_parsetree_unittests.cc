@@ -150,10 +150,14 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToAntlr4Node, ()) {
 
   // Check equality between generated Antlr4Node
   // and correspond antlr4::tree::ParseTree.
-  Concepts::equal<Antlr4Node, Antlr4Node>
-    (nodes, nodes, [](const Antlr4Node& l, const Antlr4Node& r) {
-      return true;
+  auto isEqual = Concepts::equal<Antlr4Node, antlr4::tree::ParseTree>
+    (nodes, *env->tree,
+     [](const Antlr4Node& l, const antlr4::tree::ParseTree& r) {
+      return const_cast<Antlr4Node&>(l).tree()->getText() ==
+        const_cast<antlr4::tree::ParseTree&>(r).getText();
     });
+
+  RC_ASSERT(isEqual);
 }
 
 } // Base

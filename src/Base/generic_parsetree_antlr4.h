@@ -22,6 +22,7 @@ public:
     return children_;
   };
   bool operator==(const Antlr4Node&) const;
+  antlr4::tree::ParseTree* tree() { return tree_; };
 private:
   const int lang_;
   Children children_;

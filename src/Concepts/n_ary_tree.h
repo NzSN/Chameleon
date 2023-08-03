@@ -5,6 +5,7 @@
 #include <ranges>
 #include <concepts>
 #include <functional>
+#include <utility>
 
 namespace Concepts {
 
@@ -38,6 +39,18 @@ auto& getChildren(const T& t) {
   return const_cast<T&>(t).children;
 }
 
+template<typename T,
+         typename = std::enable_if_t<std::is_pointer_v<T>>>
+auto& deferIfPossible(T t) {
+  return *t;
+}
+
+template<typename T,
+         typename = std::enable_if_t<!std::is_pointer_v<T>>>
+T deferIfPossible(T t) {
+  return t;
+}
+
 /* Algorithms */
 template<NAryTree T, NAryTree R>
 bool equal(const T& l, const R& r,
@@ -58,14 +71,10 @@ bool equal(const T& l, const R& r,
     rend = std::ranges::cend(children_r);
 
   while (lcurrent != lend && rcurrent != rend) {
-    const T& lchild = std::is_pointer_v<
-      std::ranges::range_value_t<decltype(children_l)>> ?
-      **lcurrent : *lcurrent;
-    const R& rchild = std::is_pointer_v<
-      std::ranges::range_value_t<decltype(children_l)>> ?
-      **rcurrent : *rcurrent;
+    const T& lchild = deferIfPossible(*lcurrent);
+    const R& rchild = deferIfPossible(*rcurrent);
 
-    isEqual &= Concepts::equal(*lcurrent, *rcurrent, equal_fn);
+    isEqual &= Concepts::equal(lchild, rchild, equal_fn);
     if (!isEqual) return isEqual;
 
     ++lcurrent;
