@@ -9,8 +9,6 @@ namespace Concepts {
 
 template<typename T>
 concept NAryTree = requires(T t) {
-  { t.children } -> std::ranges::range;
-} || requires(T t) {
   { t.children() } -> std::ranges::range;
 };
 
@@ -20,14 +18,19 @@ bool equal(const T& l, const R& r,
            std::function<bool(const T&, const R&)> equal_fn) {
   bool isEqual = equal_fn(l, r);
 
-  if (std::ranges::size(l.children) != std::ranges::size(r.children)) {
+  auto& children_l =
+    const_cast<T&>(l).children();
+  auto& children_r =
+    const_cast<R&>(r).children();
+  if (std::ranges::size(children_l) !=
+      std::ranges::size(children_r)) {
     return false;
   }
 
-  auto lcurrent = std::ranges::cbegin(l.children),
-    lend = std::ranges::cend(l.children);
-  auto rcurrent = std::ranges::cbegin(r.children),
-    rend = std::ranges::cend(r.children);
+  auto lcurrent = std::ranges::cbegin(children_l),
+    lend = std::ranges::cend(children_l);
+  auto rcurrent = std::ranges::cbegin(children_r),
+    rend = std::ranges::cend(children_r);
 
   while (lcurrent != lend && rcurrent != rend) {
     isEqual &= equal(*lcurrent, *rcurrent, equal_fn);

@@ -2,6 +2,7 @@
 filegroup(
     name = "concepts_srcs",
     srcs = ["n_ary_tree.h"],
+    visibility = ["//visibility:public"],
 )
 
 cc_test(
