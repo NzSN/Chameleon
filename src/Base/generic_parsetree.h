@@ -24,7 +24,7 @@ using SrcRange = std::tuple<CharPosition, CharPosition>;
 template<typename T>
 concept GPTMappable =
   GPTMeta<T> &&
-  Concepts::NAryTree<T> &&
+  Concepts::NAryTree::NAryTree<T> &&
   requires(T t) {
     // Source information
     { t.sourceRange() } -> std::same_as<SrcRange>;
