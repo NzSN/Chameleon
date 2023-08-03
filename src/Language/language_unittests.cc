@@ -21,12 +21,13 @@ struct TestWithTestLang: public ::testing::Test {
   using ANTLREnv = Utility::Antlr4ParseEnv<TestLangLexer, TestLangParser, Entry>;
 
   struct TestLangWrapper {
+    TestLangWrapper() {};
     TestLangWrapper(std::string sentences) {
-      Entry entry = &TestLangParser::prog;
-      env = std::make_unique<ANTLREnv>(sentences, entry);
     }
 
     APT* parse(std::string sentences) {
+      Entry entry = &TestLangParser::prog;
+      env = std::make_unique<ANTLREnv>(sentences, entry);
       return env->tree;
     }
 
@@ -44,6 +45,7 @@ struct TestWithTestLang: public ::testing::Test {
   }
 };
 
+// FIXME: It's test by example, not a PBT.
 RC_GTEST_FIXTURE_PROP(TestWithTestLang, Basics, ()) {
   ANTLRLang lang = getLang("1+1\n");
   RC_ASSERT(lang.tree() != nullptr);
