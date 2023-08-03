@@ -51,7 +51,7 @@ public:
 
   // Terminal
   GenericParseTree(T* meta):
-    meta_{meta} {}
+    meta_{meta}, metaRef{&meta} {}
   GenericParseTree(const T& meta):
     meta_{&meta}, metaRef{meta} {}
 
