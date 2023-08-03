@@ -8,6 +8,8 @@
 #include <concepts>
 #include <functional>
 
+#include "Language/language.h"
+
 namespace Base {
 
 /////////////////////////////////////////////////////////////////////////////
@@ -22,11 +24,12 @@ concept GPTMeta = std::equality_comparable<T> &&
 using CharPosition = std::tuple<int, int>;
 using SrcRange = std::tuple<CharPosition, CharPosition>;
 template<typename T>
-concept GPTMappable = GPTMeta<T> && requires(T t) {
-  // Traversable
-  { t.childs() } -> std::ranges::range;
-  // Source information
-  { t.sourceRange() } -> std::same_as<SrcRange>;
+concept GPTMappable =
+  GPTMeta<T> &&
+  Language::Treelike<T> &&
+  requires(T t) {
+    // Source information
+    { t.sourceRange() } -> std::same_as<SrcRange>;
 };
 
 
