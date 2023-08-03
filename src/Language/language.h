@@ -5,16 +5,14 @@
 #ifndef LANGUAGE_H
 #define LANGUAGE_H
 
+#include <Concepts/n_ary_tree.h>
+
 namespace Language {
 
-template<typename T>
-concept Treelike = requires(T t) {
-  { t.children } -> std::ranges::range;
-} || requires(T t) {
-  { t.children() } -> std::ranges::range;
-};
+using Concepts::NAryTree::NAryTree;
+
 template<typename T, typename TR>
-concept Parser = Treelike<TR> &&
+concept Parser = NAryTree<TR> &&
   requires(T t, std::string sentences) {
     { t.parse(sentences) } -> std::same_as<TR*>;
 };
@@ -22,7 +20,7 @@ concept Parser = Treelike<TR> &&
 // Entity to represent sentences of Language correspond
 // to Parser 'P'. It provide syntatic information of
 // the sentences that used to materialize it.
-template<Treelike T, Parser<T> P>
+template<NAryTree T, Parser<T> P>
 class Language {
 public:
   // Semantic of Language is to transform

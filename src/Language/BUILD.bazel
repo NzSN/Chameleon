@@ -10,7 +10,8 @@ cc_test(
          ":language_srcs",
          "language_unittests.cc",
          "//src/Misc/testLanguage:testLang_parser_srcs",
-         "//src:utility_src"],
+         "//src:utility_src",
+         "//src/Concepts:concepts_srcs"],
     copts = [
           "-Isrc",
           "-std=c++2a",
