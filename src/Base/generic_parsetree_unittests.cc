@@ -150,7 +150,7 @@ struct Antlr4GPTTests: public ::testing::Test {
         sentence += randomSentences(numOfOperands);
       }
 
-      return sentence;
+      return sentence+"\n";
     };
 
     // Generate ParseTree randomly
@@ -175,13 +175,35 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToAntlr4Node, ()) {
 
   // Check equality between generated Antlr4Node
   // and correspond antlr4::tree::ParseTree.
-  auto isEqual = Concepts::equal<Antlr4Node, antlr4::tree::ParseTree>
+  auto isEqual =
+    Concepts::NAryTree::equal<Antlr4Node, antlr4::tree::ParseTree>
     (nodes, *env->tree,
      [](const Antlr4Node& l, const antlr4::tree::ParseTree& r) {
-      return const_cast<Antlr4Node&>(l).tree()->getText() ==
-        const_cast<antlr4::tree::ParseTree&>(r).getText();
+       return const_cast<Antlr4Node&>(l).tree()->getText() ==
+         const_cast<antlr4::tree::ParseTree&>(r).getText();
     });
 
+  RC_ASSERT(isEqual);
+}
+
+RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToGenericParseTree, ()) {
+  RC_ASSERT_FALSE(env->tree == nullptr);
+
+  // Antlr4Node works as adapter
+  Antlr4Node nodes{
+    GenericParseTree<Antlr4Node>::TESTLANG,
+    env->tree };
+
+  GenericParseTree<Antlr4Node> gpt =
+    GenericParseTree<Antlr4Node>::mapping(nodes);
+
+  using GPT = GenericParseTree<Antlr4Node>;
+  auto isEqual =
+    Concepts::NAryTree::equal<GPT, Antlr4Node>(
+      gpt, nodes, [](const GPT& l, const Antlr4Node& r) {
+        return const_cast<GPT&>(l).getText() ==
+          const_cast<Antlr4Node&>(r).tree()->getText();
+      });
   RC_ASSERT(isEqual);
 }
 

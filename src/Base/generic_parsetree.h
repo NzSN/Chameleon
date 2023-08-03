@@ -53,15 +53,15 @@ public:
   GenericParseTree(T* meta):
     meta_{meta} {}
   GenericParseTree(const T& meta):
-    meta_{}, metaRef{meta} {}
+    meta_{&meta}, metaRef{meta} {}
 
-  GenericParseTree& addChild(T type) {
+  GenericParseTree& addChild(GenericParseTree type) {
     return childs_.emplace_back(type);
   };
 
-  GPTIterator childs() const {
-    return std::begin(childs_);
-  }
+  std::vector<GenericParseTree>& getChildren() {
+    return childs_;
+  };
 
   bool operator==(const GenericParseTree& other) const;
 
@@ -77,6 +77,11 @@ public:
 
   CharPosition getEndPos() const {
     return std::get<1>(positions);
+  }
+
+  std::string getText() {
+    if (meta_ == nullptr) return {};
+    return const_cast<T*>(meta_)->tree()->getText();
   }
 
   // Chameleons are based on exist parsers. Exist parsers
