@@ -2,18 +2,11 @@
 #ifndef GENERIC_PARSETREE_H
 #define GENERIC_PARSETREE_H
 
-#include <typeinfo>
 #include <ranges>
 #include <tuple>
-#include <memory>
 #include <vector>
-#include <functional>
-#include <algorithm>
 #include <concepts>
-#include <variant>
-#include <exception>
-#include "antlr4-runtime.h"
-#include "utility.h"
+#include <functional>
 
 namespace Base {
 

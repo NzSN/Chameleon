@@ -2,6 +2,7 @@
 #define GENERIC_PARSETREE_INL_H
 
 #include "generic_parsetree.h"
+#include "utility.h"
 
 namespace Base {
 
