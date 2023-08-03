@@ -88,7 +88,7 @@ GenericParseTree<T>::mapping(T& other)
   GenericParseTree<T> current = fromMappableNode(other);
 
   // Spawn the subtree of the root node.
-  for (auto& c: other.childs()) {
+  for (auto& c: other.children()) {
     current.addChild(mapping(c));
   }
 

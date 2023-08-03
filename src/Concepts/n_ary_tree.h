@@ -58,12 +58,12 @@ bool equal(const T& l, const R& r,
     rend = std::ranges::cend(children_r);
 
   while (lcurrent != lend && rcurrent != rend) {
-    // const T& lchild = std::is_pointer_v<
-    //   std::ranges::range_value_t<decltype(children_l)>> ?
-    //   **lcurrent : *lcurrent;
-    // const R& rchild = std::is_pointer_v<
-    //   std::ranges::range_value_t<decltype(children_l)>> ?
-    //   **rcurrent : *rcurrent;
+    const T& lchild = std::is_pointer_v<
+      std::ranges::range_value_t<decltype(children_l)>> ?
+      **lcurrent : *lcurrent;
+    const R& rchild = std::is_pointer_v<
+      std::ranges::range_value_t<decltype(children_l)>> ?
+      **rcurrent : *rcurrent;
 
     isEqual &= Concepts::equal(*lcurrent, *rcurrent, equal_fn);
     if (!isEqual) return isEqual;

@@ -9,7 +9,9 @@ cc_test(
     srcs = [
         ":utility_src",
         "utility_unittests.cc",
-        "//src/Base:language_unittests_src"
+        "//src/Base:language_unittests_src",
+        "//src/Language:language_srcs",
+        "//src/Concepts:concepts_srcs"
         ],
     copts = [
           "-std=c++2a", "-Isrc",

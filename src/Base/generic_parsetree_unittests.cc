@@ -17,6 +17,7 @@
 
 #include "utility.h"
 #include "misc/Interval.h"
+#include "Concepts/n_ary_tree.h"
 
 namespace Base {
 
@@ -140,9 +141,19 @@ struct Antlr4GPTTests: public ::testing::Test {
       TestLangLexer, TestLangParser, Entry>> env;
 };
 
-RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, Basics, ()) {
+RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToAntlr4Node, ()) {
   RC_ASSERT_FALSE(env->tree == nullptr);
 
+  Antlr4Node nodes{
+    GenericParseTree<Antlr4Node>::TESTLANG,
+    env->tree };
+
+  // Check equality between generated Antlr4Node
+  // and correspond antlr4::tree::ParseTree.
+  Concepts::equal<Antlr4Node, Antlr4Node>
+    (nodes, nodes, [](const Antlr4Node& l, const Antlr4Node& r) {
+      return true;
+    });
 }
 
 } // Base
