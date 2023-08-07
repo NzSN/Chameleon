@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include <utility>
 
-#include "language.h"
+#include "program.h"
 #include "generic_parsetree_antlr4.h"
 #include "Misc/testLanguage/TestLangLexer.h"
 #include "Misc/testLanguage/TestLangParser.h"

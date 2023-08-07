@@ -91,7 +91,7 @@ public:
   //
   // You can treat mapping as a functor mapping between
   // GenericParseTree and another ParseTree.
-  static GenericParseTree mapping(T& o)
+  static GenericParseTree mapping(const T& o)
   requires GPTMappable<T>;
 
 private:

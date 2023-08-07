@@ -73,7 +73,7 @@ GenericParseTree<T>* GenericParseTree<T>::select(
 
 template<GPTMeta T>
 GenericParseTree<T>
-GenericParseTree<T>::mapping(T& other)
+GenericParseTree<T>::mapping(const T& other)
   requires GPTMappable<T> {
   // Traverse tree 'other' in preorder
   // and spawn correspond node of GenericParseTree
