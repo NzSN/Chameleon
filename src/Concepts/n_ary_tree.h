@@ -41,13 +41,13 @@ auto& getChildren(const T& t) {
 
 template<typename T,
          typename = std::enable_if_t<std::is_pointer_v<T>>>
-auto& deferIfPossible(T t) {
+auto& dereferIf(T t) {
   return *t;
 }
 
 template<typename T,
          typename = std::enable_if_t<!std::is_pointer_v<T>>>
-T deferIfPossible(T t) {
+T dereferIf(T t) {
   return t;
 }
 
@@ -71,8 +71,8 @@ bool equal(const T& l, const R& r,
     rend = std::ranges::cend(children_r);
 
   while (lcurrent != lend && rcurrent != rend) {
-    const T& lchild = deferIfPossible(*lcurrent);
-    const R& rchild = deferIfPossible(*rcurrent);
+    const T& lchild = dereferIf(*lcurrent);
+    const R& rchild = dereferIf(*rcurrent);
 
     isEqual &= Concepts::NAryTree::equal(lchild, rchild, equal_fn);
     if (!isEqual) return isEqual;
