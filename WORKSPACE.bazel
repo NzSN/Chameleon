@@ -1,0 +1,47 @@
+workspace(name="chameleon")
+
+
+# Google Test
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+  name = "com_google_googletest",
+  urls = ["https://github.com/google/googletest/archive/5ab508a01f9eb089207ee87fd547d290da39d015.zip"],
+  strip_prefix = "googletest-5ab508a01f9eb089207ee87fd547d290da39d015",
+)
+
+# Rules ForeignCc
+http_archive(
+    name = "rules_foreign_cc",
+    # TODO: Get the latest sha256 value from a bazel debug message or the latest
+    #       release on the releases page: https://github.com/bazelbuild/rules_foreign_cc/releases
+    #
+    # sha256 = "...",
+    strip_prefix = "rules_foreign_cc-7fa1a1259bbc4fbceb4dc3a23ed520907b5d8d1d",
+    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/7fa1a1259bbc4fbceb4dc3a23ed520907b5d8d1d.tar.gz",
+)
+
+load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+
+rules_foreign_cc_dependencies()
+
+# External Modules
+http_archive(
+    name = "antlr4_runtime",
+    urls =["https://www.antlr.org/download/antlr4-cpp-runtime-4.13.0-source.zip"],
+    sha256 = "2e5db62acdca9adc3329c485c3b9ce3029e40d13cc9c3e74ced354e818cb63e9",
+    build_file = "@//:bazel/external_builds/BUILD.antlr4_rumtime"
+)
+
+new_local_repository(
+    name = "rapidcheck",
+    path = "third_party/rapidcheck",
+    build_file = "@//:bazel/external_builds/BUILD.rapidcheck"
+)
+
+new_local_repository(
+    name = "plog",
+    path = "third_party/plog",
+    build_file = "@//:bazel/external_builds/BUILD.plog"
+)
+

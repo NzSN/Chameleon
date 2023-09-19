@@ -1,0 +1,42 @@
+#+TITLE: Chameleons SPEC
+#+STARTUP: latexpreview
+
+* Introduction
+*Chameleons* is a tools that performing transformation between languages by a
+collection of user defined rules.
+
+This ducoument attemp to specify *Chameleons* in an informal way.
+
+* The expected way the Chameleons to work
+On the remainder of this document I will use $S$ to represent system *Chameleons*.
+Suppose there exists a function, $F: L \rightarrow L$ where $L$ is set of Languages,
+which do transformation between languages. Then we are able to represent *Chameleons*
+as $S := \{F\}$. Next to reason about how $F$ work.
+
+$F$ should act via following steps:
+
+1. Parse sentences into AST/ParseTree, for simplicity I will use PT instead of ParseTree.
+2. Analyse AST/PT for the purpose of gathering information about execution environment,
+   those information may affects the decisions make by Transformer.
+3. Perform transformation rules defined by user.
+
+So according to these steps, we are able to treat $F$ as a system $\{P,A,T\}$ where
+$P$ is Parser and $A$ is analyzer and $T$ is transformer. Hence,
+        $(S := \{F\}) \equiv (S:= \{P,A,T\})$,
+I will use the latter definition which is more expressive.
+
+First, let us to specify $P$. $P$ is repsonsible for mapping sentences of a language into
+correspond AST/PT. Specify it as a function, $P: Sentence \rightarrow PT$, I don't implement
+$P$ but just provide an interface then bridge to an existing Parser. Due to sentences may
+read by Parser in many ways so $P$ may have many different signatures:
+
++ $P: Stream \rightarrow PT$
++ $P: String \rightarrow PT$  and etc.
+
+Then AST should look like, $A: PT \rightarrow R \rightarrow PTInfo$. $A$ will gathering information from
+PT. $A$ should has knowledge about Treelike Structure and to know what to gathering.
+So if there exists $TWalk: Tree \rightarrow (Node \rightarrow a) \rightarrow [a]$ then
+                    $\exists T,R: A := TWalk(T, R)$
+
+
+$\exists TR \in Tree,R \in Rule,R' \in TransRule: T(P(TR), A(P(TR), R), R')$
