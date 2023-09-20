@@ -1,6 +1,6 @@
 filegroup(
     name = "utility_src",
-    srcs = ["utility.h", "utility.cc"],
+    srcs = ["utility.h", "utility.cc", "class_prop.h"],
     visibility = ["//visibility:public"],
 )
 

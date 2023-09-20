@@ -4,6 +4,7 @@
 
 #include <istream>
 #include <string>
+#include "class_prop.h"
 #include "Base/generic_parsetree_inl.h"
 
 namespace Parser {
@@ -29,15 +30,13 @@ template<typename ExtNode,
          ExtParser<ExtNode> P,
          NodeAdapter<ExtNode> A,
          int lang>
-class Parser {
-public:
+struct Parser {
   static Base::GenericParseTree<A> parse(std::istream* input) {
     return Base::GenericParseTree<A>::mapping(
       A{lang, P::parse(input)});
   }
 
-private:
-  Parser() = default;
+  UNINSTANTIALIZABLE(Parser);
 };
 
 } // Parser
