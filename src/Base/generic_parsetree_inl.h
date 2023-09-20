@@ -79,7 +79,7 @@ GenericParseTree<T>::mapping(const T& other)
   // and spawn correspond node of GenericParseTree
   // in the same order, which make sure that they
   // have the same structure.
-  auto fromMappableNode = [](T& other) {
+  auto fromMappableNode = [](const T& other) {
     GenericParseTree<T> node{other};
     return node;
   };
