@@ -9,8 +9,8 @@
 namespace Parser {
 
 template<typename T, typename O>
-concept ExtParser = requires(T t, std::istream input) {
-  { T::parse(input) } -> std::same_as<O>;
+concept ExtParser = requires(T t, std::istream *s) {
+  { T::parse(s) } -> std::same_as<O>;
 };
 
 template<typename T, typename N>
@@ -31,8 +31,8 @@ template<typename ExtNode,
          int lang>
 class Parser {
 public:
-  static Base::GenericParseTree<ExtNode> parse(std::istream input) {
-    return Base::GenericParseTree<A>(
+  static Base::GenericParseTree<A> parse(std::istream* input) {
+    return Base::GenericParseTree<A>::mapping(
       A{lang, P::parse(input)});
   }
 

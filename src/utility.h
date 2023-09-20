@@ -65,6 +65,8 @@ struct Antlr4ParseEnv {
   antlr4::CommonTokenStream tokens;
   Lexer lexer;
   Parser parser;
+  // This object is managed by Parser
+  // so it's already owned.
   antlr4::tree::ParseTree* tree;
 };
 
