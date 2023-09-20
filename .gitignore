@@ -3,3 +3,4 @@ ide_env
 .ccls-cache
 bazel-*
 compile_flags.txt
+states
