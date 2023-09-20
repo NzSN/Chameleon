@@ -38,5 +38,15 @@ PT. $A$ should has knowledge about Treelike Structure and to know what to gather
 So if there exists $TWalk: Tree \rightarrow (Node \rightarrow a) \rightarrow [a]$ then
                     $\exists T,R: A := TWalk(T, R)$
 
+Transformer, $T: PT \rightarrow PTInfo \rightarrow TRule \rightarrow L$, can be describe as following formula:
 
 $\exists Sentence \in String,R \in Rule,R' \in TransRule: T(P(Sentence), A(P(Sentence), R), R')$
+
+*Chameleons Parser* is simply a function that based on exist parsers. It's simply transfer sentences of
+languages to ParseTree. So next section I will deep into the detail of Analyzer and Transformer.
+
+* Implementation details
+
+** Analyzer
+
+** Transformer
