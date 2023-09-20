@@ -1,0 +1,11 @@
+filegroup(
+    name = "parser_source",
+    srcs = ["Parser.cc", "Parser.h"],
+    visibility = ["//visibility:public"]
+)
+
+filegroup(
+    name = "parser_unittest_src",
+    srcs = [":parser_source", "Parser_unittests.cc"],
+    visibility = ["//visibility:public"]
+)

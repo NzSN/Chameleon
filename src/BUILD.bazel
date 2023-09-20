@@ -11,7 +11,8 @@ cc_test(
         "utility_unittests.cc",
         "//src/Base:language_unittests_src",
         "//src/Language:language_srcs",
-        "//src/Concepts:concepts_srcs"
+        "//src/Concepts:concepts_srcs",
+        "//src/Parser:parser_unittest_src",
         ],
     copts = [
           "-std=c++2a", "-Isrc",
