@@ -2,7 +2,9 @@
 \* Tree define in this module is mainly to work as
 \* an adaptor to wrap a concrete Tree to enable
 \* Analyzer or Transformer to access it.
-CONSTANTS NULL
+CONSTANTS NULL,
+          ET,
+          ET_CONVERT
 
 LOCAL INSTANCE TLC
 LOCAL INSTANCE Naturals
@@ -87,6 +89,20 @@ AddNode(T, Node, New) ==
 
 DelNode(T, Node) ==
     [T EXCEPT ![Node] = NULL]
+
+GetChild(T, Node, N) ==
+    IF IsExists(T, Node) /\ Len(T[Node]) > N
+    THEN T[Node][N]
+    ELSE NULL
+
+\* Which will convert External Tree
+\* into tree that able to deal with
+\* by Analyzer and Transformer.
+\*
+\* ET and ET_CONVERT leave as unspecified
+\* due we are unable to specify what is
+\* ET look like and how to convert.
+Convert(ET) == ET_CONVERT(ET)
 
 (*Tree Property Predicates*)
 Ring(T) ==

@@ -39,4 +39,4 @@ So if there exists $TWalk: Tree \rightarrow (Node \rightarrow a) \rightarrow [a]
                     $\exists T,R: A := TWalk(T, R)$
 
 
-$\exists TR \in Tree,R \in Rule,R' \in TransRule: T(P(TR), A(P(TR), R), R')$
+$\exists Sentence \in String,R \in Rule,R' \in TransRule: T(P(Sentence), A(P(Sentence), R), R')$
