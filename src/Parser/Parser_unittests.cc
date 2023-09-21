@@ -23,6 +23,9 @@ struct TestLangExt {
   parse(std::istream *s) {
     Entry entry = &TestLangParser::prog;
 
+    std::string expression;
+    *s >> expression;
+
     static std::unique_ptr<
       Utility::Antlr4ParseEnv<
         TestLangLexer, TestLangParser, Entry>> env;
@@ -33,7 +36,7 @@ struct TestLangExt {
 
     env = Utility::Antlr4_GenParseTree<
       TestLangLexer, TestLangParser>(
-        "1+1", entry);
+        expression, entry);
 
     tree = env->tree;
 
@@ -54,7 +57,7 @@ struct ParserTests: public ::testing::Test {
 };
 
 
-RC_GTEST_FIXTURE_PROP(ParserTests, Basics, ()) {
+RC_GTEST_FIXTURE_PROP(ParserTests, IsomorphicToExtTree, ()) {
   std::istringstream codes{expression};
 
   auto t = Parser<
