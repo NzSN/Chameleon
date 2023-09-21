@@ -1,6 +1,6 @@
 filegroup(
     name = "parser_source",
-    srcs = ["Parser.cc", "Parser.h"],
+    srcs = ["Parser-inl.h", "Parser.h"],
     visibility = ["//visibility:public"]
 )
 

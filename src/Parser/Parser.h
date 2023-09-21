@@ -4,6 +4,7 @@
 
 #include <istream>
 #include <string>
+#include <vector>
 #include "class_prop.h"
 #include "Base/generic_parsetree_inl.h"
 
@@ -32,9 +33,12 @@ template<typename ExtNode,
          int lang>
 struct Parser {
   static Base::GenericParseTree<A> parse(std::istream* input) {
-    return Base::GenericParseTree<A>::mapping(
-      A{lang, P::parse(input)});
+    adapters_.emplace_back(lang, P::parse(input));
+    return Base::GenericParseTree<A>::mapping(adapters_.back());
   }
+
+private:
+  static std::vector<A> adapters_;
 
   UNINSTANTIALIZABLE(Parser);
 };

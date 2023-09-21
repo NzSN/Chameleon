@@ -15,7 +15,8 @@ cc_test(
         "//src/Parser:parser_unittest_src",
         ],
     copts = [
-          "-std=c++2a", "-Isrc",
+          "-std=c++2a",
+          "-Isrc",
           "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           ],
