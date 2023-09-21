@@ -50,3 +50,9 @@ new_local_repository(
     path = "third_party/plog",
     build_file = "@//:bazel/external_builds/BUILD.plog"
 )
+
+new_local_repository(
+    name = "tree_sitter",
+    path = "third_party/tree-sitter",
+    build_file = "@//:bazel/external_builds/BUILD.tree-sitter"
+)

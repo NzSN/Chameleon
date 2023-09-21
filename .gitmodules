@@ -7,3 +7,6 @@
 [submodule "third_party/rapidcheck"]
 	path = third_party/rapidcheck
 	url = https://github.com/emil-e/rapidcheck.git
+[submodule "third_party/tree-sitter"]
+	path = third_party/tree-sitter
+	url = https://github.com/tree-sitter/tree-sitter.git
