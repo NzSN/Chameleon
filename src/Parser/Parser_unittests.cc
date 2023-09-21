@@ -49,7 +49,7 @@ antlr4::tree::ParseTree* TestLangExt::tree = nullptr;
 
 struct ParserTests: public ::testing::Test {
   void SetUp() final {
-      // Generate ParseTree randomly
+      // Generate TestLang expression randomly
       expression = Utility::testLangRandomExpr(*rc::gen::inRange(1, 10));
   }
 
