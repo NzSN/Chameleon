@@ -1,0 +1,13 @@
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "make")
+
+filegroup(
+    name = "tree_sitter_src",
+    srcs = glob(["**"]),
+)
+
+make(
+    name = "tree_sitter",
+    lib_source = "tree_sitter_src",
+    out_static_libs = ["libtree-sitter.a"],
+    visibility = ["//visibility:public"],
+)
