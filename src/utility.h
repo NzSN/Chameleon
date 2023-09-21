@@ -88,6 +88,8 @@ Antlr4_GenParseTree(std::string sentences, Entry entry) {
     Antlr4ParseEnv<Lexer, Parser, Entry>>(sentences, entry);
 }
 
+std::string testLangRandomExpr(unsigned numOfOperands);
+
 } // Utility
 
 #endif /* UTILITY_H */
