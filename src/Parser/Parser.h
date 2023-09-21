@@ -25,7 +25,7 @@ concept NodeAdapter =
 // ExtParser is responsible for transform source
 // into ParseTree. Those tree unable to directly
 // used by Analyzer and Transformer in Chameleons
-// so will be wrap by ExtNode and then mapping to
+// so will be wrap by NodeAdapter and then mapping to
 // GenericParseTree.
 template<typename ExtNode,
          ExtParser<ExtNode> P,
