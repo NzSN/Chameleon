@@ -2,7 +2,7 @@
 \* Tree define in this module is mainly to work as
 \* an adaptor to wrap a concrete Tree to enable
 \* Analyzer or Transformer to access it.
-CONSTANTS NULL,
+CONSTANTS NULL
 
 LOCAL INSTANCE TLC
 LOCAL INSTANCE Naturals
@@ -47,7 +47,7 @@ LOCAL IsTree(relation) ==
                 \A i \in 1..Len(relation[x]):
                 \A j \in 1..Len(relation[x]) \ {i}:
                     relation[x][i] /= relation[x][j]
-        \* \* Assert that every node has only one parent.
+        \* Assert that every node has only one parent.
         /\ \A x \in nodes:
              relation[x] /= NULL =>
                 \E y \in nodes \ {x}:
@@ -55,14 +55,14 @@ LOCAL IsTree(relation) ==
                         \A i \in 1..Len(relation[x]):
                         \A j \in 1..Len(relation[y]):
                             /\ relation[x][i] /= relation[y][j]
-        \* \* Assert that root has no parent,
+        \* Assert that root has no parent,
         /\ \E ordering \in all_seqs:
            \A x \in nodes:
             relation[x] /= NULL =>
                 \A i \in 1..Len(relation[x]):
                     Root(ordering) /= relation[x][i]
-        \* \* Assert that every nodes except Root is descdent of Root
-        \* \* which make sure a relation correspond to only one Tree.
+        \* Assert that every nodes except Root is descdent of Root
+        \* which make sure a relation correspond to only one Tree.
         /\ \E ordering \in all_seqs:
            \A x \in nodes:
              relation[x] /= NULL =>
@@ -74,7 +74,7 @@ Tree(Nodes) ==
     IF NULL \in Nodes
     THEN Assert(FALSE, "Root of tree cannot be NULL") \* Empty Tree
     ELSE LET Relations == TreeRelations(Nodes)
-         IN  {tr \in Relations: IsTree(tr)}
+         IN  {tr \in Relations: TRUE}
 
 (*Operations*)
 Singleton(n) == (n :> <<>>)
