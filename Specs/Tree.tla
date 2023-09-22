@@ -93,6 +93,13 @@ GetChild(T, Node, N) ==
     THEN T[Node][N]
     ELSE NULL
 
+GetRoot(T) ==
+    LET nodes == DOMAIN T
+        RootSet == {n \in nodes: \A y \in nodes \ {n}: y \in Descdent(n, T)}
+    IN IF Cardinality(RootSet) = 1 \* There should only one root
+       THEN CHOOSE n \in nodes: \A y \in nodes \ {n}: y \in Descdent(n, T)
+       ELSE NULL
+
 (*Tree Property Predicates*)
 Ring(T) ==
     IF CODOMAIN(T) = {<<>>}

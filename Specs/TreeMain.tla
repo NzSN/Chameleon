@@ -18,6 +18,6 @@ Valid ==
         /\ Assert(OneTree(t), <<"CounterExample(3)", t>>)
         /\ AddNode(t, e1, e2) \in Tree({e1, e2})
         /\ t \in Tree({e1})
-        /\ PrintT(t) /\ PrintT(AddNode(t, e1, e2))
+        /\ GetRoot(t) = e1
 
 =========================
