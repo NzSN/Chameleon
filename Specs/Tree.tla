@@ -93,6 +93,11 @@ GetChild(T, Node, N) ==
     THEN T[Node][N]
     ELSE NULL
 
+NumOfChild(T, Node) ==
+    IF IsExists(T, Node) /\ Len(T[Node]) > N
+    THEN Len(T[Node])
+    ELSE 0
+
 GetRoot(T) ==
     LET nodes == DOMAIN T
         RootSet == {n \in nodes: \A y \in nodes \ {n}: y \in Descdent(n, T)}
