@@ -94,7 +94,7 @@ GetChild(T, Node, N) ==
     ELSE NULL
 
 NumOfChild(T, Node) ==
-    IF IsExists(T, Node) /\ Len(T[Node]) > N
+    IF IsExists(T, Node) /\ Len(T[Node]) > 0
     THEN Len(T[Node])
     ELSE 0
 

@@ -1,45 +1,50 @@
 ---- MODULE AnalyzerMain ----
-EXTENDS Sequences
+EXTENDS Sequences, Naturals
 CONSTANT NULL
 
+LOCAL INSTANCE FiniteSets
+LOCAL INSTANCE TLC
+
 NodeIDS == 1..5
-NodeTypes == {"PROG", "STMT", "DEFINE"}
+NodeTypes == {"T1", "T2", "T3"}
 NodeValues == 1..2 \union {NULL}
+
+LOCAL INSTANCE AnalyzerDefines WITH
+    node_ids <- NodeIDS,
+    node_types <- NodeTypes,
+    node_values <- NodeValues
+LOCAL INSTANCE Tree WITH NULL <- NULL
+LOCAL analyze[T \in Tree(ParseTreeNodes),
+        N \in ParseTreeNodes] ==
+    [tree |-> Singleton(ParseTreeNode[1, "T1", 1]),
+     info |-> [F1 |-> <<1>>],
+     status |-> "Unanalyzed"]
 
 LOCAL INSTANCE Analyzer WITH
     NULL <- NULL,
     node_ids <- NodeIDS,
     node_types <- NodeTypes,
-    node_values <- NodeValues
-LOCAL INSTANCE Tree WITH NULL <- NULL
-LOCAL INSTANCE AnalyzerDefines WITH
-    nodes_ids <- NodeIDS,
-    node_types <- NodeTypes,
-    node_values <- NodeValues
+    node_values <- NodeValues,
+    analyze <- analyze
+
+LOCAL CODOMAIN(f) ==
+    {f[x]: x \in DOMAIN f}
 
 ParseTreeNodeRestrict ==
-    [ID -> NodeIDS,
-     Type -> NodeTypes,
-     Value -> NodeValues,
-     Status -> {"Unanalyzed"}]
+    {[ID |-> ident,
+      Type |-> type,
+      Value |-> value,
+      Status |-> {"Unanalyzed"}]:
+        ident \in NodeIDS,
+        type  \in NodeTypes,
+        value \in NodeValues}
 
 ParseTreeSamples ==
-    LET RootNode == [ID |-> 1, Type |-> "PROG", Value |-> NULL,
-                     Status |-> "Unanalyzed"]
-        NA == [ID |-> 2, Type |-> "STMT", Value |-> NULL,
-               Status |-> "Unanalyzed"]
-        NB == [ID |-> 3, Type |-> "DEFINE", Value |-> 1,
-               Status |-> "Unanalyzed"]
-        NC == [ID |-> 4, Type |-> "STMT", Value |-> NULL,
-               Status |-> "Unanalyzed"]
-        ND == [ID |-> 5, Type |-> "DEFINE", Value |-> 1,
-               Status |-> "Unanalyzed"]
-    IN <<
-        [RootNode |-> <<NA,NB>>,
-         NA |-> <<NB>>,
-         NB |-> <<>>,
-         NC |-> <<ND>>,
-         ND |-> <<>>]
-       >>
+    {s \in [1..4 -> ParseTreeNodeRestrict]:
+     \A x \in CODOMAIN(s):
+     \A y \in CODOMAIN(s): x.ID /= y.ID}
+
+Valid == \A x \in ParseTreeSamples:
+    /\ PrintT(x)
 
 =============================
