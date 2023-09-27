@@ -102,7 +102,7 @@ DelNode(T, Node) ==
     [T EXCEPT ![Node] = NULL]
 
 GetChild(T, Node, N) ==
-    IF IsExists(T, Node) /\ Len(T[Node]) > N
+    IF IsExists(T, Node) /\ Len(T[Node]) >= N
     THEN T[Node][N]
     ELSE NULL
 
