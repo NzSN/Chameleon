@@ -4,9 +4,6 @@ CONSTANTS Nodes, NULL
 
 INSTANCE Tree WITH NULL <- NULL
 
-
-AllTrees == Tree(Nodes)
-
 e1 == [name |-> "A", Value |-> "V"]
 e2 == [name |-> "AA", Value |-> "VV"]
 
@@ -17,7 +14,7 @@ Valid ==
         /\ Assert(~RingToRoot(t), <<"CounterExample(3)", t>>)
         /\ Assert(OneTree(t), <<"CounterExample(3)", t>>)
         /\ AddNode(t, e1, e2) \in Tree({e1, e2})
-        /\ t \in Tree({e1})
+        /\ t \in Tree({e1,e2})
         /\ GetRoot(t) = e1
 
 =========================

@@ -16,7 +16,11 @@ LOCAL TreeRelations(Nodes) ==
     \* DOMAIN is the set of all nodes
     \* that is parent, NULL indicate
     \* nodes that been deleted.
-    [Nodes -> Seq(Nodes) \union {NULL}]
+    \*
+    \* Restrict maximum number of Children
+    \* to make it enumerable.
+    LET Children == (UNION {[1..n -> Nodes]: n \in 0..3})
+    IN  [Nodes -> Children \union {NULL}]
 
 LOCAL Descdent(Node, relation) ==
     LET D[N \in DOMAIN relation] ==
@@ -31,7 +35,7 @@ LOCAL Descdent(Node, relation) ==
 
 \* 1. Every node can have infinite childs
 \* 2. A child can have only one parent.
-\* 3. Root has no parent.
+ \* 3. Root has no parent.
 \* 4. Every nodes except Root is descdent of Root
 LOCAL IsTree(relation) ==
     LET nodes == DOMAIN relation
@@ -73,7 +77,10 @@ LOCAL IsTree(relation) ==
 Tree(Nodes) ==
     IF NULL \in Nodes
     THEN Assert(FALSE, "Root of tree cannot be NULL") \* Empty Tree
-    ELSE LET Relations == TreeRelations(Nodes)
+    ELSE LET Subsets == (SUBSET Nodes \ {})
+             SetOfRelations ==
+               {TreeRelations(subn): subn \in Subsets}
+             Relations == UNION SetOfRelations
          IN  {tr \in Relations: TRUE}
 
 (*Operations*)
