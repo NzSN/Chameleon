@@ -92,7 +92,7 @@ Tree(Nodes) ==
 (*Operations*)
 Singleton(n) == (n :> <<>>)
 IsExists(T, Node) ==
-    \A r \in DOMAIN T: Node = r
+    \E r \in DOMAIN T: Node = r
 
 AddNode(T, Node, New) ==
     LET TT == T @@ (New :> <<>>)
@@ -107,7 +107,8 @@ GetChild(T, Node, N) ==
     ELSE NULL
 
 NumOfChild(T, Node) ==
-    IF IsExists(T, Node) /\ Len(T[Node]) > 0
+    IF /\ IsExists(T, Node)
+       /\ Len(T[Node]) > 0
     THEN Len(T[Node])
     ELSE 0
 

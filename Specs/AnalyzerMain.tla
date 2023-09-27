@@ -6,7 +6,7 @@ LOCAL INSTANCE FiniteSets
 LOCAL INSTANCE TLC
 
 NodeIDS == 1..5
-NodeTypes == {"T1", "T2", "T3"}
+NodeTypes == {"PROG", "STMT", "DEFINE"}
 NodeValues == 1..2 \union {NULL}
 
 LOCAL INSTANCE AnalyzerDefines WITH
@@ -14,11 +14,26 @@ LOCAL INSTANCE AnalyzerDefines WITH
     node_types <- NodeTypes,
     node_values <- NodeValues
 LOCAL INSTANCE Tree WITH NULL <- NULL
-LOCAL analyze[T \in Tree(ParseTreeNodes),
-        N \in ParseTreeNodes] ==
-    [tree |-> Singleton(ParseTreeNode[1, "T1", 1]),
-     info |-> [F1 |-> <<1>>],
-     status |-> "Unanalyzed"]
+
+LOCAL CODOMAIN(f) ==
+    {f[x]: x \in DOMAIN f}
+
+TreeSample ==
+  LET rootNode == ParseTreeNode[1, "PROG", NULL]
+      node1 == ParseTreeNode[2, "STMT", NULL]
+      node2 == ParseTreeNode[3, "DEFINE", 1]
+  IN AddNode(AddNode(Singleton(rootNode), rootNode, node1),
+             node1, node2)
+
+LOCAL analyze[T \in Tree(DOMAIN TreeSample),
+              N \in DOMAIN TreeSample] ==
+  CASE N.Type = "PROG" ->
+             [info |-> [F1 |-> <<>>], status |-> "Analyzing"]
+    [] N.Type = "STMT" ->
+             [info |-> [F1 |-> <<>>], status |-> "Analyzing"]
+    [] N.Type = "DEFINE" ->
+             [info |-> [F1 |-> <<N.Value>>],
+              status |-> "Done"]
 
 LOCAL INSTANCE Analyzer WITH
     NULL <- NULL,
@@ -27,24 +42,5 @@ LOCAL INSTANCE Analyzer WITH
     node_values <- NodeValues,
     analyze <- analyze
 
-LOCAL CODOMAIN(f) ==
-    {f[x]: x \in DOMAIN f}
-
-ParseTreeNodeRestrict ==
-    {[ID |-> ident,
-      Type |-> type,
-      Value |-> value,
-      Status |-> {"Unanalyzed"}]:
-        ident \in NodeIDS,
-        type  \in NodeTypes,
-        value \in NodeValues}
-
-ParseTreeSamples ==
-    {s \in [1..4 -> ParseTreeNodeRestrict]:
-     \A x \in CODOMAIN(s):
-     \A y \in CODOMAIN(s): x.ID /= y.ID}
-
-Valid == \A x \in ParseTreeSamples:
-    /\ PrintT(x)
-
+Valid == PrintT(Analyze(TreeSample))
 =============================

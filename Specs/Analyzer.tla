@@ -11,26 +11,25 @@ LOCAL INSTANCE AnalyzerDefines WITH
 
 AnalyzeImpls ==
   [Tree(ParseTreeNodes) \X ParseTreeNodes ->
-   {[tree |-> t, info |-> i, status |-> s]:
-    t \in Tree(ParseTreeNodes),
+   {[info |-> i, status |-> s]:
     i \in ParsedData,
     s \in ParseTreeNodeStatus} \union {NULL}]
 
-ASSUME analyze \in AnalyzeImpls
+\*ASSUME analyze \in AnalyzeImpls
 
 LOCAL DoAnalyze(T) ==
   LET rootNode == GetRoot(T)
-      Analyzing[tree \in Tree(ParseTreeNodes),
-                node_ \in ParseTreeNodes] ==
+      Analyzing[tree \in Tree(DOMAIN T),
+                node_ \in DOMAIN T] ==
         LET result == analyze[T, node_]
 
-            AnalyzingChildren[tree_ \in Tree(ParseTreeNodes),
-                              node__ \in ParseTreeNodes,
+            AnalyzingChildren[tree_ \in Tree(DOMAIN T),
+                              node__ \in DOMAIN T,
                               idx \in Nat] ==
-              IF idx < NumOfChild(tree_, node__)
+              IF idx <= NumOfChild(tree_, node__)
               THEN LET current_result == Analyzing[tree_, GetChild(tree_, node__, idx)]
                        remains == AnalyzingChildren[tree_, node__, idx+1]
-                   IN  IF remains /= NULL
+                   IN  IF current_result /= NULL /\ remains /= NULL
                        THEN MergeDatas[current_result, remains]
                        ELSE NULL
               ELSE NULL
@@ -41,9 +40,9 @@ LOCAL DoAnalyze(T) ==
               IF NumOfChild(tree, node_) > 0
               THEN LET result_children == AnalyzingChildren[tree, node_, 1]
                    IN  IF result_children /= NULL
-                       THEN MergeDatas[result, result_children]
+                       THEN MergeDatas[[result EXCEPT !.status = "Done"], result_children]
                        ELSE Assert(FALSE, "Failed to parse children")
-              ELSE Assert(FALSE, "Failed to analyze node")
+              ELSE Assert(FALSE, "Failed to analyze node: No child node to parse")
             ELSE
               IF IsAnalyzeFinished[result.status]
               THEN result.info
