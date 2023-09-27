@@ -19,7 +19,7 @@ LOCAL TreeRelations(Nodes) ==
     \*
     \* Restrict maximum number of Children
     \* to make it enumerable.
-    LET Children == (UNION {[1..n -> Nodes]: n \in 0..3})
+    LET Children == (UNION {[1..n -> Nodes]: n \in 0..2})
     IN  [Nodes -> Children \union {NULL}]
 
 LOCAL Descdent(Node, relation) ==
@@ -65,6 +65,12 @@ LOCAL IsTree(relation) ==
             relation[x] /= NULL =>
                 \A i \in 1..Len(relation[x]):
                     Root(ordering) /= relation[x][i]
+        \* Assert that no cycle
+        /\ \A x \in nodes:
+             relation[x] /= NULL =>
+               \A y \in nodes \ {x}:
+                 relation[y] /= NULL /\ x \in CODOMAIN(relation[y]) =>
+                   y \notin CODOMAIN(relation[x])
         \* Assert that every nodes except Root is descdent of Root
         \* which make sure a relation correspond to only one Tree.
         /\ \E ordering \in all_seqs:
@@ -77,11 +83,11 @@ LOCAL IsTree(relation) ==
 Tree(Nodes) ==
     IF NULL \in Nodes
     THEN Assert(FALSE, "Root of tree cannot be NULL") \* Empty Tree
-    ELSE LET Subsets == (SUBSET Nodes \ {})
+    ELSE LET Subsets == (SUBSET Nodes) \ {{}}
              SetOfRelations ==
                {TreeRelations(subn): subn \in Subsets}
              Relations == UNION SetOfRelations
-         IN  {tr \in Relations: TRUE}
+         IN  {tr \in Relations: IsTree(tr)}
 
 (*Operations*)
 Singleton(n) == (n :> <<>>)
