@@ -28,11 +28,11 @@ TreeSample ==
 LOCAL analyze[T \in Tree(DOMAIN TreeSample),
               N \in DOMAIN TreeSample] ==
   CASE N.Type = "PROG" ->
-             [info |-> [F1 |-> <<>>], status |-> "Analyzing"]
+             [info |-> [F1 |-> <<>>, F2 |-> <<>>, NA |-> <<>>], status |-> "Analyzing"]
     [] N.Type = "STMT" ->
-             [info |-> [F1 |-> <<>>], status |-> "Analyzing"]
+             [info |-> [F1 |-> <<>>, F2 |-> <<>>, NA |-> <<>>], status |-> "Analyzing"]
     [] N.Type = "DEFINE" ->
-             [info |-> [F1 |-> <<N.Value>>],
+             [info |-> [F1 |-> <<N.Value>>, F2 |-> <<>>, NA |-> <<>>],
               status |-> "Done"]
 
 LOCAL INSTANCE Analyzer WITH

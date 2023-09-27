@@ -29,10 +29,10 @@ LOCAL DoAnalyze(T) ==
               IF idx <= NumOfChild(tree_, node__)
               THEN LET current_result == Analyzing[tree_, GetChild(tree_, node__, idx)]
                        remains == AnalyzingChildren[tree_, node__, idx+1]
-                   IN  IF current_result /= NULL /\ remains /= NULL
+                   IN  IF current_result /= NULL \/ remains /= NULL
                        THEN MergeDatas[current_result, remains]
                        ELSE NULL
-              ELSE NULL
+              ELSE [F1 |-> <<>>, F2 |-> <<>>, NA |-> <<>>]
 
         IN  IF IsAnalyzing[result.status]
             \* Some of children still unanalyzed.
@@ -40,7 +40,7 @@ LOCAL DoAnalyze(T) ==
               IF NumOfChild(tree, node_) > 0
               THEN LET result_children == AnalyzingChildren[tree, node_, 1]
                    IN  IF result_children /= NULL
-                       THEN MergeDatas[[result EXCEPT !.status = "Done"], result_children]
+                       THEN MergeDatas[result.info, result_children]
                        ELSE Assert(FALSE, "Failed to parse children")
               ELSE Assert(FALSE, "Failed to analyze node: No child node to parse")
             ELSE

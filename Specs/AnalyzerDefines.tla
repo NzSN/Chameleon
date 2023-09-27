@@ -30,7 +30,7 @@ ParseTreeNode[ident  \in node_ids,
      Status |-> "Unanalyzed"]
 
 ParsedData ==
-  [{"F1", "F2"} -> Seq(Nat)]
+  [{"F1", "F2", "NA"} -> Seq(Nat)]
 MergeDatas[D1 \in ParsedData,
            D2 \in ParsedData] ==
   LET conflict_fields ==
