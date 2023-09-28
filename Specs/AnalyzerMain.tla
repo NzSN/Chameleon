@@ -22,8 +22,16 @@ TreeSample ==
   LET rootNode == ParseTreeNode[1, "PROG", NULL]
       node1 == ParseTreeNode[2, "STMT", NULL]
       node2 == ParseTreeNode[3, "DEFINE", 1]
-  IN AddNode(AddNode(Singleton(rootNode), rootNode, node1),
-             node1, node2)
+
+      node3 == ParseTreeNode[4, "STMT", NULL]
+
+  IN
+             AddNode(
+                     AddNode(
+                             AddNode(Singleton(rootNode),
+                                     rootNode, node1),
+                             node1, node2),
+                     rootNode, node3)
 
 LOCAL analyze[T \in Tree(DOMAIN TreeSample),
               N \in DOMAIN TreeSample] ==
