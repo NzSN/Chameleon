@@ -1,6 +1,7 @@
 #ifndef GENERIC_PARSETREE_INL_H
 #define GENERIC_PARSETREE_INL_H
 
+#include <memory>
 #include "generic_parsetree.h"
 #include "utility.h"
 
@@ -72,28 +73,34 @@ GenericParseTree<T>* GenericParseTree<T>::select(
 }
 
 template<GPTMeta T>
-GenericParseTree<T>
-GenericParseTree<T>::mapping(const T& other)
+GenericParseTree<T> GenericParseTree<T>::mapping(const T& other)
   requires GPTMappable<T> {
-  // Traverse tree 'other' in preorder
-  // and spawn correspond node of GenericParseTree
-  // in the same order, which make sure that they
-  // have the same structure.
-  auto fromMappableNode = [](const T& other) {
-    GenericParseTree<T> node{other};
-    return node;
-  };
 
-  // Spawn the current node.
-  GenericParseTree<T> current = fromMappableNode(other);
-
+  GenericParseTree<T> current = GenericParseTree<T>(other);
   // Spawn the subtree of the root node.
   for (auto& c: Concepts::NAryTree::getChildren(other)) {
     current.addChild(mapping(c));
   }
 
+
   return current;
 }
+
+template<GPTMeta T>
+std::unique_ptr<GenericParseTree<T>>
+GenericParseTree<T>::mappingOnHeap(const T& other)
+  requires GPTMappable<T> {
+
+  std::unique_ptr<GenericParseTree<T>> current =
+    std::make_unique<GenericParseTree<T>>(other);
+  // Spawn the subtree of the root node.
+  for (auto& c: Concepts::NAryTree::getChildren(other)) {
+    current->addChild(mapping(c));
+  }
+
+  return current;
+}
+
 
 
 } // Base

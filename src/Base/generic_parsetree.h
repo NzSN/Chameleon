@@ -99,8 +99,12 @@ public:
   //
   // You can treat mapping as a functor mapping between
   // GenericParseTree and another ParseTree.
-  static GenericParseTree mapping(const T& o)
+  static GenericParseTree<T> mapping(const T& o)
   requires GPTMappable<T>;
+
+  static std::unique_ptr<GenericParseTree<T>>
+  mappingOnHeap(const T& o) requires GPTMappable<T>;
+
 
 private:
   friend struct GenericParseTreeTest;
