@@ -18,7 +18,6 @@ concept Children_t = std::ranges::range<T> &&
 template<typename T>
 concept WalkByFunction = requires(T t) {
   { t.getChildren() } -> Children_t<T>;
-  { t.getChild(int{}) } -> std::same_as<T>;
 };
 
 template<typename T>
