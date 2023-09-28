@@ -18,6 +18,7 @@ LOCAL INSTANCE Tree WITH NULL <- NULL
 LOCAL CODOMAIN(f) ==
     {f[x]: x \in DOMAIN f}
 
+\* Thise sample exptected to be FALSE
 TreeSample ==
   LET rootNode == ParseTreeNode[1, "PROG", NULL]
       node1 == ParseTreeNode[2, "STMT", NULL]

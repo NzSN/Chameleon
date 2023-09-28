@@ -63,6 +63,14 @@ public:
     return childs_;
   };
 
+  std::optional<GenericParseTree&> getChild(int i) {
+    if (childs_.size() < i) {
+      return std::nullopt;
+    } else {
+      return childs_[i];
+    }
+  }
+
   bool operator==(const GenericParseTree& other) const;
 
   GenericParseTree* select(
