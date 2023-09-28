@@ -5,7 +5,15 @@ filegroup(
 )
 
 filegroup(
+    name = "external_parser_src",
+    srcs = ["ExternalParser.h", "ExternalParser.cc"],
+    visibility = ["//visibility:public"]
+)
+
+filegroup(
     name = "parser_unittest_src",
-    srcs = [":parser_source", "Parser_unittests.cc"],
+    srcs = [":parser_source",
+            ":external_parser_src",
+            "Parser_unittests.cc"],
     visibility = ["//visibility:public"]
 )
