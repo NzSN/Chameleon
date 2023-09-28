@@ -1,0 +1,11 @@
+filegroup(
+    name = "analyzer_src",
+    srcs = ["analyzer.h"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "analyzer_unittest_src",
+    srcs = [":analyzer_src", "analyzer_unittest.cc"],
+    visibility = ["//visibility:public"],
+)

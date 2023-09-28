@@ -1,10 +1,12 @@
-
 #ifndef ANALYZER_H
 #define ANALYZER_H
 
 #include <utility>
-#include <vector>
+#include <set>
+#include <map>
+#include <numeric>
 #include <cstdlib>
+#include <functional>
 #include <algorithm>
 #include "plog/Log.h"
 #include "Concepts/n_ary_tree.h"
@@ -46,10 +48,40 @@ struct AnalyzeState {
 
 template<NAryTree T>
 struct AnalyzeData {
-  std::vector<T> defines;
-  std::vector<T> merge(AnalyzeData d1, AnalyzeData d2) {
+  using Data = std::map<std::string, std::set<std::reference_wrapper<T>>>;
 
+  AnalyzeData() : data{} {}
+  AnalyzeData(AnalyzeData& ad) : data{ad.data} {}
+  AnalyzeData& operator=(AnalyzeData& ad) {
+    return AnalyzeData{ad};
   }
+
+  // Generate new data, d3, by merge d1 and d2,
+  // INVARIANT:
+  // 1.\A x \in d1,\A y \in d2:
+  //     (x \in d3) /\ (y \in d3)
+  // 2.\exists x \in d1:
+  //     (x \in d2) => (x \in d3 /\ (\A y \in d3\{x}: x /= y))
+  static AnalyzeData merge(AnalyzeData& d1, AnalyzeData& d2) {
+    AnalyzeData merged{d1};
+
+    for (auto& [key, lineOfData]: d2.data) {
+      if (merged.data.contains(key)) {
+        std::set<std::reference_wrapper<T>>& dataValue = merged.data;
+
+        std::for_each(lineOfData.cbegin(), lineOfData.cend(),
+                      [&](std::reference_wrapper<T> d) {
+                        dataValue.insert(d);
+                      });
+      } else {
+        merged.data.insert(std::make_tuple(key, lineOfData));
+      }
+    }
+
+    return merged;
+  }
+
+  Data data;
 };
 
 template<typename F, typename T>
@@ -65,10 +97,10 @@ class Analyzer {
 public:
   static AnalyzeData<T> Analyze(T& tree, A nodeAnalyzer) {
     // Analyzing started from Root.
-    DoAnalyze(tree, tree, nodeAnalyzer);
+    DoAnalyze(tree, nodeAnalyzer);
   }
 private:
-  static AnalyzeData<T> DoAnalyze(T& tree, T& node, A nodeAnalyzer) {
+  static AnalyzeData<T> DoAnalyze(T& node, A nodeAnalyzer) {
     // Analyzeing node
     std::tuple<AnalyzeState, AnalyzeData<T>>
       analyzedInfo = nodeAnalyzer(node);
@@ -76,11 +108,18 @@ private:
     AnalyzeState state = std::get<0>(analyzedInfo);
     if (state.IsAnalyzing()) {
       // Descdent nodes of subtree still unanalyzed
-      // need to parsed them recursively.
+      // need to analyze them recursively.
       std::vector<T> children = node.getChildren();
 
-      std::transform_reduce(, children.cbegin(), children.cend(), );
+      std::for_each(
+        children.cbegin(), children.cend(),
+        [&](const T& child) {
+          AnalyzeData<T> data = DoAnalyze(child, nodeAnalyzer);
+          std::get<1>(analyzedInfo) =
+            AnalyzeData<T>::merge(std::get<1>(analyzedInfo, data));
+        });
 
+      return std::get<1>(analyzedInfo);
     } else if (state.IsFinished()) {
       return std::get<1>(analyzedInfo);
     } else {
