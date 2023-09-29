@@ -100,13 +100,13 @@ public:
   //
   // You can treat mapping as a functor mapping between
   // GenericParseTree and another ParseTree.
-  template<bool IsOnHeap = false,
-           typename = std::enable_if_t<!IsOnHeap>>
+  template<Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
+           typename = std::enable_if_t<Storage == Utility::AUTOMATIC>>
   static GenericParseTree<T> mapping(const T& o)
   requires GPTMappable<T>;
 
-  template<bool IsOnHeap = false,
-           typename = std::enable_if_t<IsOnHeap>,
+  template<Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
+           typename = std::enable_if_t<Storage == Utility::DYNAMIC>,
            int = 1>
   static std::unique_ptr<GenericParseTree<T>>
   mapping(const T& o)

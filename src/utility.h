@@ -13,6 +13,11 @@
 
 namespace Utility {
 
+enum ALLOC_STORAGE_DURATION {
+  AUTOMATIC,
+  DYNAMIC,
+};
+
 template<typename T, typename E>
 concept RangeTuple = std::ranges::range<T> &&
   requires(T t, std::tuple<E, E> pair) {

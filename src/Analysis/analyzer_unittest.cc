@@ -22,7 +22,7 @@ struct AnalyzerTests: public ::testing::Test {
       Parser::TestLangExt,
       Base::Antlr4Node,
       Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-      ::template parse<true>(&codes);
+      ::parse<Utility::DYNAMIC>(&codes);
   }
 
   std::unique_ptr<

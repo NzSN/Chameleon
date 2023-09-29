@@ -73,7 +73,8 @@ GenericParseTree<T>* GenericParseTree<T>::select(
 }
 
 template<GPTMeta T>
-template<bool IsOnHeap, typename>
+template<Utility::ALLOC_STORAGE_DURATION Storage,
+         typename>
 GenericParseTree<T>
 GenericParseTree<T>::mapping(const T& other) requires GPTMappable<T> {
   GenericParseTree<T> node = GenericParseTree<T>(other);
@@ -84,7 +85,8 @@ GenericParseTree<T>::mapping(const T& other) requires GPTMappable<T> {
 }
 
 template<GPTMeta T>
-template<bool IsOnHeap, typename, int>
+template<Utility::ALLOC_STORAGE_DURATION Storage,
+         typename ,int>
 std::unique_ptr<GenericParseTree<T>>
 GenericParseTree<T>::mapping(const T& other) requires GPTMappable<T> {
   std::unique_ptr<GenericParseTree<T>> node = std::make_unique<GenericParseTree<T>>(other);
