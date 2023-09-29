@@ -1,5 +1,5 @@
 grammar TestLang;
-prog:   (expr NEWLINE)* ;
+prog:   expr ;
 expr:   expr ('*'|'/') expr
     |   expr ('+'|'-') expr
     |   INT

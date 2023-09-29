@@ -5,9 +5,9 @@
 namespace Utility {
 
 std::string testLangRandomExpr(unsigned numOfOperands) {
-  constexpr int NumOfOperators = 5;
+  constexpr int NumOfOperators = 4;
   static std::string operators[] ={
-    "+", "-", "*", "/", "\n"
+    "+", "-", "*", "/"
   };
 
   if (numOfOperands == 0) return {};
@@ -19,9 +19,9 @@ std::string testLangRandomExpr(unsigned numOfOperands) {
   } else {
     sentence += operators[*rc::gen::inRange(0, NumOfOperators)];
     sentence += testLangRandomExpr(numOfOperands);
+    return sentence;
   }
 
-  return sentence+"\n";
 }
 
 
