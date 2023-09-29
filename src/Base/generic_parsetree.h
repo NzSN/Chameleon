@@ -10,6 +10,7 @@
 
 #include "Language/language.h"
 #include "Concepts/n_ary_tree.h"
+#include "utility.h"
 
 namespace Base {
 
@@ -99,11 +100,17 @@ public:
   //
   // You can treat mapping as a functor mapping between
   // GenericParseTree and another ParseTree.
+  template<bool IsOnHeap = false,
+           typename = std::enable_if_t<!IsOnHeap>>
   static GenericParseTree<T> mapping(const T& o)
   requires GPTMappable<T>;
 
+  template<bool IsOnHeap = false,
+           typename = std::enable_if_t<IsOnHeap>,
+           int = 1>
   static std::unique_ptr<GenericParseTree<T>>
-  mappingOnHeap(const T& o) requires GPTMappable<T>;
+  mapping(const T& o)
+  requires GPTMappable<T>;
 
 
 private:

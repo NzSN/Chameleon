@@ -22,14 +22,16 @@ struct AnalyzerTests: public ::testing::Test {
       Parser::TestLangExt,
       Base::Antlr4Node,
       Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-      ::parse(&codes);
+      ::template parse<true>(&codes);
   }
 
-  Base::GenericParseTree<Base::Antlr4Node> parsetree;
+  std::unique_ptr<
+    Base::GenericParseTree<
+      Base::Antlr4Node>> parsetree;
 };
 
 RC_GTEST_FIXTURE_PROP(AnalyzerTests, Basics, ()) {
-
+  RC_ASSERT((parsetree.get() != NULL));
 }
 
 } // Analyzer

@@ -32,10 +32,23 @@ template<typename ExtNode,
          NodeAdapter<ExtNode> A,
          int lang>
 struct Parser {
+
+  template<bool IsOnHeap = false,
+           typename = std::enable_if_t<!IsOnHeap>>
   static Base::GenericParseTree<A> parse(std::istream* input) {
     adapters_.emplace_back(lang, P::parse(input));
     return Base::GenericParseTree<A>::mapping(adapters_.back());
   }
+
+  template<bool IsOnHeap = false,
+           typename = std::enable_if_t<IsOnHeap>,
+           int = 1>
+  static std::unique_ptr<Base::GenericParseTree<A>>
+  parse(std::istream* input) {
+    adapters_.emplace_back(lang, P::parse(input));
+    return Base::GenericParseTree<A>::template mapping<true>(adapters_.back());
+  }
+
 
 private:
   static std::vector<A> adapters_;

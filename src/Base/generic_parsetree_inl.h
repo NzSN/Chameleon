@@ -73,33 +73,27 @@ GenericParseTree<T>* GenericParseTree<T>::select(
 }
 
 template<GPTMeta T>
-GenericParseTree<T> GenericParseTree<T>::mapping(const T& other)
-  requires GPTMappable<T> {
-
-  GenericParseTree<T> current = GenericParseTree<T>(other);
-  // Spawn the subtree of the root node.
+template<bool IsOnHeap, typename>
+GenericParseTree<T>
+GenericParseTree<T>::mapping(const T& other) requires GPTMappable<T> {
+  GenericParseTree<T> node = GenericParseTree<T>(other);
   for (auto& c: Concepts::NAryTree::getChildren(other)) {
-    current.addChild(mapping(c));
+    node.addChild(mapping(c));
   }
-
-
-  return current;
+  return node;
 }
 
 template<GPTMeta T>
+template<bool IsOnHeap, typename, int>
 std::unique_ptr<GenericParseTree<T>>
-GenericParseTree<T>::mappingOnHeap(const T& other)
-  requires GPTMappable<T> {
-
-  std::unique_ptr<GenericParseTree<T>> current =
-    std::make_unique<GenericParseTree<T>>(other);
-  // Spawn the subtree of the root node.
+GenericParseTree<T>::mapping(const T& other) requires GPTMappable<T> {
+  std::unique_ptr<GenericParseTree<T>> node = std::make_unique<GenericParseTree<T>>(other);
   for (auto& c: Concepts::NAryTree::getChildren(other)) {
-    current->addChild(mapping(c));
+    node->addChild(mapping(c));
   }
-
-  return current;
+  return node;
 }
+
 
 
 
