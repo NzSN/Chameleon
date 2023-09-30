@@ -2,7 +2,9 @@
 #define ANALYZER_H
 
 #include <utility>
-#include <set>
+#include <unordered_set>
+#include <functional>
+#include <vector>
 #include <map>
 #include <numeric>
 #include <cstdlib>
@@ -10,6 +12,7 @@
 #include <algorithm>
 #include "plog/Log.h"
 #include "Concepts/n_ary_tree.h"
+
 
 namespace Analyzer {
 
@@ -48,12 +51,25 @@ struct AnalyzeState {
 
 template<NAryTree T>
 struct AnalyzeData {
-  using Data = std::map<std::string, std::set<std::reference_wrapper<T>>>;
+
+  struct DataHash {
+    size_t operator()(const std::reference_wrapper<T> item) const {
+      return reinterpret_cast<std::uintptr_t>(&item.get());
+    }
+  };
+
+  using DataSet = std::unordered_set<std::reference_wrapper<T>,
+                                     DataHash>;
+  using Data = std::map<std::string, DataSet>;
 
   AnalyzeData() : data{} {}
   AnalyzeData(AnalyzeData& ad) : data{ad.data} {}
   AnalyzeData& operator=(AnalyzeData& ad) {
     return AnalyzeData{ad};
+  }
+  AnalyzeData(AnalyzeData&& ad) : data{std::move(ad.data)} {}
+  AnalyzeData& operator=(AnalyzeData&& ad) {
+    return AnalyzeData{std::move(ad)};
   }
 
   // Generate new data, d3, by merge d1 and d2,
@@ -67,7 +83,7 @@ struct AnalyzeData {
 
     for (auto& [key, lineOfData]: d2.data) {
       if (merged.data.contains(key)) {
-        std::set<std::reference_wrapper<T>>& dataValue = merged.data;
+        std::unordered_set<std::reference_wrapper<T>>& dataValue = merged.data;
 
         std::for_each(lineOfData.cbegin(), lineOfData.cend(),
                       [&](std::reference_wrapper<T> d) {
@@ -85,14 +101,14 @@ struct AnalyzeData {
 };
 
 template<typename F, typename T>
-concept ParseTreeAnalyze =
+concept NodeAnalyzer =
   NAryTree<T> &&
   requires(F f, T t) {
     { f(t) } -> std::same_as<std::tuple<AnalyzeState, AnalyzeData<T>>>;
   };
 
 template<NAryTree T,
-         ParseTreeAnalyze<T> A>
+         NodeAnalyzer<T> A>
 class Analyzer {
 public:
   static AnalyzeData<T> Analyze(T& tree, A nodeAnalyzer) {
