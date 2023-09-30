@@ -51,10 +51,7 @@ public:
   using GPTIterator = Childs::iterator;
 
   // Terminal
-  GenericParseTree(T* meta):
-    meta_{meta}, metaRef{&meta} {}
-  GenericParseTree(const T& meta):
-    meta_{&meta}, metaRef{meta} {}
+  GenericParseTree(const T& meta): metaRef{meta} {}
 
   GenericParseTree& addChild(GenericParseTree type) {
     return childs_.emplace_back(type);
@@ -80,17 +77,18 @@ public:
   void traverse(
     std::function<bool(GenericParseTree&)> proc);
 
-  CharPosition getStartPos() const {
-    return std::get<0>(positions);
-  }
-
-  CharPosition getEndPos() const {
-    return std::get<1>(positions);
-  }
-
+  // For convenience, GenericParseTree will require that
+  //
   std::string getText() {
-    if (meta_ == nullptr) return {};
-    return const_cast<T*>(meta_)->tree()->getText();
+    return const_cast<T&>(metaRef).tree()->getText();
+  }
+
+  SrcRange getPos() {
+    return metaRef.sourceRange();
+  }
+
+  const T& getMeta() const {
+    return metaRef;
   }
 
   // Chameleons are based on exist parsers. Exist parsers
@@ -115,15 +113,9 @@ public:
 
 private:
   friend struct GenericParseTreeTest;
-  // GenericParseTree does not owning resource
-  // of a specific tree which contain metainfo
-  // of sentence, just let the type to be T* .
-  const T* meta_;
   const T& metaRef;
 
   Childs childs_;
-  // (pos of fisrt char, pos of last char)
-  SrcRange positions;
 };
 
 } // Base

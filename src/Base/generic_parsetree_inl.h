@@ -17,7 +17,7 @@ bool GenericParseTree<T>::operator==(
     equality_check = [&equality_check](
       const GenericParseTree& l, const GenericParseTree& r) {
       // Check node type
-      if (!(l.meta_ == r.meta_)) {
+      if (!(l.metaRef == r.metaRef)) {
         return false;
       }
 
