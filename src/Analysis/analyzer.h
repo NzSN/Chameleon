@@ -58,8 +58,15 @@ struct AnalyzeData {
     }
   };
 
+  struct DataEqual {
+    constexpr bool operator()(const std::reference_wrapper<T> l,
+                              const std::reference_wrapper<T> r) const {
+      return l.get() == r.get();
+    }
+  };
+
   using DataSet = std::unordered_set<std::reference_wrapper<T>,
-                                     DataHash>;
+                                     DataHash, DataEqual>;
   using Data = std::map<std::string, DataSet>;
 
   AnalyzeData() : data{} {}
