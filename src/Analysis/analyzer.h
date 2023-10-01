@@ -71,11 +71,11 @@ struct AnalyzeData {
 
   AnalyzeData() : data{} {}
   AnalyzeData(AnalyzeData& ad) : data{ad.data} {}
-  AnalyzeData& operator=(AnalyzeData& ad) {
+  AnalyzeData operator=(AnalyzeData& ad) {
     return AnalyzeData{ad};
   }
   AnalyzeData(AnalyzeData&& ad) : data{std::move(ad.data)} {}
-  AnalyzeData& operator=(AnalyzeData&& ad) {
+  AnalyzeData operator=(AnalyzeData&& ad) {
     return AnalyzeData{std::move(ad)};
   }
 
@@ -90,14 +90,14 @@ struct AnalyzeData {
 
     for (auto& [key, lineOfData]: d2.data) {
       if (merged.data.contains(key)) {
-        std::unordered_set<std::reference_wrapper<T>>& dataValue = merged.data;
+        DataSet& dataValue{merged.data[key]};
 
         std::for_each(lineOfData.cbegin(), lineOfData.cend(),
-                      [&](std::reference_wrapper<T> d) {
+                      [&](const std::reference_wrapper<T> d) {
                         dataValue.insert(d);
                       });
       } else {
-        merged.data.insert(std::make_tuple(key, lineOfData));
+        merged.data.insert({key, lineOfData});
       }
     }
 
@@ -120,7 +120,7 @@ class Analyzer {
 public:
   static AnalyzeData<T> Analyze(T& tree, A nodeAnalyzer) {
     // Analyzing started from Root.
-    DoAnalyze(tree, nodeAnalyzer);
+    return DoAnalyze(tree, nodeAnalyzer);
   }
 private:
   static AnalyzeData<T> DoAnalyze(T& node, A nodeAnalyzer) {
@@ -132,15 +132,14 @@ private:
     if (state.IsAnalyzing()) {
       // Descdent nodes of subtree still unanalyzed
       // need to analyze them recursively.
-      std::vector<T> children = node.getChildren();
+      std::vector<T>& children =
+        const_cast<T&>(node).getChildren();
 
-      std::for_each(
-        children.cbegin(), children.cend(),
-        [&](const T& child) {
-          AnalyzeData<T> data = DoAnalyze(child, nodeAnalyzer);
-          std::get<1>(analyzedInfo) =
-            AnalyzeData<T>::merge(std::get<1>(analyzedInfo, data));
-        });
+      for (auto& child: children) {
+        AnalyzeData<T> data = DoAnalyze(child, nodeAnalyzer);
+        std::get<1>(analyzedInfo) =
+          AnalyzeData<T>::merge(std::get<1>(analyzedInfo), data);
+      }
 
       return std::get<1>(analyzedInfo);
     } else if (state.IsFinished()) {
