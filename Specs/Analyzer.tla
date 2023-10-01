@@ -29,10 +29,17 @@ LOCAL DoAnalyze(T) ==
               IF idx <= NumOfChild(tree_, node__)
               THEN LET current_result == Analyzing[tree_, GetChild(tree_, node__, idx)]
                        remains == AnalyzingChildren[tree_, node__, idx+1]
-                   IN  IF current_result /= NULL \/ remains /= NULL
+                   IN  IF current_result /= NULL /\ remains /= NULL
                        THEN MergeDatas[current_result, remains]
-                       ELSE NULL
-              ELSE [F1 |-> <<>>, F2 |-> <<>>, NA |-> <<>>]
+                       ELSE
+                         IF current_result /= NULL
+                         THEN current_result
+                         ELSE
+                           IF remains /= NULL
+                           THEN remains
+                           ELSE NULL
+
+              ELSE NULL
 
         IN  IF IsAnalyzing[result.status]
             \* Some of children still unanalyzed.
