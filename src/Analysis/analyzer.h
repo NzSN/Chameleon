@@ -72,11 +72,13 @@ struct AnalyzeData {
   AnalyzeData() : data{} {}
   AnalyzeData(AnalyzeData& ad) : data{ad.data} {}
   AnalyzeData operator=(AnalyzeData& ad) {
-    return AnalyzeData{ad};
+    this->data = ad.data;
+    return *this;
   }
   AnalyzeData(AnalyzeData&& ad) : data{std::move(ad.data)} {}
   AnalyzeData operator=(AnalyzeData&& ad) {
-    return AnalyzeData{std::move(ad)};
+    this->data = ad.data;
+    return *this;
   }
 
   // Generate new data, d3, by merge d1 and d2,
@@ -90,7 +92,7 @@ struct AnalyzeData {
 
     for (auto& [key, lineOfData]: d2.data) {
       if (merged.data.contains(key)) {
-        DataSet& dataValue{merged.data[key]};
+        DataSet& dataValue = merged.data[key];
 
         std::for_each(lineOfData.cbegin(), lineOfData.cend(),
                       [&](const std::reference_wrapper<T> d) {
@@ -135,10 +137,19 @@ private:
       std::vector<T>& children =
         const_cast<T&>(node).getChildren();
 
+      if (children.size() == 0) {
+        // A node in Analyzing state without child nodes
+        // means the analyze is incompleted.
+        throw std::runtime_error(
+          "Incompleted ParseTree: Some nodes remain"
+          "in Analyzing states after all nodes is traversed.");
+      }
+
       for (auto& child: children) {
         AnalyzeData<T> data = DoAnalyze(child, nodeAnalyzer);
+        auto& temp = std::get<1>(analyzedInfo);
         std::get<1>(analyzedInfo) =
-          AnalyzeData<T>::merge(std::get<1>(analyzedInfo), data);
+          AnalyzeData<T>::merge(temp, data);
       }
 
       return std::get<1>(analyzedInfo);
@@ -147,7 +158,7 @@ private:
     } else {
       PLOG_FATAL << "Failed to analyze: node still in "
                  << "Unanalyzed state after analyze.";
-      std::abort();
+      throw std::runtime_error("Failed to analyze node");
     }
   }
 };
