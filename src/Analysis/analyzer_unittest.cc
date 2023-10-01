@@ -62,8 +62,8 @@ struct NodeAnalyzerStub {
 struct AnalyzerTests: public ::testing::Test {
   void SetUp() final {
     // Generate source code randomly.
-    numOfExpr = *rc::gen::inRange(1, 10);
-    expression = Utility::testLangRandomExpr(numOfExpr);
+    numOfOperand = *rc::gen::inRange(1, 10);
+    expression = Utility::testLangRandomExpr(numOfOperand);
     std::istringstream codes{expression};
 
     parsetree = Parser::Parser<
@@ -74,7 +74,7 @@ struct AnalyzerTests: public ::testing::Test {
       ::parse<Utility::DYNAMIC>(&codes);
   }
 
-  int numOfExpr;
+  int numOfOperand;
   std::string expression;
   std::unique_ptr<
     Base::GenericParseTree<
@@ -84,6 +84,7 @@ struct AnalyzerTests: public ::testing::Test {
 RC_GTEST_FIXTURE_PROP(AnalyzerTests, Basics, ()) {
   // Assert that Parsetree is generated correctly.
   RC_ASSERT((parsetree->getText() == expression));
+  std::cout << expression << std::endl;
 
   // Do analyzing.
   NodeAnalyzerStub analyzer{} ;
@@ -91,8 +92,24 @@ RC_GTEST_FIXTURE_PROP(AnalyzerTests, Basics, ()) {
     Analyzer<Antlr4GenericParseTree, NodeAnalyzerStub>::Analyze(
     *parsetree, analyzer);
 
+  // Assert that only expr info reside in
+  // AnalyzedData.
   RC_ASSERT(info.data.size() == 1);
-  //RC_ASSERT(info.data["EXPR"].size() == numOfExpr);
+
+  // Assert that num of expr node is
+  // correct.
+  int numOfExpr = 0;
+  switch (numOfOperand) {
+  case 1:
+    numOfExpr = 1;
+    break;
+  case 2:
+    numOfExpr = 3;
+    break;
+  default:
+    numOfExpr = 3 + (numOfOperand - 2) * 2;
+  }
+  RC_ASSERT(info.data["EXPR"].size() == numOfExpr);
 }
 
 } // Analyzer
