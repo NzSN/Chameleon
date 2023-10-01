@@ -47,6 +47,8 @@ struct NodeAnalyzerStub {
           std::reference_wrapper<Antlr4GenericParseTree>(
             const_cast<Antlr4GenericParseTree&>(node)));
       }
+    } else if (nodeTypeID == typeid(TestLangParser::ProgContext).hash_code()) {
+      std::get<0>(ret) = {AnalyzeState::Analyzing};
     } else {
       /* Node type that not recognized by this analyzer */
     }
@@ -58,7 +60,8 @@ struct NodeAnalyzerStub {
 struct AnalyzerTests: public ::testing::Test {
   void SetUp() final {
     // Generate source code randomly.
-    expression = Utility::testLangRandomExpr(*rc::gen::inRange(1, 10));
+    numOfExpr = *rc::gen::inRange(1, 10);
+    expression = Utility::testLangRandomExpr(numOfExpr);
     std::istringstream codes{expression};
 
     parsetree = Parser::Parser<
@@ -69,6 +72,7 @@ struct AnalyzerTests: public ::testing::Test {
       ::parse<Utility::DYNAMIC>(&codes);
   }
 
+  int numOfExpr;
   std::string expression;
   std::unique_ptr<
     Base::GenericParseTree<
@@ -81,10 +85,12 @@ RC_GTEST_FIXTURE_PROP(AnalyzerTests, Basics, ()) {
 
   // Do analyzing.
   NodeAnalyzerStub analyzer{} ;
-  AnalyzeData<Antlr4GenericParseTree> data =
+  AnalyzeData<Antlr4GenericParseTree> info =
     Analyzer<Antlr4GenericParseTree, NodeAnalyzerStub>::Analyze(
     *parsetree, analyzer);
 
+  RC_ASSERT(info.data.size() == 1);
+  RC_ASSERT(info.data["EXPR"].size() == numOfExpr);
 }
 
 } // Analyzer
