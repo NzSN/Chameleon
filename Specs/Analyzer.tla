@@ -29,16 +29,12 @@ LOCAL DoAnalyze(T) ==
               IF idx <= NumOfChild(tree_, node__)
               THEN LET current_result == Analyzing[tree_, GetChild(tree_, node__, idx)]
                        remains == AnalyzingChildren[tree_, node__, idx+1]
-                   IN  IF current_result /= NULL /\ remains /= NULL
-                       THEN MergeDatas[current_result, remains]
-                       ELSE
-                         IF current_result /= NULL
-                         THEN current_result
-                         ELSE
-                           IF remains /= NULL
-                           THEN remains
-                           ELSE NULL
-
+                   IN  IF remains /= NULL
+                       THEN [current_result EXCEPT
+                             !.current_result.info = MergeDatas[current_result, remains],
+                             !.status = "Done"]
+                       ELSE current_result
+                   \* No more children to analyze
               ELSE NULL
 
         IN  IF IsAnalyzing[result.status]
@@ -47,14 +43,19 @@ LOCAL DoAnalyze(T) ==
               IF NumOfChild(tree, node_) > 0
               THEN LET result_children == AnalyzingChildren[tree, node_, 1]
                    IN  IF result_children /= NULL
-                       THEN MergeDatas[result.info, result_children]
+                       THEN IF IsAnalyzeFinished[result_children.status]
+                            THEN [result EXCEPT
+                                  !.info = MergeDatas[result.info, result_children],
+                                  !.status = "Done"]
+                            ELSE Assert(FALSE, "Failed to analyze Tree: Not all finished")
                        ELSE Assert(FALSE, "Failed to parse children")
               ELSE Assert(FALSE, "Failed to analyze node: No child node to parse")
             ELSE
               IF IsAnalyzeFinished[result.status]
-              THEN result.info
+              THEN result
               ELSE Assert(FALSE, "Failed to analyze node")
-  IN Analyzing[T, rootNode]
+  IN LET Ret == Analyzing[T, rootNode]
+     IN  Ret.info
 
 \* Analyze the tree which root
 \* node as parameter.

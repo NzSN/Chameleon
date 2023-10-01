@@ -23,7 +23,6 @@ TreeSample ==
   LET rootNode == ParseTreeNode[1, "PROG", NULL]
       node1 == ParseTreeNode[2, "STMT", NULL]
       node2 == ParseTreeNode[3, "DEFINE", 1]
-
       node3 == ParseTreeNode[4, "STMT", NULL]
 
   IN
