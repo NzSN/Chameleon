@@ -84,7 +84,6 @@ struct AnalyzerTests: public ::testing::Test {
 RC_GTEST_FIXTURE_PROP(AnalyzerTests, Basics, ()) {
   // Assert that Parsetree is generated correctly.
   RC_ASSERT((parsetree->getText() == expression));
-  std::cout << expression << std::endl;
 
   // Do analyzing.
   NodeAnalyzerStub analyzer{} ;
