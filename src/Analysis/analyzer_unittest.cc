@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include <map>
 #include <tuple>
+#include <array>
 
 #include "analyzer.h"
 #include "Parser/Parser-inl.h"
@@ -16,8 +17,103 @@
 #include "Misc/testLanguage/TestLangParser.h"
 
 namespace Analyzer {
-
 using Antlr4GenericParseTree = Base::GenericParseTree<Base::Antlr4Node>;
+
+///////////////////////////////////////////////////////////////////////////////
+//                           AnalyzeData Unittests                           //
+///////////////////////////////////////////////////////////////////////////////
+struct TestTree {
+  constexpr static const int MAXIMUM_FIELDS = 10;
+  constexpr static const int MAXIMUM_DATAS = 10;
+  constexpr static int TOTAL_NUM_OF_DATA = MAXIMUM_FIELDS * MAXIMUM_DATAS;
+
+
+  TestTree(int v): value{v}, children{} {}
+  std::array<TestTree*, TOTAL_NUM_OF_DATA> getChildren() {
+    return children;
+  }
+
+  TestTree(const TestTree& other) {
+    this->value = other.value;
+    this->children = other.children;
+  }
+
+  bool operator==(const TestTree& t) const {
+    return this == &t;
+  }
+
+  int value;
+  std::array<TestTree*, TOTAL_NUM_OF_DATA> children;
+};
+
+struct AnalyzeDataTests: public ::testing::Test {
+  void SetUp() final { /* Do Nothing */ }
+
+  AnalyzeData<TestTree>
+  randomData() {
+    AnalyzeData<TestTree> data{};
+
+    int numOfFields = *rc::gen::inRange(1,10);
+    for (int i = 0; i < numOfFields; ++i) {
+      int numOfData = *rc::gen::inRange(1,10);
+
+      AnalyzeData<TestTree>::DataSet set;
+
+      for (int j = 0; j < numOfData; ++j) {
+        int value = *rc::gen::inRange(1,10);
+
+        allTrees.emplace_back(value);
+        TestTree& tree = allTrees.back();
+        set.insert(std::reference_wrapper<TestTree>(tree));
+      }
+
+      data.data.insert({std::to_string(i), set});
+    }
+
+    return data;
+  }
+
+  std::vector<TestTree> allTrees;
+};
+
+RC_GTEST_FIXTURE_PROP(AnalyzeDataTests, InvariantCheck, ()) {
+  AnalyzeData<TestTree> treeA = randomData();
+  AnalyzeData<TestTree> treeB = randomData();
+
+  AnalyzeData<TestTree> treeC = AnalyzeData<TestTree>::merge(
+    treeA, treeB);
+
+  // Assert invariant is holded.
+  const auto& isFound = [&](std::string key, TestTree& t) -> bool {
+    if (!treeC.data.contains(key)) {
+      std::cout << "key not found:" << key << std::endl;
+      return false;
+    } else {
+      for (auto& d: treeC.data[key]) {
+        if (d.get() == t) {
+          return true;
+        }
+        return true;
+      }
+    }
+
+    return true;
+  };
+
+  for (auto& tree: {treeA, treeB}) {
+    for (auto& [key, data]: tree.data) {
+      for (auto& d: data) {
+        bool found = isFound(key, d);
+        RC_ASSERT(found);
+      }
+    }
+  }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                             Analyzer Unittests                            //
+///////////////////////////////////////////////////////////////////////////////
 
 // An Node analyzer to analyzing a TestLang ParseTree
 // to collect all operand infos.
@@ -97,18 +193,20 @@ RC_GTEST_FIXTURE_PROP(AnalyzerTests, Basics, ()) {
 
   // Assert that num of expr node is
   // correct.
-  int numOfExpr = 0;
-  switch (numOfOperand) {
-  case 1:
-    numOfExpr = 1;
-    break;
-  case 2:
-    numOfExpr = 3;
-    break;
-  default:
-    numOfExpr = 3 + (numOfOperand - 2) * 2;
-  }
-  RC_ASSERT(info.data["EXPR"].size() == numOfExpr);
+  auto numOfExpr = [](int numOfOperand) {
+    switch (numOfOperand) {
+    case 1:
+      return 1;
+      break;
+    case 2:
+      return 3;
+      break;
+    default:
+      return 3 + (numOfOperand - 2) * 2;
+    }
+  };
+
+  RC_ASSERT(info.data["EXPR"].size() == numOfExpr(numOfOperand));
 }
 
 } // Analyzer
