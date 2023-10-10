@@ -19,7 +19,7 @@ LOCAL TreeRelations(Nodes) ==
     \*
     \* Restrict maximum number of Children
     \* to make it enumerable.
-    LET Children == (UNION {[1..n -> Nodes]: n \in 0..2})
+    LET Children == (UNION {[1..n -> Nodes]: n \in 0..Cardinality(Nodes)})
     IN  [Nodes -> Children \union {NULL}]
 
 LOCAL Descdent(Node, relation) ==
@@ -83,11 +83,7 @@ LOCAL IsTree(relation) ==
 Tree(Nodes) ==
     IF NULL \in Nodes
     THEN Assert(FALSE, "Root of tree cannot be NULL") \* Empty Tree
-    ELSE LET Subsets == (SUBSET Nodes) \ {{}}
-             SetOfRelations ==
-               {TreeRelations(subn): subn \in Subsets}
-             Relations == UNION SetOfRelations
-         IN  {tr \in Relations: IsTree(tr)}
+    ELSE {tr \in TreeRelations(Nodes): IsTree(tr)}
 
 (*Operations*)
 Singleton(n) == (n :> <<>>)

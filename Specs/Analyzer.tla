@@ -31,7 +31,7 @@ LOCAL DoAnalyze(T) ==
                        remains == AnalyzingChildren[tree_, node__, idx+1]
                    IN  IF remains /= NULL
                        THEN [current_result EXCEPT
-                             !.current_result.info = MergeDatas[current_result, remains],
+                             !.info = MergeDatas[current_result.info, remains.info],
                              !.status = "Done"]
                        ELSE current_result
                    \* No more children to analyze
@@ -45,7 +45,7 @@ LOCAL DoAnalyze(T) ==
                    IN  IF result_children /= NULL
                        THEN IF IsAnalyzeFinished[result_children.status]
                             THEN [result EXCEPT
-                                  !.info = MergeDatas[result.info, result_children],
+                                  !.info = MergeDatas[result.info, result_children.info],
                                   !.status = "Done"]
                             ELSE Assert(FALSE, "Failed to analyze Tree: Not all finished")
                        ELSE Assert(FALSE, "Failed to parse children")
