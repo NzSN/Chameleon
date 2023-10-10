@@ -38,7 +38,7 @@ MergeDatas[D1 \in ParsedData,
   IN  IF conflict_fields /= {}
       THEN [x \in (DOMAIN D1) \union (DOMAIN D2) |->
             IF x \in conflict_fields
-            THEN D1[x] @@ D2[x]
+            THEN D1[x] \o D2[x]
             ELSE IF x \in DOMAIN D1 THEN D1[x] ELSE D2[x]]
       ELSE D1 @@ D2
 ================================
