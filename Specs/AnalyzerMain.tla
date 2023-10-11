@@ -24,14 +24,15 @@ TreeSample ==
       node1 == ParseTreeNode[2, "STMT", NULL]
       node2 == ParseTreeNode[3, "DEFINE", 1]
       node3 == ParseTreeNode[4, "STMT", NULL]
-
-  IN
-             AddNode(
-                     AddNode(
-                             AddNode(Singleton(rootNode),
-                                     rootNode, node1),
-                             node1, node2),
-                     rootNode, node3)
+      node4 == ParseTreeNode[5, "DEFINE", 2]
+  IN  AddNode(
+              AddNode(
+                      AddNode(
+                              AddNode(Singleton(rootNode),
+                                      rootNode, node1),
+                              node1, node2),
+                      rootNode, node3),
+              node3, node4)
 
 LOCAL analyze[T \in Tree(DOMAIN TreeSample),
               N \in DOMAIN TreeSample] ==
