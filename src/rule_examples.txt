@@ -7,8 +7,12 @@
 # Migrate TS code which before "=>"
 # to CPP code which after "=>"
 SetTimeoutWithCoro:
-   {| { SetTimeout(%A%, %B%); console.log(%A%, %B%); } |} =>
-   {| { SetTimeout_Coro(%A%, %B%); console_log(%A%, %B%); } |}
+   {| { SetTimeout(%A, %B); console.log(%A, %B); } |} =>
+   {| { SetTimeout_Coro(%A, %B); console_log(%A, %B); } |}
+
+Strategy:
+   RandomIdentifier => RDI_Assign
+   RandomIdentifier => RDI_Multiply
 
 # Transform all identifier to random valid identifier.
 # This Rule require syntax knowledge.
@@ -18,5 +22,16 @@ SetTimeoutWithCoro:
 #
 # %RDIdent(A)% is a command use
 RandomIdentifier:
-   {| %T% %I% = %E% |} => {| %T% %RD(I)% = %E% |}
-   where T \in Type /\ I \in Identifier
+   LET IDENT = RD()
+   IN {| %T %I = %E |} => {| %T $IDENT = %E |}
+      where T \in Type /\ I \in Identifier
+
+RDI_Assign:
+   {| %I = %E |} => {| $IDENT = %E |}
+   where %I == RandomIdentifier::%I /\
+         Scope(%I) == Scope(RandomIdentifier::%I)
+
+RDI_Multiply:
+   {| %I * %E |} => {| $IDENT * %E |}
+   where %I == RandomIdentifier::%I /\
+         Scope(%I) == Scope(RandomIdentifier::%I)
