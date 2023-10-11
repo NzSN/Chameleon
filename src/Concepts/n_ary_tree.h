@@ -85,6 +85,7 @@ bool equal(const T& l, const R& r,
   return isEqual;
 }
 
+// Note: T should be in Concept NAryTree.
 #define LAYER_OF_NARY_TREE(L, T) \
   std::vector<L>& getChildren() { return children; }  \
   std::vector<L> children; \
