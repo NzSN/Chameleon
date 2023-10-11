@@ -1,5 +1,13 @@
 
 filegroup(
-    name = "Transformer",
+    name = "transformer_srcs",
+    srcs = ["SigmaTerm.h",
+            "PatternMatching.h"],
+    visibility = ["//visibility:public"]
+)
 
+filegroup(
+    name = "transformer_unittest_srcs",
+    srcs = [":transformer_srcs",
+            "PatternMatching_Unittests.cc"]
 )
