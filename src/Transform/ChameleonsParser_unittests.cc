@@ -17,6 +17,7 @@ struct ChameleonsTest: public ::testing::Test {
   }
 
   bool ParseTreeMatching(std::string prog, std::string parseTree) {
+    std::cout << GetParseTree(prog);
     return GetParseTree(prog) == parseTree;
   }
 
@@ -29,34 +30,46 @@ struct ChameleonsTest: public ::testing::Test {
 TEST_F(ChameleonsTest, Basic) {
   EXPECT_TRUE(ParseTreeMatching(
                 // Program
-                "R: { Origin } => { Progd }",
+                "R: {| Origin |} => {| Progd |}",
                 // ParseTree
                 "(prog "
                 "(rewriteRules "
                 "(rewriteRule "
-                "R : { (sourcePattern  Origin ) } => { (targetPattern  Progd ) })))"
+                "R : {| (sourcePattern  Origin ) |} => {| (targetPattern  Progd ) |})))"
                 ));
+
+  EXPECT_TRUE(ParseTreeMatching(
+                // Program
+                "R: {| Origin\\| |} => {| Progd\\| |}",
+                // ParseTree
+                "(prog "
+                "(rewriteRules "
+                "(rewriteRule "
+                "R : {| (sourcePattern  Origin\\| ) |} => {| (targetPattern  Progd\\| ) |})))"
+                ));
+
 }
 
 TEST_F(ChameleonsTest, WithSpaceCodes) {
   EXPECT_TRUE(ParseTreeMatching(
                 // Program
-                "R: {"
+                "R: {|"
 
-                "setTimeout(%A, %B);"
-                "console.log(%A, %B); "
+                "%F()%;"
+                "setTimeout(%A%, %B%);"
+                "console.log(%A%, %B%); "
 
-                " } => { "
+                " |} => {| "
 
-                "SetTimeout_Coro(%A, %B)"
+                "SetTimeout_Coro(%A%, %B%)"
 
-                " }",
+                " |}",
                 // Expected ParseTree
                 "(prog "
                 "(rewriteRules "
                 "(rewriteRule "
-                "R : { (sourcePattern setTimeout(%A, %B);console.log(%A, %B);  ) } "
-                "=> { (targetPattern  SetTimeout_Coro(%A, %B) ) })))"
+                "R : {| (sourcePattern %F()%;setTimeout(%A%, %B%);console.log(%A%, %B%);  ) |} "
+                "=> {| (targetPattern  SetTimeout_Coro(%A%, %B%) ) |})))"
                 ));
 }
 
@@ -64,11 +77,11 @@ TEST_F(ChameleonsTest, EscapedBrace) {
   EXPECT_TRUE(
     ParseTreeMatching(
       // Program
-      "R: { \\{ SENTENCE \\} } => { \\{ Progd SENTENCE \\} }",
+      "R: {| \\{ SENTENCE \\} |} => {| \\{ Progd SENTENCE \\} |}",
       // Expected ParseTree
       "(prog (rewriteRules "
       "(rewriteRule R : "
-      "{ (sourcePattern  \\{ SENTENCE \\} ) } => { "
-      "(targetPattern  \\{ Progd SENTENCE \\} ) })))"
+      "{| (sourcePattern  \\{ SENTENCE \\} ) |} => {| "
+      "(targetPattern  \\{ Progd SENTENCE \\} ) |})))"
       ));
 }

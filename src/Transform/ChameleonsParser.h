@@ -1,5 +1,5 @@
 
-// Generated from ChameleonsParser.g4 by ANTLR 4.13.0
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
 
 #pragma once
 
@@ -12,8 +12,8 @@
 class  ChameleonsParser : public antlr4::Parser {
 public:
   enum {
-    IDENTIFIER = 1, COLON = 2, OPENBRACE = 3, TRANSFORM = 4, WS = 5, CODEBYTES = 6, 
-    CLOSEBRACE = 7
+    IDENTIFIER = 1, COLON = 2, OPENBRACE = 3, BEGIN_TERM = 4, TRANSFORM = 5, 
+    WS = 6, TERM_VAR = 7, TERM_FUN = 8, END_TERM = 9, CODEBYTES = 10, CLOSEBRACE = 11
   };
 
   enum {
