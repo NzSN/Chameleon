@@ -52,6 +52,8 @@ public:
 
   // Terminal
   GenericParseTree(const T& meta): metaRef{meta} {}
+  GenericParseTree(const GenericParseTree& other):
+    metaRef(other.metaRef), childs_{other.childs_} {}
 
   GenericParseTree& addChild(GenericParseTree type) {
     return childs_.emplace_back(type);

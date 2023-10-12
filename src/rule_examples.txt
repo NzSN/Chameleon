@@ -1,5 +1,5 @@
-Strategy:
-   RandomIdentifier => RDI_Assign => RDI_Multiply
+
+RULES:
 
 # Transform all identifier to random valid identifier.
 # This Rule require syntax knowledge.
@@ -13,7 +13,7 @@ RandomIdentifier:
    IN {| %T %I = %E |} => {| %T $IDENT = %E |}
       where T \in Type /\ I \in Identifier
 
-RDI_Assign:
+RDI_Assign: {strat: RDI_Multiply}
    {| %I = %E |} => {| $IDENT = %E |}
    where %I == RandomIdentifier::%I /\
          Scope(%I) == Scope(RandomIdentifier::%I)
@@ -22,3 +22,9 @@ RDI_Multiply:
    {| %I * %E |} => {| $IDENT * %E |}
    where %I == RandomIdentifier::%I /\
          Scope(%I) == Scope(RandomIdentifier::%I)
+
+STRATEGIES:
+   rename-identifier =
+     RandomIdentifier
+     <+ RDI_Assign
+     <+ RDI_Multiply

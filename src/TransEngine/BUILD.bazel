@@ -9,5 +9,7 @@ filegroup(
 filegroup(
     name = "transformer_unittest_srcs",
     srcs = [":transformer_srcs",
-            "PatternMatching_Unittests.cc"]
+            "PatternMatching_Unittests.cc"],
+    visibility = ["//visibility:public"]
 )
+

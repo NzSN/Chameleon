@@ -22,6 +22,13 @@ struct NAryTreeTests: public ::testing::Test {
     int n;
     std::vector<TreeNary_T2> children;
   };
+  struct UpperLayerOfT1 {
+    UpperLayerOfT1(const TreeNary_T1& t) {
+      MAP_TO_TREE(t);
+    }
+
+    DEFINE_AS_LAYER_OF_NARY_TREE(UpperLayerOfT1, TreeNary_T1);
+  };
 
   TreeNary_T1* l;
   TreeNary_T2* r;
@@ -76,6 +83,18 @@ RC_GTEST_FIXTURE_PROP(NAryTreeTests, Equal, ()) {
     });
   RC_ASSERT(isEqual);
 }
+
+RC_GTEST_FIXTURE_PROP(NAryTreeTests, Isomorphic, ()) {
+  int n = *rc::gen::inRange(1, 100);
+  const auto& trees = genTwinsNAry(n);
+
+  RC_ASSERT(trees.has_value());
+  const auto& [l, r] = trees.value();
+
+  UpperLayerOfT1 ut1{*l};
+  isIsomorphic<TreeNary_T1, UpperLayerOfT1>(ut1, *l);
+}
+
 
 } // NAryTree
 } // Concepts

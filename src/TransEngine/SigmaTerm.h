@@ -5,31 +5,30 @@
 #include "Concepts/n_ary_tree.h"
 #include "Base/generic_parsetree_inl.h"
 
-namespace Transformer {
+namespace TransEngine {
 
 template<Base::GPTMeta T>
 struct SigmaTerm: public Base::GenericParseTree<T> {
   SigmaTerm(const T& meta):
     Base::GenericParseTree<T>(meta) {}
-
-private:
-  LAYER_OF_NARY_TREE(SigmaTerm, Base::GenericParseTree<T>);
 };
 
 template<Base::GPTMeta T>
 struct Pattern: public Base::GenericParseTree<T> {
-  Pattern(const T& meta):
-    Base::GenericParseTree<T>(meta) {
-    buildLayer(*this);
+  Pattern(const Base::GenericParseTree<T>& t):
+    Base::GenericParseTree<T>{t} {
+
+    MAP_TO_TREE(t);
   }
 
   bool isTermVar;
 
 private:
-  LAYER_OF_NARY_TREE(Pattern, Base::GenericParseTree<T>);
+  DEFINE_AS_LAYER_OF_NARY_TREE(
+    Pattern, Base::GenericParseTree<T>);
 };
 
-} // Transformer
+} // TransEngine
 
 
 #endif /* SIGMATERM_H */

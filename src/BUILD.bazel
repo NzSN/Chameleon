@@ -14,6 +14,7 @@ cc_test(
         "//src/Concepts:concepts_srcs",
         "//src/Parser:parser_unittest_src",
         "//src/Analysis:analyzer_unittest_src",
+        "//src/TransEngine:transformer_unittest_srcs"
         ],
     copts = [
           "-std=c++2a",

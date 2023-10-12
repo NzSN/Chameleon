@@ -15,7 +15,6 @@ concept Children_t = std::ranges::range<T> &&
   (std::same_as<std::ranges::range_value_t<T>, V> ||
    std::same_as<std::ranges::range_value_t<T>, V*>);
 
-
 template<typename T>
 concept WalkByFunction = requires(T t) {
   { t.getChildren() } -> Children_t<T>;
@@ -86,15 +85,81 @@ bool equal(const T& l, const R& r,
 }
 
 // Note: T should be in Concept NAryTree.
-#define LAYER_OF_NARY_TREE(L, T) \
+#define MAP_TO_TREE(T) buildLayer(*this, T);
+#define DEFINE_AS_LAYER_OF_NARY_TREE(L, T) \
   std::vector<L>& getChildren() { return children; }  \
   std::vector<L> children; \
-  const T* lowLayer;\
-  void buildLayer(const T& t) {\
-                               \
-  }
+  const T* lowerLayer;\
+  void buildLayer(const L& l, const T& t) {\
+    /* Mapping  to lower layer for current node */               \
+    mapLayer(t);                                              \
+    /* Mapping to lower layer for children */                    \
+    for (const auto& c: const_cast<T&>(t).getChildren()) {             \
+      children.emplace_back(c);                  \
+      buildLayer(children.back(), c);       \
+    }                                       \
+  }                                         \
+  void mapLayer(const T& t) { lowerLayer = &t; }
 
+template<typename T, typename L>
+concept TreeLayer =
+  NAryTree<T> &&
+  NAryTree<L> &&
+  requires(T t) {
+    { t.lowerLayer } -> std::convertible_to<const L*>;
+  };
 
+template<NAryTree LOWER, TreeLayer<LOWER> UPPER>
+bool isIsomorphic(const UPPER& u, const LOWER& l) {
+  std::vector<int> pos;
+
+  const LOWER* current = nullptr;
+  auto& getNode =
+    [](std::vector<int>& pos, const LOWER& l) -> LOWER* {
+      return &const_cast<LOWER&>(l);
+    };
+  const std::function<bool(const UPPER& u,
+                     const LOWER& l,
+                     std::vector<int>&)>&
+    isomorphicCheck =
+    [&](const UPPER& u,
+       const LOWER& l,
+       std::vector<int>& pos) {
+
+      // Root node
+      if (pos.size() == 0) {
+        current = &l;
+      } else {
+        current = getNode(pos, l);
+      }
+
+      // Check equality of current node
+      if (u.lowerLayer == &l) {
+        // FIXME: No concept to assert that
+        //        there is a member function, size(),
+        //        is exists.
+        if (u.getChildren().size() == 0) {
+          // No Child
+          return true;
+        } else {
+          // Checking for subtree
+          int i = 0;
+          for (auto& c: u.getChildren()) {
+            pos.push_back(i);
+
+            if (!isomorphicCheck(c, l, pos)) {
+              return false;
+            }
+          }
+          return true;
+        }
+      } else {
+        return false;
+      }
+    };
+
+  return isomorphicCheck(u, l, pos);
+}
 
 } // Concepts::NAryTree
 
