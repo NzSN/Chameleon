@@ -1,18 +1,5 @@
-# Statements that place at the top
-# of generated file.
-%prologue
-#include "...."
-%prologue
-
-# Migrate TS code which before "=>"
-# to CPP code which after "=>"
-SetTimeoutWithCoro:
-   {| { SetTimeout(%A, %B); console.log(%A, %B); } |} =>
-   {| { SetTimeout_Coro(%A, %B); console_log(%A, %B); } |}
-
 Strategy:
-   RandomIdentifier => RDI_Assign
-   RandomIdentifier => RDI_Multiply
+   RandomIdentifier => RDI_Assign => RDI_Multiply
 
 # Transform all identifier to random valid identifier.
 # This Rule require syntax knowledge.
