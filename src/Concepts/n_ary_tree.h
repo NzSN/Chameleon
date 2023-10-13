@@ -87,18 +87,18 @@ bool equal(const T& l, const R& r,
 
 // Note: T should be in Concept NAryTree.
 #define MAP_TO_TREE(T) buildLayer(*this, T);
-#define DEFINE_AS_LAYER_OF_NARY_TREE(L, T) \
-  std::vector<L>& getChildren() { return children; }  \
-  std::vector<L> children; \
-  const T* lowerLayer;\
-  void buildLayer(L& l, const T& t) {\
-    /* Mapping  to lower layer for current node */               \
-    mapLayer(l, t);                                              \
-    /* Mapping to lower layer for children */                    \
-    for (const auto& c: const_cast<T&>(t).getChildren()) {             \
-      children.emplace_back(c);                  \
-    }                                       \
-  }                                         \
+#define DEFINE_AS_LAYER_OF_NARY_TREE(L, T)                 \
+  std::vector<L>& getChildren() { return children; }       \
+  std::vector<L> children;                                 \
+  const T* lowerLayer;                                     \
+  void buildLayer(L& l, const T& t) {                      \
+    /* Mapping  to lower layer for current node */         \
+    mapLayer(l, t);                                        \
+    /* Mapping to lower layer for children */              \
+    for (const auto& c: const_cast<T&>(t).getChildren()) { \
+      children.emplace_back(c);                            \
+    }                                                      \
+  }                                                        \
   void mapLayer(L& l, const T& t) { l.lowerLayer = &t; }
 
 template<typename T, typename L>
