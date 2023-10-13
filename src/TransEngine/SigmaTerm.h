@@ -9,8 +9,16 @@ namespace TransEngine {
 
 template<Base::GPTMeta T>
 struct SigmaTerm: public Base::GenericParseTree<T> {
-  SigmaTerm(const T& meta):
-    Base::GenericParseTree<T>(meta) {}
+  SigmaTerm(const Base::GenericParseTree<T>& t):
+    Base::GenericParseTree<T>(t) {
+
+    MAP_TO_TREE(t);
+  }
+
+private:
+  DEFINE_AS_LAYER_OF_NARY_TREE(
+    SigmaTerm, Base::GenericParseTree<T>,
+    private);
 };
 
 template<Base::GPTMeta T>
@@ -25,7 +33,8 @@ struct Pattern: public Base::GenericParseTree<T> {
 
 private:
   DEFINE_AS_LAYER_OF_NARY_TREE(
-    Pattern, Base::GenericParseTree<T>);
+    Pattern, Base::GenericParseTree<T>,
+    private);
 };
 
 } // TransEngine

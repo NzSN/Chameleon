@@ -34,6 +34,13 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MapPatternToGPT, ()) {
   // Building a Pattern base on ParseTree,
   // without term variables.
   TransEngine::Pattern<Base::Antlr4Node> pattern(t);
+
+  // Assert that a pattern from a concrete parsetree
+  // is isomorhpic to the parsetree.
+  RC_ASSERT(
+    (Concepts::NAryTree::isIsomorphic<
+     Base::GenericParseTree<Base::Antlr4Node>,
+     TransEngine::Pattern<Base::Antlr4Node>>(pattern, t)));
 }
 
 } // Algorithms
