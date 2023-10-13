@@ -95,7 +95,6 @@ private:                                                   \
   /* Hide children to prevent ambiguous
    * to choose getChidlren */                              \
   std::vector<L> children_;                                \
-ACCESS:                                                    \
   void buildLayer(L& l, const T& t) {                      \
     /* Mapping  to lower layer for current node */         \
     mapLayer(l, t);                                        \
@@ -104,7 +103,8 @@ ACCESS:                                                    \
       children_.emplace_back(c);                           \
     }                                                      \
   }                                                        \
-  void mapLayer(L& l, const T& t) { l.lowerLayer = &t; }
+  void mapLayer(L& l, const T& t) { l.lowerLayer = &t; }   \
+ACCESS:
 
 template<typename T, typename L>
 concept TreeLayer =
