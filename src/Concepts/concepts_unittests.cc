@@ -27,7 +27,7 @@ struct NAryTreeTests: public ::testing::Test {
       MAP_TO_TREE(t);
     }
 
-    DEFINE_AS_LAYER_OF_NARY_TREE(UpperLayerOfT1, TreeNary_T1);
+    DEFINE_AS_LAYER_OF_NARY_TREE(UpperLayerOfT1, TreeNary_T1, public);
   };
 
   TreeNary_T1* l;

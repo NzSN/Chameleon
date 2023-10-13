@@ -87,10 +87,12 @@ bool equal(const T& l, const R& r,
 
 // Note: T should be in Concept NAryTree.
 #define MAP_TO_TREE(T) buildLayer(*this, T);
-#define DEFINE_AS_LAYER_OF_NARY_TREE(L, T)                 \
+#define DEFINE_AS_LAYER_OF_NARY_TREE(L, T, PERM)                 \
+public:                                                    \
   std::vector<L>& getChildren() { return children; }       \
   std::vector<L> children;                                 \
   const T* lowerLayer;                                     \
+PERM:                                                      \
   void buildLayer(L& l, const T& t) {                      \
     /* Mapping  to lower layer for current node */         \
     mapLayer(l, t);                                        \
