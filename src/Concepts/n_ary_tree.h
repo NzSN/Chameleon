@@ -87,18 +87,21 @@ bool equal(const T& l, const R& r,
 
 // Note: T should be in Concept NAryTree.
 #define MAP_TO_TREE(T) buildLayer(*this, T);
-#define DEFINE_AS_LAYER_OF_NARY_TREE(L, T, PERM)                 \
+#define DEFINE_AS_LAYER_OF_NARY_TREE(L, T, ACCESS)         \
 public:                                                    \
-  std::vector<L>& getChildren() { return children; }       \
-  std::vector<L> children;                                 \
+  std::vector<L>& getChildren() { return children_; }      \
   const T* lowerLayer;                                     \
-PERM:                                                      \
+private:                                                   \
+  /* Hide children to prevent ambiguous
+   * to choose getChidlren */                              \
+  std::vector<L> children_;                                \
+ACCESS:                                                    \
   void buildLayer(L& l, const T& t) {                      \
     /* Mapping  to lower layer for current node */         \
     mapLayer(l, t);                                        \
     /* Mapping to lower layer for children */              \
-    for (const auto& c: const_cast<T&>(t).getChildren()) { \
-      children.emplace_back(c);                            \
+    for (auto& c: Concepts::NAryTree::getChildren(t)) {    \
+      children_.emplace_back(c);                           \
     }                                                      \
   }                                                        \
   void mapLayer(L& l, const T& t) { l.lowerLayer = &t; }
@@ -120,8 +123,12 @@ bool isIsomorphic(const UPPER& u, const LOWER& l) {
     [](std::vector<int>& pos, const LOWER& l) -> LOWER* {
       LOWER* node = &const_cast<LOWER&>(l);
       for (auto& idx: pos) {
-        assert(idx < node->getChildren().size());
-        node = &node->getChildren()[idx];
+        auto& children = getChildren(*node);
+        if (idx >= static_cast<int>(children.size())) {
+          return nullptr;
+        }
+
+        node = &children[idx];
       }
 
       return node;
@@ -143,14 +150,12 @@ bool isIsomorphic(const UPPER& u, const LOWER& l) {
         current = getNode(pos, l);
       }
 
-      assert(current != nullptr);
-
       // Check equality of current node
       if (u.lowerLayer == current) {
         // FIXME: No concept to assert that
         //        there is a member function, size(),
         //        is exists.
-        if (const_cast<UPPER&>(u).getChildren().size() == 0) {
+        if (getChildren(u).size() == 0) {
           // No Child
           return true;
         } else {
@@ -158,7 +163,7 @@ bool isIsomorphic(const UPPER& u, const LOWER& l) {
           int i = 0;
           pos.push_back(0);
 
-          for (auto& c: const_cast<UPPER&>(u).getChildren()) {
+          for (auto& c: getChildren(u)) {
             pos[level] = i++;
 
             if (!isomorphicCheck(c, l, pos, level+1)) {

@@ -10,27 +10,29 @@ enum MatchAlgor {
   NORMAL
 };
 
-template<MatchAlgor select = NORMAL,
-         Base::GPTMeta T,
-         std::enable_if_t<select == NORMAL>>
-bool patternMaching(Transformer::Pattern<T> pattern,
-                    Transformer::SigmaTerm<T> subjectTree) {
+template<Base::GPTMeta T,
+         MatchAlgor select = NORMAL,
+         typename = std::enable_if_t<select == NORMAL>>
+bool patternMatching(TransEngine::Pattern<T> pattern,
+                    TransEngine::SigmaTerm<T> subjectTree) {
 
-  auto& matchingSubTree =
-    [](const Transformer::Pattern<T>& pattern,
-       const Transformer::SigmaTerm<T> subjectTree) {
+  const auto matchingSubTree =
+    [](const TransEngine::Pattern<T>& pattern,
+       const TransEngine::SigmaTerm<T> subjectTree) -> bool {
 
-      Concepts::NAryTree::equal<Transformer::Pattern<T>,
-                                Transformer::SigmaTerm<T>>(
-        pattern, subjectTree,
-        [](const Transformer::Pattern<T>& lhs,
-           const Transformer::SigmaTerm<T>& rhs) {
-          if (lhs.isTermVar || rhs.isTermVar) {
-            return true;
-          } else {
-            return lhs.getMeta() == rhs.getMeta();
-          }
-        });
+      return Concepts::NAryTree::equal<
+        TransEngine::Pattern<T>,
+        TransEngine::SigmaTerm<T>>(
+
+          pattern, subjectTree,
+          [](const TransEngine::Pattern<T>& lhs,
+             const TransEngine::SigmaTerm<T>& rhs) {
+            if (lhs.isTermVar) {
+              return true;
+            } else {
+              return lhs.getMeta() == rhs.getMeta();
+            }
+          });
     };
 
   // Maching on the root of subject tree
@@ -39,8 +41,8 @@ bool patternMaching(Transformer::Pattern<T> pattern,
   }
 
   // Maching on another SubTree of Subject Tree.
-  for (auto& child: subjectTree.getChildren()) {
-    if (patternMaching<NORMAL, T>(pattern, child)) {
+  for (auto& child: Concepts::NAryTree::getChildren(subjectTree)) {
+    if (patternMatching<T>(pattern, child)) {
       return true;
     }
   }
