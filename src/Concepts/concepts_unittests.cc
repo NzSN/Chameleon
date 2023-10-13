@@ -92,7 +92,7 @@ RC_GTEST_FIXTURE_PROP(NAryTreeTests, Isomorphic, ()) {
   const auto& [l, r] = trees.value();
 
   UpperLayerOfT1 ut1{*l};
-  isIsomorphic<TreeNary_T1, UpperLayerOfT1>(ut1, *l);
+  RC_ASSERT((isIsomorphic<TreeNary_T1, UpperLayerOfT1>(ut1, *l)));
 }
 
 
