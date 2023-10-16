@@ -29,9 +29,17 @@ struct Pattern: public Base::GenericParseTree<T> {
     MAP_TO_TREE(t);
   }
 
-  bool isTermVar;
+  bool isTermVar() const {
+    return isTermVar_;
+  }
+
+  std::string termID() const {
+    return termID_;
+  }
 
 private:
+  std::string termID_;
+  bool isTermVar_;
   DEFINE_AS_LAYER_OF_NARY_TREE(
     Pattern, Base::GenericParseTree<T>,
     private);

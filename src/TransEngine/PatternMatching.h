@@ -27,7 +27,7 @@ bool patternMatching(TransEngine::Pattern<T> pattern,
           pattern, subjectTree,
           [](const TransEngine::Pattern<T>& lhs,
              const TransEngine::SigmaTerm<T>& rhs) {
-            if (lhs.isTermVar) {
+            if (lhs.isTermVar()) {
               return true;
             } else {
               return lhs.getMeta() == rhs.getMeta();

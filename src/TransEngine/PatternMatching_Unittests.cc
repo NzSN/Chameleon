@@ -63,7 +63,7 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, Matching, ()) {
   TransEngine::Pattern<Base::Antlr4Node> pattern(t);
   TransEngine::SigmaTerm<Base::Antlr4Node> sigmaterm(t);
 
-  // Try to maching the pattern and the sigmaterm
+  // Try to matching the pattern and the sigmaterm
   RC_ASSERT(patternMatching<Base::Antlr4Node>(pattern, sigmaterm));
 }
 
