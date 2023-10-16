@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
 
 #pragma once
 
@@ -12,13 +12,14 @@
 class  ChameleonsParser : public antlr4::Parser {
 public:
   enum {
-    IDENTIFIER = 1, COLON = 2, OPENBRACE = 3, BEGIN_TERM = 4, TRANSFORM = 5, 
-    WS = 6, TERM_VAR = 7, TERM_FUN = 8, END_TERM = 9, CODEBYTES = 10, CLOSEBRACE = 11
+    WHERE = 1, LOGICOP = 2, ORDEROP = 3, NUMBER = 4, IDENTIFIER = 5, COLON = 6, 
+    OPENBRACE = 7, TERM_VAR = 8, TRANSFORM = 9, WS = 10, CODEBYTES = 11, 
+    CLOSEBRACE = 12
   };
 
   enum {
     RuleProg = 0, RuleRewriteRules = 1, RuleRewriteRule = 2, RuleSourcePattern = 3, 
-    RuleTargetPattern = 4
+    RuleTargetPattern = 4, RuleCondExprs = 5, RuleCondExpr = 6
   };
 
   explicit ChameleonsParser(antlr4::TokenStream *input);
@@ -42,7 +43,9 @@ public:
   class RewriteRulesContext;
   class RewriteRuleContext;
   class SourcePatternContext;
-  class TargetPatternContext; 
+  class TargetPatternContext;
+  class CondExprsContext;
+  class CondExprContext; 
 
   class  ProgContext : public antlr4::ParserRuleContext {
   public:
@@ -84,6 +87,8 @@ public:
     antlr4::tree::TerminalNode* CLOSEBRACE(size_t i);
     antlr4::tree::TerminalNode *TRANSFORM();
     TargetPatternContext *targetPattern();
+    antlr4::tree::TerminalNode *WHERE();
+    CondExprsContext *condExprs();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -117,6 +122,37 @@ public:
   };
 
   TargetPatternContext* targetPattern();
+
+  class  CondExprsContext : public antlr4::ParserRuleContext {
+  public:
+    CondExprsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    CondExprContext *condExpr();
+    antlr4::tree::TerminalNode *LOGICOP();
+    CondExprsContext *condExprs();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  CondExprsContext* condExprs();
+
+  class  CondExprContext : public antlr4::ParserRuleContext {
+  public:
+    CondExprContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<antlr4::tree::TerminalNode *> TERM_VAR();
+    antlr4::tree::TerminalNode* TERM_VAR(size_t i);
+    antlr4::tree::TerminalNode *ORDEROP();
+    antlr4::tree::TerminalNode *NUMBER();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  CondExprContext* condExpr();
 
 
   // By default the static state used to implement the parser is lazily initialized during the first

@@ -55,21 +55,21 @@ TEST_F(ChameleonsTest, WithSpaceCodes) {
                 // Program
                 "R: {|"
 
-                "%F()%;"
-                "setTimeout(%A%, %B%);"
-                "console.log(%A%, %B%); "
+                "%F();"
+                "setTimeout(%A, %B);"
+                "console.log(%A, %B); "
 
                 " |} => {| "
 
-                "SetTimeout_Coro(%A%, %B%)"
+                "SetTimeout_Coro(%A, %B)"
 
                 " |}",
                 // Expected ParseTree
                 "(prog "
                 "(rewriteRules "
                 "(rewriteRule "
-                "R : {| (sourcePattern %F()%;setTimeout(%A%, %B%);console.log(%A%, %B%);  ) |} "
-                "=> {| (targetPattern  SetTimeout_Coro(%A%, %B%) ) |})))"
+                "R : {| (sourcePattern %F();setTimeout(%A, %B);console.log(%A, %B);  ) |} "
+                "=> {| (targetPattern  SetTimeout_Coro(%A, %B) ) |})))"
                 ));
 }
 
@@ -83,5 +83,30 @@ TEST_F(ChameleonsTest, EscapedBrace) {
       "(rewriteRule R : "
       "{| (sourcePattern  \\{ SENTENCE \\} ) |} => {| "
       "(targetPattern  \\{ Progd SENTENCE \\} ) |})))"
+      ));
+}
+
+TEST_F(ChameleonsTest, WhereCondition) {
+  EXPECT_TRUE(
+    ParseTreeMatching(
+      "R: {| %T = 0 |} => {| %T = 1 |} where %T = %T",
+      // Expected
+      "(prog "
+      "(rewriteRules "
+      "(rewriteRule "
+      "R : {| (sourcePattern  %T = 0 ) |} => {| (targetPattern  %T = 1 ) |} "
+      "where (condExprs (condExpr %T = %T)))))"
+      ));
+  EXPECT_TRUE(
+    ParseTreeMatching(
+      "R: {| %T = 0 |} => {| %T = 1 |} where %T = 1 AND %T = 2 OR %T = 3",
+      // Expected
+      "(prog "
+      "(rewriteRules "
+      "(rewriteRule "
+      "R : {| (sourcePattern  %T = 0 ) |} => {| (targetPattern  %T = 1 ) |} "
+      "where (condExprs (condExpr %T = 1) AND "
+      "(condExprs (condExpr %T = 2) OR "
+      "(condExprs (condExpr %T = 3)))))))"
       ));
 }

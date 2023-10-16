@@ -9,19 +9,19 @@ RULES:
 #
 # %RDIdent(A)% is a command use
 RandomIdentifier:
-   LET IDENT = RD()
-   IN {| %T %I = %E |} => {| %T $IDENT = %E |}
-      where T \in Type /\ I \in Identifier
+    {| %T %I = %E |} => {| %T $IDENT = %E |}
+    # Conditional Parts of Rewrite Rule
+    where T \in Type /\ I \in Identifier
 
 RDI_Assign: {strat: RDI_Multiply}
-   {| %I = %E |} => {| $IDENT = %E |}
-   where %I == RandomIdentifier::%I /\
-         Scope(%I) == Scope(RandomIdentifier::%I)
+   {| %I = %E |} => {| %RDID(%I) = %E |}
+   where %I = RandomIdentifier::%I /\
+         Scope(%I) = Scope(RandomIdentifier::%I)
 
 RDI_Multiply:
    {| %I * %E |} => {| $IDENT * %E |}
-   where %I == RandomIdentifier::%I /\
-         Scope(%I) == Scope(RandomIdentifier::%I)
+   where %I = RandomIdentifier::%I /\
+         Scope(%I) = Scope(RandomIdentifier::%I)
 
 STRATEGIES:
    rename-identifier =

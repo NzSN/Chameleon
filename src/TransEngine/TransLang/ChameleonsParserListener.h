@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
 
 #pragma once
 
@@ -28,6 +28,12 @@ public:
 
   virtual void enterTargetPattern(ChameleonsParser::TargetPatternContext *ctx) = 0;
   virtual void exitTargetPattern(ChameleonsParser::TargetPatternContext *ctx) = 0;
+
+  virtual void enterCondExprs(ChameleonsParser::CondExprsContext *ctx) = 0;
+  virtual void exitCondExprs(ChameleonsParser::CondExprsContext *ctx) = 0;
+
+  virtual void enterCondExpr(ChameleonsParser::CondExprContext *ctx) = 0;
+  virtual void exitCondExpr(ChameleonsParser::CondExprContext *ctx) = 0;
 
 
 };
