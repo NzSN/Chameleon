@@ -1,5 +1,6 @@
 ------- MODULE Analyzer ------------
-CONSTANT NULL, node_ids, node_types, node_values, analyze
+CONSTANT NULL, node_ids, node_types, node_values, analyze,
+         Nodes
 
 LOCAL INSTANCE Naturals
 LOCAL INSTANCE TLC
@@ -9,15 +10,15 @@ LOCAL INSTANCE AnalyzerDefines WITH
   node_types <- node_types,
   node_values <- node_values
 
-\* AnalyzeImpls ==
-\*   [Tree(ParseTreeNodes) \X ParseTreeNodes ->
-\*    {[info |-> i, status |-> s]:
-\*     i \in ParsedData,
-\*     s \in ParseTreeNodeStatus} \union {NULL}]
+AnalyzeImpls ==
+  [Tree(Nodes) \X Nodes ->
+   {[info |-> i, status |-> s]:
+    i \in ParsedData,
+    s \in ParseTreeNodeStatus} \union {NULL}]
 
-\*ASSUME analyze \in AnalyzeImpls
+ASSUME analyze \in AnalyzeImpls
 
-LOCAL DoAnalyze(T) ==
+LOCAL DoAnalyze[T \in Tree(Nodes)] ==
   LET rootNode == GetRoot(T)
       Analyzing[tree \in Tree(DOMAIN T),
                 node_ \in DOMAIN T] ==
@@ -59,7 +60,7 @@ LOCAL DoAnalyze(T) ==
 
 \* Analyze the tree which root
 \* node as parameter.
-Analyze(T) == DoAnalyze(T)
+Analyze[T \in Tree(Nodes)] == DoAnalyze[T]
 
 
 

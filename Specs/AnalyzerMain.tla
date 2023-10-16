@@ -49,7 +49,8 @@ LOCAL INSTANCE Analyzer WITH
     node_ids <- NodeIDS,
     node_types <- NodeTypes,
     node_values <- NodeValues,
-    analyze <- analyze
+    analyze <- analyze,
+    Nodes <- (DOMAIN TreeSample)
 
-Valid == PrintT(Analyze(TreeSample))
+Valid == PrintT(Analyze[TreeSample])
 =============================
