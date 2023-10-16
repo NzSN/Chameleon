@@ -1,5 +1,11 @@
-
+TARGET: WGSL
 RULES:
+
+# An example of rewrite rule for TestLang.
+IdnentityMulti:
+    {| %a * 1 |} => {| %a |}
+IdentityPlus:
+    {| %a + 0 |} => {| %a |}
 
 # Transform all identifier to random valid identifier.
 # This Rule require syntax knowledge.
@@ -11,20 +17,20 @@ RULES:
 RandomIdentifier:
     {| %T %I = %E |} => {| %T $IDENT = %E |}
     # Conditional Parts of Rewrite Rule
-    where T \in Type /\ I \in Identifier
+    where <Type>%T AND <Identifier>%I
 
-RDI_Assign: {strat: RDI_Multiply}
+RDI_Assign:
    {| %I = %E |} => {| %RDID(%I) = %E |}
-   where %I = RandomIdentifier::%I /\
+   where %I = RandomIdentifier::%I AND
          Scope(%I) = Scope(RandomIdentifier::%I)
 
 RDI_Multiply:
    {| %I * %E |} => {| $IDENT * %E |}
-   where %I = RandomIdentifier::%I /\
+   where %I = RandomIdentifier::%I AND
          Scope(%I) = Scope(RandomIdentifier::%I)
 
 STRATEGIES:
    rename-identifier =
      RandomIdentifier
-     <+ RDI_Assign
-     <+ RDI_Multiply
+     <+ RDI_Assign {Global}
+     <+ RDI_Multiply {Global}
