@@ -2,6 +2,7 @@
 #ifndef SIGMATERM_H
 #define SIGMATERM_H
 
+#include "utility.h"
 #include "Concepts/n_ary_tree.h"
 #include "Base/generic_parsetree_inl.h"
 
@@ -30,7 +31,8 @@ struct Pattern: public Base::GenericParseTree<T> {
   }
 
   bool isTermVar() const {
-    return isTermVar_;
+    return Utility::isTermVar(
+      const_cast<Pattern*>(this)->getText());
   }
 
   std::string termID() const {
@@ -39,7 +41,6 @@ struct Pattern: public Base::GenericParseTree<T> {
 
 private:
   std::string termID_;
-  bool isTermVar_;
   DEFINE_AS_LAYER_OF_NARY_TREE(
     Pattern, Base::GenericParseTree<T>,
     private);

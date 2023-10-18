@@ -8,4 +8,4 @@ expr:   expr ('*'|'/') expr
     ;
 NEWLINE : [\r\n]+ ;
 INT     : [0-9]+ ;
-PLACEHOLDER: [a-z]+;
+PLACEHOLDER: [a-z];

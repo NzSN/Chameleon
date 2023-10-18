@@ -3,31 +3,34 @@ RULES:
 
 # An example of rewrite rule for TestLang.
 IdnentityMulti:
-    {| %a * 1 |} => {| %a |}
+    {| a * 1 |} => {| a |}
 IdentityPlus:
-    {| %a + 0 |} => {| %a |}
+    {| a + 0 |} => {| a |}
 
 # Transform all identifier to random valid identifier.
 # This Rule require syntax knowledge.
 #
-# %A::IDENTIFIER% used to matching any grammar element whose type
+# A::IDENTIFIER used to matching any grammar element whose type
 # is IDENTIFIER.
 #
-# %RDIdent(A)% is a command use
+# RDIdent(A) is a command use
 RandomIdentifier:
-    {| %T %I = %E |} => {| %T $IDENT = %E |}
+    {| T I = E |} => {| T L = E |}
     # Conditional Parts of Rewrite Rule
-    where <Type>%T AND <Identifier>%I
+    where <Type>T AND <Identifier>I
+          L = RD(I)
 
 RDI_Assign:
-   {| %I = %E |} => {| %RDID(%I) = %E |}
-   where %I = RandomIdentifier::%I AND
-         Scope(%I) = Scope(RandomIdentifier::%I)
+   {| I = E |} => {| L = E |}
+   where I = RandomIdentifier::I AND
+         Scope(I) = Scope(RandomIdentifier::I)
+         L = RD(I)
 
 RDI_Multiply:
-   {| %I * %E |} => {| $IDENT * %E |}
-   where %I = RandomIdentifier::%I AND
-         Scope(%I) = Scope(RandomIdentifier::%I)
+   {| I * E |} => {| L * E |}
+   where I = RandomIdentifier::I AND
+         Scope(I) = Scope(RandomIdentifier::I)
+         L = RD(I)
 
 STRATEGIES:
    rename-identifier =

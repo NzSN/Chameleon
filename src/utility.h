@@ -95,6 +95,8 @@ Antlr4_GenParseTree(std::string sentences, Entry entry) {
 
 std::string testLangRandomExpr(unsigned numOfOperands);
 
+bool isTermVar(std::string str);
+
 } // Utility
 
 #endif /* UTILITY_H */

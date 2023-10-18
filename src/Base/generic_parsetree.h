@@ -63,7 +63,7 @@ public:
     return childs_;
   };
 
-  std::optional<GenericParseTree&> getChild(int i) {
+  std::optional<GenericParseTree> getChild(int i) {
     if (childs_.size() < i) {
       return std::nullopt;
     } else {

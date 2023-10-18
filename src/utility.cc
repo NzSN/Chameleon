@@ -24,5 +24,11 @@ std::string testLangRandomExpr(unsigned numOfOperands) {
 
 }
 
+bool isTermVar(std::string str) {
+  if (str.size() != 1) return false;
+  char c = str[0];
+
+  return 'a' <= c && c <= 'z';
+}
 
 } // Utility
