@@ -17,14 +17,15 @@ IdentityPlus:
 RandomIdentifier:
     {| T I = E |} => {| T L = E |}
     # Conditional Parts of Rewrite Rule
-    where <Type>T AND <Identifier>I
-          L = RD(I)
+    where <Type>T AND
+          <Identifier>I
+          L := RD(I)
 
 RDI_Assign:
    {| I = E |} => {| L = E |}
    where I = RandomIdentifier::I AND
          Scope(I) = Scope(RandomIdentifier::I)
-         L = RD(I)
+         L := RD(I)
 
 RDI_Multiply:
    {| I * E |} => {| L * E |}

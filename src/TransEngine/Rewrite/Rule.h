@@ -4,6 +4,7 @@
 #include "Base/generic_parsetree.h"
 #include "TransEngine/SigmaTerm.h"
 #include "CondExpr.h"
+#include "Environment.h"
 
 namespace TransEngine {
 namespace Rewrite {
@@ -17,6 +18,7 @@ private:
   Pattern<T> leftSide;
   Pattern<T> rightSide;
   CondExpr cond;
+  Environment<T>* env;
 };
 
 } // Rewrite
