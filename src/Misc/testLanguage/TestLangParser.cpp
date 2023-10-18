@@ -1,5 +1,5 @@
 
-// Generated from TestLang.g4 by ANTLR 4.13.1
+// Generated from TestLang.g4 by ANTLR 4.13.0
 
 
 #include "TestLangListener.h"
@@ -58,18 +58,18 @@ void testlangParserInitialize() {
       "", "'*'", "'/'", "'+'", "'-'", "'('", "')'"
     },
     std::vector<std::string>{
-      "", "", "", "", "", "", "", "NEWLINE", "INT"
+      "", "", "", "", "", "", "", "NEWLINE", "INT", "PLACEHOLDER"
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,8,26,2,0,7,0,2,1,7,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,3,1,13,8,1,1,
-  	1,1,1,1,1,1,1,1,1,1,1,5,1,21,8,1,10,1,12,1,24,9,1,1,1,0,1,2,2,0,2,0,2,
-  	1,0,1,2,1,0,3,4,26,0,4,1,0,0,0,2,12,1,0,0,0,4,5,3,2,1,0,5,1,1,0,0,0,6,
-  	7,6,1,-1,0,7,13,5,8,0,0,8,9,5,5,0,0,9,10,3,2,1,0,10,11,5,6,0,0,11,13,
-  	1,0,0,0,12,6,1,0,0,0,12,8,1,0,0,0,13,22,1,0,0,0,14,15,10,4,0,0,15,16,
-  	7,0,0,0,16,21,3,2,1,5,17,18,10,3,0,0,18,19,7,1,0,0,19,21,3,2,1,4,20,14,
-  	1,0,0,0,20,17,1,0,0,0,21,24,1,0,0,0,22,20,1,0,0,0,22,23,1,0,0,0,23,3,
-  	1,0,0,0,24,22,1,0,0,0,3,12,20,22
+  	4,1,9,27,2,0,7,0,2,1,7,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,14,8,
+  	1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,22,8,1,10,1,12,1,25,9,1,1,1,0,1,2,2,0,2,
+  	0,2,1,0,1,2,1,0,3,4,28,0,4,1,0,0,0,2,13,1,0,0,0,4,5,3,2,1,0,5,1,1,0,0,
+  	0,6,7,6,1,-1,0,7,14,5,8,0,0,8,14,5,9,0,0,9,10,5,5,0,0,10,11,3,2,1,0,11,
+  	12,5,6,0,0,12,14,1,0,0,0,13,6,1,0,0,0,13,8,1,0,0,0,13,9,1,0,0,0,14,23,
+  	1,0,0,0,15,16,10,5,0,0,16,17,7,0,0,0,17,22,3,2,1,6,18,19,10,4,0,0,19,
+  	20,7,1,0,0,20,22,3,2,1,5,21,15,1,0,0,0,21,18,1,0,0,0,22,25,1,0,0,0,23,
+  	21,1,0,0,0,23,24,1,0,0,0,24,3,1,0,0,0,25,23,1,0,0,0,3,13,21,23
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -181,6 +181,10 @@ tree::TerminalNode* TestLangParser::ExprContext::INT() {
   return getToken(TestLangParser::INT, 0);
 }
 
+tree::TerminalNode* TestLangParser::ExprContext::PLACEHOLDER() {
+  return getToken(TestLangParser::PLACEHOLDER, 0);
+}
+
 std::vector<TestLangParser::ExprContext *> TestLangParser::ExprContext::expr() {
   return getRuleContexts<TestLangParser::ExprContext>();
 }
@@ -232,7 +236,7 @@ TestLangParser::ExprContext* TestLangParser::expr(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(12);
+    setState(13);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case TestLangParser::INT: {
@@ -241,12 +245,18 @@ TestLangParser::ExprContext* TestLangParser::expr(int precedence) {
         break;
       }
 
-      case TestLangParser::T__4: {
+      case TestLangParser::PLACEHOLDER: {
         setState(8);
-        match(TestLangParser::T__4);
+        match(TestLangParser::PLACEHOLDER);
+        break;
+      }
+
+      case TestLangParser::T__4: {
         setState(9);
-        expr(0);
+        match(TestLangParser::T__4);
         setState(10);
+        expr(0);
+        setState(11);
         match(TestLangParser::T__5);
         break;
       }
@@ -255,7 +265,7 @@ TestLangParser::ExprContext* TestLangParser::expr(int precedence) {
       throw NoViableAltException(this);
     }
     _ctx->stop = _input->LT(-1);
-    setState(22);
+    setState(23);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -263,16 +273,16 @@ TestLangParser::ExprContext* TestLangParser::expr(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(20);
+        setState(21);
         _errHandler->sync(this);
         switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 1, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<ExprContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleExpr);
-          setState(14);
-
-          if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
           setState(15);
+
+          if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
+          setState(16);
           _la = _input->LA(1);
           if (!(_la == TestLangParser::T__0
 
@@ -283,18 +293,18 @@ TestLangParser::ExprContext* TestLangParser::expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(16);
-          expr(5);
+          setState(17);
+          expr(6);
           break;
         }
 
         case 2: {
           _localctx = _tracker.createInstance<ExprContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleExpr);
-          setState(17);
-
-          if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
           setState(18);
+
+          if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
+          setState(19);
           _la = _input->LA(1);
           if (!(_la == TestLangParser::T__2
 
@@ -305,8 +315,8 @@ TestLangParser::ExprContext* TestLangParser::expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(19);
-          expr(4);
+          setState(20);
+          expr(5);
           break;
         }
 
@@ -314,7 +324,7 @@ TestLangParser::ExprContext* TestLangParser::expr(int precedence) {
           break;
         } 
       }
-      setState(24);
+      setState(25);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx);
     }
@@ -339,8 +349,8 @@ bool TestLangParser::sempred(RuleContext *context, size_t ruleIndex, size_t pred
 
 bool TestLangParser::exprSempred(ExprContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 0: return precpred(_ctx, 4);
-    case 1: return precpred(_ctx, 3);
+    case 0: return precpred(_ctx, 5);
+    case 1: return precpred(_ctx, 4);
 
   default:
     break;
