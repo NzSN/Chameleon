@@ -3,6 +3,7 @@
 
 #include "Base/generic_parsetree.h"
 #include "TransEngine/SigmaTerm.h"
+#include "Strategy.h"
 #include "CondExpr.h"
 #include "Environment.h"
 
@@ -10,10 +11,7 @@ namespace TransEngine {
 namespace Rewrite {
 
 template<Base::GPTMeta T>
-class Rule {
-public:
-  Base::GenericParseTree<T> operator()(Base::GenericParseTree<T>&);
-private:
+struct Rule {
   std::string label;
   Pattern<T> leftSide;
   Pattern<T> rightSide;
