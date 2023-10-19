@@ -1,65 +1,99 @@
 #ifndef REFL_H
 #define REFL_H
 
-#include <string>
-#include <map>
-#include <memory>
+#include <array>
+#include <functional>
 #include <any>
 #include <optional>
+#include <stdexcept>
 
 namespace Utility {
 namespace Refl {
 
-struct ReflItem {
-  template<typename T>
-  ReflItem(T src):
-    inner_(new Inner<T>(std::forward<T>(src))) {}
+#define Stringify(...) #__VA_ARGS__
+constexpr const unsigned MAXIMUM_CLASSNAME = 256;
+constexpr unsigned NUM_OF_REFLECTS = 100;
 
-  template<typename R>
-  R operator()(std::any arg) {
-    return (*inner_)(arg);
-  }
+template<std::size_t N>
+struct ConstStr {
 
-  struct InnerBase {
-    using ptr = std::unique_ptr<InnerBase>;
-    virtual void operator()(std::any arg) const = 0;
-  };
-  template<typename T>
-  struct Inner: InnerBase {
-    Inner(T src): value_{src} {}
+  ConstStr() = default;
 
-    template<typename R>
-    R operator()(std::any arg) {
-      return value_();
-    }
-  private:
-    T value_;
-  };
-
-private:
-  typename InnerBase::ptr inner_;
-};
-
-struct Refl {
-  using TypeName = std::string;
-
-  Refl& getInstance() {
-    static Refl instance;
-    return instance;
-  }
-
-  template<typename R>
-  std::optional<R> reflect(TypeName name) {
-    if (!types.contains(name)) {
-      return std::nullopt;
+  template<std::size_t M>
+  constexpr ConstStr(const char (&other)[M]) {
+    if (N < M) {
+      throw std::runtime_error("...");
     }
 
-    ...
+    reset();
+    for (unsigned i = 0; i < M; ++i) {
+      data[i] = other[i];
+    }
   }
-private:
-  std::map<TypeName, ReflItem> types;
+
+  template<std::size_t M>
+  constexpr ConstStr& operator=(const char (&other)[M]) {
+    if (N < M) {
+      return *this;
+    }
+
+    reset();
+    for (unsigned i = 0; i < M; ++i) {
+      data[i] = other[i];
+    }
+
+    return *this;
+  }
+
+  constexpr void reset() {
+    for (unsigned i = 0; i < N; ++i) {
+      data[i] = 0;
+    }
+  }
+
+  char data[N+1];
 };
 
+template<std::size_t N>
+class Refl {
+public:
+  using Constructor = std::any (*)(std::optional<std::any>);
+  struct TypeInfo {
+    ConstStr<MAXIMUM_CLASSNAME> className;
+    Constructor ctor;
+  };
+
+  template<std::size_t M>
+  static constexpr bool addReflectType(
+    const char (&name)[M], Constructor ctor) {
+
+    if (!(idx < N)) {
+      return false;
+    }
+
+    TypeInfo info{name, ctor};
+    all[idx++] = info;
+    return true;
+  }
+
+  template<typename T>
+  static constexpr T reflect(std::string name) {
+    return std::any_cast<T>(all[0].ctor(std::nullopt));
+  }
+
+private:
+  static unsigned idx;
+  static std::array<TypeInfo, N> all;
+};
+
+template<size_t N>
+unsigned Refl<N>::idx = 0;
+
+template<size_t N>
+std::array<typename Refl<N>::TypeInfo, N>
+Refl<N>::all = {};
+
+using DefaultRefl = Refl<NUM_OF_REFLECTS>;
 
 } // Refl
 } // Utility

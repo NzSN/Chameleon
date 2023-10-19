@@ -4,6 +4,12 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
+filegroup(
+    name = "refl_src",
+    srcs = ["Refl.h"],
+    visibility = ["//visibility:public"],
+)
+
 cc_test(
     name = "interpreter_unittests",
     srcs = [
@@ -14,7 +20,9 @@ cc_test(
         "//src/Concepts:concepts_srcs",
         "//src/Parser:parser_unittest_src",
         "//src/Analysis:analyzer_unittest_src",
-        "//src/TransEngine:transformer_unittest_srcs"
+        "//src/TransEngine:transformer_unittest_srcs",
+        ":refl_src",
+        "Refl_unittests.cc",
         ],
     copts = [
           "-std=c++2a",
