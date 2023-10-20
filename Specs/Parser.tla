@@ -1,19 +1,27 @@
 ---- MODULE Parser ----
-CONSTANT
-    Source,
-    Nodes,
+CONSTANT Source, AST, NULL
+VARIABLE parser
 
-    \* Tree's CONSTANTS
-    NULL,
+TypeInvariant == Parser \in [rdy: {0,1},
+                             src: Source \union {NULL},
+                             ast: AST \union {NULL},
+                             parse: [Source -> AST]]
 
-LOCAL INSTANCE Tree WITH NULL <- NULL,
+Init == /\ TypeInvariant
+        /\ parser.rdy = 1
+        /\ parser.src = NULL
+        /\ parser.ast = NULL
 
-\* I don't specify how Parser works only
-\* due this part of works will bridged to
-\* another Parser exists.
-\*
-\* I define Parser in Chamelone simplly is
-\* a function that do transformation between
-\* Source and ParseTree.
-Parser == [Source -> Tree(Nodes)]
+Parse(s) == /\ parser.rdy = 1
+            /\ parser.src = NULL
+            /\ parser.ast = NULL
+            /\ parser' = [parser EXCEPT !.rdy = 0, !.source = s, !.ast = @.parse[@.src]]
+
+GetAST == /\ parser.rdy = 0
+          /\ parser.src # NULL
+          /\ parser.ast # NULL
+          /\ parser' = [parser EXCEPT !.rdy = 1, !.source = NULL, !.ast = NULL]
+
+Next == (\exists s \in Source: Parse(s)) \/ GetAST
+Spec == Init /\ [][Next]_parser
 =======================
