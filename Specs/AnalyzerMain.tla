@@ -44,7 +44,7 @@ LOCAL analyze[T \in Tree(DOMAIN TreeSample),
              [info |-> [F1 |-> <<N.Value>>, F2 |-> <<>>, NA |-> <<>>],
               status |-> "Done"]
 
-LOCAL INSTANCE Analyzer WITH
+LOCAL INSTANCE AnalyzerAlgo WITH
     NULL <- NULL,
     node_ids <- NodeIDS,
     node_types <- NodeTypes,
