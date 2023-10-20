@@ -5,6 +5,7 @@
 
 #include "Environment.h"
 #include "Base/generic_parsetree.h"
+#include "ExprTree.h"
 
 
 namespace TransEngine {
@@ -16,7 +17,13 @@ public:
   bool operator()(Environment<T>* env) {}
 
 private:
-  std::vector<CondExpr> subExprs;
+  // FIXME: Determination the content of
+  //        condition expression.
+  // Utility::BinExprTree<
+  // typename R,
+  // typename LEAF,
+  // typename OP,
+  // Environment<T>*> cond;
 };
 
 } // Rewrite
