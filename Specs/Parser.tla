@@ -17,10 +17,10 @@ Parse(s) == /\ parser.rdy = 1
             /\ parser.ast = NULL
             /\ parser' = [parser EXCEPT !.rdy = 0, !.source = s, !.ast = @.parse[@.src]]
 
+\* We don't require reusability of parser.
 GetAST == /\ parser.rdy = 0
           /\ parser.src # NULL
           /\ parser.ast # NULL
-          /\ parser' = [parser EXCEPT !.rdy = 1, !.source = NULL, !.ast = NULL]
 
 Next == (\exists s \in Source: Parse(s)) \/ GetAST
 Spec == Init /\ [][Next]_parser
