@@ -23,6 +23,8 @@ cc_test(
         "//src/TransEngine:transformer_unittest_srcs",
         ":refl_src",
         "Refl_unittests.cc",
+        "ExprTree.h",
+        "ExprTree_unittests.cc",
         ],
     copts = [
           "-std=c++2a",
