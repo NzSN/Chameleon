@@ -88,17 +88,8 @@ public:
       auto t2 = std::tie(rhs_, roperand);
       for (auto& [e, o]: {t1, t2}) {
         if (!(e == nullptr)) {
-          std::optional<R> tmp = (*e)(args...);
-          if (!tmp.has_value()) {
-            return std::nullopt;
-          } else {
-            o = tmp;
-          }
+          o = (*e)(args...);
         }
-      }
-
-      if (!loperand.has_value() && !roperand.has_value()) {
-        return std::nullopt;
       }
 
       return (*op_)(loperand, roperand, args...);
