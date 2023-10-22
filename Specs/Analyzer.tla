@@ -1,15 +1,18 @@
 ---- MODULE Analyzer ----
-CONSTANTS ASTInfo, NULL
+CONSTANTS NULL
 
+LOCAL INSTANCE TLC
+LOCAL INSTANCE AnalyzerDefines WITH NULL <- NULL
+LOCAL INSTANCE AnalyzerAlgo WITH
+    NULL <- NULL, Nodes <- (DOMAIN TreeSamples)
+
+LOCAL AnalyzerDef == [rdy: {0,1}, ast: {NULL}, info: {NULL}]
 
 (*--algorithm Analyzer
-variables analyzer, ast \in AST, info \in ASTInfo;
+variables analyzer \in AnalyzerDef, ast \in TreeSamples, info;
 
 define
-  TypeInvariant == analyzer \in [rdy: {0,1},
-                                 ast: AST \union {NULL},
-                                 info: ASTInfo \union {NULL},
-                                 analyze: [AST -> ASTInfo]]
+  TypeInvariant == analyzer \in AnalyzerDef
 end define;
 
 begin
@@ -19,7 +22,7 @@ begin
 
     analyzer.rdy := 0;
     analyzer.ast := ast;
-    analyzer.info := analyzer.analyze[ast];
+    analyzer.info := Analyze(ast);
 
   elsif analyzer.rdy = 0 /\
         analyzer.ast /= NULL /\
@@ -28,23 +31,20 @@ begin
   end if;
 
 end algorithm; *)
-\* BEGIN TRANSLATION (chksum(pcal) = "d314894e" /\ chksum(tla) = "e6dbc89e")
+\* BEGIN TRANSLATION (chksum(pcal) = "2fd0b303" /\ chksum(tla) = "335db649")
 CONSTANT defaultInitValue
 VARIABLES analyzer, ast, info, pc
 
 (* define statement *)
-TypeInvariant == analyzer \in [rdy: {0,1},
-                               ast: AST \union {NULL},
-                               info: ASTInfo \union {NULL},
-                               analyze: [AST -> ASTInfo]]
+TypeInvariant == analyzer \in AnalyzerDef
 
 
 vars == << analyzer, ast, info, pc >>
 
 Init == (* Global variables *)
-        /\ analyzer = defaultInitValue
-        /\ ast \in AST
-        /\ info \in ASTInfo
+        /\ analyzer \in AnalyzerDef
+        /\ ast \in TreeSamples
+        /\ info = defaultInitValue
         /\ pc = "Lbl_1"
 
 Lbl_1 == /\ pc = "Lbl_1"
@@ -70,7 +70,7 @@ Lbl_2 == /\ pc = "Lbl_2"
          /\ UNCHANGED << ast, info >>
 
 Lbl_3 == /\ pc = "Lbl_3"
-         /\ analyzer' = [analyzer EXCEPT !.info = analyzer.analyze[ast]]
+         /\ analyzer' = [analyzer EXCEPT !.info = Analyze(ast)]
          /\ pc' = "Done"
          /\ UNCHANGED << ast, info >>
 

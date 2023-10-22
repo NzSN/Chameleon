@@ -1,14 +1,10 @@
 ------- MODULE AnalyzerAlgo ------------
-CONSTANT NULL, node_ids, node_types, node_values, analyze,
-         Nodes
+CONSTANT NULL, Nodes
 
 LOCAL INSTANCE Naturals
 LOCAL INSTANCE TLC
 LOCAL INSTANCE Tree WITH NULL <- NULL
-LOCAL INSTANCE AnalyzerDefines WITH
-  node_ids <- node_ids,
-  node_types <- node_types,
-  node_values <- node_values
+LOCAL INSTANCE AnalyzerDefines
 
 AnalyzeImpls ==
   [Tree(Nodes) \X Nodes ->
@@ -18,7 +14,7 @@ AnalyzeImpls ==
 
 ASSUME analyze \in AnalyzeImpls
 
-LOCAL DoAnalyze[T \in Tree(Nodes)] ==
+LOCAL DoAnalyze(T) ==
   LET rootNode == GetRoot(T)
       Analyzing[tree \in Tree(DOMAIN T),
                 node_ \in DOMAIN T] ==
@@ -60,7 +56,7 @@ LOCAL DoAnalyze[T \in Tree(Nodes)] ==
 
 \* Analyze the tree which root
 \* node as parameter.
-Analyze[T \in Tree(Nodes)] == DoAnalyze[T]
+Analyze(T) == DoAnalyze(T)
 
 
 
