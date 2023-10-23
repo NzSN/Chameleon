@@ -55,7 +55,7 @@ analyze[T \in TreeSamples,
 
 
 ParsedData ==
-  [{"F1", "F2", "NA"} -> Seq(1..2)]
+  [{"F1", "F2", "NA"} -> Seq(Nat)]
 MergeDatas[D1 \in ParsedData,
            D2 \in ParsedData] ==
   LET conflict_fields ==
