@@ -42,7 +42,6 @@ Analyzing == /\ AnalyzerInst!Analyzing(parser.ast)
              /\ UNCHANGED parser
 
 AnalyzedDone == /\ AnalyzerInst!AnalyzedDone
-                /\ PrintT(analyzer)
                 /\ UNCHANGED parser
 
 Next == Parsing \/ ParsedDone \/ Analyzing \/ AnalyzedDone

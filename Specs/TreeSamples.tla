@@ -22,12 +22,14 @@ IsAnalyzing[s \in ParseTreeNodeStatus] ==
 IsAnalyzeFinished[s \in ParseTreeNodeStatus] ==
   s = "Done"
 
-ParseTreeNode[ident \in Nat, type \in {"S", "C"}] ==
-    [ID |-> ident, Type |-> type, Status |-> "Unanalyzed"]
-SkipNode[ident \in Nat] ==
-    [ID |-> ident, Type |-> "S", Status |-> "Unanalyzed"]
-ContinueNode[ident \in Nat] ==
-    [ID |-> ident, Type |-> "C", Status |-> "Unanalyzed"]
+NodeValue == {"a", "b", "c", "d", "e"}
+
+ParseTreeNode[ident \in Nat, type \in {"S", "C"}, value \in NodeValue] ==
+    [ID |-> ident, Type |-> type, Status |-> "Unanalyzed", Value |-> value]
+SkipNode[ident \in Nat, value \in NodeValue] ==
+    [ID |-> ident, Type |-> "S", Status |-> "Unanalyzed", Value |-> value]
+ContinueNode[ident \in Nat, value \in NodeValue] ==
+    [ID |-> ident, Type |-> "C", Status |-> "Unanalyzed", Value |-> value]
 
 
 MAXIMUM_NUM_OF_NODES == 4
@@ -35,18 +37,23 @@ MAXIMUM_NUM_OF_NODES == 4
 RECURSIVE TreeSample(_,_)
 TreeSample(N, Root) ==
   LET NodeType == CHOOSE n \in {0,1}: TRUE
+      Value == CHOOSE v \in NodeValue: TRUE
       Node == IF NodeType = 0 \* Skip
-              THEN SkipNode[N]
-              ELSE ContinueNode[N]
+              THEN SkipNode[N, Value]
+              ELSE ContinueNode[N, Value]
       AppendNode == CHOOSE n \in (DOMAIN Root): n.Type # "S"
   IN IF N > 0
      THEN TreeSample(N-1, AddNode(Root, AppendNode, Node))
      ELSE Root
-TreeSamples == {TreeSample(n, Singleton(ParseTreeNode[n+1, "C"])): n \in 1..MAXIMUM_NUM_OF_NODES}
+TreeSamples ==
+  LET Value == CHOOSE v \in NodeValue: TRUE
+  IN {TreeSample(n, Singleton(ParseTreeNode[n+1, "C", Value])): n \in 1..MAXIMUM_NUM_OF_NODES}
 
+TreeSampleNodes ==
+       {[ID |-> ident, Type |-> type, Status |-> "Unanalyzed", Value |-> value]:
+        ident \in 1..MAXIMUM_NUM_OF_NODES+1, type \in {"C", "S"}, value \in NodeValue}
 analyze[T \in TreeSamples,
-              N \in {[ID |-> ident, Type |-> type, Status |-> "Unanalyzed"]:
-                      ident \in 1..MAXIMUM_NUM_OF_NODES+1, type \in {"C", "S"}}] ==
+        N \in TreeSampleNodes] ==
   CASE N.Type = "C" ->
              [info |-> [F1 |-> <<>>, F2 |-> <<>>, NA |-> <<>>], status |-> "Analyzing"]
     [] N.Type = "S" ->
