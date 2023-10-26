@@ -68,7 +68,10 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, Matching, ()) {
 }
 
 RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithPlaceHolders, ()) {
+  // Matching pattern "a+1" with term "1+1".
+
   std::istringstream codes{"a+1"};
+  std::istringstream codes2{"1+1"};
 
   auto t = Parser::Parser<
     antlr4::tree::ParseTree*,
@@ -77,12 +80,24 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithPlaceHolders, ()) {
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse(&codes);
 
+  auto t2 = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse(&codes2);
+
+
   TransEngine::Pattern<Base::Antlr4Node> pattern(t);
+  TransEngine::SigmaTerm<Base::Antlr4Node> term(t2);
+
   std::vector<TransEngine::Pattern<Base::Antlr4Node>>&
     children = pattern.getChildren();
 
   RC_ASSERT(
     children[0].getChildren()[0].isTermVar());
+
+  RC_ASSERT(patternMatching<Base::Antlr4Node>(pattern, term));
 }
 
 } // Algorithms

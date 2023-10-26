@@ -22,7 +22,7 @@ IsAnalyzing[s \in ParseTreeNodeStatus] ==
 IsAnalyzeFinished[s \in ParseTreeNodeStatus] ==
   s = "Done"
 
-NodeValue == {"a", "b", "c", "d", "e"}
+NodeValue == {"a", "b", "c", "d", "e", "v"}
 
 ParseTreeNode[ident \in Nat, type \in {"S", "C"}, value \in NodeValue] ==
     [ID |-> ident, Type |-> type, Status |-> "Unanalyzed", Value |-> value]
@@ -32,7 +32,7 @@ ContinueNode[ident \in Nat, value \in NodeValue] ==
     [ID |-> ident, Type |-> "C", Status |-> "Unanalyzed", Value |-> value]
 
 
-MAXIMUM_NUM_OF_NODES == 4
+MAXIMUM_NUM_OF_NODES == 3
 
 RECURSIVE TreeSample(_,_)
 TreeSample(N, Root) ==
