@@ -26,13 +26,13 @@ Parsing(sentence) ==
                   !.sentence = sentence,
                   !.ast = parseF[sentence]]
 
-ParsedDone ==
+ParseDone ==
     /\ parser.rdy = 0
     /\ parser.sentence # NULL
     /\ parser.ast # NULL
     /\ UNCHANGED <<parser>>
 
-Next == \E s \in Sentence: Parsing(s) \/ ParsedDone
+Next == \E s \in Sentence: Parsing(s) \/ ParseDone
 
 Spec == Init /\ [][Next]_<<parser>>
 

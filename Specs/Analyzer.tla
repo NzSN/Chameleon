@@ -26,12 +26,12 @@ Analyzing(ast) ==
                     !.ast = ast,
                     !.info = Analyze(ast)]
 
-AnalyzedDone == /\ analyzer.rdy = 0
+AnalyzeDone == /\ analyzer.rdy = 0
            /\ analyzer.ast # NULL
            /\ analyzer.info # NULL
            /\ UNCHANGED <<analyzer>>
 
-Next == \E t \in TreeSamples: Analyzing(t) \/ AnalyzedDone
+Next == \E t \in TreeSamples: Analyzing(t) \/ AnalyzeDone
 
 Spec == Init /\ [][Next]_<<analyzer>>
 

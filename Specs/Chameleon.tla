@@ -1,7 +1,7 @@
 \* TODO: Implement Transfor Step.
 ----- MODULE Chameleon -----
-CONSTANTS NULL
-VARIABLES parser, analyzer
+CONSTANTS NULL, RuleConfig, Rule
+VARIABLES parser, analyzer, transformer, state
 
 
 LOCAL INSTANCE TLC
@@ -23,28 +23,64 @@ AnalyzerInst == INSTANCE Analyzer WITH
   NULL <- NULL,
   analyzer <- analyzer
 
+TransformerInst == INSTANCE Transformer WITH
+  NULL <- NULL,
+  RuleConfig <- RuleConfig,
+  Rule <- Rule,
+  transformer <- transformer
+
+
 TypeInvariant ==
+    /\ state = 0
     /\ parser = [rdy |-> 1, sentence |-> NULL, ast |-> NULL]
-    /\ ParserInst!TypeInvariant
     /\ analyzer = [rdy |-> 1, ast |-> NULL, info |-> NULL]
+    /\ ParserInst!TypeInvariant
+    /\ AnalyzerInst!TypeInvariant
 
 Init == /\ TypeInvariant
         /\ ParserInst!Init
         /\ AnalyzerInst!Init
+        /\ TransformerInst!Init
 
 Parsing == /\ \E s \in Sentence: ParserInst!Parsing(s)
-           /\ UNCHANGED analyzer
+           /\ state = 0
+           /\ state' = 1
+           /\ UNCHANGED <<analyzer, transformer>>
 
-ParsedDone == /\ ParserInst!ParsedDone
-              /\ UNCHANGED analyzer
+ParseDone == /\ ParserInst!ParseDone
+              /\ state = 1
+              /\ state' = 2
+              /\ UNCHANGED <<analyzer, transformer>>
 
 Analyzing == /\ AnalyzerInst!Analyzing(parser.ast)
-             /\ UNCHANGED parser
+             /\ state = 2
+             /\ state' = 3
+             /\ UNCHANGED <<parser, transformer>>
 
-AnalyzedDone == /\ AnalyzerInst!AnalyzedDone
-                /\ UNCHANGED parser
+AnalyzeDone == /\ AnalyzerInst!AnalyzeDone
+                /\ state = 3
+                /\ state' = 4
+                /\ UNCHANGED <<parser, transformer>>
 
-Next == Parsing \/ ParsedDone \/ Analyzing \/ AnalyzedDone
+ParseRuleConfig ==
+  /\ \E config \in RuleConfig: TransformerInst!ParseRuleConfig(config)
+  /\ state = 4
+  /\ state' = 5
+  /\ UNCHANGED <<parser, analyzer>>
 
-Spec == Init /\ [][Next]_<<parser, analyzer>>
+Transforming ==
+  /\ TransformerInst!Transforming(analyzer.info, parser.ast)
+  /\ state = 5
+  /\ state' = 6
+  /\ UNCHANGED <<parser, analyzer>>
+
+TransDone ==
+  /\ TransformerInst!TransDone
+  /\ state = 6
+  /\ UNCHANGED <<parser, analyzer, state>>
+
+Next == \/ Parsing \/ ParseDone \/ Analyzing \/ AnalyzeDone
+        \/ ParseRuleConfig \/ Transforming \/ TransDone
+
+Spec == Init /\ [][Next]_<<parser, analyzer, transformer, state>>
 ==========================
