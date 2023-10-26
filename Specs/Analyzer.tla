@@ -8,9 +8,7 @@ LOCAL INSTANCE TreeSamples WITH NULL <- NULL
 LOCAL INSTANCE AnalyzerAlgo WITH
     NULL <- NULL, Nodes <- (DOMAIN TreeSamples)
 
-LOCAL AnalyzerDef == [rdy: {0,1}, ast: {NULL}, info: {NULL}]
-
-TypeInvariant == /\ analyzer \in AnalyzerDef
+TypeInvariant == /\ analyzer = [rdy |-> 1, ast |-> NULL, info |-> NULL]
                  /\ ast \in TreeSamples
                  /\ info = <<>>
 
