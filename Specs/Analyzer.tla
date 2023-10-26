@@ -1,40 +1,39 @@
 ---- MODULE Analyzer ----
 EXTENDS Sequences, Naturals, FiniteSets
 CONSTANTS NULL
-VARIABLES analyzer, ast, info
+VARIABLES analyzer
 
 LOCAL INSTANCE TLC
 LOCAL INSTANCE TreeSamples WITH NULL <- NULL
 LOCAL INSTANCE AnalyzerAlgo WITH
     NULL <- NULL, Nodes <- (DOMAIN TreeSamples)
 
-TypeInvariant == /\ analyzer = [rdy |-> 1, ast |-> NULL, info |-> NULL]
-                 /\ ast \in TreeSamples
-                 /\ info = <<>>
+TypeInvariant ==
+    /\ analyzer = [rdy |-> 1, ast |-> NULL, info |-> NULL]
 
 Init == /\ TypeInvariant
         /\ analyzer.rdy = 1
         /\ analyzer.info = NULL
         /\ analyzer.ast = NULL
 
-Analyzing == /\ analyzer.rdy = 1
-           /\ analyzer.info = NULL
-           /\ analyzer.ast = NULL
-           /\ analyzer' = [analyzer EXCEPT
-                           !.rdy = 0,
-                           !.ast = ast,
-                           !.info = Analyze(ast)]
-           /\ UNCHANGED <<ast, info>>
+Analyzing(ast) ==
+    /\ ast \in TreeSamples
+    /\ analyzer.rdy = 1
+    /\ analyzer.info = NULL
+    /\ analyzer.ast = NULL
+    /\ analyzer' = [analyzer EXCEPT
+                    !.rdy = 0,
+                    !.ast = ast,
+                    !.info = Analyze(ast)]
 
-RcvInfo == /\ analyzer.rdy = 0
+AnalyzedDone == /\ analyzer.rdy = 0
            /\ analyzer.ast # NULL
            /\ analyzer.info # NULL
-           /\ info' = <<analyzer.info>>
-           /\ UNCHANGED <<ast, analyzer>>
+           /\ UNCHANGED <<analyzer>>
 
-Next == Analyzing \/ RcvInfo
+Next == \E t \in TreeSamples: Analyzing(t) \/ AnalyzedDone
 
-Spec == Init /\ [][Next]_<<analyzer, info, ast>>
+Spec == Init /\ [][Next]_<<analyzer>>
 
 
 =========================
