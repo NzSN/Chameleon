@@ -9,5 +9,4 @@ ParseFunc[s \in Sentence] ==
     IN T
 
 SentenceConst == 1..3
-Parser == [rdy |-> 1, sentence |-> NULL, ast |-> NULL]
 ===========================
