@@ -8,12 +8,8 @@ LOCAL INSTANCE TreeSamples WITH NULL <- NULL
 RIDConst == 1..3
 
 Rules ==
-    {[ID |-> id, L |-> lt, R |-> rt,
-      \* Transform Rule may define without
-      \* condition parts.
-      S |-> s]:
-     id \in RID, lt \in TreeSamples, rt \in TreeSamples,
-     s \in ExprTree \union {NULL}}
+    {[ID |-> id, L |-> lt, R |-> rt]:
+     id \in RID, lt \in TreeSamples, rt \in TreeSamples}
 
 EVAL == \A t \in Rules: PrintT(t)
 =====================
