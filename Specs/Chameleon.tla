@@ -1,3 +1,4 @@
+\* TODO: Implement Transfor Step.
 ----- MODULE Chameleon -----
 CONSTANTS NULL
 VARIABLES parser, analyzer
