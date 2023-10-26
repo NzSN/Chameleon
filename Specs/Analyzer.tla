@@ -4,7 +4,7 @@ CONSTANTS NULL
 VARIABLES analyzer, ast, info
 
 LOCAL INSTANCE TLC
-LOCAL INSTANCE AnalyzerDefines WITH NULL <- NULL
+LOCAL INSTANCE TreeSamples WITH NULL <- NULL
 LOCAL INSTANCE AnalyzerAlgo WITH
     NULL <- NULL, Nodes <- (DOMAIN TreeSamples)
 
@@ -19,7 +19,7 @@ Init == /\ TypeInvariant
         /\ analyzer.info = NULL
         /\ analyzer.ast = NULL
 
-Parsing == /\ analyzer.rdy = 1
+Analyzing == /\ analyzer.rdy = 1
            /\ analyzer.info = NULL
            /\ analyzer.ast = NULL
            /\ analyzer' = [analyzer EXCEPT
@@ -34,7 +34,7 @@ RcvInfo == /\ analyzer.rdy = 0
            /\ info' = <<analyzer.info>>
            /\ UNCHANGED <<ast, analyzer>>
 
-Next == Parsing \/ RcvInfo
+Next == Analyzing \/ RcvInfo
 
 Spec == Init /\ [][Next]_<<analyzer, info, ast>>
 

@@ -1,4 +1,4 @@
----- MODULE AnalyzerDefines ----
+---- MODULE TreeSamples ----
 CONSTANTS NULL
 
 LOCAL INSTANCE Naturals

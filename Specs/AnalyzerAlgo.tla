@@ -4,7 +4,7 @@ CONSTANT NULL, Nodes
 LOCAL INSTANCE Naturals
 LOCAL INSTANCE TLC
 LOCAL INSTANCE Tree WITH NULL <- NULL
-LOCAL INSTANCE AnalyzerDefines
+LOCAL INSTANCE TreeSamples
 
 AnalyzeImpls ==
   [Tree(Nodes) \X Nodes ->
