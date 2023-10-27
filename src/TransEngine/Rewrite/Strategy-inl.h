@@ -2,17 +2,33 @@
 #define STRATEGY_INL_H
 
 #include "Strategy.h"
+#include "TransEngine/PatternMatching.h"
 
 namespace TransEngine {
 namespace Rewrite {
+
+// BuildStra(MatchStra(R, E), E);
 
 template<Base::GPTMeta T>
 struct MatchStra: public Strategy<T> {
   using UNUSED_V = Strategy<T>::UNUSED_V;
 
-  UNUSED_V operator()(
-    Rule<T>& rule, Environment<T>* env) {
+  Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
+    auto maybeMatch = Algorithms::patternMatching<T>(
+      rule.leftSide,
+      env.targetTerm());
 
+    if (!maybeMatch.has_value()) {
+      // Failed to pattern matched, do nothing
+      // about side effect works to environments.
+      return rule;
+    }
+
+    // Setup the term that have matched, so consequence
+    // straties able to apply changed.
+    env.setMatchTerm(maybeMatch.value());
+
+    // Binding terms to term variable.
   }
 };
 

@@ -1,12 +1,14 @@
 filegroup(
     name = "rewrite_srcs",
-    srcs = ["Term.h", "Term.cc"],
+    srcs = ["Term.h", "Term.cc",
+            "Environment.h", "Environment.cc"],
     visibility = ["//visibility:public"]
 )
 
 filegroup(
     name = "rewrite_unittest_srcs",
     srcs = [":rewrite_srcs",
-            "Term-Unittests.cc"],
+            "Term-Unittests.cc",
+            "Environment-Unittest.cc"],
     visibility = ["//visibility:public"]
 )

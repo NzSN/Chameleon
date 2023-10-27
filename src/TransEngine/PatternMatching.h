@@ -2,6 +2,8 @@
 #ifndef PATTERNMATCHING_H
 #define PATTERNMATCHING_H
 
+#include <optional>
+
 #include "Concepts/n_ary_tree.h"
 #include "SigmaTerm.h"
 
@@ -13,20 +15,20 @@ enum MatchAlgor {
 template<Base::GPTMeta T,
          MatchAlgor select = NORMAL,
          typename = std::enable_if_t<select == NORMAL>>
-bool patternMatching(TransEngine::Pattern<T> pattern,
-                    TransEngine::SigmaTerm<T> subjectTree) {
-
+std::optional<Base::GenericParseTree<T>*>
+patternMatching(TransEngine::Pattern<T>& pattern,
+                Base::GenericParseTree<T>& subjectTree) {
   const auto matchingSubTree =
     [](const TransEngine::Pattern<T>& pattern,
-       const TransEngine::SigmaTerm<T> subjectTree) -> bool {
+       const Base::GenericParseTree<T> subjectTree) -> bool {
 
       return Concepts::NAryTree::equal<
         TransEngine::Pattern<T>,
-        TransEngine::SigmaTerm<T>>(
+        Base::GenericParseTree<T>>(
 
           pattern, subjectTree,
           [](const TransEngine::Pattern<T>& lhs,
-             const TransEngine::SigmaTerm<T>& rhs) {
+             const Base::GenericParseTree<T>& rhs) {
             if (lhs.isTermVar()) {
               return true;
             } else {
@@ -37,17 +39,18 @@ bool patternMatching(TransEngine::Pattern<T> pattern,
 
   // Maching on the root of subject tree
   if (matchingSubTree(pattern, subjectTree)) {
-    return true;
+    return &subjectTree;
   }
 
   // Maching on another SubTree of Subject Tree.
   for (auto& child: Concepts::NAryTree::getChildren(subjectTree)) {
-    if (patternMatching<T>(pattern, child)) {
-      return true;
+    auto matchRet = patternMatching<T>(pattern, child);
+    if (matchRet.has_value()) {
+      return matchRet.value();
     }
   }
 
-  return false;
+  return std::nullopt;
 }
 
 } // Algorithms

@@ -10,8 +10,6 @@
 namespace TransEngine {
 namespace Rewrite {
 
-using UNUSED_V = int;
-
 template<Base::GPTMeta T>
 struct Rule;
 
@@ -26,7 +24,7 @@ using StrategySeq = std::vector<Strategy<T>>;
 
 template<Base::GPTMeta T>
 struct Strategy {
-  virtual UNUSED_V operator()(
+  virtual Rule<T>& operator()(
     Rule<T>& rule, Environment<T>&) = 0;
 };
 

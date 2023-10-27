@@ -35,7 +35,7 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MapPatternToGPT, ()) {
   // Building a Pattern base on ParseTree,
   // without term variables.
   TransEngine::Pattern<Base::Antlr4Node> pattern(t);
-  TransEngine::SigmaTerm<Base::Antlr4Node> sigmaterm(t);
+  Base::GenericParseTree<Base::Antlr4Node> sigmaterm(t);
 
   // Assert that a pattern from a concrete parsetree
   // is isomorhpic to the parsetree.
@@ -43,11 +43,6 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MapPatternToGPT, ()) {
     (Concepts::NAryTree::isIsomorphic<
      Base::GenericParseTree<Base::Antlr4Node>,
      TransEngine::Pattern<Base::Antlr4Node>>(pattern, t)));
-
-  RC_ASSERT(
-    (Concepts::NAryTree::isIsomorphic<
-     Base::GenericParseTree<Base::Antlr4Node>,
-     TransEngine::SigmaTerm<Base::Antlr4Node>>(sigmaterm, t)));
 }
 
 RC_GTEST_FIXTURE_PROP(PatternMatchingTests, Matching, ()) {
@@ -61,10 +56,11 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, Matching, ()) {
     ::parse(&codes);
 
   TransEngine::Pattern<Base::Antlr4Node> pattern(t);
-  TransEngine::SigmaTerm<Base::Antlr4Node> sigmaterm(t);
+  Base::GenericParseTree<Base::Antlr4Node> sigmaterm(t);
 
   // Try to matching the pattern and the sigmaterm
-  RC_ASSERT(patternMatching<Base::Antlr4Node>(pattern, sigmaterm));
+  RC_ASSERT(patternMatching<Base::Antlr4Node>(
+              pattern, sigmaterm).has_value());
 }
 
 RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithPlaceHolders, ()) {
@@ -89,7 +85,7 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithPlaceHolders, ()) {
 
 
   TransEngine::Pattern<Base::Antlr4Node> pattern(t);
-  TransEngine::SigmaTerm<Base::Antlr4Node> term(t2);
+  Base::GenericParseTree<Base::Antlr4Node> term(t2);
 
   std::vector<TransEngine::Pattern<Base::Antlr4Node>>&
     children = pattern.getChildren();
@@ -97,7 +93,8 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithPlaceHolders, ()) {
   RC_ASSERT(
     children[0].getChildren()[0].isTermVar());
 
-  RC_ASSERT(patternMatching<Base::Antlr4Node>(pattern, term));
+  RC_ASSERT(patternMatching<Base::Antlr4Node>(
+              pattern, term).has_value());
 }
 
 } // Algorithms

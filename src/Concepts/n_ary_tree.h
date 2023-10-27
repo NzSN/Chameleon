@@ -12,26 +12,13 @@
 namespace Concepts::NAryTree {
 
 template<typename T, typename V>
-concept Children_t = std::ranges::range<T> &&
-  (std::same_as<std::ranges::range_value_t<T>, V> ||
-   std::same_as<std::ranges::range_value_t<T>, V*>);
-
-template<typename T>
-concept WalkByFunction = requires(T t) {
-  { t.getChildren() } -> Children_t<T>;
+concept Children_t = std::ranges::range<T> && (std::same_as<std::ranges::range_value_t<T>, V> || std::same_as<std::ranges::range_value_t<T>, V*>); template<typename T> concept WalkByFunction = requires(T t) {{ t.getChildren() } -> Children_t<T>;
 };
 
 template<typename T>
 concept WalkByDataMember = requires(T t) {
   { t.children } -> Children_t<T>;
-};
-
-template<typename T>
-concept NAryTree =
-  WalkByFunction<T> || WalkByDataMember<T>;
-
-template<WalkByFunction T>
-auto& getChildren(const T& t) {
+}; template<typename T> concept NAryTree = WalkByFunction<T> || WalkByDataMember<T>; template<WalkByFunction T> auto& getChildren(const T& t) {
   return const_cast<T&>(t).getChildren();
 }
 
@@ -71,12 +58,7 @@ bool equal(const T& l, const R& r,
   auto rcurrent = std::ranges::cbegin(children_r),
     rend = std::ranges::cend(children_r);
 
-  while (lcurrent != lend && rcurrent != rend) {
-    const T& lchild = derferIfAvailable(*lcurrent);
-    const R& rchild = derferIfAvailable(*rcurrent);
-
-    isEqual &= Concepts::NAryTree::equal(lchild, rchild, equal_fn);
-    if (!isEqual) return isEqual;
+  while (lcurrent != lend && rcurrent != rend) {const T& lchild = derferIfAvailable(*lcurrent); const R& rchild = derferIfAvailable(*rcurrent); isEqual &= Concepts::NAryTree::equal(lchild, rchild, equal_fn); if (!isEqual) return isEqual;
 
     ++lcurrent;
     ++rcurrent;

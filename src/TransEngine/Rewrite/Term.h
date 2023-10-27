@@ -11,35 +11,32 @@
 namespace TransEngine {
 namespace Rewrite {
 
-/* This structure represent an already binded Term
- * variable. */
+/* This structure represent a subtree of
+ * ParseTree, and this structures is used for
+ * binding purposes. */
 template<Base::GPTMeta T>
 struct Term {
-  Term(std::string identArg,
-       Base::GenericParseTree<T>& t):
-    ident{identArg}, tree{t} {}
+  Term(Base::GenericParseTree<T>& t):
+    tree{t} {}
   Term(const Term& other):
-    ident{other.ident}, tree{other.tree} {}
+    tree{other.tree} {}
   Term(const Term&& other):
-    ident{std::move(other.ident)},
     tree{std::move(other.tree)} {}
 
-  Term& operator=(const Term& other) const {
-    ident = other.ident;
-    tree = other.ident;
+  Term& operator=(const Term& other) {
+    tree = other.tree;
+    return *this;
   }
 
-  Term& operator=(const Term&& other) const {
-    ident = std::move(other.ident);
+  Term& operator=(const Term&& other) {
     tree = std::move(other.tree);
+    return *this;
   }
 
   bool operator==(const Term& other) const {
-    return ident == other.ident &&
-      tree.get() == other.tree.get();
+    return tree.get() == other.tree.get();
   }
 
-  const std::string ident;
   using RefWrapperGPT =
     std::reference_wrapper<Base::GenericParseTree<T>>;
   RefWrapperGPT tree;

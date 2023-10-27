@@ -15,19 +15,18 @@ struct TermTests: public ::testing::Test {
 };
 
 TEST_F(TermTests, Assignable) {
-  Term<int> t("ID", tree);
+  Term<int> t(tree);
   Term<int> t2{t};
 
-  RC_ASSERT(t.ident == t2.ident);
   RC_ASSERT(t.tree.get() == t2.tree.get());
 }
 
 TEST_F(TermTests, Comparable) {
-  Term<int> t{"ID", tree};
+  Term<int> t{tree};
   Term<int> t2{t};
 
   RC_ASSERT(t == t2);
-  RC_ASSERT_FALSE((t == Term<int>{"ID2", tree}));
+  RC_ASSERT((t == Term<int>{tree}));
 }
 
 } // Rewrite
