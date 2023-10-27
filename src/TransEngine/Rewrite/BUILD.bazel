@@ -1,0 +1,12 @@
+filegroup(
+    name = "rewrite_srcs",
+    srcs = ["Term.h", "Term.cc"],
+    visibility = ["//visibility:public"]
+)
+
+filegroup(
+    name = "rewrite_unittest_srcs",
+    srcs = [":rewrite_srcs",
+            "Term-Unittests.cc"],
+    visibility = ["//visibility:public"]
+)

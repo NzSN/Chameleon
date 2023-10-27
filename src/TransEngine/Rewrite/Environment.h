@@ -2,6 +2,8 @@
 #define ENVIRONMENT_H
 
 #include <map>
+#include <optional>
+
 #include "Base/generic_parsetree_inl.h"
 #include "Term.h"
 
@@ -12,9 +14,20 @@ template<Base::GPTMeta T>
 class Environment {
 public:
   using TermIdent = std::string;
+  std::optional<Term<T>> operator[](const TermIdent& ident) {
+    if (bindings.contains(ident)) {
+      return bindings[ident];
+    } else {
+      return std::nullopt;
+    }
+  }
+
+  bool contains(const TermIdent& ident) {
+    return bindings.contains(ident);
+  }
 
 private:
-  std::map<TermIdent, Base::GenericParseTree<T>> bindings;
+  std::map<TermIdent, Term<T>> bindings;
 };
 
 } // TransEngine
