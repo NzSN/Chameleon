@@ -9,6 +9,12 @@
 #include "Concepts/n_ary_tree.h"
 #include "SigmaTerm.h"
 
+#include "Rewrite/Environment.h"
+#include "Rewrite/Term.h"
+
+using TransEngine::Rewrite::Environment;
+using TransEngine::Rewrite::Term;
+
 namespace Algorithms {
 enum MatchAlgor {
   NORMAL
@@ -24,29 +30,29 @@ template<Base::GPTMeta T,
          typename = std::enable_if_t<select == NORMAL>>
 std::optional<Base::GenericParseTree<T>*>
 patternMatchingTermCapture(
-  TransEngine::Pattern<T>& pattern,
+  const TransEngine::Pattern<T>& pattern,
   Base::GenericParseTree<T>& subjectTree,
-  CaptureTerms<T>* terms) {
+  Environment<T>* env) {
 
   const auto matchingSubTree =
     [](const TransEngine::Pattern<T>& pattern,
        const Base::GenericParseTree<T>& subjectTree,
-       CaptureTerms<T>* terms) -> bool {
+       Environment<T>* env) -> bool {
 
       return Concepts::NAryTree::equal<
         TransEngine::Pattern<T>,
         Base::GenericParseTree<T>>(
           pattern, subjectTree,
-          [&terms](const TransEngine::Pattern<T>& lhs,
+          [&env](const TransEngine::Pattern<T>& lhs,
              const Base::GenericParseTree<T>& rhs) {
 
             if (lhs.isTermVar()) {
               // Capture Term Variables
-              if (terms != nullptr) {
-                (*terms)[lhs.termID()] =
-                  const_cast<Base::GenericParseTree<T>*>(&rhs);
+              if (env != nullptr) {
+                env->bindings().bind(
+                 lhs.termID(),
+                  Term(const_cast<Base::GenericParseTree<T>&>(rhs)));
               }
-
               return true;
             } else {
               return lhs.getMeta() == rhs.getMeta();
@@ -55,13 +61,13 @@ patternMatchingTermCapture(
     };
 
   // Maching on the root of subject tree
-  if (matchingSubTree(pattern, subjectTree, terms)) {
+  if (matchingSubTree(pattern, subjectTree, env)) {
     return &subjectTree;
   }
 
   // Maching on another SubTree of Subject Tree.
   for (auto& child: Concepts::NAryTree::getChildren(subjectTree)) {
-    auto matchRet = patternMatchingTermCapture<T>(pattern, child, terms);
+    auto matchRet = patternMatchingTermCapture<T>(pattern, child, env);
     if (matchRet.has_value()) {
       return matchRet.value();
     }

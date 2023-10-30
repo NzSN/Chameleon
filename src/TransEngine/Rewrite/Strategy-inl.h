@@ -1,24 +1,38 @@
 #ifndef STRATEGY_INL_H
 #define STRATEGY_INL_H
 
+#include <stdexcept>
+
 #include "Strategy.h"
 #include "TransEngine/PatternMatching.h"
 
 namespace TransEngine {
 namespace Rewrite {
 
-// BuildStra(MatchStra(R, E), E);
-
+// PRECONDITION:
+//   1.*Environment<T>::targetTerm_ in GenericParseTree<T>
+//   2.Cardinality of Environment<T>::bindings_ is 0.
+// POSTCONDITION(success):
+//   1.Environment<T>::matchTerm_ != nullptr
+//   2.Cardinality of Environment<T>::bindings_ should be
+//     bigger than 0 if there are TermVar in left side pattern.
+// otherwise left the Environment UNCHANGED.
 template<Base::GPTMeta T>
 struct MatchStra: public Strategy<T> {
 
-  Algorithms::CaptureTerms<T> termVars;
-
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
+    if (env.targetTerm() == nullptr) {
+      throw std::runtime_error(
+        "TargetTerm not found by MatchStra Object");
+    }
+
+    // PatternMatching TargetTerm within Environment with
+    // left side pattern of Rule, all TermVars will be binded
+    // to correspond terms during PatternMatching.
     auto maybeMatch = Algorithms::patternMatchingTermCapture<T>(
-      rule.leftSide,
-      env.targetTerm(),
-      &termVars);
+      *rule.leftSide,
+      *env.targetTerm(),
+      &env);
 
     if (!maybeMatch.has_value()) {
       // Failed to pattern matched, do nothing
@@ -30,7 +44,7 @@ struct MatchStra: public Strategy<T> {
     // straties able to apply changed.
     env.setMatchTerm(maybeMatch.value());
 
-    // Setup Variable bindings to Environments.
+    return rule;
   }
 };
 

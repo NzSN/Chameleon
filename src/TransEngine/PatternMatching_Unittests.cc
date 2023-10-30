@@ -128,16 +128,22 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, CaptureTermVar, ()) {
   TransEngine::Pattern<Base::Antlr4Node> pattern(t);
   Base::GenericParseTree<Base::Antlr4Node> term(t2);
 
-  CaptureTerms<Base::Antlr4Node> terms{};
+  Environment<Base::Antlr4Node> env;
 
   RC_ASSERT(
     patternMatchingTermCapture<Base::Antlr4Node>(
-      pattern, term, &terms).has_value());
+      pattern, term, &env).has_value());
 
-  RC_ASSERT(terms.contains("a"));
-  RC_ASSERT(terms["a"]->getText() == "1");
-  RC_ASSERT(terms.contains("b"));
-  RC_ASSERT(terms["b"]->getText() == "2");
+  RC_ASSERT(env.bindings().isBinded("a"));
+  RC_ASSERT(env.bindings()["a"]
+            .tree
+            .get()
+            .getText() == "1");
+  RC_ASSERT(env.bindings().isBinded("b"));
+  RC_ASSERT(env.bindings()["b"]
+            .tree
+            .get()
+            .getText() == "2");
 }
 
 } // Algorithms

@@ -25,15 +25,8 @@ public:
   // pattern to identifier "a".
   using TermIdent = std::string;
 
-  void bind(const TermIdent& ident, Term<T>& term) {
-    if (bindings_.contains(ident)) {
-      throw std::runtime_error(
-        "Try to bind to TermIdent that already binded.");
-    } else {
-      bindings_.insert(
-        typename std::unordered_map<TermIdent, Term<T>>
-        ::value_type(ident, term));
-    }
+  void bind(const TermIdent& ident, Term<T> term) {
+    bindings_.insert_or_assign(ident, term);
   }
 
   const Term<T> operator[](const TermIdent& ident) const {
@@ -63,17 +56,28 @@ private:
 template<Base::GPTMeta T>
 class Environment {
 public:
-  Base::GenericParseTree<T>* targetTerm();
+  Environment():
+    targetTerm_{nullptr}, matchTerm_{nullptr} {}
+
+  Base::GenericParseTree<T>* targetTerm() {
+    return targetTerm_;
+  }
+
   void setTargetTerm(Base::GenericParseTree<T>* t) {
     targetTerm_ = t;
   }
 
-  Base::GenericParseTree<T>* matchTerm();
+  Base::GenericParseTree<T>* matchTerm() {
+    return matchTerm_;
+  }
+
   void setMatchTerm(Base::GenericParseTree<T>* t) {
     matchTerm_ = t;
   }
 
-  Bindings<T>& bindings();
+  Bindings<T>& bindings() {
+    return bindings_;
+  }
 private:
   Base::GenericParseTree<T>* targetTerm_;
   Base::GenericParseTree<T>* matchTerm_;
