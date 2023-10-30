@@ -1,10 +1,15 @@
 #ifndef STRATEGY_INL_H
 #define STRATEGY_INL_H
 
+#include <iostream>
 #include <stdexcept>
 
 #include "Strategy.h"
+#include "Parser/Parser-inl.h"
 #include "TransEngine/PatternMatching.h"
+
+#include "Misc/testLanguage/TestLangLexer.h"
+#include "Misc/testLanguage/TestLangParser.h"
 
 namespace TransEngine {
 namespace Rewrite {
@@ -25,6 +30,10 @@ struct MatchStra: public Strategy<T> {
       throw std::runtime_error(
         "TargetTerm not found by MatchStra Object");
     }
+    if (env.bindings().size() > 0) {
+      throw std::runtime_error(
+        "Some dirty bindings remains in Environment.");
+    }
 
     // PatternMatching TargetTerm within Environment with
     // left side pattern of Rule, all TermVars will be binded
@@ -35,8 +44,11 @@ struct MatchStra: public Strategy<T> {
       &env);
 
     if (!maybeMatch.has_value()) {
-      // Failed to pattern matched, do nothing
-      // about side effect works to environments.
+      // Reset all bindings otherwise
+      // INVARIANT break which will
+      // cause dirty bindings to allow
+      // ill-formed rule to perform.
+      env.bindings().clear();
       return rule;
     }
 
@@ -48,10 +60,22 @@ struct MatchStra: public Strategy<T> {
   }
 };
 
+// Build right side pattern on Environment<T>::buildTerm_
 template<Base::GPTMeta T>
-StrategySet<T> ruleBreakDown(Rule<T> rule) {
+struct BuildStra: public Strategy<T> {
+  Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
+    // Build right side pattern
+    std::istringstream codes{rule.rTemplate};
 
-}
+    auto t = Parser::ParserSelect<2>::parser
+      ::parse<Utility::AUTOMATIC>(&codes);
+
+    std::cout << t.getText() << std::endl;
+  }
+};
+
+template<Base::GPTMeta T>
+StrategySet<T> ruleBreakDown(Rule<T> rule) {}
 
 } // Rewrite
 } // TransEngine

@@ -1,4 +1,8 @@
+#ifndef EXTERNALPARSER_H
+#define EXTERNALPARSER_H
+
 #include <string>
+#include <vector>
 #include <memory>
 #include "utility.h"
 #include "Misc/testLanguage/TestLangLexer.h"
@@ -16,24 +20,27 @@ struct TestLangExt {
     std::string expression;
     *s >> expression;
 
-    static std::unique_ptr<
+    std::unique_ptr<
       Utility::Antlr4ParseEnv<
         TestLangLexer, TestLangParser, Entry>> env;
-
-    if (env.get() != nullptr) {
-      env.release();
-    }
 
     env = Utility::Antlr4_GenParseTree<
       TestLangLexer, TestLangParser>(
         expression, entry);
 
     tree = env->tree;
+    envs.push_back(std::move(env));
 
-    return env->tree;
+    return tree;
   }
 
   static antlr4::tree::ParseTree* tree;
+
+  using EnvPtr = std::unique_ptr<
+    Utility::Antlr4ParseEnv<TestLangLexer, TestLangParser, Entry>>;
+  static std::vector<EnvPtr> envs;
 };
 
 } // Parser
+
+#endif /* EXTERNALPARSER_H */

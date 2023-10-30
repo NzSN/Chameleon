@@ -10,6 +10,10 @@
 
 namespace Parser {
 
+enum TREE_PROP {
+  TREE_INDEPENDENT
+};
+
 template<typename T, typename O>
 concept ExtParser = requires(T t, std::istream *s) {
   { T::parse(s) } -> std::same_as<O>;

@@ -1,12 +1,14 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
+#include <vector>
 #include <unordered_map>
 #include <stdexcept>
 #include <optional>
 
-#include "Base/generic_parsetree_inl.h"
 #include "Term.h"
+#include "Base/generic_parsetree_inl.h"
+#include "utility.h"
 
 namespace TransEngine {
 namespace Rewrite {
@@ -48,6 +50,14 @@ public:
     }
   }
 
+  size_t size() const {
+    return bindings_.size();
+  }
+
+  void clear() {
+    bindings_.clear();
+  }
+
 private:
   std::unordered_map<TermIdent, Term<T>> bindings_;
 };
@@ -75,13 +85,24 @@ public:
     matchTerm_ = t;
   }
 
+  Base::GenericParseTree<T>* buildTerm() {
+    return buildTerm_;
+  }
+
+  void setBuildTerm(Base::GenericParseTree<T>* t) {
+    buildTerm_ = t;
+  }
+
   Bindings<T>& bindings() {
     return bindings_;
   }
+
 private:
   Base::GenericParseTree<T>* targetTerm_;
   Base::GenericParseTree<T>* matchTerm_;
+  Base::GenericParseTree<T>* buildTerm_;
   Bindings<T> bindings_;
+  std::vector<Utility::HeapResourceHolder> resources;
 };
 
 

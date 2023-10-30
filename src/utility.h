@@ -52,8 +52,7 @@ template<std::derived_from<antlr4::Lexer> Lexer,
          std::derived_from<antlr4::Parser> Parser,
          typename Entry>
 struct Antlr4ParseEnv {
-  Antlr4ParseEnv(std::string sentences, Entry entry):
-    inputStream{sentences},
+  Antlr4ParseEnv(std::string sentences, Entry entry): inputStream{sentences},
     input{inputStream},
     tokens{&lexer},
     lexer{&input},
@@ -96,6 +95,52 @@ Antlr4_GenParseTree(std::string sentences, Entry entry) {
 std::string testLangRandomExpr(unsigned numOfOperands);
 
 bool isTermVar(std::string str);
+
+// Type-Erasure Wrapper
+struct TypeErasureWrapper {
+  template<typename _Ty>
+  TypeErasureWrapper(_Ty src): _inner(new inner<_Ty>(std::forward<_Ty>(src))) {}
+
+  TypeErasureWrapper(const TypeErasureWrapper& src): _inner(src._inner->clone()) {}
+
+  template<typename _Ty>
+  TypeErasureWrapper& operator=(_Ty src) {
+    _inner = std::make_unique<inner<_Ty>>(std::forward<_Ty>(src));
+    return *this;
+  }
+
+  TypeErasureWrapper& operator=(const TypeErasureWrapper& src) {
+    TypeErasureWrapper oTmp(src);
+    std::swap(oTmp._inner, this->_inner);
+    return *this;
+  }
+
+  struct inner_base {
+    using ptr = std::unique_ptr<inner_base>;
+    virtual ~inner_base() {}
+    virtual inner_base* clone() const = 0;
+  };
+  template<typename _Ty> struct inner: inner_base {
+    inner(_Ty newval): _value(newval) {}
+    virtual inner_base* clone() const override {
+      return new inner(_value);
+    }
+  private:
+    _Ty _value;
+  };
+
+private:
+  typename inner_base::ptr _inner;
+};
+
+// Wrapper to hold all heap allocated resources that
+// used by Environment.
+struct HeapResourceHolder: public Utility::TypeErasureWrapper {
+  template<typename T>
+  HeapResourceHolder(T t):
+    Utility::TypeErasureWrapper{t} {}
+};
+
 
 } // Utility
 
