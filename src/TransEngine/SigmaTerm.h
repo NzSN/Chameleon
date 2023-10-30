@@ -2,6 +2,8 @@
 #ifndef SIGMATERM_H
 #define SIGMATERM_H
 
+#include <string>
+
 #include "utility.h"
 #include "Concepts/n_ary_tree.h"
 #include "Base/generic_parsetree_inl.h"
@@ -10,8 +12,11 @@ namespace TransEngine {
 
 template<Base::GPTMeta T>
 struct Pattern: public Base::GenericParseTree<T> {
+  using TermID = std::string;
+
   Pattern(const Base::GenericParseTree<T>& t):
-    Base::GenericParseTree<T>{t} {
+    Base::GenericParseTree<T>{t},
+    termID_{const_cast<Pattern*>(this)->getText()} {
 
     MAP_TO_TREE(t);
   }

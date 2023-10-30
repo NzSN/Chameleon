@@ -63,11 +63,11 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, Matching, ()) {
               pattern, sigmaterm).has_value());
 }
 
-RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithPlaceHolders, ()) {
+RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithTermVar, ()) {
   // Matching pattern "a+1" with term "1+1".
 
-  std::istringstream codes{"a+1"};
-  std::istringstream codes2{"1+1"};
+  std::istringstream codes{"a+b+1"};
+  std::istringstream codes2{"1+1+1"};
 
   auto t = Parser::Parser<
     antlr4::tree::ParseTree*,
@@ -90,11 +90,54 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithPlaceHolders, ()) {
   std::vector<TransEngine::Pattern<Base::Antlr4Node>>&
     children = pattern.getChildren();
 
+  // Make sure all term var is recognized.
   RC_ASSERT(
-    children[0].getChildren()[0].isTermVar());
+    children[0]
+    .getChildren()[0]
+    .getChildren()[0]
+    .isTermVar());
+
+  RC_ASSERT(
+    children[0]
+    .getChildren()[0]
+    .getChildren()[2]
+    .isTermVar());
 
   RC_ASSERT(patternMatching<Base::Antlr4Node>(
               pattern, term).has_value());
+}
+
+RC_GTEST_FIXTURE_PROP(PatternMatchingTests, CaptureTermVar, ()) {
+  std::istringstream codes{"a+b+1"};
+  std::istringstream codes2{"1+2+1"};
+
+  auto t = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse(&codes);
+
+  auto t2 = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse(&codes2);
+
+  TransEngine::Pattern<Base::Antlr4Node> pattern(t);
+  Base::GenericParseTree<Base::Antlr4Node> term(t2);
+
+  CaptureTerms<Base::Antlr4Node> terms{};
+
+  RC_ASSERT(
+    patternMatchingTermCapture<Base::Antlr4Node>(
+      pattern, term, &terms).has_value());
+
+  RC_ASSERT(terms.contains("a"));
+  RC_ASSERT(terms["a"]->getText() == "1");
+  RC_ASSERT(terms.contains("b"));
+  RC_ASSERT(terms["b"]->getText() == "2");
 }
 
 } // Algorithms

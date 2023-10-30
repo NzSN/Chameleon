@@ -11,12 +11,14 @@ namespace Rewrite {
 
 template<Base::GPTMeta T>
 struct MatchStra: public Strategy<T> {
-  using UNUSED_V = Strategy<T>::UNUSED_V;
+
+  Algorithms::CaptureTerms<T> termVars;
 
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
-    auto maybeMatch = Algorithms::patternMatching<T>(
+    auto maybeMatch = Algorithms::patternMatchingTermCapture<T>(
       rule.leftSide,
-      env.targetTerm());
+      env.targetTerm(),
+      &termVars);
 
     if (!maybeMatch.has_value()) {
       // Failed to pattern matched, do nothing
@@ -24,11 +26,11 @@ struct MatchStra: public Strategy<T> {
       return rule;
     }
 
-    // Setup the term that have matched, so consequence
+    // Setup the term that have matched, so conseque
     // straties able to apply changed.
     env.setMatchTerm(maybeMatch.value());
 
-    // Binding terms to term variable.
+    // Setup Variable bindings to Environments.
   }
 };
 
