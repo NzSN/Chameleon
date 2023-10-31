@@ -67,10 +67,15 @@ struct BuildStra: public Strategy<T> {
     // Build right side pattern
     std::istringstream codes{rule.rTemplate};
 
-    auto t = Parser::ParserSelect<2>::parser
-      ::parse<Utility::AUTOMATIC>(&codes);
+    auto treeMaybe = Parser::ParserRuntimeSelect(rule.lang, codes);
+    if (treeMaybe.has_value()) {
+      Base::GenericParseTree<T> tree =
+        std::get<Base::GenericParseTree<T>>(treeMaybe.value());
 
-    std::cout << t.getText() << std::endl;
+
+    } else {
+      // Failed to build right side pattern.
+    }
   }
 };
 

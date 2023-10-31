@@ -2,9 +2,11 @@
 #define PARSER_INL_H
 
 #include "Parser.h"
+#include <variant>
+#include <sstream>
 
 #include "ExternalParser.h"
-#include "Base/generic_parsetree_antlr4.h"
+#include "Base/generic_parsetree_concrete.h"
 #include "Misc/testLanguage/TestLangParser.h"
 
 namespace Parser {
@@ -23,11 +25,16 @@ struct ParserSelect<Base::GenericParseTree<Base::Antlr4Node>::TESTLANG> {
   typedef Parser<antlr4::tree::ParseTree*,
                  TestLangExt,
                  Base::Antlr4Node,
-                 2> parser;
+                 Base::GenericParseTree<Base::Antlr4Node>::TESTLANG> parser;
 };
 
 // Dynamic Parser Selecter
+using ParserT = std::variant<
+  ParserSelect<Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>::parser
+  >;
 
+std::optional<Base::GenericParseTreeT>
+ParserRuntimeSelect(unsigned lang, std::istringstream& sentences);
 
 } // Parser
 
