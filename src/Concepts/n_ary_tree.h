@@ -8,6 +8,7 @@
 #include <functional>
 #include <utility>
 #include <vector>
+#include <type_traits>
 
 namespace Concepts::NAryTree {
 
@@ -21,7 +22,23 @@ concept WalkByDataMember = requires(T t) {
   { t.parent } -> std::convertible_to<T*>;
 };
 
-template<typename T> concept NAryTree = WalkByFunction<T> || WalkByDataMember<T>; template<WalkByFunction T> auto& getChildren(const T& t) {
+template<typename T>
+concept NAryTree =
+  (WalkByFunction<T> || WalkByDataMember<T>);
+
+// Types that satisfied this constrains could be
+// used to construct an NAryTree.
+template<typename T>
+concept Constructible =
+  NAryTree<T> &&
+  // Interface to append children.
+  // Caution: This operation is required to setup parent pointer of child.
+  requires(T t) {
+    { t.appendChild(t) } -> std::same_as<void>;
+  };
+
+
+template<WalkByFunction T> auto& getChildren(const T& t) {
   return const_cast<T&>(t).getChildren();
 }
 
@@ -193,6 +210,18 @@ bool isIsomorphic(const UPPER& u, const LOWER& l) {
     };
 
   return isomorphicCheck(u, l, pos, 0);
+}
+
+template<Constructible T>
+requires std::is_copy_assignable_v<T>
+T transform(const T& t, std::function<T(const T&)> f) {
+  T copy = f(t);
+
+  for (auto& c: getChildren(t)) {
+    copy.appendChild(transform(c, f));
+  }
+
+  return copy;
 }
 
 } // Concepts::NAryTree

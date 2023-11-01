@@ -18,6 +18,9 @@ public:
   using Children = std::vector<Antlr4Node>;
   Antlr4Node(int lang, antlr4::tree::ParseTree* tree);
 
+  Antlr4Node(const Antlr4Node& other);
+  Antlr4Node& operator=(const Antlr4Node& other);
+
   SrcRange sourceRange() const;
 
   std::vector<Antlr4Node>& getChildren() {
@@ -28,10 +31,15 @@ public:
 
   bool setNode(const Antlr4Node& other);
 
+  void appendChild(Antlr4Node& node);
+  void appendChild(Antlr4Node&& node);
+
+  Antlr4Node clone();
+
   bool operator==(const Antlr4Node&) const;
   antlr4::tree::ParseTree* tree() { return tree_; };
 private:
-  const int lang_;
+  int lang_;
   Children children_;
 
   // no-owning

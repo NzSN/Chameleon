@@ -95,6 +95,12 @@ public:
     return const_cast<T&>(metaRef).setNode(other.getMeta());
   }
 
+
+  GenericParseTree clone()
+    requires Concepts::NAryTree::NAryTree<T> &&
+             requires(T t) { { t.clone() } -> std::same_as<T>; }
+  { return metaRef.clone(); }
+
   // For convenience, GenericParseTree will require that
   //
   std::string getText() {
