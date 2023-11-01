@@ -173,7 +173,6 @@ TEST_F(StrategySuccess, TRYCASE) {
   auto* t = const_cast<Node&>(target->getMeta()).tree();
   t->children = const_cast<Node&>(rPattern->getMeta()).tree()->children;
 
-  std::cout << target->getText() << std::endl;
 }
 
 } // Rewrite

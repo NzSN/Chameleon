@@ -68,15 +68,20 @@ bool Antlr4Node::setNode(const Antlr4Node& other) {
   std::vector<antlr4::tree::ParseTree*>&
     siblings = tree_->parent->children;
 
-  std::transform(siblings.begin(), siblings.end(),
+  std::vector<antlr4::tree::ParseTree*> siblings_new(siblings.size());
+
+  std::transform(siblings.cbegin(), siblings.cend(),
                  siblings.begin(),
                  [tree, &other](antlr4::tree::ParseTree* t) -> antlr4::tree::ParseTree* {
+                   std::cout << "T" << t->getText() << std::endl;
                    if (tree == t) {
+                     std::cout << "M" << t->getText() << std::endl;
                      return other.tree_;
                    }
 
                    return t;
                  });
+  tree_ = other.tree_;
   return true;
 }
 
