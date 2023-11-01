@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <exception>
 #include "tree/ParseTreeType.h"
 #include "generic_parsetree_antlr4.h"
@@ -15,6 +16,10 @@ Antlr4Node::Antlr4Node(int lang, antlr4::tree::ParseTree* tree):
   // Construct subtrees
   for (auto c: tree->children) {
     children_.emplace_back(lang, c);
+  }
+
+  for (auto& c: children_) {
+    c.parent = this;
   }
 }
 
@@ -52,6 +57,27 @@ SrcRange Antlr4Node::sourceRange() const {
       rctx->getStop()->getLine(),
       rctx->getStop()->getCharPositionInLine(),
     }};
+}
+
+bool Antlr4Node::setNode(const Antlr4Node& other) {
+  if (tree_ == nullptr || other.tree_ == nullptr) {
+    return false;
+  }
+
+  antlr4::tree::ParseTree* tree = tree_;
+  std::vector<antlr4::tree::ParseTree*>&
+    siblings = tree_->parent->children;
+
+  std::transform(siblings.begin(), siblings.end(),
+                 siblings.begin(),
+                 [tree, &other](antlr4::tree::ParseTree* t) -> antlr4::tree::ParseTree* {
+                   if (tree == t) {
+                     return other.tree_;
+                   }
+
+                   return t;
+                 });
+  return true;
 }
 
 } // Base

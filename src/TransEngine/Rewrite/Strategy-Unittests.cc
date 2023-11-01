@@ -152,14 +152,13 @@ TEST_F(StrategySuccess, Build) {
   Environment<Node> env{};
   env.setTargetTerm(target.get());
 
-  BuildStra<Node> s;
-  s(*lRule, env);
+  MatchStra<Node>{}(*lRule, env);
+  BuildStra<Node>{}(*lRule, env);
 }
 
 TEST_F(StrategySuccess, TRYCASE) {
   Environment<Node> env{};
   env.setTargetTerm(target.get());
-
 
   rTree = Parser::Parser<
     antlr4::tree::ParseTree*,

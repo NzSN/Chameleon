@@ -14,13 +14,20 @@ namespace Base {
 // method Antlr4GPT::mapping().
 class Antlr4Node {
 public:
+
   using Children = std::vector<Antlr4Node>;
   Antlr4Node(int lang, antlr4::tree::ParseTree* tree);
 
   SrcRange sourceRange() const;
+
   std::vector<Antlr4Node>& getChildren() {
     return children_;
   };
+
+  Antlr4Node* parent;
+
+  bool setNode(const Antlr4Node& other);
+
   bool operator==(const Antlr4Node&) const;
   antlr4::tree::ParseTree* tree() { return tree_; };
 private:

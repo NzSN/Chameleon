@@ -4,6 +4,7 @@
 
 #include <string>
 
+#include "Rewrite/Term.h"
 #include "utility.h"
 #include "Concepts/n_ary_tree.h"
 #include "Base/generic_parsetree_inl.h"
@@ -28,6 +29,34 @@ struct Pattern: public Base::GenericParseTree<T> {
 
   std::string termID() const {
     return termID_;
+  }
+
+  std::vector<Pattern*> termVars() {
+    std::vector<Pattern*> vars =
+      Concepts::NAryTree::search<Pattern>(
+        *this,
+        [](const Pattern& p) {
+          return p.isTermVar();
+        });
+
+    return vars;
+  }
+
+  bool bind(Rewrite::Term<T> term) {
+    if (!this->isTermVar()) {
+      // Only nodes represent a TermVar
+      // able to bind to a term.
+      return false;
+    }
+
+    if (parent == nullptr) {
+      /* Ignored case */
+    } else {
+      const_cast<Base::GenericParseTree<T>*>(this->lowerLayer)
+        ->setNode(term.tree.get());
+    }
+
+    return true;
   }
 
 private:

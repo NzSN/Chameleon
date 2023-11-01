@@ -81,6 +81,11 @@ GenericParseTree<T>::mapping(const T& other) requires GPTMappable<T> {
   for (auto& c: Concepts::NAryTree::getChildren(other)) {
     node.addChild(mapping(c));
   }
+
+  for (auto& c: node.getChildren()) {
+    c.parent = &node;
+  }
+
   return node;
 }
 

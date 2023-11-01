@@ -2,6 +2,7 @@
 #ifndef GENERIC_PARSETREE_H
 #define GENERIC_PARSETREE_H
 
+#include <type_traits>
 #include <ranges>
 #include <tuple>
 #include <vector>
@@ -60,6 +61,8 @@ public:
     return childs_.emplace_back(type);
   };
 
+  GenericParseTree* parent;
+
   std::vector<GenericParseTree>& getChildren() {
     return childs_;
   };
@@ -79,6 +82,18 @@ public:
 
   void traverse(
     std::function<bool(GenericParseTree&)> proc);
+
+  // This procedure require modification to
+  // underlaying tree.
+  // Only when T is NAryTree with setNode().
+  bool setNode(const GenericParseTree& other)
+    requires Concepts::NAryTree::NAryTree<T> &&
+             requires(T t, const T arg) {
+               { t.setNode(arg) } -> std::convertible_to<bool>;
+             }
+  {
+    return const_cast<T&>(metaRef).setNode(other.getMeta());
+  }
 
   // For convenience, GenericParseTree will require that
   //
@@ -111,6 +126,7 @@ public:
   static std::unique_ptr<GenericParseTree<T>>
   mapping(const T& o)
   requires GPTMappable<T>;
+
 
 
 private:

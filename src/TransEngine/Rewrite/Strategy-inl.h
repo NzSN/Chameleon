@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "Term.h"
 #include "Strategy.h"
 #include "Parser/Parser-inl.h"
 #include "TransEngine/PatternMatching.h"
@@ -72,6 +73,15 @@ struct BuildStra: public Strategy<T> {
       Base::GenericParseTree<T> tree =
         std::get<Base::GenericParseTree<T>>(treeMaybe.value());
 
+      // Replace all TermVars with correspond Terms.
+      Pattern<T> rPattern{tree};
+      std::vector<Pattern<T>*> vars = rPattern.termVars();
+
+      for (auto v: vars) {
+        // Perform replacement onto Pattern
+        Term<T> term = env.bindings()[v->termID()];
+        v->bind(term);
+      }
 
     } else {
       // Failed to build right side pattern.

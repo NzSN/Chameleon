@@ -18,7 +18,10 @@ concept Children_t = std::ranges::range<T> && (std::same_as<std::ranges::range_v
 template<typename T>
 concept WalkByDataMember = requires(T t) {
   { t.children } -> Children_t<T>;
-}; template<typename T> concept NAryTree = WalkByFunction<T> || WalkByDataMember<T>; template<WalkByFunction T> auto& getChildren(const T& t) {
+  { t.parent } -> std::convertible_to<T*>;
+};
+
+template<typename T> concept NAryTree = WalkByFunction<T> || WalkByDataMember<T>; template<WalkByFunction T> auto& getChildren(const T& t) {
   return const_cast<T&>(t).getChildren();
 }
 
@@ -40,6 +43,23 @@ T& derferIfAvailable(T& t) {
 }
 
 /* Algorithms */
+template<NAryTree T>
+std::vector<T*> search(const T& t, std::function<bool(T&)> p) {
+  std::vector<T*> result;
+
+  for (auto& c: getChildren(t)) {
+    if (p(c)) {
+      result.push_back(&c);
+    }
+    auto subResult = search(c, p);
+    for (auto c: subResult) {
+      result.push_back(c);
+    }
+  }
+
+  return result;
+}
+
 template<NAryTree T, NAryTree R>
 bool equal(const T& l, const R& r,
            std::function<bool(const T&, const R&)> equal_fn) {
@@ -77,6 +97,7 @@ bool equal(const T& l, const R& r,
 #define MAP_TO_TREE(T) buildLayer(*this, T);
 #define DEFINE_AS_LAYER_OF_NARY_TREE(L, T, ACCESS)         \
 public:                                                    \
+  L* parent;                                               \
   std::vector<L>& getChildren() { return children_; }      \
   const T* lowerLayer;                                     \
 private:                                                   \
@@ -84,11 +105,15 @@ private:                                                   \
    * to choose getChidlren */                              \
   std::vector<L> children_;                                \
   void buildLayer(L& l, const T& t) {                      \
+    parent = nullptr;                                      \
     /* Mapping  to lower layer for current node */         \
     mapLayer(l, t);                                        \
     /* Mapping to lower layer for children */              \
     for (auto& c: Concepts::NAryTree::getChildren(t)) {    \
       children_.emplace_back(c);                           \
+    }                                                      \
+    for (auto& c: children_) {                             \
+      c.parent = &l;                                       \
     }                                                      \
   }                                                        \
   void mapLayer(L& l, const T& t) { l.lowerLayer = &t; }   \
