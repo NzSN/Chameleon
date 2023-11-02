@@ -188,6 +188,29 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToAntlr4Node, ()) {
   RC_ASSERT(isEqual);
 }
 
+RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, Clone, ()) {
+  RC_ASSERT_FALSE(env->tree == nullptr);
+
+  Antlr4Node nodes{
+    GenericParseTree<Antlr4Node>::TESTLANG,
+    env->tree };
+
+  Antlr4Node copy = nodes.clone();
+
+  // Check equality of two nodes
+  RC_ASSERT(nodes.tree()->getText() ==
+            copy.tree() ->getText());
+
+  // Make sure their two distinct trees.
+  bool isEqual = Concepts::NAryTree::equal<Antlr4Node, Antlr4Node>(
+    nodes, copy,
+    [](const Antlr4Node& lhs, const Antlr4Node& rhs) -> bool {
+      return const_cast<Antlr4Node&>(lhs).tree() ==
+        const_cast<Antlr4Node&>(rhs).tree();
+    });
+  RC_ASSERT(!isEqual);
+}
+
 RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToGenericParseTree, ()) {
   RC_ASSERT_FALSE(env->tree == nullptr);
 
@@ -244,14 +267,15 @@ RC_GTEST_PROP(GenericParseTreeTest_NAry, SetNode, ()) {
     RC_ASSERT(v2.size() == 1);
     RC_ASSERT(v3.size() == 1);
 
+
     // Replace node 'a' with node '1'
     // by setNode.
-    std::cout << "B" << std::endl;
-    v[0]->setNode(*v2[0]);
+    v[0]->setNode(
+      const_cast<Antlr4Node&>(v2[0]->getMeta()).clone());
     RC_ASSERT(t.getText() == "1+1+2");
-    v[0]->setNode(*v3[0]);
-    std::cout << "A" << std::endl;
-    RC_ASSERT(t.getText() == "2+2+2");
+    v[0]->setNode(
+      const_cast<Antlr4Node&>(v3[0]->getMeta()).clone());
+    RC_ASSERT(t.getText() == "2+1+2");
 }
 
 } // Base

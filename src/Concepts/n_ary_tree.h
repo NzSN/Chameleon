@@ -212,13 +212,21 @@ bool isIsomorphic(const UPPER& u, const LOWER& l) {
   return isomorphicCheck(u, l, pos, 0);
 }
 
+
+template<typename T>
+struct TransformInfo {
+  T* parent;
+};
+
 template<Constructible T>
 requires std::is_copy_assignable_v<T>
-T transform(const T& t, std::function<T(const T&)> f) {
-  T copy = f(t);
+T transform(const T& t,
+            std::function<T(const T&, TransformInfo<T>& info)> f,
+            TransformInfo<T> info = { nullptr }) {
+  T copy = f(t, info);
 
   for (auto& c: getChildren(t)) {
-    copy.appendChild(transform(c, f));
+    copy.appendChild(transform(c, f, { &copy }));
   }
 
   return copy;

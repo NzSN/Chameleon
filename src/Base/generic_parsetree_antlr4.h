@@ -40,10 +40,11 @@ public:
   antlr4::tree::ParseTree* tree() { return tree_; };
 private:
   int lang_;
-  Children children_;
 
   // no-owning
   antlr4::tree::ParseTree* tree_;
+
+  Children children_;
 };
 using Antlr4GPT = GenericParseTree<Antlr4Node>;
 

@@ -1,17 +1,88 @@
 #include <algorithm>
 #include <exception>
+#include <typeinfo>
+#include <stdexcept>
+
 #include "tree/ParseTreeType.h"
 #include "generic_parsetree_antlr4.h"
+#include "Misc/testLanguage/TestLangParser.h"
 
 namespace Base {
 
 namespace {
 
-Antlr4Node cloneTestLang(const Antlr4Node& tree) {
-  Antlr4Node copy = Concepts::NAryTree::transform<Antlr4Node>(
-    tree, [](const Antlr4Node& node) -> Antlr4Node {
+using Concepts::NAryTree::TransformInfo;
 
-    });
+TestLangParser::ProgContext*
+cloneProgContext(TestLangParser::ProgContext* node,
+                 TransformInfo<Antlr4Node>& info) {
+
+  // Start Rule
+  TestLangParser::ProgContext* copy =
+    new TestLangParser::ProgContext(nullptr, -1);
+
+  return copy;
+}
+
+TestLangParser::ExprContext*
+cloneExprContext(TestLangParser::ExprContext* node,
+                 TransformInfo<Antlr4Node>& info) {
+  TestLangParser::ExprContext* copy =
+    new TestLangParser::ExprContext(
+      dynamic_cast<TestLangParser::ExprContext*>(
+        info.parent != nullptr ?
+          info.parent->tree() : nullptr),
+      node->invokingState);
+
+  return copy;
+}
+
+Antlr4Node cloneTestLangNode(const Antlr4Node& node,
+                             TransformInfo<Antlr4Node>& info) {
+  Antlr4Node& node_nonconst =
+    const_cast<Antlr4Node&>(node);
+
+  const std::type_info& tinfo =
+    typeid(*node_nonconst.tree());
+
+  if (tinfo == typeid(TestLangParser::ProgContext)) {
+    TestLangParser::ProgContext* copy =
+      cloneProgContext(
+        dynamic_cast<TestLangParser::ProgContext*>(node_nonconst.tree()),
+        info);
+
+    return Antlr4Node(GenericParseTree<Antlr4Node>::TESTLANG, copy);
+
+  } else if (tinfo == typeid(TestLangParser::ExprContext)) {
+    TestLangParser::ExprContext* copy =
+      cloneExprContext(
+        dynamic_cast<TestLangParser::ExprContext*>(node_nonconst.tree()),
+        info);
+    return Antlr4Node(GenericParseTree<Antlr4Node>::TESTLANG, copy);
+
+  } else if (tinfo == typeid(antlr4::tree::TerminalNodeImpl)) {
+    antlr4::tree::TerminalNodeImpl* copy =
+      new antlr4::tree::TerminalNodeImpl(
+        dynamic_cast<antlr4::tree::TerminalNodeImpl*>(node_nonconst.tree())->getSymbol());
+
+    copy->setParent(
+      info.parent != nullptr ?
+      dynamic_cast<antlr4::RuleContext*>(info.parent->tree()) :
+      nullptr);
+
+    return Antlr4Node(
+      GenericParseTree<Antlr4Node>::TESTLANG,
+      copy);
+  }
+
+  /* Unknown type */
+  throw std::runtime_error(
+    "Unknow TestLang NodeType: " + std::string(tinfo.name()));
+}
+
+Antlr4Node cloneTestLang(const Antlr4Node& tree) {
+  return Concepts::NAryTree::transform<Antlr4Node>(
+    tree, cloneTestLangNode);
 }
 
 }
@@ -109,23 +180,25 @@ bool Antlr4Node::setNode(const Antlr4Node& other) {
   std::transform(siblings.cbegin(), siblings.cend(),
                  siblings.begin(),
                  [tree, &other](antlr4::tree::ParseTree* t) -> antlr4::tree::ParseTree* {
-                   std::cout << "T" << t->getText() << std::endl;
                    if (tree == t) {
-                     std::cout << "M" << t->getText() << std::endl;
                      return other.tree_;
                    }
 
                    return t;
                  });
+
+  other.tree_->parent = tree_->parent;
   tree_ = other.tree_;
   return true;
 }
 
 void Antlr4Node::appendChild(Antlr4Node& node) {
+  this->tree()->children.push_back(node.tree());
   children_.push_back(node);
 }
 
 void Antlr4Node::appendChild(Antlr4Node&& node) {
+  this->tree()->children.push_back(node.tree());
   children_.push_back(node);
 }
 
