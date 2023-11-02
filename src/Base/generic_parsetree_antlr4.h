@@ -34,7 +34,7 @@ public:
   void appendChild(Antlr4Node& node);
   void appendChild(Antlr4Node&& node);
 
-  Antlr4Node clone();
+  Antlr4Node clone() const;
 
   bool operator==(const Antlr4Node&) const;
   antlr4::tree::ParseTree* tree() { return tree_; };

@@ -88,7 +88,7 @@ Antlr4Node cloneTestLang(const Antlr4Node& tree) {
 }
 
 // Deep copy
-Antlr4Node Antlr4Node::clone() {
+Antlr4Node Antlr4Node::clone() const {
   switch (lang_) {
   case GenericParseTree<Antlr4Node>::TESTLANG:
     return cloneTestLang(*this);
@@ -96,7 +96,6 @@ Antlr4Node Antlr4Node::clone() {
     throw std::runtime_error("Failed to clone Antlr4Node");
   }
 }
-
 
 Antlr4Node::Antlr4Node(int lang, antlr4::tree::ParseTree* tree):
   lang_{lang}, tree_{tree} {

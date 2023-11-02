@@ -3,6 +3,7 @@
 #define GENERIC_PARSETREE_H
 
 #include <type_traits>
+#include <memory>
 #include <ranges>
 #include <tuple>
 #include <vector>
@@ -95,15 +96,9 @@ public:
     return const_cast<T&>(metaRef).setNode(other.getMeta());
   }
 
-
-  GenericParseTree clone()
-    requires Concepts::NAryTree::NAryTree<T> &&
-             requires(T t) { { t.clone() } -> std::same_as<T>; }
-  { return metaRef.clone(); }
-
   // For convenience, GenericParseTree will require that
   //
-  std::string getText() {
+  std::string getText() const {
     return const_cast<T&>(metaRef).tree()->getText();
   }
 
@@ -132,8 +127,6 @@ public:
   static std::unique_ptr<GenericParseTree<T>>
   mapping(const T& o)
   requires GPTMappable<T>;
-
-
 
 private:
   friend struct GenericParseTreeTest;

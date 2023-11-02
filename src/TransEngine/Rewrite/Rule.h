@@ -15,21 +15,17 @@ template<Base::GPTMeta T>
 struct Rule {
   Rule(std::string labelArg,
        const Pattern<T>& leftSideArg,
-       const std::string rTemplateArg,
+       const Pattern<T>& rightSideArg,
        const int langArg):
     label(labelArg),
     leftSide(&leftSideArg),
-    rTemplate(rTemplateArg),
+    rightSide(&rightSideArg),
     lang(langArg) {}
 
   const std::string label;
   const Pattern<T>* leftSide;
+  const Pattern<T>* rightSide;
 
-  Pattern<T>* buildRightSide(Environment<T>& env) {
-
-  }
-
-  const std::string rTemplate;
   const int lang;
   //const CondExpr cond;
 };

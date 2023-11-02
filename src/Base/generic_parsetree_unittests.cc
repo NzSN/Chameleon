@@ -232,50 +232,63 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToGenericParseTree, ()) {
   RC_ASSERT(isEqual);
 }
 
-RC_GTEST_PROP(GenericParseTreeTest_NAry, SetNode, ()) {
-    std::istringstream codes{"a+1+2"};
-    GenericParseTree<Antlr4Node> t =
+RC_GTEST_PROP(GenericParseTreeTest_NAry, Clone, ()) {
+  std::istringstream codes{"a+1+2"};
+  GenericParseTree<Antlr4Node> t =
       Parser::ParserSelect<GenericParseTree<Antlr4Node>::TESTLANG>
       ::parser::parse<Utility::AUTOMATIC>(&codes);
 
+  Antlr4Node copy_meta = t.getMeta().clone();
+  GenericParseTree<Antlr4Node> copy =
+    GenericParseTree<Antlr4Node>::mapping(
+      copy_meta);
+  RC_ASSERT(copy.getText() == t.getText());
+}
 
-    auto v = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(
-      t,
-      [](GenericParseTree<Antlr4Node>& node) -> bool {
-        return const_cast<Antlr4Node&>(node.getMeta())
-          .tree()->getTreeType() == antlr4::tree::ParseTreeType::TERMINAL
-          && node.getText() == "a";
-      });
+RC_GTEST_PROP(GenericParseTreeTest_NAry, SetNode, ()) {
+  std::istringstream codes{"a+1+2"};
+  GenericParseTree<Antlr4Node> t =
+    Parser::ParserSelect<GenericParseTree<Antlr4Node>::TESTLANG>
+    ::parser::parse<Utility::AUTOMATIC>(&codes);
 
-    auto v2 = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(
-      t,
-      [](GenericParseTree<Antlr4Node>& node) -> bool {
-        return const_cast<Antlr4Node&>(node.getMeta())
-          .tree()->getTreeType() == antlr4::tree::ParseTreeType::TERMINAL
-          && node.getText() == "1";
-      });
 
-    auto v3 = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(
-      t,
-      [](GenericParseTree<Antlr4Node>& node) -> bool {
-        return const_cast<Antlr4Node&>(node.getMeta())
-          .tree()->getTreeType() == antlr4::tree::ParseTreeType::TERMINAL
-          && node.getText() == "2";
-      });
+  auto v = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(
+    t,
+    [](GenericParseTree<Antlr4Node>& node) -> bool {
+      return const_cast<Antlr4Node&>(node.getMeta())
+        .tree()->getTreeType() == antlr4::tree::ParseTreeType::TERMINAL
+        && node.getText() == "a";
+    });
 
-    RC_ASSERT(v.size() == 1);
-    RC_ASSERT(v2.size() == 1);
-    RC_ASSERT(v3.size() == 1);
+  auto v2 = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(
+    t,
+    [](GenericParseTree<Antlr4Node>& node) -> bool {
+      return const_cast<Antlr4Node&>(node.getMeta())
+        .tree()->getTreeType() == antlr4::tree::ParseTreeType::TERMINAL
+        && node.getText() == "1";
+    });
+
+  auto v3 = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(
+    t,
+    [](GenericParseTree<Antlr4Node>& node) -> bool {
+      return const_cast<Antlr4Node&>(node.getMeta())
+        .tree()->getTreeType() == antlr4::tree::ParseTreeType::TERMINAL
+        && node.getText() == "2";
+    });
+
+  RC_ASSERT(v.size() == 1);
+  RC_ASSERT(v2.size() == 1);
+  RC_ASSERT(v3.size() == 1);
 
 
     // Replace node 'a' with node '1'
     // by setNode.
-    v[0]->setNode(
-      const_cast<Antlr4Node&>(v2[0]->getMeta()).clone());
-    RC_ASSERT(t.getText() == "1+1+2");
-    v[0]->setNode(
-      const_cast<Antlr4Node&>(v3[0]->getMeta()).clone());
-    RC_ASSERT(t.getText() == "2+1+2");
+  v[0]->setNode(
+    const_cast<Antlr4Node&>(v2[0]->getMeta()).clone());
+  RC_ASSERT(t.getText() == "1+1+2");
+  v[0]->setNode(
+    const_cast<Antlr4Node&>(v3[0]->getMeta()).clone());
+  RC_ASSERT(t.getText() == "2+1+2");
 }
 
 } // Base

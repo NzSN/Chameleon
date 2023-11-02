@@ -65,27 +65,16 @@ struct MatchStra: public Strategy<T> {
 template<Base::GPTMeta T>
 struct BuildStra: public Strategy<T> {
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
-    // Build right side pattern
-    std::istringstream codes{rule.rTemplate};
 
-    auto treeMaybe = Parser::ParserRuntimeSelect(rule.lang, codes);
-    if (treeMaybe.has_value()) {
-      Base::GenericParseTree<T> tree =
-        std::get<Base::GenericParseTree<T>>(treeMaybe.value());
+    // Pattern<T> copy = const_cast<Pattern<T>*>(
+    //   rule.rightSide)->clone();
+    // std::vector<Pattern<T>*> vars = copy.termVars();
 
-      // Replace all TermVars with correspond Terms.
-      Pattern<T> rPattern{tree};
-      std::vector<Pattern<T>*> vars = rPattern.termVars();
-
-      for (auto v: vars) {
-        // Perform replacement onto Pattern
-        Term<T> term = env.bindings()[v->termID()];
-        v->bind(term);
-      }
-
-    } else {
-      // Failed to build right side pattern.
-    }
+    // for (auto v: vars) {
+    //   // Perform replacement onto Pattern
+    //   Term<T> term = env.bindings()[v->termID()];
+    //   v->bind(term);
+    // }
   }
 };
 

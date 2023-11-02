@@ -17,9 +17,13 @@ struct Pattern: public Base::GenericParseTree<T> {
 
   Pattern(const Base::GenericParseTree<T>& t):
     Base::GenericParseTree<T>{t},
-    termID_{const_cast<Pattern*>(this)->getText()} {
+    termID_{t.getText()} {
 
     MAP_TO_TREE(t);
+  }
+
+  Pattern clone() {
+    return Base::GenericParseTree<T>::clone();
   }
 
   bool isTermVar() const {

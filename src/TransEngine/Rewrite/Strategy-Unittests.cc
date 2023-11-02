@@ -39,12 +39,20 @@ struct StrategySuccess: public ::testing::Test {
     GPT::TESTLANG>
     ::parse<Utility::DYNAMIC>(&lCodes);
 
+    rTree = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Node,
+    GPT::TESTLANG>
+    ::parse<Utility::DYNAMIC>(&rCodes);
+
     lPattern = std::make_unique<PatternT>(*lTree);
+    rPattern = std::make_unique<PatternT>(*rTree);
 
     lRule = std::make_unique<RuleT>(
       "R",
       *lPattern,
-      "b+a+1",
+      *rPattern,
       GPT::TESTLANG);
   }
 
@@ -95,7 +103,7 @@ struct StrategyFailed: public ::testing::Test {
     lRule = std::make_unique<RuleT>(
       "R",
       *lPattern,
-      "b+a+1",
+      *rPattern,
       GPT::TESTLANG);
   }
 
