@@ -16,7 +16,9 @@ struct Pattern: public Base::GenericParseTree<T> {
   using TermID = std::string;
 
   Pattern(const Base::GenericParseTree<T>& t):
-    Base::GenericParseTree<T>{t},
+    // Prevent copy children from GenericParseTree,
+    // Pattern will build it's own children.
+    Base::GenericParseTree<T>{t.getMeta()},
     termID_{t.getText()} {
 
     MAP_TO_TREE(t);
