@@ -25,10 +25,6 @@ struct Pattern: public TreeLayer<Pattern<T>> {
     // Pattern will build it's own children.
     meta_{meta} {}
 
-  Pattern clone() {
-    return Base::GenericParseTree<T>::clone();
-  }
-
   bool isTermVar() const {
     return Utility::isTermVar(
       const_cast<T&>(meta_).getText());
@@ -59,8 +55,8 @@ struct Pattern: public TreeLayer<Pattern<T>> {
     if (parent == nullptr) {
       /* Ignored case */
     } else {
-      const_cast<Base::GenericParseTree<T>*>(this->lowerLayer)
-        ->setNode(term.tree.get());
+      const_cast<T&>(meta_).setNode(
+        term.tree.get().getMeta().clone());
     }
 
     return true;
@@ -86,6 +82,26 @@ struct Pattern: public TreeLayer<Pattern<T>> {
 
   Pattern& addChild(Pattern t) {
     return children_.emplace_back(t);
+  }
+
+  Pattern* withoutHeader() {
+    T* afterHeader = const_cast<T&>(meta_).withoutHeader();
+    if (afterHeader == nullptr) {
+      return nullptr;
+    }
+
+    std::vector<Pattern*> result =
+      Concepts::NAryTree::search<Pattern>(
+        *this,
+        [afterHeader](const Pattern& t) {
+          return &t.meta_ == afterHeader;
+        });
+
+    if (result.size() > 1 || result.size() == 0) {
+      return nullptr;
+    }
+
+    return result[0];
   }
 
 private:

@@ -42,6 +42,9 @@ public:
   std::string getText() {
     return tree_->getText();
   }
+
+  Antlr4Node* withoutHeader();
+
 private:
   int lang_;
 

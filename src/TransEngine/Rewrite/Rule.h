@@ -14,8 +14,8 @@ namespace Rewrite {
 template<Base::GPTMeta T>
 struct Rule {
   Rule(std::string labelArg,
-       const Pattern<T>& leftSideArg,
-       const Pattern<T>& rightSideArg,
+       Pattern<T>& leftSideArg,
+       Pattern<T>& rightSideArg,
        const int langArg):
     label(labelArg),
     leftSide(&leftSideArg),
@@ -23,8 +23,8 @@ struct Rule {
     lang(langArg) {}
 
   const std::string label;
-  const Pattern<T>* leftSide;
-  const Pattern<T>* rightSide;
+  Pattern<T>* leftSide;
+  Pattern<T>* rightSide;
 
   const int lang;
   //const CondExpr cond;

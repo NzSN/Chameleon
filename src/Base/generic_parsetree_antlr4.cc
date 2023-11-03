@@ -201,4 +201,14 @@ void Antlr4Node::appendChild(Antlr4Node&& node) {
   children_.push_back(node);
 }
 
+
+Antlr4Node* Antlr4Node::withoutHeader() {
+  if (typeid(*tree_) ==
+      typeid(TestLangParser::ProgContext)) {
+    return &children_[0];
+  } else {
+    return this;
+  }
+}
+
 } // Base

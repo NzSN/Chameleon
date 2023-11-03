@@ -40,7 +40,7 @@ struct MatchStra: public Strategy<T> {
     // left side pattern of Rule, all TermVars will be binded
     // to correspond terms during PatternMatching.
     auto maybeMatch = Algorithms::patternMatchingTermCapture<T>(
-      *rule.leftSide,
+      *rule.leftSide->withoutHeader(),
       *env.targetTerm(),
       &env);
 
@@ -66,15 +66,24 @@ template<Base::GPTMeta T>
 struct BuildStra: public Strategy<T> {
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
 
-    // Pattern<T> copy = const_cast<Pattern<T>*>(
-    //   rule.rightSide)->clone();
-    // std::vector<Pattern<T>*> vars = copy.termVars();
+    T metaCopy = rule.rightSide->getMeta().clone();
 
-    // for (auto v: vars) {
-    //   // Perform replacement onto Pattern
-    //   Term<T> term = env.bindings()[v->termID()];
-    //   v->bind(term);
-    // }
+    // Try to replace all TermVars with terms have
+    // binded.
+    Pattern<T> copy = Pattern<T>::mapping(metaCopy);
+    std::vector<Pattern<T>*> vars = copy.termVars();
+    for (auto v: vars) {
+      // Perform replacement onto Pattern
+      Term<T> term = env.bindings()[v->termID()];
+      v->bind(term);
+    }
+
+    // Replace the matched tree with the tree the
+    // just builded.
+    env.matchTerm()->setNode(
+      Base::GenericParseTree<T>::mapping(metaCopy));
+
+    return rule;
   }
 };
 
