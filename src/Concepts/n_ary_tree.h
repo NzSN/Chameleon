@@ -13,8 +13,14 @@
 namespace Concepts::NAryTree {
 
 template<typename T, typename V>
-concept Children_t = std::ranges::range<T> && (std::same_as<std::ranges::range_value_t<T>, V> || std::same_as<std::ranges::range_value_t<T>, V*>); template<typename T> concept WalkByFunction = requires(T t) {{ t.getChildren() } -> Children_t<T>;
-};
+concept Children_t =
+  std::ranges::range<T> &&
+  (std::same_as<std::ranges::range_value_t<T>, V> ||
+   std::same_as<std::ranges::range_value_t<T>, V*>);
+
+template<typename T>
+concept WalkByFunction =
+  requires(T t) {{ t.getChildren() } -> Children_t<T>; };
 
 template<typename T>
 concept WalkByDataMember = requires(T t) {
@@ -38,7 +44,8 @@ concept Constructible =
   };
 
 
-template<WalkByFunction T> auto& getChildren(const T& t) {
+template<WalkByFunction T>
+auto& getChildren(const T& t) {
   return const_cast<T&>(t).getChildren();
 }
 

@@ -38,6 +38,10 @@ public:
 
   bool operator==(const Antlr4Node&) const;
   antlr4::tree::ParseTree* tree() { return tree_; };
+
+  std::string getText() {
+    return tree_->getText();
+  }
 private:
   int lang_;
 

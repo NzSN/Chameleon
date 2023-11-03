@@ -8,17 +8,43 @@
 #include "utility.h"
 
 
-template<Concepts::NAryTree::NAryTree T>
+template<typename T>
 struct TreeLayer {
   T& addChild(T type);
-
-  std::vector<T>& getChildren();
-  std::optional<T> getChild(int i);
 
   template<Concepts::NAryTree::NAryTree U,
            Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
            typename = std::enable_if_t<Storage == Utility::AUTOMATIC>>
-  static T mapping(const U& o);
+  static T mapping(const U& o) {
+    T tree = T(o);
+    for (auto& c: Concepts::NAryTree::getChildren(o)) {
+      tree.addChild(mapping(c));
+    }
+
+    for (auto& c: Concepts::NAryTree::getChildren(tree)) {
+      c.parent = &tree;
+    }
+
+    return tree;
+  }
+
+  template<Concepts::NAryTree::NAryTree U,
+           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
+           typename = std::enable_if_t<Storage == Utility::DYNAMIC>,
+           int = 1>
+  static std::unique_ptr<T>
+  mapping(const U& o) {
+    std::unique_ptr<T> tree = std::make_unique<T>(o);
+    for (auto& c: Concepts::NAryTree::getChildren(o)) {
+      tree->addChild(mapping(c));
+    }
+
+    for (auto& c: Concepts::NAryTree::getChildren(*tree)) {
+      c.parent = tree.get();
+    }
+
+    return tree;
+  }
 
 };
 

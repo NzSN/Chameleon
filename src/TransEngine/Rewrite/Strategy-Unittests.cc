@@ -30,24 +30,21 @@ struct StrategySuccess: public ::testing::Test {
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<Utility::DYNAMIC>(&tCodes);
+    ::parse<GPT, Utility::DYNAMIC>(&tCodes);
 
-    lTree = Parser::Parser<
+    lPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<Utility::DYNAMIC>(&lCodes);
+    ::parse<PatternT, Utility::DYNAMIC>(&lCodes);
 
-    rTree = Parser::Parser<
+    rPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<Utility::DYNAMIC>(&rCodes);
-
-    lPattern = std::make_unique<PatternT>(*lTree);
-    rPattern = std::make_unique<PatternT>(*rTree);
+    ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
 
     lRule = std::make_unique<RuleT>(
       "R",
@@ -61,8 +58,6 @@ struct StrategySuccess: public ::testing::Test {
   std::istringstream rCodes;
 
   std::unique_ptr<GPT> target;
-  std::unique_ptr<GPT> lTree;
-  std::unique_ptr<GPT> rTree;
 
   std::unique_ptr<PatternT> lPattern;
   std::unique_ptr<PatternT> rPattern;
@@ -81,24 +76,21 @@ struct StrategyFailed: public ::testing::Test {
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<Utility::DYNAMIC>(&tCodes);
+    ::parse<GPT, Utility::DYNAMIC>(&tCodes);
 
-    lTree = Parser::Parser<
+    lPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<Utility::DYNAMIC>(&lCodes);
+    ::parse<PatternT, Utility::DYNAMIC>(&lCodes);
 
-    rTree = Parser::Parser<
+    rPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<Utility::DYNAMIC>(&rCodes);
-
-    lPattern = std::make_unique<PatternT>(*lTree);
-    rPattern = std::make_unique<PatternT>(*rTree);
+    ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
 
     lRule = std::make_unique<RuleT>(
       "R",
@@ -112,8 +104,6 @@ struct StrategyFailed: public ::testing::Test {
   std::istringstream rCodes;
 
   std::unique_ptr<GPT> target;
-  std::unique_ptr<GPT> lTree;
-  std::unique_ptr<GPT> rTree;
 
   std::unique_ptr<PatternT> lPattern;
   std::unique_ptr<PatternT> rPattern;
@@ -168,15 +158,12 @@ TEST_F(StrategySuccess, TRYCASE) {
   Environment<Node> env{};
   env.setTargetTerm(target.get());
 
-  rTree = Parser::Parser<
+  rPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<Utility::DYNAMIC>(&rCodes);
-
-  rPattern = std::make_unique<PatternT>(*rTree);
-
+    ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
 
   auto* t = const_cast<Node&>(target->getMeta()).tree();
   t->children = const_cast<Node&>(rPattern->getMeta()).tree()->children;

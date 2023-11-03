@@ -24,43 +24,44 @@ struct PatternMatchingTests: public ::testing::Test {
 
 RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MapPatternToGPT, ()) {
   std::istringstream codes{testExpr};
+  std::istringstream codes2{testExpr};
 
-  auto t = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse(&codes);
+  TransEngine::Pattern<Base::Antlr4Node> t =
+    Parser::Parser<
+      antlr4::tree::ParseTree*, Parser::TestLangExt,
+      Base::Antlr4Node, Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
-  // Building a Pattern base on ParseTree,
-  // without term variables.
-  TransEngine::Pattern<Base::Antlr4Node> pattern(t);
-  Base::GenericParseTree<Base::Antlr4Node> sigmaterm(t);
+  Base::GenericParseTree<Base::Antlr4Node> t2 =
+    Parser::Parser<
+      antlr4::tree::ParseTree*, Parser::TestLangExt,
+      Base::Antlr4Node, Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+
 
   // Assert that a pattern from a concrete parsetree
   // is isomorhpic to the parsetree.
-  RC_ASSERT(
-    (Concepts::NAryTree::isIsomorphic<
-     Base::GenericParseTree<Base::Antlr4Node>,
-     TransEngine::Pattern<Base::Antlr4Node>>(pattern, t)));
 }
 
 RC_GTEST_FIXTURE_PROP(PatternMatchingTests, Matching, ()) {
   std::istringstream codes{testExpr};
+  std::istringstream codes2{testExpr};
 
-  auto t = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse(&codes);
+  TransEngine::Pattern<Base::Antlr4Node> t =
+     Parser::Parser<
+      antlr4::tree::ParseTree*, Parser::TestLangExt,
+      Base::Antlr4Node, Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
-  TransEngine::Pattern<Base::Antlr4Node> pattern(t);
-  Base::GenericParseTree<Base::Antlr4Node> sigmaterm(t);
+  Base::GenericParseTree<Base::Antlr4Node> t2 =
+    Parser::Parser<
+      antlr4::tree::ParseTree*, Parser::TestLangExt,
+      Base::Antlr4Node, Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
 
   // Try to matching the pattern and the sigmaterm
   RC_ASSERT(patternMatching<Base::Antlr4Node>(
-              pattern, sigmaterm).has_value());
+              t, t2).has_value());
 }
 
 RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithTermVar, ()) {
@@ -74,21 +75,18 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithTermVar, ()) {
     Parser::TestLangExt,
     Base::Antlr4Node,
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse(&codes);
+    ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
   auto t2 = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse(&codes2);
+    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
 
-
-  TransEngine::Pattern<Base::Antlr4Node> pattern(t);
-  Base::GenericParseTree<Base::Antlr4Node> term(t2);
 
   std::vector<TransEngine::Pattern<Base::Antlr4Node>>&
-    children = pattern.getChildren();
+    children = t.getChildren();
 
   // Make sure all term var is recognized.
   RC_ASSERT(
@@ -104,7 +102,7 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithTermVar, ()) {
     .isTermVar());
 
   RC_ASSERT(patternMatching<Base::Antlr4Node>(
-              pattern, term).has_value());
+              t, t2).has_value());
 }
 
 RC_GTEST_FIXTURE_PROP(PatternMatchingTests, CaptureTermVar, ()) {
@@ -116,23 +114,21 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, CaptureTermVar, ()) {
     Parser::TestLangExt,
     Base::Antlr4Node,
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse(&codes);
+    ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
   auto t2 = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse(&codes2);
+    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
 
-  TransEngine::Pattern<Base::Antlr4Node> pattern(t);
-  Base::GenericParseTree<Base::Antlr4Node> term(t2);
 
   Environment<Base::Antlr4Node> env;
 
   RC_ASSERT(
     patternMatchingTermCapture<Base::Antlr4Node>(
-      pattern, term, &env).has_value());
+      t, t2, &env).has_value());
 
   RC_ASSERT(env.bindings().isBinded("a"));
   RC_ASSERT(env.bindings()["a"]

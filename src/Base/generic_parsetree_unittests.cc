@@ -236,7 +236,7 @@ RC_GTEST_PROP(GenericParseTreeTest_NAry, Clone, ()) {
   std::istringstream codes{"a+1+2"};
   GenericParseTree<Antlr4Node> t =
       Parser::ParserSelect<GenericParseTree<Antlr4Node>::TESTLANG>
-      ::parser::parse<Utility::AUTOMATIC>(&codes);
+      ::parser::parse<GenericParseTree<Antlr4Node>>(&codes);
 
   Antlr4Node copy_meta = t.getMeta().clone();
   GenericParseTree<Antlr4Node> copy =
@@ -249,7 +249,7 @@ RC_GTEST_PROP(GenericParseTreeTest_NAry, SetNode, ()) {
   std::istringstream codes{"a+1+2"};
   GenericParseTree<Antlr4Node> t =
     Parser::ParserSelect<GenericParseTree<Antlr4Node>::TESTLANG>
-    ::parser::parse<Utility::AUTOMATIC>(&codes);
+    ::parser::parse<GenericParseTree<Antlr4Node>>(&codes);
 
 
   auto v = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(

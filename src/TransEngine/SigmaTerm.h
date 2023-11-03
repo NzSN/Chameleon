@@ -7,22 +7,23 @@
 #include "Rewrite/Term.h"
 #include "utility.h"
 #include "Concepts/n_ary_tree.h"
-#include "Base/generic_parsetree_inl.h"
+#include "Base/generic_parsetree.h"
+
+#include "Base/TreeLayer.h"
 
 namespace TransEngine {
 
 template<Base::GPTMeta T>
-struct Pattern: public Base::GenericParseTree<T> {
+struct Pattern: public TreeLayer<Pattern<T>> {
   using TermID = std::string;
+  using Children = std::vector<Pattern>;
 
-  Pattern(const Base::GenericParseTree<T>& t):
+  Pattern(const Pattern& other):
+    meta_{other.meta_}, children_{other.children_} {}
+  Pattern(const T& meta):
     // Prevent copy children from GenericParseTree,
     // Pattern will build it's own children.
-    Base::GenericParseTree<T>{t.getMeta()},
-    termID_{t.getText()} {
-
-    MAP_TO_TREE(t);
-  }
+    meta_{meta} {}
 
   Pattern clone() {
     return Base::GenericParseTree<T>::clone();
@@ -30,11 +31,11 @@ struct Pattern: public Base::GenericParseTree<T> {
 
   bool isTermVar() const {
     return Utility::isTermVar(
-      const_cast<Pattern*>(this)->getText());
+      const_cast<T&>(meta_).getText());
   }
 
   std::string termID() const {
-    return termID_;
+    return const_cast<T&>(meta_).tree()->getText();
   }
 
   std::vector<Pattern*> termVars() {
@@ -65,11 +66,31 @@ struct Pattern: public Base::GenericParseTree<T> {
     return true;
   }
 
+  std::vector<Pattern>& getChildren() {
+    return children_;
+  };
+
+  std::optional<Pattern> getChild(int i) {
+    if (children_.size() < i) {
+      return std::nullopt;
+    } else {
+      return children_[i];
+    }
+  }
+
+  const T& getMeta() const {
+    return meta_;
+  }
+
+  Pattern* parent;
+
+  Pattern& addChild(Pattern t) {
+    return children_.emplace_back(t);
+  }
+
 private:
-  std::string termID_;
-  DEFINE_AS_LAYER_OF_NARY_TREE(
-    Pattern, Base::GenericParseTree<T>,
-    private);
+  const T& meta_;
+  Children children_;
 };
 
 } // TransEngine

@@ -7,6 +7,7 @@
 #include <vector>
 #include "class_prop.h"
 #include "Base/generic_parsetree_inl.h"
+#include "Concepts/n_ary_tree.h"
 
 namespace Parser {
 
@@ -37,21 +38,22 @@ template<typename ExtNode,
          int lang>
 struct Parser {
 
-  template<Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
+  template<Concepts::NAryTree::NAryTree T,
+           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
            typename = std::enable_if_t<Storage == Utility::AUTOMATIC>>
-  static Base::GenericParseTree<A> parse(std::istream* input) {
+  static T parse(std::istream* input) {
     adapters_.emplace_back(lang, P::parse(input));
-    return Base::GenericParseTree<A>::mapping(adapters_.back());
+    return T::mapping(adapters_.back());
   }
 
-  template<Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
+  template<Concepts::NAryTree::NAryTree T,
+           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
            typename = std::enable_if_t<Storage == Utility::DYNAMIC>,
            int = 1>
-  static std::unique_ptr<Base::GenericParseTree<A>>
+  static std::unique_ptr<T>
   parse(std::istream* input) {
     adapters_.emplace_back(lang, P::parse(input));
-    return Base::GenericParseTree<A>::
-      template mapping<Utility::DYNAMIC>(adapters_.back());
+    return T::template mapping<A, Utility::DYNAMIC>(adapters_.back());
   }
 
 

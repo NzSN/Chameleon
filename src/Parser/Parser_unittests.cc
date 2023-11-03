@@ -34,7 +34,7 @@ RC_GTEST_FIXTURE_PROP(ParserTests, IsomorphicToExtTree, ()) {
     TestLangExt,
     Base::Antlr4Node,
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse(&codes);
+    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes);
 
   Base::Antlr4Node nodes {
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG,

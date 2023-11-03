@@ -72,38 +72,6 @@ GenericParseTree<T>* GenericParseTree<T>::select(
   return tree;
 }
 
-template<GPTMeta T>
-template<Utility::ALLOC_STORAGE_DURATION Storage,
-         typename>
-GenericParseTree<T>
-GenericParseTree<T>::mapping(const T& other) requires GPTMappable<T> {
-  GenericParseTree<T> node = GenericParseTree<T>(other);
-  for (auto& c: Concepts::NAryTree::getChildren(other)) {
-    node.addChild(mapping(c));
-  }
-
-  for (auto& c: node.getChildren()) {
-    c.parent = &node;
-  }
-
-  return node;
-}
-
-template<GPTMeta T>
-template<Utility::ALLOC_STORAGE_DURATION Storage,
-         typename ,int>
-std::unique_ptr<GenericParseTree<T>>
-GenericParseTree<T>::mapping(const T& other) requires GPTMappable<T> {
-  std::unique_ptr<GenericParseTree<T>> node = std::make_unique<GenericParseTree<T>>(other);
-  for (auto& c: Concepts::NAryTree::getChildren(other)) {
-    node->addChild(mapping(c));
-  }
-  return node;
-}
-
-
-
-
 } // Base
 
 #endif /* GENERIC_PARSETREE_INL_H */

@@ -7,7 +7,8 @@ filegroup(
          "generic_parsetree_libclang.cc",
          "generic_parsetree_inl.h",
          "generic_parsetree.h",
-         "generic_parsetree_concrete.h"],
+         "generic_parsetree_concrete.h",
+         "TreeLayer.h"],
 )
 
 filegroup(
