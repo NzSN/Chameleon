@@ -46,7 +46,7 @@ struct StrategySuccess: public ::testing::Test {
     GPT::TESTLANG>
     ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
 
-    lRule = std::make_unique<RuleT>(
+    rule = std::make_unique<RuleT>(
       "R",
       *lPattern,
       *rPattern,
@@ -62,8 +62,7 @@ struct StrategySuccess: public ::testing::Test {
   std::unique_ptr<PatternT> lPattern;
   std::unique_ptr<PatternT> rPattern;
 
-  std::unique_ptr<RuleT> lRule;
-  std::unique_ptr<RuleT> rRule;
+  std::unique_ptr<RuleT> rule;
 };
 
 struct StrategyFailed: public ::testing::Test {
@@ -92,7 +91,7 @@ struct StrategyFailed: public ::testing::Test {
     GPT::TESTLANG>
     ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
 
-    lRule = std::make_unique<RuleT>(
+    rule = std::make_unique<RuleT>(
       "R",
       *lPattern,
       *rPattern,
@@ -108,8 +107,7 @@ struct StrategyFailed: public ::testing::Test {
   std::unique_ptr<PatternT> lPattern;
   std::unique_ptr<PatternT> rPattern;
 
-  std::unique_ptr<RuleT> lRule;
-  std::unique_ptr<RuleT> rRule;
+  std::unique_ptr<RuleT> rule;
 };
 
 TEST_F(StrategySuccess, BasicMatchStrat) {
@@ -121,7 +119,7 @@ TEST_F(StrategySuccess, BasicMatchStrat) {
   ASSERT_TRUE(env.matchTerm() == nullptr);
 
   // We construct
-  MatchStra<Node>{}(*lRule, env);
+  MatchStra<Node>{}(*rule, env);
 
   // Make sure variable bindings is done correctly.
   ASSERT_TRUE(env.matchTerm() != nullptr);
@@ -139,7 +137,7 @@ TEST_F(StrategyFailed, FailedToMatched) {
   // is satisfied.
   ASSERT_TRUE(env.matchTerm() == nullptr);
 
-  MatchStra<Node>{}(*lRule, env);
+  MatchStra<Node>{}(*rule, env);
 
   ASSERT_TRUE(env.matchTerm() == nullptr);
   ASSERT_TRUE(env.targetTerm() == target.get());
@@ -150,8 +148,9 @@ TEST_F(StrategySuccess, Build) {
   Environment<Node> env{};
   env.setTargetTerm(target.get());
 
-  MatchStra<Node>{}(*lRule, env);
-  BuildStra<Node>{}(*lRule, env);
+  // {| a+b+1 |} => {| b+a+1 |}
+  MatchStra<Node>{}(*rule, env);
+  BuildStra<Node>{}(*rule, env);
 
   ASSERT_TRUE(env.targetTerm()->getText() == "2+1+1");
 }
