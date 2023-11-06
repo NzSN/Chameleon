@@ -1,4 +1,3 @@
-\* TODO: Implement Transfor Step.
 ----- MODULE Chameleon -----
 CONSTANTS NULL, RuleConfig, Rule
 VARIABLES parser, analyzer, transformer, state

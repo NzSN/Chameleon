@@ -18,6 +18,8 @@ cloneProgContext(TestLangParser::ProgContext* node,
                  TransformInfo<Antlr4Node>& info) {
 
   // Start Rule
+  // FIXME: This resource is not managed any entities
+  //        memory leak is possible.
   TestLangParser::ProgContext* copy =
     new TestLangParser::ProgContext(nullptr, -1);
 
@@ -27,6 +29,8 @@ cloneProgContext(TestLangParser::ProgContext* node,
 TestLangParser::ExprContext*
 cloneExprContext(TestLangParser::ExprContext* node,
                  TransformInfo<Antlr4Node>& info) {
+  // FIXME: This resource is not managed any entities
+  //        memory leak is possible.
   TestLangParser::ExprContext* copy =
     new TestLangParser::ExprContext(
       dynamic_cast<TestLangParser::ExprContext*>(

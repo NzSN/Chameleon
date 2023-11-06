@@ -25,7 +25,7 @@ namespace Rewrite {
 // otherwise left the Environment UNCHANGED.
 template<Base::GPTMeta T>
 struct MatchStra: public Strategy<T> {
-
+  ~MatchStra() {}
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
     if (env.targetTerm() == nullptr) {
       throw std::runtime_error(
@@ -64,6 +64,7 @@ struct MatchStra: public Strategy<T> {
 // Build right side pattern on Environment<T>::buildTerm_
 template<Base::GPTMeta T>
 struct BuildStra: public Strategy<T> {
+  ~BuildStra() {}
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
 
     T metaCopy = rule.rightSide->getMeta().clone();
@@ -88,7 +89,16 @@ struct BuildStra: public Strategy<T> {
 };
 
 template<Base::GPTMeta T>
-StrategySet<T> ruleBreakDown(Rule<T> rule) {}
+StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
+  // A rule is breakdown into Strategy language:
+  //   match(r); build(r);
+  StrategySeq<T> seq;
+  seq.emplace_back(
+    std::make_unique<MatchStra<T>>(MatchStra<T>{}));
+  seq.emplace_back(
+    std::make_unique<BuildStra<T>>(BuildStra<T>{}));
+  return seq;
+}
 
 } // Rewrite
 } // TransEngine

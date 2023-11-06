@@ -152,6 +152,19 @@ TEST_F(StrategySuccess, Build) {
   MatchStra<Node>{}(*rule, env);
   BuildStra<Node>{}(*rule, env);
 
+}
+
+TEST_F(StrategySuccess, RuleBreakDown) {
+  Environment<Node> env{};
+  env.setTargetTerm(target.get());
+
+  // Break a rule to form that represent by
+  // strategy languages.
+  StrategySeq<Node> seq = ruleBreakDown(*rule);
+  for (auto& s: seq) {
+    (*s)(*rule, env);
+  }
+
   ASSERT_TRUE(env.targetTerm()->getText() == "2+1+1");
 }
 

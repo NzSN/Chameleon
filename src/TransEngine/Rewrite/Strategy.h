@@ -17,13 +17,14 @@ template<Base::GPTMeta T>
 struct Strategy;
 
 template<Base::GPTMeta T>
-using StrategySet = std::set<Strategy<T>>;
+using StrategySet = std::set<std::unique_ptr<Strategy<T>>>;
 
 template<Base::GPTMeta T>
-using StrategySeq = std::vector<Strategy<T>>;
+using StrategySeq = std::vector<std::unique_ptr<Strategy<T>>>;
 
 template<Base::GPTMeta T>
 struct Strategy {
+  ~Strategy() {}
   virtual Rule<T>& operator()(
     Rule<T>& rule, Environment<T>&) = 0;
 };
@@ -32,7 +33,7 @@ struct Strategy {
 // due to this system use Strategy language
 // low-level core language to describe transformations.
 template<Base::GPTMeta T>
-StrategySeq<T> ruleBreakDown(Rule<T> rule);
+StrategySeq<T> ruleBreakDown(Rule<T>& rule);
 
 } // Rewrite
 } // TransEngine
