@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
 
 #pragma once
 
@@ -12,14 +12,15 @@
 class  ChameleonsParser : public antlr4::Parser {
 public:
   enum {
-    WHERE = 1, LOGICOP = 2, ORDEROP = 3, NUMBER = 4, IDENTIFIER = 5, COLON = 6, 
-    OPENBRACE = 7, TERM_VAR = 8, TRANSFORM = 9, WS = 10, CODEBYTES = 11, 
-    CLOSEBRACE = 12
+    TARGET_TAG = 1, RULE_TAG = 2, STRATEGY_TAG = 3, WHERE = 4, LOGICOP = 5, 
+    ORDEROP = 6, NUMBER = 7, IDENTIFIER = 8, COLON = 9, OPENBRACE = 10, 
+    TERM_VAR = 11, TRANSFORM = 12, WS = 13, CODEBYTES = 14, CLOSEBRACE = 15
   };
 
   enum {
-    RuleProg = 0, RuleRewriteRules = 1, RuleRewriteRule = 2, RuleSourcePattern = 3, 
-    RuleTargetPattern = 4, RuleCondExprs = 5, RuleCondExpr = 6
+    RuleProg = 0, RuleTargetSection = 1, RuleRuleSection = 2, RuleStrategySection = 3, 
+    RuleRewriteRules = 4, RuleRewriteRule = 5, RuleSourcePattern = 6, RuleTargetPattern = 7, 
+    RuleCondExprs = 8, RuleCondExpr = 9
   };
 
   explicit ChameleonsParser(antlr4::TokenStream *input);
@@ -40,6 +41,9 @@ public:
 
 
   class ProgContext;
+  class TargetSectionContext;
+  class RuleSectionContext;
+  class StrategySectionContext;
   class RewriteRulesContext;
   class RewriteRuleContext;
   class SourcePatternContext;
@@ -51,7 +55,9 @@ public:
   public:
     ProgContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    RewriteRulesContext *rewriteRules();
+    TargetSectionContext *targetSection();
+    RuleSectionContext *ruleSection();
+    StrategySectionContext *strategySection();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -59,6 +65,47 @@ public:
   };
 
   ProgContext* prog();
+
+  class  TargetSectionContext : public antlr4::ParserRuleContext {
+  public:
+    TargetSectionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *TARGET_TAG();
+    antlr4::tree::TerminalNode *IDENTIFIER();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  TargetSectionContext* targetSection();
+
+  class  RuleSectionContext : public antlr4::ParserRuleContext {
+  public:
+    RuleSectionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *RULE_TAG();
+    RewriteRulesContext *rewriteRules();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  RuleSectionContext* ruleSection();
+
+  class  StrategySectionContext : public antlr4::ParserRuleContext {
+  public:
+    StrategySectionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *STRATEGY_TAG();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  StrategySectionContext* strategySection();
 
   class  RewriteRulesContext : public antlr4::ParserRuleContext {
   public:

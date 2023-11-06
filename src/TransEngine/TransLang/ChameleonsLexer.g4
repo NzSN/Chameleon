@@ -1,5 +1,8 @@
 lexer grammar ChameleonsLexer;
 
+TARGET_TAG: 'TARGET:';
+RULE_TAG: 'Rules:';
+STRATEGY_TAG: 'STRATEGIES';
 WHERE: 'where';
 LOGICOP: ('AND' | 'OR' | 'NOT');
 ORDEROP: ('=' | '<' | '>' | '<=' | '>=');

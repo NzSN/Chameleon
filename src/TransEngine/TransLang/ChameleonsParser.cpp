@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
 
 
 #include "ChameleonsParserListener.h"
@@ -52,37 +52,43 @@ void chameleonsparserParserInitialize() {
 #endif
   auto staticData = std::make_unique<ChameleonsParserStaticData>(
     std::vector<std::string>{
-      "prog", "rewriteRules", "rewriteRule", "sourcePattern", "targetPattern", 
-      "condExprs", "condExpr"
+      "prog", "targetSection", "ruleSection", "strategySection", "rewriteRules", 
+      "rewriteRule", "sourcePattern", "targetPattern", "condExprs", "condExpr"
     },
     std::vector<std::string>{
-      "", "'where'", "", "", "", "", "':'", "'{|'", "", "'=>'", "", "", 
-      "'|}'"
+      "", "'TARGET:'", "'Rules:'", "'STRATEGIES'", "'where'", "", "", "", 
+      "", "':'", "'{|'", "", "'=>'", "", "", "'|}'"
     },
     std::vector<std::string>{
-      "", "WHERE", "LOGICOP", "ORDEROP", "NUMBER", "IDENTIFIER", "COLON", 
-      "OPENBRACE", "TERM_VAR", "TRANSFORM", "WS", "CODEBYTES", "CLOSEBRACE"
+      "", "TARGET_TAG", "RULE_TAG", "STRATEGY_TAG", "WHERE", "LOGICOP", 
+      "ORDEROP", "NUMBER", "IDENTIFIER", "COLON", "OPENBRACE", "TERM_VAR", 
+      "TRANSFORM", "WS", "CODEBYTES", "CLOSEBRACE"
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,12,66,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,1,0,
-  	1,0,1,1,1,1,1,1,1,1,3,1,21,8,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,
-  	2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,3,2,45,8,2,1,3,1,3,
-  	1,4,1,4,1,5,1,5,1,5,1,5,1,5,3,5,56,8,5,1,6,1,6,1,6,1,6,1,6,1,6,3,6,64,
-  	8,6,1,6,0,0,7,0,2,4,6,8,10,12,0,0,62,0,14,1,0,0,0,2,20,1,0,0,0,4,44,1,
-  	0,0,0,6,46,1,0,0,0,8,48,1,0,0,0,10,55,1,0,0,0,12,63,1,0,0,0,14,15,3,2,
-  	1,0,15,1,1,0,0,0,16,21,3,4,2,0,17,18,3,4,2,0,18,19,3,2,1,0,19,21,1,0,
-  	0,0,20,16,1,0,0,0,20,17,1,0,0,0,21,3,1,0,0,0,22,23,5,5,0,0,23,24,5,6,
-  	0,0,24,25,5,7,0,0,25,26,3,6,3,0,26,27,5,12,0,0,27,28,5,9,0,0,28,29,5,
-  	7,0,0,29,30,3,8,4,0,30,31,5,12,0,0,31,45,1,0,0,0,32,33,5,5,0,0,33,34,
-  	5,6,0,0,34,35,5,7,0,0,35,36,3,6,3,0,36,37,5,12,0,0,37,38,5,9,0,0,38,39,
-  	5,7,0,0,39,40,3,8,4,0,40,41,5,12,0,0,41,42,5,1,0,0,42,43,3,10,5,0,43,
-  	45,1,0,0,0,44,22,1,0,0,0,44,32,1,0,0,0,45,5,1,0,0,0,46,47,5,11,0,0,47,
-  	7,1,0,0,0,48,49,5,11,0,0,49,9,1,0,0,0,50,56,3,12,6,0,51,52,3,12,6,0,52,
-  	53,5,2,0,0,53,54,3,10,5,0,54,56,1,0,0,0,55,50,1,0,0,0,55,51,1,0,0,0,56,
-  	11,1,0,0,0,57,58,5,8,0,0,58,59,5,3,0,0,59,64,5,8,0,0,60,61,5,8,0,0,61,
-  	62,5,3,0,0,62,64,5,4,0,0,63,57,1,0,0,0,63,60,1,0,0,0,64,13,1,0,0,0,4,
-  	20,44,55,63
+  	4,1,15,87,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+  	7,7,2,8,7,8,2,9,7,9,1,0,1,0,1,0,1,0,1,0,1,0,1,0,3,0,28,8,0,1,1,1,1,1,
+  	1,1,2,1,2,1,2,1,3,1,3,1,4,1,4,1,4,1,4,3,4,42,8,4,1,5,1,5,1,5,1,5,1,5,
+  	1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,3,
+  	5,66,8,5,1,6,1,6,1,7,1,7,1,8,1,8,1,8,1,8,1,8,3,8,77,8,8,1,9,1,9,1,9,1,
+  	9,1,9,1,9,3,9,85,8,9,1,9,0,0,10,0,2,4,6,8,10,12,14,16,18,0,0,81,0,27,
+  	1,0,0,0,2,29,1,0,0,0,4,32,1,0,0,0,6,35,1,0,0,0,8,41,1,0,0,0,10,65,1,0,
+  	0,0,12,67,1,0,0,0,14,69,1,0,0,0,16,76,1,0,0,0,18,84,1,0,0,0,20,21,3,2,
+  	1,0,21,22,3,4,2,0,22,28,1,0,0,0,23,24,3,2,1,0,24,25,3,4,2,0,25,26,3,6,
+  	3,0,26,28,1,0,0,0,27,20,1,0,0,0,27,23,1,0,0,0,28,1,1,0,0,0,29,30,5,1,
+  	0,0,30,31,5,8,0,0,31,3,1,0,0,0,32,33,5,2,0,0,33,34,3,8,4,0,34,5,1,0,0,
+  	0,35,36,5,3,0,0,36,7,1,0,0,0,37,42,3,10,5,0,38,39,3,10,5,0,39,40,3,8,
+  	4,0,40,42,1,0,0,0,41,37,1,0,0,0,41,38,1,0,0,0,42,9,1,0,0,0,43,44,5,8,
+  	0,0,44,45,5,9,0,0,45,46,5,10,0,0,46,47,3,12,6,0,47,48,5,15,0,0,48,49,
+  	5,12,0,0,49,50,5,10,0,0,50,51,3,14,7,0,51,52,5,15,0,0,52,66,1,0,0,0,53,
+  	54,5,8,0,0,54,55,5,9,0,0,55,56,5,10,0,0,56,57,3,12,6,0,57,58,5,15,0,0,
+  	58,59,5,12,0,0,59,60,5,10,0,0,60,61,3,14,7,0,61,62,5,15,0,0,62,63,5,4,
+  	0,0,63,64,3,16,8,0,64,66,1,0,0,0,65,43,1,0,0,0,65,53,1,0,0,0,66,11,1,
+  	0,0,0,67,68,5,14,0,0,68,13,1,0,0,0,69,70,5,14,0,0,70,15,1,0,0,0,71,77,
+  	3,18,9,0,72,73,3,18,9,0,73,74,5,5,0,0,74,75,3,16,8,0,75,77,1,0,0,0,76,
+  	71,1,0,0,0,76,72,1,0,0,0,77,17,1,0,0,0,78,79,5,11,0,0,79,80,5,6,0,0,80,
+  	85,5,11,0,0,81,82,5,11,0,0,82,83,5,6,0,0,83,85,5,7,0,0,84,78,1,0,0,0,
+  	84,81,1,0,0,0,85,19,1,0,0,0,5,27,41,65,76,84
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -137,8 +143,16 @@ ChameleonsParser::ProgContext::ProgContext(ParserRuleContext *parent, size_t inv
   : ParserRuleContext(parent, invokingState) {
 }
 
-ChameleonsParser::RewriteRulesContext* ChameleonsParser::ProgContext::rewriteRules() {
-  return getRuleContext<ChameleonsParser::RewriteRulesContext>(0);
+ChameleonsParser::TargetSectionContext* ChameleonsParser::ProgContext::targetSection() {
+  return getRuleContext<ChameleonsParser::TargetSectionContext>(0);
+}
+
+ChameleonsParser::RuleSectionContext* ChameleonsParser::ProgContext::ruleSection() {
+  return getRuleContext<ChameleonsParser::RuleSectionContext>(0);
+}
+
+ChameleonsParser::StrategySectionContext* ChameleonsParser::ProgContext::strategySection() {
+  return getRuleContext<ChameleonsParser::StrategySectionContext>(0);
 }
 
 
@@ -170,9 +184,203 @@ ChameleonsParser::ProgContext* ChameleonsParser::prog() {
     exitRule();
   });
   try {
+    setState(27);
+    _errHandler->sync(this);
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 0, _ctx)) {
+    case 1: {
+      enterOuterAlt(_localctx, 1);
+      setState(20);
+      targetSection();
+      setState(21);
+      ruleSection();
+      break;
+    }
+
+    case 2: {
+      enterOuterAlt(_localctx, 2);
+      setState(23);
+      targetSection();
+      setState(24);
+      ruleSection();
+      setState(25);
+      strategySection();
+      break;
+    }
+
+    default:
+      break;
+    }
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
+  return _localctx;
+}
+
+//----------------- TargetSectionContext ------------------------------------------------------------------
+
+ChameleonsParser::TargetSectionContext::TargetSectionContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+tree::TerminalNode* ChameleonsParser::TargetSectionContext::TARGET_TAG() {
+  return getToken(ChameleonsParser::TARGET_TAG, 0);
+}
+
+tree::TerminalNode* ChameleonsParser::TargetSectionContext::IDENTIFIER() {
+  return getToken(ChameleonsParser::IDENTIFIER, 0);
+}
+
+
+size_t ChameleonsParser::TargetSectionContext::getRuleIndex() const {
+  return ChameleonsParser::RuleTargetSection;
+}
+
+void ChameleonsParser::TargetSectionContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterTargetSection(this);
+}
+
+void ChameleonsParser::TargetSectionContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitTargetSection(this);
+}
+
+ChameleonsParser::TargetSectionContext* ChameleonsParser::targetSection() {
+  TargetSectionContext *_localctx = _tracker.createInstance<TargetSectionContext>(_ctx, getState());
+  enterRule(_localctx, 2, ChameleonsParser::RuleTargetSection);
+
+#if __cplusplus > 201703L
+  auto onExit = finally([=, this] {
+#else
+  auto onExit = finally([=] {
+#endif
+    exitRule();
+  });
+  try {
     enterOuterAlt(_localctx, 1);
-    setState(14);
+    setState(29);
+    match(ChameleonsParser::TARGET_TAG);
+    setState(30);
+    match(ChameleonsParser::IDENTIFIER);
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
+  return _localctx;
+}
+
+//----------------- RuleSectionContext ------------------------------------------------------------------
+
+ChameleonsParser::RuleSectionContext::RuleSectionContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+tree::TerminalNode* ChameleonsParser::RuleSectionContext::RULE_TAG() {
+  return getToken(ChameleonsParser::RULE_TAG, 0);
+}
+
+ChameleonsParser::RewriteRulesContext* ChameleonsParser::RuleSectionContext::rewriteRules() {
+  return getRuleContext<ChameleonsParser::RewriteRulesContext>(0);
+}
+
+
+size_t ChameleonsParser::RuleSectionContext::getRuleIndex() const {
+  return ChameleonsParser::RuleRuleSection;
+}
+
+void ChameleonsParser::RuleSectionContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterRuleSection(this);
+}
+
+void ChameleonsParser::RuleSectionContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitRuleSection(this);
+}
+
+ChameleonsParser::RuleSectionContext* ChameleonsParser::ruleSection() {
+  RuleSectionContext *_localctx = _tracker.createInstance<RuleSectionContext>(_ctx, getState());
+  enterRule(_localctx, 4, ChameleonsParser::RuleRuleSection);
+
+#if __cplusplus > 201703L
+  auto onExit = finally([=, this] {
+#else
+  auto onExit = finally([=] {
+#endif
+    exitRule();
+  });
+  try {
+    enterOuterAlt(_localctx, 1);
+    setState(32);
+    match(ChameleonsParser::RULE_TAG);
+    setState(33);
     rewriteRules();
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
+  return _localctx;
+}
+
+//----------------- StrategySectionContext ------------------------------------------------------------------
+
+ChameleonsParser::StrategySectionContext::StrategySectionContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+tree::TerminalNode* ChameleonsParser::StrategySectionContext::STRATEGY_TAG() {
+  return getToken(ChameleonsParser::STRATEGY_TAG, 0);
+}
+
+
+size_t ChameleonsParser::StrategySectionContext::getRuleIndex() const {
+  return ChameleonsParser::RuleStrategySection;
+}
+
+void ChameleonsParser::StrategySectionContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterStrategySection(this);
+}
+
+void ChameleonsParser::StrategySectionContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitStrategySection(this);
+}
+
+ChameleonsParser::StrategySectionContext* ChameleonsParser::strategySection() {
+  StrategySectionContext *_localctx = _tracker.createInstance<StrategySectionContext>(_ctx, getState());
+  enterRule(_localctx, 6, ChameleonsParser::RuleStrategySection);
+
+#if __cplusplus > 201703L
+  auto onExit = finally([=, this] {
+#else
+  auto onExit = finally([=] {
+#endif
+    exitRule();
+  });
+  try {
+    enterOuterAlt(_localctx, 1);
+    setState(35);
+    match(ChameleonsParser::STRATEGY_TAG);
    
   }
   catch (RecognitionException &e) {
@@ -217,7 +425,7 @@ void ChameleonsParser::RewriteRulesContext::exitRule(tree::ParseTreeListener *li
 
 ChameleonsParser::RewriteRulesContext* ChameleonsParser::rewriteRules() {
   RewriteRulesContext *_localctx = _tracker.createInstance<RewriteRulesContext>(_ctx, getState());
-  enterRule(_localctx, 2, ChameleonsParser::RuleRewriteRules);
+  enterRule(_localctx, 8, ChameleonsParser::RuleRewriteRules);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -227,21 +435,21 @@ ChameleonsParser::RewriteRulesContext* ChameleonsParser::rewriteRules() {
     exitRule();
   });
   try {
-    setState(20);
+    setState(41);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 0, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 1, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(16);
+      setState(37);
       rewriteRule();
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(17);
+      setState(38);
       rewriteRule();
-      setState(18);
+      setState(39);
       rewriteRules();
       break;
     }
@@ -329,7 +537,7 @@ void ChameleonsParser::RewriteRuleContext::exitRule(tree::ParseTreeListener *lis
 
 ChameleonsParser::RewriteRuleContext* ChameleonsParser::rewriteRule() {
   RewriteRuleContext *_localctx = _tracker.createInstance<RewriteRuleContext>(_ctx, getState());
-  enterRule(_localctx, 4, ChameleonsParser::RuleRewriteRule);
+  enterRule(_localctx, 10, ChameleonsParser::RuleRewriteRule);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -339,55 +547,55 @@ ChameleonsParser::RewriteRuleContext* ChameleonsParser::rewriteRule() {
     exitRule();
   });
   try {
-    setState(44);
+    setState(65);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 1, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(22);
+      setState(43);
       match(ChameleonsParser::IDENTIFIER);
-      setState(23);
+      setState(44);
       match(ChameleonsParser::COLON);
-      setState(24);
+      setState(45);
       match(ChameleonsParser::OPENBRACE);
-      setState(25);
+      setState(46);
       sourcePattern();
-      setState(26);
+      setState(47);
       match(ChameleonsParser::CLOSEBRACE);
-      setState(27);
+      setState(48);
       match(ChameleonsParser::TRANSFORM);
-      setState(28);
+      setState(49);
       match(ChameleonsParser::OPENBRACE);
-      setState(29);
+      setState(50);
       targetPattern();
-      setState(30);
+      setState(51);
       match(ChameleonsParser::CLOSEBRACE);
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(32);
+      setState(53);
       match(ChameleonsParser::IDENTIFIER);
-      setState(33);
+      setState(54);
       match(ChameleonsParser::COLON);
-      setState(34);
+      setState(55);
       match(ChameleonsParser::OPENBRACE);
-      setState(35);
+      setState(56);
       sourcePattern();
-      setState(36);
+      setState(57);
       match(ChameleonsParser::CLOSEBRACE);
-      setState(37);
+      setState(58);
       match(ChameleonsParser::TRANSFORM);
-      setState(38);
+      setState(59);
       match(ChameleonsParser::OPENBRACE);
-      setState(39);
+      setState(60);
       targetPattern();
-      setState(40);
+      setState(61);
       match(ChameleonsParser::CLOSEBRACE);
-      setState(41);
+      setState(62);
       match(ChameleonsParser::WHERE);
-      setState(42);
+      setState(63);
       condExprs();
       break;
     }
@@ -435,7 +643,7 @@ void ChameleonsParser::SourcePatternContext::exitRule(tree::ParseTreeListener *l
 
 ChameleonsParser::SourcePatternContext* ChameleonsParser::sourcePattern() {
   SourcePatternContext *_localctx = _tracker.createInstance<SourcePatternContext>(_ctx, getState());
-  enterRule(_localctx, 6, ChameleonsParser::RuleSourcePattern);
+  enterRule(_localctx, 12, ChameleonsParser::RuleSourcePattern);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -446,7 +654,7 @@ ChameleonsParser::SourcePatternContext* ChameleonsParser::sourcePattern() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(46);
+    setState(67);
     match(ChameleonsParser::CODEBYTES);
    
   }
@@ -488,7 +696,7 @@ void ChameleonsParser::TargetPatternContext::exitRule(tree::ParseTreeListener *l
 
 ChameleonsParser::TargetPatternContext* ChameleonsParser::targetPattern() {
   TargetPatternContext *_localctx = _tracker.createInstance<TargetPatternContext>(_ctx, getState());
-  enterRule(_localctx, 8, ChameleonsParser::RuleTargetPattern);
+  enterRule(_localctx, 14, ChameleonsParser::RuleTargetPattern);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -499,7 +707,7 @@ ChameleonsParser::TargetPatternContext* ChameleonsParser::targetPattern() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(48);
+    setState(69);
     match(ChameleonsParser::CODEBYTES);
    
   }
@@ -549,7 +757,7 @@ void ChameleonsParser::CondExprsContext::exitRule(tree::ParseTreeListener *liste
 
 ChameleonsParser::CondExprsContext* ChameleonsParser::condExprs() {
   CondExprsContext *_localctx = _tracker.createInstance<CondExprsContext>(_ctx, getState());
-  enterRule(_localctx, 10, ChameleonsParser::RuleCondExprs);
+  enterRule(_localctx, 16, ChameleonsParser::RuleCondExprs);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -559,23 +767,23 @@ ChameleonsParser::CondExprsContext* ChameleonsParser::condExprs() {
     exitRule();
   });
   try {
-    setState(55);
+    setState(76);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 3, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(50);
+      setState(71);
       condExpr();
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(51);
+      setState(72);
       condExpr();
-      setState(52);
+      setState(73);
       match(ChameleonsParser::LOGICOP);
-      setState(53);
+      setState(74);
       condExprs();
       break;
     }
@@ -635,7 +843,7 @@ void ChameleonsParser::CondExprContext::exitRule(tree::ParseTreeListener *listen
 
 ChameleonsParser::CondExprContext* ChameleonsParser::condExpr() {
   CondExprContext *_localctx = _tracker.createInstance<CondExprContext>(_ctx, getState());
-  enterRule(_localctx, 12, ChameleonsParser::RuleCondExpr);
+  enterRule(_localctx, 18, ChameleonsParser::RuleCondExpr);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -645,27 +853,27 @@ ChameleonsParser::CondExprContext* ChameleonsParser::condExpr() {
     exitRule();
   });
   try {
-    setState(63);
+    setState(84);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 3, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 4, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(57);
+      setState(78);
       match(ChameleonsParser::TERM_VAR);
-      setState(58);
+      setState(79);
       match(ChameleonsParser::ORDEROP);
-      setState(59);
+      setState(80);
       match(ChameleonsParser::TERM_VAR);
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(60);
+      setState(81);
       match(ChameleonsParser::TERM_VAR);
-      setState(61);
+      setState(82);
       match(ChameleonsParser::ORDEROP);
-      setState(62);
+      setState(83);
       match(ChameleonsParser::NUMBER);
       break;
     }

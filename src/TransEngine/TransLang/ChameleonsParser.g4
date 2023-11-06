@@ -3,7 +3,20 @@ parser grammar ChameleonsParser;
 options { tokenVocab=ChameleonsLexer; }
 
 prog
-    : rewriteRules
+    : targetSection
+      ruleSection
+    | targetSection
+      ruleSection
+      strategySection;
+
+targetSection
+    : TARGET_TAG IDENTIFIER;
+ruleSection
+    : RULE_TAG rewriteRules
+    ;
+// Optional section
+strategySection
+    : STRATEGY_TAG
     ;
 
 rewriteRules

@@ -30,22 +30,29 @@ struct ChameleonsTest: public ::testing::Test {
 TEST_F(ChameleonsTest, Basic) {
   EXPECT_TRUE(ParseTreeMatching(
                 // Program
+                "TARGET: Cpp\n"
+                "Rules:\n"
                 "R: {| Origin |} => {| Progd |}",
                 // ParseTree
                 "(prog "
+                "(targetSection TARGET: Cpp) "
+                "(ruleSection Rules: "
                 "(rewriteRules "
-                "(rewriteRule "
-                "R : {| (sourcePattern  Origin ) |} => {| (targetPattern  Progd ) |})))"
+                "(rewriteRule R : {| (sourcePattern  Origin ) |} => {| (targetPattern  Progd ) |}))))"
                 ));
 
   EXPECT_TRUE(ParseTreeMatching(
                 // Program
+                "TARGET: Cpp\n"
+                "Rules:\n"
                 "R: {| Origin\\| |} => {| Progd\\| |}",
                 // ParseTree
                 "(prog "
+                "(targetSection TARGET: Cpp) "
+                "(ruleSection Rules: "
                 "(rewriteRules "
                 "(rewriteRule "
-                "R : {| (sourcePattern  Origin\\| ) |} => {| (targetPattern  Progd\\| ) |})))"
+                "R : {| (sourcePattern  Origin\\| ) |} => {| (targetPattern  Progd\\| ) |}))))"
                 ));
 
 }
@@ -53,6 +60,8 @@ TEST_F(ChameleonsTest, Basic) {
 TEST_F(ChameleonsTest, WithSpaceCodes) {
   EXPECT_TRUE(ParseTreeMatching(
                 // Program
+                "TARGET: Cpp\n"
+                "Rules:\n"
                 "R: {|"
 
                 "%F();"
@@ -66,10 +75,12 @@ TEST_F(ChameleonsTest, WithSpaceCodes) {
                 " |}",
                 // Expected ParseTree
                 "(prog "
+                "(targetSection TARGET: Cpp) "
+                "(ruleSection Rules: "
                 "(rewriteRules "
                 "(rewriteRule "
                 "R : {| (sourcePattern %F();setTimeout(%A, %B);console.log(%A, %B);  ) |} "
-                "=> {| (targetPattern  SetTimeout_Coro(%A, %B) ) |})))"
+                "=> {| (targetPattern  SetTimeout_Coro(%A, %B) ) |}))))"
                 ));
 }
 
@@ -77,36 +88,49 @@ TEST_F(ChameleonsTest, EscapedBrace) {
   EXPECT_TRUE(
     ParseTreeMatching(
       // Program
+      "TARGET: Cpp\n"
+      "Rules:\n"
       "R: {| \\{ SENTENCE \\} |} => {| \\{ Progd SENTENCE \\} |}",
       // Expected ParseTree
-      "(prog (rewriteRules "
+      "(prog "
+      "(targetSection TARGET: Cpp) "
+      "(ruleSection Rules: "
+      "(rewriteRules "
       "(rewriteRule R : "
       "{| (sourcePattern  \\{ SENTENCE \\} ) |} => {| "
-      "(targetPattern  \\{ Progd SENTENCE \\} ) |})))"
+      "(targetPattern  \\{ Progd SENTENCE \\} ) |}))))"
       ));
 }
 
 TEST_F(ChameleonsTest, WhereCondition) {
   EXPECT_TRUE(
     ParseTreeMatching(
+      "TARGET: Cpp\n"
+      "Rules:\n"
       "R: {| %T = 0 |} => {| %T = 1 |} where %T = %T",
       // Expected
       "(prog "
+      "(targetSection TARGET: Cpp) "
+      "(ruleSection Rules: "
       "(rewriteRules "
       "(rewriteRule "
       "R : {| (sourcePattern  %T = 0 ) |} => {| (targetPattern  %T = 1 ) |} "
-      "where (condExprs (condExpr %T = %T)))))"
+      "where (condExprs (condExpr %T = %T))))))"
       ));
   EXPECT_TRUE(
     ParseTreeMatching(
+      "TARGET: Cpp\n"
+      "Rules:\n"
       "R: {| %T = 0 |} => {| %T = 1 |} where %T = 1 AND %T = 2 OR %T = 3",
       // Expected
       "(prog "
+      "(targetSection TARGET: Cpp) "
+      "(ruleSection Rules: "
       "(rewriteRules "
       "(rewriteRule "
       "R : {| (sourcePattern  %T = 0 ) |} => {| (targetPattern  %T = 1 ) |} "
       "where (condExprs (condExpr %T = 1) AND "
       "(condExprs (condExpr %T = 2) OR "
-      "(condExprs (condExpr %T = 3)))))))"
+      "(condExprs (condExpr %T = 3))))))))"
       ));
 }

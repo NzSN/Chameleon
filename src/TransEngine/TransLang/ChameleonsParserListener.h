@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
 
 #pragma once
 
@@ -16,6 +16,15 @@ public:
 
   virtual void enterProg(ChameleonsParser::ProgContext *ctx) = 0;
   virtual void exitProg(ChameleonsParser::ProgContext *ctx) = 0;
+
+  virtual void enterTargetSection(ChameleonsParser::TargetSectionContext *ctx) = 0;
+  virtual void exitTargetSection(ChameleonsParser::TargetSectionContext *ctx) = 0;
+
+  virtual void enterRuleSection(ChameleonsParser::RuleSectionContext *ctx) = 0;
+  virtual void exitRuleSection(ChameleonsParser::RuleSectionContext *ctx) = 0;
+
+  virtual void enterStrategySection(ChameleonsParser::StrategySectionContext *ctx) = 0;
+  virtual void exitStrategySection(ChameleonsParser::StrategySectionContext *ctx) = 0;
 
   virtual void enterRewriteRules(ChameleonsParser::RewriteRulesContext *ctx) = 0;
   virtual void exitRewriteRules(ChameleonsParser::RewriteRulesContext *ctx) = 0;

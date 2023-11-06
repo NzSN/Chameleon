@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsLexer.g4 by ANTLR 4.13.0
+// Generated from ./ChameleonsLexer.g4 by ANTLR 4.13.1
 
 #pragma once
 
@@ -12,9 +12,9 @@
 class  ChameleonsLexer : public antlr4::Lexer {
 public:
   enum {
-    WHERE = 1, LOGICOP = 2, ORDEROP = 3, NUMBER = 4, IDENTIFIER = 5, COLON = 6, 
-    OPENBRACE = 7, TERM_VAR = 8, TRANSFORM = 9, WS = 10, CODEBYTES = 11, 
-    CLOSEBRACE = 12
+    TARGET_TAG = 1, RULE_TAG = 2, STRATEGY_TAG = 3, WHERE = 4, LOGICOP = 5, 
+    ORDEROP = 6, NUMBER = 7, IDENTIFIER = 8, COLON = 9, OPENBRACE = 10, 
+    TERM_VAR = 11, TRANSFORM = 12, WS = 13, CODEBYTES = 14, CLOSEBRACE = 15
   };
 
   enum {
