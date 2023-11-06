@@ -1,15 +1,14 @@
 
 filegroup(
-    name = "transformer_srcs",
+    name = "pattern_matching",
     srcs = ["SigmaTerm.h",
-            "PatternMatching.h",
-            "//src/TransEngine/Rewrite:rewrite_srcs"],
+            "PatternMatching.h"],
     visibility = ["//visibility:public"]
 )
 
 filegroup(
     name = "transformer_unittest_srcs",
-    srcs = [":transformer_srcs",
+    srcs = [":pattern_matching",
             "PatternMatching_Unittests.cc",
             "//src/TransEngine/Rewrite:rewrite_unittest_srcs"],
     visibility = ["//visibility:public"]

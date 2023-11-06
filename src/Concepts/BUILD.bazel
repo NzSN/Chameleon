@@ -5,6 +5,12 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
+cc_library(
+    name = "concepts_lib",
+    srcs = [":concepts_srcs"],
+    visibility = ["//visibility:public"],
+)
+
 cc_test(
     name = "concepts_unittests",
     srcs = [

@@ -9,6 +9,7 @@
 #include "Term.h"
 #include "Base/generic_parsetree_inl.h"
 #include "utility.h"
+#include "Analysis/analyzer.h"
 
 namespace TransEngine {
 namespace Rewrite {
@@ -66,8 +67,12 @@ private:
 template<Base::GPTMeta T>
 class Environment {
 public:
+  using AnalysisData =
+    Analyzer::AnalyzeData<Base::GenericParseTree<T>>;
+
   Environment():
-    targetTerm_{nullptr}, matchTerm_{nullptr} {}
+    targetTerm_{nullptr}, matchTerm_{nullptr},
+    analysisData_{nullptr} {}
 
   Base::GenericParseTree<T>* targetTerm() {
     return targetTerm_;
@@ -97,12 +102,21 @@ public:
     return bindings_;
   }
 
+  void setAnalysisData(AnalysisData* data) {
+    analysisData_ = data;
+  }
+
+  const AnalysisData* getAnalysisData() const {
+    return analysisData_;
+  }
+
 private:
   Base::GenericParseTree<T>* targetTerm_;
   Base::GenericParseTree<T>* matchTerm_;
   Base::GenericParseTree<T>* buildTerm_;
   Bindings<T> bindings_;
   std::vector<Utility::HeapResourceHolder> resources;
+  const AnalysisData* analysisData_;
 };
 
 

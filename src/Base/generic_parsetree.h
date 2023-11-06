@@ -10,7 +10,6 @@
 #include <concepts>
 #include <functional>
 
-#include "Language/language.h"
 #include "Concepts/n_ary_tree.h"
 #include "utility.h"
 #include "TreeLayer.h"
