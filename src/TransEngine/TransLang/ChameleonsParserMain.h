@@ -3,34 +3,36 @@
 
 #include "Base/generic_parsetree.h"
 #include "Analysis/analyzer.h"
+#include "GenericTypes.h"
+
 #include "TransEngine/Rewrite/Strategy-inl.h"
 
 namespace TransEngine {
 namespace Compiler {
 
 // Program is consist of sequence of strategies.
-template<typename T>
-struct Program {
-  Rewrite::StrategySeq<T> strategies;
-
-  Base::GenericParseTree<T>
-  operator()(Base::GenericParseTree<T>& tree,
-             Analyzer::AnalyzeData<T>& metaInfo);
+class Program {
+public:
+  Base::GptGeneric
+  operator()(Base::GptGeneric& tree,
+             Analyzer::AnalyzeDataGeneric& metaInfo);
 
   // program run in this case, without metainfo,
   // has no syntax and semantcis knowledge about
   // target parsetree.
-  Base::GenericParseTree<T>
-  operator()(Base::GenericParseTree<T>& tree);
+  Base::GptGeneric operator()(Base::GptGeneric& tree);
+
+private:
+  std::string targetLang;
+  Rewrite::StrategySeqGeneric strategies_;
 };
 
 // Compile rule configuration into
 // program that do transformation onto
 // ParseTree of target languages.
-template<typename T>
 struct Compiler {
 
-  Program<T> compile(std::istream& input);
+  Program compile(std::istream& input);
 
 };
 

@@ -3,6 +3,7 @@
 
 
 #include "ChameleonsParserListener.h"
+#include "ChameleonsParserVisitor.h"
 
 #include "ChameleonsParser.h"
 
@@ -172,6 +173,14 @@ void ChameleonsParser::ProgContext::exitRule(tree::ParseTreeListener *listener) 
     parserListener->exitProg(this);
 }
 
+
+std::any ChameleonsParser::ProgContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitProg(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 ChameleonsParser::ProgContext* ChameleonsParser::prog() {
   ProgContext *_localctx = _tracker.createInstance<ProgContext>(_ctx, getState());
   enterRule(_localctx, 0, ChameleonsParser::RuleProg);
@@ -252,6 +261,14 @@ void ChameleonsParser::TargetSectionContext::exitRule(tree::ParseTreeListener *l
     parserListener->exitTargetSection(this);
 }
 
+
+std::any ChameleonsParser::TargetSectionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitTargetSection(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 ChameleonsParser::TargetSectionContext* ChameleonsParser::targetSection() {
   TargetSectionContext *_localctx = _tracker.createInstance<TargetSectionContext>(_ctx, getState());
   enterRule(_localctx, 2, ChameleonsParser::RuleTargetSection);
@@ -311,6 +328,14 @@ void ChameleonsParser::RuleSectionContext::exitRule(tree::ParseTreeListener *lis
     parserListener->exitRuleSection(this);
 }
 
+
+std::any ChameleonsParser::RuleSectionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitRuleSection(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 ChameleonsParser::RuleSectionContext* ChameleonsParser::ruleSection() {
   RuleSectionContext *_localctx = _tracker.createInstance<RuleSectionContext>(_ctx, getState());
   enterRule(_localctx, 4, ChameleonsParser::RuleRuleSection);
@@ -364,6 +389,14 @@ void ChameleonsParser::StrategySectionContext::exitRule(tree::ParseTreeListener 
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitStrategySection(this);
+}
+
+
+std::any ChameleonsParser::StrategySectionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitStrategySection(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 ChameleonsParser::StrategySectionContext* ChameleonsParser::strategySection() {
@@ -421,6 +454,14 @@ void ChameleonsParser::RewriteRulesContext::exitRule(tree::ParseTreeListener *li
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitRewriteRules(this);
+}
+
+
+std::any ChameleonsParser::RewriteRulesContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitRewriteRules(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 ChameleonsParser::RewriteRulesContext* ChameleonsParser::rewriteRules() {
@@ -535,6 +576,14 @@ void ChameleonsParser::RewriteRuleContext::exitRule(tree::ParseTreeListener *lis
     parserListener->exitRewriteRule(this);
 }
 
+
+std::any ChameleonsParser::RewriteRuleContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitRewriteRule(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 ChameleonsParser::RewriteRuleContext* ChameleonsParser::rewriteRule() {
   RewriteRuleContext *_localctx = _tracker.createInstance<RewriteRuleContext>(_ctx, getState());
   enterRule(_localctx, 10, ChameleonsParser::RuleRewriteRule);
@@ -641,6 +690,14 @@ void ChameleonsParser::SourcePatternContext::exitRule(tree::ParseTreeListener *l
     parserListener->exitSourcePattern(this);
 }
 
+
+std::any ChameleonsParser::SourcePatternContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitSourcePattern(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 ChameleonsParser::SourcePatternContext* ChameleonsParser::sourcePattern() {
   SourcePatternContext *_localctx = _tracker.createInstance<SourcePatternContext>(_ctx, getState());
   enterRule(_localctx, 12, ChameleonsParser::RuleSourcePattern);
@@ -692,6 +749,14 @@ void ChameleonsParser::TargetPatternContext::exitRule(tree::ParseTreeListener *l
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitTargetPattern(this);
+}
+
+
+std::any ChameleonsParser::TargetPatternContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitTargetPattern(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 ChameleonsParser::TargetPatternContext* ChameleonsParser::targetPattern() {
@@ -753,6 +818,14 @@ void ChameleonsParser::CondExprsContext::exitRule(tree::ParseTreeListener *liste
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitCondExprs(this);
+}
+
+
+std::any ChameleonsParser::CondExprsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitCondExprs(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 ChameleonsParser::CondExprsContext* ChameleonsParser::condExprs() {
@@ -839,6 +912,14 @@ void ChameleonsParser::CondExprContext::exitRule(tree::ParseTreeListener *listen
   auto parserListener = dynamic_cast<ChameleonsParserListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitCondExpr(this);
+}
+
+
+std::any ChameleonsParser::CondExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ChameleonsParserVisitor*>(visitor))
+    return parserVisitor->visitCondExpr(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 ChameleonsParser::CondExprContext* ChameleonsParser::condExpr() {
