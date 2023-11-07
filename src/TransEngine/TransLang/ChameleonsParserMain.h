@@ -23,7 +23,7 @@ public:
   Base::GptGeneric operator()(Base::GptGeneric& tree);
 
 private:
-  std::string targetLang;
+  Base::GptSupportLang lang;
   Rewrite::StrategySeqGeneric strategies_;
 };
 

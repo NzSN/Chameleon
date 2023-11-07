@@ -1,31 +1,45 @@
 #include <stdexcept>
+#include <optional>
 
 #include "ChameleonsParserMain.h"
 #include "ChameleonsLexer.h"
 #include "ChameleonsParser.h"
 #include "ChameleonsParserBaseListener.h"
 
-#include "Base/generic_parsetree_metas.h"
 #include "TransEngine/Rewrite/Environment.h"
 
 namespace TransEngine {
 namespace Compiler {
 
-template<typename T>
-Base::GenericParseTree<T>
-Program<T>::operator()(Base::GenericParseTree<T>& tree,
-                       Analyzer::AnalyzeData<T>& metaInfo) {}
+Base::GptGeneric
+Program::operator()(Base::GptGeneric& tree,
+                       Analyzer::AnalyzeDataGeneric& metaInfo) {
 
-template<typename T>
-Base::GenericParseTree<T>
-Program<T>::operator()(Base::GenericParseTree<T>& tree) {}
+}
+
+Base::GptGeneric
+Program::operator()(Base::GptGeneric& tree) {
+
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //                                 Compiler                                //
 /////////////////////////////////////////////////////////////////////////////
+std::optional<Base::GptSupportLang>
+toLangID(std::string);
 
 struct CompileListener: public ChameleonsParserBaseListener {
-  void enterProg(ChameleonsParser::ProgContext *ctx) {
+
+  enum StrategeMode {
+    // Without definition of Strategy. In this mode,
+    // the generated program just aplly all strategy
+    // to target parsetree in order.
+    DEFAULT,
+    // User defined strategy will cover the behaviror.
+    USER_DEFINED
+  };
+
+  void enterProg(ChameleonsParser::ProgContext* ctx) {
     // Sections that required to form
     // a minimal Chameleons Program.
     //
@@ -40,21 +54,38 @@ struct CompileListener: public ChameleonsParserBaseListener {
         "RULE Section is required\n");
     }
 
+    mode = ctx->strategySection() == nullptr ?
+      DEFAULT : USER_DEFINED;
+
     // Next to determine which target language
     // the program need to deal with.
-    targetLang =
-      ctx->targetSection()
-         ->IDENTIFIER()
-         ->getText();
+    auto langMaybe = toLangID(ctx->targetSection()
+                          ->IDENTIFIER()
+                          ->getText());
+    if (langMaybe.has_value()) {
+      targetLang = langMaybe.value();
+    } else {
+      throw std::runtime_error(
+        "Unsupported language");
+    }
+  }
 
+  void enterRewriteRules(ChameleonsParser::RewriteRulesContext* ctx) {
+    if (mode == USER_DEFINED) {}
+
+    /* Default Mode
+     *
+     * Break down all rules into strategies and
+     * instantiate a Program instance from these
+     * strategies. */
 
   }
 
-  std::string targetLang;
+  StrategeMode mode;
+  Base::GptSupportLang targetLang;
 };
 
-template<typename T>
-Program<T> Compiler<T>::compile(std::istream& stream) {
+Program Compiler::compile(std::istream& stream) {
   antlr4::ANTLRInputStream input(stream);
   ChameleonsLexer lexer(&input);
   antlr4::CommonTokenStream tokens(&lexer);

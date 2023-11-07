@@ -9,4 +9,7 @@ using GptGeneric =
   GenericParseTree<Antlr4Node>
   >;
 
+using GptSupportLang =
+  GenericParseTree<int>::SUPPORTED_LANGUAGE;
+
 } // Base
