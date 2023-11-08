@@ -1,6 +1,8 @@
 #ifndef CHAMELEONSPARSERMAIN_H
 #define CHAMELEONSPARSERMAIN_H
 
+#include <optional>
+
 #include "Base/generic_parsetree.h"
 #include "Analysis/analyzer.h"
 #include "GenericTypes.h"
@@ -13,17 +15,23 @@ namespace Compiler {
 // Program is consist of sequence of strategies.
 class Program {
 public:
-  Base::GptGeneric
+  Program(Base::GptSupportLang lang,
+          Rewrite::StrategySeqGeneric& stras):
+    lang_{lang}, strategies_{std::move(stras)} {}
+
+  std::optional<Base::GptGeneric>
   operator()(Base::GptGeneric& tree,
              Analyzer::AnalyzeDataGeneric& metaInfo);
 
   // program run in this case, without metainfo,
   // has no syntax and semantcis knowledge about
   // target parsetree.
-  Base::GptGeneric operator()(Base::GptGeneric& tree);
+  std::optional<Base::GptGeneric>
+  operator()(Base::GptGeneric& tree);
 
 private:
-  Base::GptSupportLang lang;
+  Base::GptSupportLang lang_;
+
   Rewrite::StrategySeqGeneric strategies_;
 };
 
@@ -32,7 +40,7 @@ private:
 // ParseTree of target languages.
 struct Compiler {
 
-  Program compile(std::istream& input);
+  std::shared_ptr<Program> compile(std::istream& input);
 
 };
 

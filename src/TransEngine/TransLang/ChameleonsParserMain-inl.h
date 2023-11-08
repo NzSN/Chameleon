@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <optional>
+#include <memory>
 
 #include "ChameleonsParserMain.h"
 #include "ChameleonsLexer.h"
@@ -11,22 +12,15 @@
 namespace TransEngine {
 namespace Compiler {
 
-Base::GptGeneric
-Program::operator()(Base::GptGeneric& tree,
-                       Analyzer::AnalyzeDataGeneric& metaInfo) {
-
-}
-
-Base::GptGeneric
-Program::operator()(Base::GptGeneric& tree) {
-
-}
-
 /////////////////////////////////////////////////////////////////////////////
 //                                 Compiler                                //
 /////////////////////////////////////////////////////////////////////////////
 std::optional<Base::GptSupportLang>
 toLangID(std::string);
+
+std::optional<std::shared_ptr<Program>>
+programFromRules(ChameleonsParser::RewriteRulesContext *rCtx,
+                 Base::GptSupportLang lang);
 
 struct CompileListener: public ChameleonsParserBaseListener {
 
@@ -71,35 +65,29 @@ struct CompileListener: public ChameleonsParserBaseListener {
   }
 
   void enterRewriteRules(ChameleonsParser::RewriteRulesContext* ctx) {
-    if (mode == USER_DEFINED) {}
+    if (mode == USER_DEFINED) {
+      /* FIXME: Need to implement */
+    }
 
     /* Default Mode
      *
      * Break down all rules into strategies and
      * instantiate a Program instance from these
      * strategies. */
-
+    auto progMaybe = programFromRules(
+      ctx, targetLang);
+    if (!progMaybe.has_value()) {
+      program = nullptr;
+    } else {
+      program = progMaybe.value();
+    }
   }
 
+
+  std::shared_ptr<Program> program;
   StrategeMode mode;
   Base::GptSupportLang targetLang;
 };
-
-Program Compiler::compile(std::istream& stream) {
-  antlr4::ANTLRInputStream input(stream);
-  ChameleonsLexer lexer(&input);
-  antlr4::CommonTokenStream tokens(&lexer);
-  ChameleonsParser parser(&tokens);
-
-  antlr4::tree::ParseTree *tree = parser.prog();
-
-  // Use listener or visitor to traverse Chameleons
-  // ParseTree then translate into Program.
-
-  CompileListener listener;
-  antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
-}
-
 
 } // Compiler
 } // TransEngine

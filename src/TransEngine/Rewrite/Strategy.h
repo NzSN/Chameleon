@@ -24,9 +24,18 @@ using StrategySeq = std::vector<std::unique_ptr<Strategy<T>>>;
 
 template<Base::GPTMeta T>
 struct Strategy {
+  Strategy() = default;
+
+  explicit Strategy(Rule<T> r): bindedRule{r} {}
+
   ~Strategy() {}
   virtual Rule<T>& operator()(
     Rule<T>& rule, Environment<T>&) = 0;
+
+  // If a strategy is binded with a Rule then
+  // the binding rule will be used as parameter
+  // while operator() is called.
+  Rule<T> bindedRule;
 };
 
 // Break down a transform rule into Strategies

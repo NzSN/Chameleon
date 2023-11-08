@@ -30,9 +30,10 @@ using AnalyzeDataGeneric =
 namespace TransEngine {
 namespace Rewrite {
 
-using StrategyGeneric =
+using StrategyAntlr4 =
   std::variant<
-  Strategy<Base::Antlr4Node>
+  MatchStra<Base::Antlr4Node>,
+  BuildStra<Base::Antlr4Node>
   >;
 using StrategySeqGeneric =
   std::variant<
@@ -45,6 +46,23 @@ using StrategySetGeneric =
 
 } // Rewrite
 } // TransEngine
+
+/////////////////////////////////////////////////////////////////////////////
+//                                   Rule                                  //
+/////////////////////////////////////////////////////////////////////////////
+#include "TransEngine/Rewrite/Rule.h"
+
+namespace TransEngine {
+namespace Rewrite {
+
+using RuleGeneric =
+  std::variant<
+  Rule<Base::Antlr4Node>
+  >;
+
+} // Rewrite
+} // TransEngine
+
 
 
 #endif /* GENERICTYPES_H */

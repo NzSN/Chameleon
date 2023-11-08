@@ -1,7 +1,7 @@
 lexer grammar ChameleonsLexer;
 
 TARGET_TAG: 'TARGET:';
-RULE_TAG: 'Rules:';
+RULE_TAG: 'RULES:';
 STRATEGY_TAG: 'STRATEGIES';
 WHERE: 'where';
 LOGICOP: ('AND' | 'OR' | 'NOT');

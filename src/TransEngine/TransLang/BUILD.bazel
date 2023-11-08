@@ -33,10 +33,11 @@ cc_test(
             "//src:utility_src",
             "//src/TransEngine:pattern_matching",
             "//src/Parser:parser_source",
-            "//src/Parser:external_parser_src"
+            "//src/Parser:external_parser_src",
             ],
     copts = [
           "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           "-Isrc",
           "-std=c++2a"],
     linkopts = ["-lglog", "-lfmt"],

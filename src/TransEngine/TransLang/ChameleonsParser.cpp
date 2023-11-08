@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
 
 
 #include "ChameleonsParserListener.h"
@@ -57,7 +57,7 @@ void chameleonsparserParserInitialize() {
       "rewriteRule", "sourcePattern", "targetPattern", "condExprs", "condExpr"
     },
     std::vector<std::string>{
-      "", "'TARGET:'", "'Rules:'", "'STRATEGIES'", "'where'", "", "", "", 
+      "", "'TARGET:'", "'RULES:'", "'STRATEGIES'", "'where'", "", "", "", 
       "", "':'", "'{|'", "", "'=>'", "", "", "'|}'"
     },
     std::vector<std::string>{

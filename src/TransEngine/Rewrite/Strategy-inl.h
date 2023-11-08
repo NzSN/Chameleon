@@ -25,6 +25,9 @@ namespace Rewrite {
 // otherwise left the Environment UNCHANGED.
 template<Base::GPTMeta T>
 struct MatchStra: public Strategy<T> {
+  MatchStra() = default;
+  MatchStra(Rule<T> r): Strategy<T>{r} {}
+
   ~MatchStra() {}
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
     if (env.targetTerm() == nullptr) {
@@ -39,6 +42,10 @@ struct MatchStra: public Strategy<T> {
     // PatternMatching TargetTerm within Environment with
     // left side pattern of Rule, all TermVars will be binded
     // to correspond terms during PatternMatching.
+
+    std::cout << const_cast<T&>(rule.leftSide->getMeta()).getText()
+              << std::endl;
+
     auto maybeMatch = Algorithms::patternMatchingTermCapture<T>(
       *rule.leftSide->withoutHeader(),
       *env.targetTerm(),
@@ -64,6 +71,9 @@ struct MatchStra: public Strategy<T> {
 // Build right side pattern on Environment<T>::buildTerm_
 template<Base::GPTMeta T>
 struct BuildStra: public Strategy<T> {
+  BuildStra() = default;
+  BuildStra(Rule<T> r): Strategy<T>{r} {}
+
   ~BuildStra() {}
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
 
@@ -94,9 +104,10 @@ StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
   //   match(r); build(r);
   StrategySeq<T> seq;
   seq.emplace_back(
-    std::make_unique<MatchStra<T>>(MatchStra<T>{}));
+    std::make_unique<MatchStra<T>>(rule));
   seq.emplace_back(
-    std::make_unique<BuildStra<T>>(BuildStra<T>{}));
+    std::make_unique<BuildStra<T>>(rule));
+
   return seq;
 }
 

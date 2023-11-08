@@ -49,12 +49,12 @@ struct Parser {
   template<Concepts::NAryTree::NAryTree T,
            Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
            typename = std::enable_if_t<Storage == Utility::DYNAMIC>,
-           int = 1> static std::unique_ptr<T>
+           int = 1>
+  static std::unique_ptr<T>
   parse(std::istream* input) {
     adapters_.emplace_back(lang, P::parse(input));
     return T::template mapping<A, Utility::DYNAMIC>(adapters_.back());
   }
-
 
 private:
   static std::vector<A> adapters_;
