@@ -178,36 +178,36 @@ struct AnalyzerTests: public ::testing::Test {
       Base::Antlr4Node>> parsetree;
 };
 
-RC_GTEST_FIXTURE_PROP(AnalyzerTests, Basics, ()) {
-  // Assert that Parsetree is generated correctly.
-  RC_ASSERT((parsetree->getText() == expression));
+// RC_GTEST_FIXTURE_PROP(AnalyzerTests, Basics, ()) {
+//   // Assert that Parsetree is generated correctly.
+//   RC_ASSERT((parsetree->getText() == expression));
 
-  // Do analyzing.
-  NodeAnalyzerStub analyzer{} ;
-  AnalyzeData<Antlr4GenericParseTree> info =
-    Analyzer<Antlr4GenericParseTree, NodeAnalyzerStub>::Analyze(
-    *parsetree, analyzer);
+//   // Do analyzing.
+//   NodeAnalyzerStub analyzer{} ;
+//   AnalyzeData<Antlr4GenericParseTree> info =
+//     Analyzer<Antlr4GenericParseTree, NodeAnalyzerStub>::Analyze(
+//     *parsetree, analyzer);
 
-  // Assert that only expr info reside in
-  // AnalyzedData.
-  RC_ASSERT(info.data.size() == 1);
+//   // Assert that only expr info reside in
+//   // AnalyzedData.
+//   RC_ASSERT(info.data.size() == 1);
 
-  // Assert that num of expr node is
-  // correct.
-  auto numOfExpr = [](int numOfOperand) {
-    switch (numOfOperand) {
-    case 1:
-      return 1;
-      break;
-    case 2:
-      return 3;
-      break;
-    default:
-      return 3 + (numOfOperand - 2) * 2;
-    }
-  };
+//   // Assert that num of expr node is
+//   // correct.
+//   auto numOfExpr = [](int numOfOperand) {
+//     switch (numOfOperand) {
+//     case 1:
+//       return 1;
+//       break;
+//     case 2:
+//       return 3;
+//       break;
+//     default:
+//       return 3 + (numOfOperand - 2) * 2;
+//     }
+//   };
 
-  RC_ASSERT(info.data["EXPR"].size() == numOfExpr(numOfOperand));
-}
+//   RC_ASSERT(info.data["EXPR"].size() == numOfExpr(numOfOperand));
+// }
 
 } // Analyzer

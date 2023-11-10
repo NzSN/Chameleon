@@ -41,8 +41,10 @@ cloneExprContext(TestLangParser::ExprContext* node,
   return copy;
 }
 
-Antlr4Node cloneTestLangNode(const Antlr4Node& node,
-                             TransformInfo<Antlr4Node>& info) {
+std::unique_ptr<Antlr4Node>
+cloneTestLangNode(const Antlr4Node& node,
+                  TransformInfo<Antlr4Node>& info) {
+
   Antlr4Node& node_nonconst =
     const_cast<Antlr4Node&>(node);
 
@@ -55,14 +57,16 @@ Antlr4Node cloneTestLangNode(const Antlr4Node& node,
         dynamic_cast<TestLangParser::ProgContext*>(node_nonconst.tree()),
         info);
 
-    return Antlr4Node(GenericParseTree<Antlr4Node>::TESTLANG, copy);
+    return std::make_unique<Antlr4Node>(
+      Antlr4Node(GenericParseTree<Antlr4Node>::TESTLANG, copy));
 
   } else if (tinfo == typeid(TestLangParser::ExprContext)) {
     TestLangParser::ExprContext* copy =
       cloneExprContext(
         dynamic_cast<TestLangParser::ExprContext*>(node_nonconst.tree()),
         info);
-    return Antlr4Node(GenericParseTree<Antlr4Node>::TESTLANG, copy);
+    return std::make_unique<Antlr4Node>(
+      Antlr4Node(GenericParseTree<Antlr4Node>::TESTLANG, copy));
 
   } else if (tinfo == typeid(antlr4::tree::TerminalNodeImpl)) {
     antlr4::tree::TerminalNodeImpl* copy =
@@ -74,9 +78,9 @@ Antlr4Node cloneTestLangNode(const Antlr4Node& node,
       dynamic_cast<antlr4::RuleContext*>(info.parent->tree()) :
       nullptr);
 
-    return Antlr4Node(
+    return std::make_unique<Antlr4Node>(Antlr4Node(
       GenericParseTree<Antlr4Node>::TESTLANG,
-      copy);
+      copy));
   }
 
   /* Unknown type */
@@ -84,18 +88,22 @@ Antlr4Node cloneTestLangNode(const Antlr4Node& node,
     "Unknow TestLang NodeType: " + std::string(tinfo.name()));
 }
 
-Antlr4Node cloneTestLang(const Antlr4Node& tree) {
-  return Concepts::NAryTree::transform<Antlr4Node>(
-    tree, cloneTestLangNode);
+Antlr4Node::Node cloneTestLang(
+  const Antlr4Node* tree) {
+
+  return std::move(Concepts
+                   ::NAryTree
+                   ::transform_unique<Antlr4Node>(
+                     tree, cloneTestLangNode));
 }
 
 }
 
 // Deep copy
-Antlr4Node Antlr4Node::clone() const {
+Antlr4Node::Node Antlr4Node::clone() const {
   switch (lang_) {
   case GenericParseTree<Antlr4Node>::TESTLANG:
-    return cloneTestLang(*this);
+    return cloneTestLang(this);
   default:
     throw std::runtime_error("Failed to clone Antlr4Node");
   }
@@ -111,24 +119,42 @@ Antlr4Node::Antlr4Node(int lang, antlr4::tree::ParseTree* tree):
 
   // Construct subtrees
   for (auto c: tree->children) {
-    children_.emplace_back(lang, c);
+    children_.push_back(
+      std::make_unique<Antlr4Node>(lang, c));
   }
 
   for (auto& c: children_) {
-    c.parent = this;
+    c->parent = this;
   }
 }
 
 // Shallow copy
 Antlr4Node::Antlr4Node(const Antlr4Node& other):
-  lang_{other.lang_}, tree_{other.tree_},
-  children_{other.children_} {}
+  lang_{other.lang_}, tree_{other.tree_} {
+
+  for (auto c: other.tree_->children) {
+    children_.push_back(
+      std::make_unique<Antlr4Node>(lang_, c));
+  }
+
+  for (auto& c: children_) {
+    c->parent = this;
+  }
+}
 
 // Shallow copy
 Antlr4Node& Antlr4Node::operator=(const Antlr4Node& other) {
   lang_ = other.lang_;
   tree_ = other.tree_;
-  children_ = other.children_;
+
+  if (children_.size() > 0) {
+    children_.clear();
+  }
+
+  for (auto c: other.tree_->children) {
+    children_.push_back(
+      std::make_unique<Antlr4Node>(lang_, c));
+  }
 
   return *this;
 }
@@ -195,21 +221,21 @@ bool Antlr4Node::setNode(const Antlr4Node& other) {
   return true;
 }
 
-void Antlr4Node::appendChild(Antlr4Node& node) {
-  this->tree()->children.push_back(node.tree());
-  children_.push_back(node);
+void Antlr4Node::appendChild(Node& node) {
+  this->tree()->children.push_back(node->tree());
+  children_.push_back(std::move(node));
 }
 
-void Antlr4Node::appendChild(Antlr4Node&& node) {
-  this->tree()->children.push_back(node.tree());
-  children_.push_back(node);
+void Antlr4Node::appendChild(Node&& node) {
+  this->tree()->children.push_back(node->tree());
+  children_.push_back(std::move(node));
 }
 
 
 Antlr4Node* Antlr4Node::withoutHeader() {
   if (typeid(*tree_) ==
       typeid(TestLangParser::ProgContext)) {
-    return &children_[0];
+    return children_[0].get();
   } else {
     return this;
   }

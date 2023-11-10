@@ -17,6 +17,7 @@ std::optional<Base::GptGeneric>
 Program::operator()(Base::GptGeneric& tree,
                     Analyzer::AnalyzeDataGeneric& metaInfo) {
   /* FIXME: Need to implement */
+  return std::nullopt;
 }
 
 std::optional<Base::GptGeneric>

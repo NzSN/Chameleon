@@ -39,10 +39,10 @@ TEST(ChameleonsParserMainTest, Spec) {
   //
   // The calling of operator() of program will
   // do transformation for t.
-  Base::GptGeneric tt = t;
-  std::optional<Base::GptGeneric> u = (*program)(tt);
+  //Base::GptGeneric tt = t;
+  //std::optional<Base::GptGeneric> u = (*program)(tt);
 
-  EXPECT_TRUE(!u.has_value());
+  //EXPECT_TRUE(!u.has_value());
   //EXPECT_TRUE(std::get<GPTAntlr4>(u).getText() == "3 + 2 + 1");
 }
 

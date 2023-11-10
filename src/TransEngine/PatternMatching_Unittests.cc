@@ -85,21 +85,21 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithTermVar, ()) {
     ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
 
 
-  std::vector<TransEngine::Pattern<Base::Antlr4Node>>&
+  std::vector<std::unique_ptr<TransEngine::Pattern<Base::Antlr4Node>>>&
     children = t.getChildren();
 
   // Make sure all term var is recognized.
   RC_ASSERT(
     children[0]
-    .getChildren()[0]
-    .getChildren()[0]
-    .isTermVar());
+    ->getChildren()[0]
+    ->getChildren()[0]
+    ->isTermVar());
 
   RC_ASSERT(
     children[0]
-    .getChildren()[0]
-    .getChildren()[2]
-    .isTermVar());
+    ->getChildren()[0]
+    ->getChildren()[2]
+    ->isTermVar());
 
   RC_ASSERT(patternMatching<Base::Antlr4Node>(
               t, t2).has_value());

@@ -67,7 +67,7 @@ patternMatchingTermCapture(
 
   // Maching on another SubTree of Subject Tree.
   for (auto& child: Concepts::NAryTree::getChildren(subjectTree)) {
-    auto matchRet = patternMatchingTermCapture<T>(pattern, child, env);
+    auto matchRet = patternMatchingTermCapture<T>(pattern, *child, env);
     if (matchRet.has_value()) {
       return matchRet.value();
     }

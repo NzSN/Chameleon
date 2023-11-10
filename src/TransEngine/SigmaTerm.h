@@ -2,6 +2,8 @@
 #ifndef SIGMATERM_H
 #define SIGMATERM_H
 
+#include <memory>
+#include <iostream>
 #include <string>
 
 #include "Rewrite/Term.h"
@@ -16,14 +18,16 @@ namespace TransEngine {
 template<Base::GPTMeta T>
 struct Pattern: public TreeLayer<Pattern<T>> {
   using TermID = std::string;
-  using Children = std::vector<Pattern>;
+  using Children = std::vector<std::unique_ptr<Pattern>>;
 
   Pattern(const Pattern& other):
-    meta_{other.meta_}, children_{other.children_} {}
+    meta_{other.meta_} {}
   Pattern(const T& meta):
     // Prevent copy children from GenericParseTree,
     // Pattern will build it's own children.
     meta_{meta} {}
+
+  ~Pattern() { std::cout << "Pattern Destroyed" << std::endl; }
 
   bool isTermVar() const {
     return Utility::isTermVar(
@@ -56,21 +60,21 @@ struct Pattern: public TreeLayer<Pattern<T>> {
       /* Ignored case */
     } else {
       const_cast<T&>(meta_).setNode(
-        term.tree.get().getMeta().clone());
+        *(term.tree.get().getMeta().clone()));
     }
 
     return true;
   }
 
-  std::vector<Pattern>& getChildren() {
+  Children& getChildren() {
     return children_;
   };
 
-  std::optional<Pattern> getChild(int i) {
+  std::optional<Pattern*> getChild(int i) {
     if (children_.size() < i) {
       return std::nullopt;
     } else {
-      return children_[i];
+      return children_[i].get();
     }
   }
 
@@ -80,8 +84,9 @@ struct Pattern: public TreeLayer<Pattern<T>> {
 
   Pattern* parent;
 
-  Pattern& addChild(Pattern t) {
-    return children_.emplace_back(t);
+  Pattern& addChild(std::unique_ptr<Pattern>&& child) {
+    children_.push_back(std::move(child));
+    return *children_.back();
   }
 
   Pattern* withoutHeader() {

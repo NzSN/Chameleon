@@ -18,16 +18,20 @@ struct TreeLayer {
   static T mapping(const U& o) {
     T tree = T(o);
     for (auto& c: Concepts::NAryTree::getChildren(o)) {
-      tree.addChild(mapping(c));
+      tree.addChild(mapping<U, Utility::DYNAMIC>(
+                      Concepts::NAryTree::derefMaybe(c)));
     }
 
     for (auto& c: Concepts::NAryTree::getChildren(tree)) {
-      c.parent = &tree;
+      Concepts::NAryTree::derefMaybe(c).parent = &tree;
     }
 
     return tree;
   }
 
+
+  // Cases that every nodes of generated Treelayer
+  // is dynamics, with type std::unique_ptr<T>.
   template<Concepts::NAryTree::NAryTree U,
            Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
            typename = std::enable_if_t<Storage == Utility::DYNAMIC>,
@@ -36,11 +40,12 @@ struct TreeLayer {
   mapping(const U& o) {
     std::unique_ptr<T> tree = std::make_unique<T>(o);
     for (auto& c: Concepts::NAryTree::getChildren(o)) {
-      tree->addChild(mapping(c));
+      tree->addChild(mapping<U, Utility::DYNAMIC>(
+                       Concepts::NAryTree::derefMaybe(c)));
     }
 
     for (auto& c: Concepts::NAryTree::getChildren(*tree)) {
-      c.parent = tree.get();
+      c->parent = tree.get();
     }
 
     return tree;

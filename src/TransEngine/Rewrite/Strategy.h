@@ -23,14 +23,18 @@ template<Base::GPTMeta T>
 using StrategySeq = std::vector<std::unique_ptr<Strategy<T>>>;
 
 template<Base::GPTMeta T>
-struct Strategy {
-  Strategy() = default;
-
-  explicit Strategy(Rule<T> r): bindedRule{r} {}
-
-  ~Strategy() {}
+struct StrategyBase {
+  virtual ~StrategyBase() {}
   virtual Rule<T>& operator()(
     Rule<T>& rule, Environment<T>&) = 0;
+};
+
+template<Base::GPTMeta T>
+struct Strategy: public StrategyBase<T> {
+
+  ~Strategy() {}
+  Strategy(Rule<T> rule):
+    bindedRule{rule} {}
 
   // If a strategy is binded with a Rule then
   // the binding rule will be used as parameter

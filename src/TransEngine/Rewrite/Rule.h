@@ -25,6 +25,8 @@ struct Rule {
     rightSide(&rightSideArg),
     lang(langArg) {}
 
+  ~Rule() { std::cout << "Rule Destroyed" << std::endl; }
+
   Rule(std::string labelArg,
        std::shared_ptr<Pattern<T>> leftSideArg,
        std::shared_ptr<Pattern<T>> rightSideArg,

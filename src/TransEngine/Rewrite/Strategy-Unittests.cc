@@ -152,6 +152,7 @@ TEST_F(StrategySuccess, Build) {
   MatchStra<Node>{}(*rule, env);
   BuildStra<Node>{}(*rule, env);
 
+  ASSERT_TRUE(target->getText() == "2+1+1");
 }
 
 TEST_F(StrategySuccess, RuleBreakDown) {

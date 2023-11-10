@@ -30,12 +30,29 @@ bool GenericParseTree<T>::operator==(
           return true;
         }
 
-        auto zipped = Utility::zip_vector<GenericParseTree>(
-          l.childs_, r.childs_);
+        std::vector<GenericParseTree*> l_children(l.childs_.size());
+        std::vector<GenericParseTree*> r_children(r.childs_.size());
+
+        std::transform(l.childs_.begin(),
+                       l.childs_.end(),
+                       l_children.begin(),
+                       [](const std::unique_ptr<GenericParseTree>& c) {
+                         return c.get();
+                       });
+
+        std::transform(r.childs_.begin(),
+                       r.childs_.end(),
+                       r_children.begin(),
+                       [](const std::unique_ptr<GenericParseTree>& c) {
+                         return c.get();
+                       });
+
+        auto zipped = Utility::zip_vector<
+          GenericParseTree*>(l_children, r_children);
         if (zipped.size() == 0) { return false; }
 
         for (auto& [thisChilds, otherChilds]: zipped) {
-          if (!equality_check(thisChilds, otherChilds)) {
+          if (!equality_check(*thisChilds, *otherChilds)) {
             return false;
           }
         }
@@ -51,7 +68,7 @@ void GenericParseTree<T>::traverse(
 
   if (!proc(*this)) return;
   for (auto& c: childs_) {
-    c.traverse(proc);
+    c->traverse(proc);
   }
 }
 

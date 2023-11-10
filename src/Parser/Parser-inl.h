@@ -4,6 +4,7 @@
 #include "Parser.h"
 #include <variant>
 #include <sstream>
+#include <memory>
 
 #include "ExternalParser.h"
 #include "Base/generic_parsetree_concrete.h"
@@ -33,7 +34,7 @@ using ParserT = std::variant<
   ParserSelect<Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>::parser
   >;
 
-std::optional<Base::GenericParseTreeT>
+std::optional<Base::GenericParseTreeT_DYNAMIC>
 ParserRuntimeSelect(unsigned lang, std::istringstream& sentences);
 
 } // Parser

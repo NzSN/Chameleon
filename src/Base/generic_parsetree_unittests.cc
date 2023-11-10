@@ -26,22 +26,28 @@ namespace Base {
 struct GenericParseTreeTest: public ::testing::Test {
   // Generate arbitary parsetree contains
   // only N nodes (include the root node).
-  std::optional<GenericParseTree<int>> genTreeWithN(const int n) {
-    if (n == 0) return std::nullopt;
-
+GenericParseTree<int> genTreeWithN(const int n) {
     GenericParseTree<int> root{1};
 
     std::function<void(GenericParseTree<int>*,int)>
       genSubTreeWithN = [&](GenericParseTree<int>* root, int nsubs) {
         while (nsubs > 0) {
           // Create directly child
-          GenericParseTree<int>& child = root->addChild(1);
+          GenericParseTree<int>& child = root->addChild(
+            std::make_unique<GenericParseTree<int>>(1));
           nsubs -= 1;
-          if (nsubs == 0) { return; }
+          if (nsubs == 0) {
+            return;
+          }
 
           // Create a subtree with M nodes,
           // M is in range [0, remain]
           int m = *rc::gen::inRange(0, nsubs);
+
+          if (m > 0) {
+            std::cout << "Sub" << std::endl;
+          }
+
           genSubTreeWithN(&child, m);
           nsubs -= m;
         }
@@ -54,16 +60,8 @@ struct GenericParseTreeTest: public ::testing::Test {
   int traverseN(GenericParseTree<int>& tree) {
     const auto& counting =
       [&](GenericParseTree<int>& tree) -> bool {
-      if (reached.size() == 0) {
         ++node_counter;
-      }
-      for (auto addr: reached) {
-        if (addr != &tree) {
-          ++node_counter;
-          reached.push_back(&tree);
-        }
-      }
-      return true;
+        return true;
     };
     tree.traverse(counting);
 
@@ -90,18 +88,26 @@ struct GenericParseTreeTest: public ::testing::Test {
   }
 
   int node_counter = 0;
-  std::vector<void*> reached;
+  std::vector<void*> nodes;
 };
 
+RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, Basic, ()) {
+  GenericParseTree<int> root{1};
+  auto& child = root.addChild(
+    std::make_unique<GenericParseTree<int>>(2));
+  child.addChild(std::make_unique<GenericParseTree<int>>(3));
+
+  traverseN(root);
+  RC_ASSERT(node_counter == 3);
+}
 
 RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, Traverse, ()) {
   const int N = *rc::gen::inRange(0, 100);
-  std::optional<GenericParseTree<int>> root = genTreeWithN(N);
+  if (N == 0) return;
 
-  if (root.has_value()) {
-    traverseN(root.value());
-    RC_ASSERT(node_counter == N);
-  }
+  GenericParseTree<int> root = genTreeWithN(N);
+  traverseN(root);
+  RC_ASSERT(node_counter == N);
 }
 
 RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
@@ -119,7 +125,7 @@ RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
   // Select a place to add
   // a node randomly.
   GenericParseTree<int>& node = getNodeRandomly(root.value());
-  node.addChild(1);
+  node.addChild(std::make_unique<GenericParseTree<int>>(1));
   RC_ASSERT(root.value() == root.value());
 }
 
@@ -195,15 +201,15 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, Clone, ()) {
     GenericParseTree<Antlr4Node>::TESTLANG,
     env->tree };
 
-  Antlr4Node copy = nodes.clone();
+  Antlr4Node::Node copy = nodes.clone();
 
   // Check equality of two nodes
   RC_ASSERT(nodes.tree()->getText() ==
-            copy.tree() ->getText());
+            copy->tree() ->getText());
 
   // Make sure their two distinct trees.
   bool isEqual = Concepts::NAryTree::equal<Antlr4Node, Antlr4Node>(
-    nodes, copy,
+    nodes, *copy,
     [](const Antlr4Node& lhs, const Antlr4Node& rhs) -> bool {
       return const_cast<Antlr4Node&>(lhs).tree() ==
         const_cast<Antlr4Node&>(rhs).tree();
@@ -238,10 +244,10 @@ RC_GTEST_PROP(GenericParseTreeTest_NAry, Clone, ()) {
       Parser::ParserSelect<GenericParseTree<Antlr4Node>::TESTLANG>
       ::parser::parse<GenericParseTree<Antlr4Node>>(&codes);
 
-  Antlr4Node copy_meta = t.getMeta().clone();
+  Antlr4Node::Node copy_meta = t.getMeta().clone();
   GenericParseTree<Antlr4Node> copy =
     GenericParseTree<Antlr4Node>::mapping(
-      copy_meta);
+      *copy_meta);
   RC_ASSERT(copy.getText() == t.getText());
 }
 
@@ -280,14 +286,13 @@ RC_GTEST_PROP(GenericParseTreeTest_NAry, SetNode, ()) {
   RC_ASSERT(v2.size() == 1);
   RC_ASSERT(v3.size() == 1);
 
-
-    // Replace node 'a' with node '1'
-    // by setNode.
-  v[0]->setNode(
-    const_cast<Antlr4Node&>(v2[0]->getMeta()).clone());
+  // Replace node 'a' with node '1'
+  // by setNode.
+  RC_ASSERT(v[0]->setNode(
+              const_cast<Antlr4Node&>(*(v2[0]->getMeta().clone()))));
   RC_ASSERT(t.getText() == "1+1+2");
-  v[0]->setNode(
-    const_cast<Antlr4Node&>(v3[0]->getMeta()).clone());
+  RC_ASSERT(v[0]->setNode(
+              const_cast<Antlr4Node&>(*(v3[0]->getMeta()).clone())));
   RC_ASSERT(t.getText() == "2+1+2");
 }
 

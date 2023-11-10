@@ -1,6 +1,7 @@
 #ifndef N_ARY_TREE_H
 #define N_ARY_TREE_H
 
+#include <memory>
 #include <cassert>
 #include <iostream>
 #include <ranges>
@@ -10,12 +11,16 @@
 #include <vector>
 #include <type_traits>
 
+#include "utility.h"
+
 namespace Concepts::NAryTree {
 
 template<typename T, typename V>
 concept Children_t =
   std::ranges::range<T> &&
   (std::same_as<std::ranges::range_value_t<T>, V> ||
+   std::same_as<std::ranges::range_value_t<T>,
+                std::unique_ptr<V>> ||
    std::same_as<std::ranges::range_value_t<T>, V*>);
 
 template<typename T>
@@ -39,8 +44,8 @@ concept Constructible =
   NAryTree<T> &&
   // Interface to append children.
   // Caution: This operation is required to setup parent pointer of child.
-  requires(T t) {
-    { t.appendChild(t) } -> std::same_as<void>;
+  requires(T t, std::unique_ptr<T> arg) {
+    { t.appendChild(arg) } -> std::same_as<void>;
   };
 
 
@@ -54,15 +59,43 @@ auto& getChildren(const T& t) {
   return const_cast<T&>(t).children;
 }
 
+// Raw pointer version
 template<typename T,
          typename = std::enable_if_t<std::is_pointer_v<T>>>
-auto& derferIfAvailable(T t) {
+auto& derefMaybe(T t) {
+  return *t;
+}
+
+// Deal with smart pointer
+template<typename T,
+         typename = std::enable_if_t<
+           !std::is_pointer_v<T> &&
+           (Utility::is_derefable<T>::value &&
+           Utility::is_arrow<T>::value)>,
+         int i = 0>
+auto& derefMaybe(T& t) {
   return *t;
 }
 
 template<typename T,
-         typename = std::enable_if_t<!std::is_pointer_v<T>>>
-T& derferIfAvailable(T& t) {
+         typename = std::enable_if_t<
+           !std::is_pointer_v<T> &&
+           (Utility::is_derefable<T>::value &&
+           Utility::is_arrow<T>::value)>,
+         int i = 0>
+auto& derefMaybe(const T& t) {
+  return *t;
+}
+
+
+// Value semantic
+template<typename T,
+         typename = std::enable_if_t<
+           !std::is_pointer_v<T> &&
+           !(Utility::is_derefable<T>::value ||
+             Utility::is_arrow<T>::value)
+           >>
+T& derefMaybe(T& t) {
   return t;
 }
 
@@ -72,10 +105,11 @@ std::vector<T*> search(const T& t, std::function<bool(T&)> p) {
   std::vector<T*> result;
 
   for (auto& c: getChildren(t)) {
-    if (p(c)) {
-      result.push_back(&c);
+    T& v = derefMaybe(c);
+    if (p(v)) {
+      result.push_back(&v);
     }
-    auto subResult = search(c, p);
+    auto subResult = search(v, p);
     for (auto c: subResult) {
       result.push_back(c);
     }
@@ -103,8 +137,8 @@ bool equal(const T& l, const R& r,
     rend = std::ranges::cend(children_r);
 
   while (lcurrent != lend && rcurrent != rend) {
-    const T& lchild = derferIfAvailable(*lcurrent);
-    const R& rchild = derferIfAvailable(*rcurrent);
+    const T& lchild = derefMaybe(*lcurrent);
+    const R& rchild = derefMaybe(*rcurrent);
 
     isEqual &= Concepts::NAryTree::equal(lchild, rchild, equal_fn);
 
@@ -224,6 +258,22 @@ template<typename T>
 struct TransformInfo {
   T* parent;
 };
+
+template<Constructible T>
+std::unique_ptr<T> transform_unique(
+  const T* t,
+  std::function<std::unique_ptr<T>(
+    const T&, TransformInfo<T>&)> f,
+  TransformInfo<T> info = { nullptr }) {
+
+  std::unique_ptr<T> copy = f(*t, info);
+
+  for (auto& c: getChildren(*t)) {
+    copy->appendChild(transform_unique(c.get(), f, { copy.get() }));
+  }
+
+  return copy;
+}
 
 template<Constructible T>
 requires std::is_copy_assignable_v<T>

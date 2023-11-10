@@ -42,10 +42,8 @@ struct MatchStra: public Strategy<T> {
     // PatternMatching TargetTerm within Environment with
     // left side pattern of Rule, all TermVars will be binded
     // to correspond terms during PatternMatching.
-
     std::cout << const_cast<T&>(rule.leftSide->getMeta()).getText()
               << std::endl;
-
     auto maybeMatch = Algorithms::patternMatchingTermCapture<T>(
       *rule.leftSide->withoutHeader(),
       *env.targetTerm(),
@@ -77,12 +75,14 @@ struct BuildStra: public Strategy<T> {
   ~BuildStra() {}
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
 
-    T metaCopy = rule.rightSide->getMeta().clone();
+    std::unique_ptr<T> metaCopy = rule.rightSide->getMeta().clone();
 
     // Try to replace all TermVars with terms have
     // binded.
-    Pattern<T> copy = Pattern<T>::mapping(metaCopy);
-    std::vector<Pattern<T>*> vars = copy.termVars();
+    std::unique_ptr<Pattern<T>>
+      copy = Pattern<T>
+               ::template mapping<T, Utility::DYNAMIC>(*metaCopy);
+    std::vector<Pattern<T>*> vars = copy->termVars();
     for (auto v: vars) {
       // Perform replacement onto Pattern
       Term<T> term = env.bindings()[v->termID()];
@@ -92,7 +92,8 @@ struct BuildStra: public Strategy<T> {
     // Replace the matched tree with the tree the
     // just builded.
     env.matchTerm()->setNode(
-      Base::GenericParseTree<T>::mapping(metaCopy));
+      *Base::GenericParseTree<T>
+      ::template mapping<T, Utility::DYNAMIC>(*metaCopy));
 
     return rule;
   }
@@ -105,8 +106,15 @@ StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
   StrategySeq<T> seq;
   seq.emplace_back(
     std::make_unique<MatchStra<T>>(rule));
+
+  std::cout << const_cast<T&>(rule.leftSide->getMeta()).getText()
+            << std::endl;
+
   seq.emplace_back(
     std::make_unique<BuildStra<T>>(rule));
+
+  std::cout << const_cast<T&>(rule.leftSide->getMeta()).getText()
+            << std::endl;
 
   return seq;
 }

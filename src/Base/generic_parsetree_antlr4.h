@@ -15,15 +15,18 @@ namespace Base {
 class Antlr4Node {
 public:
 
-  using Children = std::vector<Antlr4Node>;
+  using Node = std::unique_ptr<Antlr4Node>;
+  using Children = std::vector<Node>;
   Antlr4Node(int lang, antlr4::tree::ParseTree* tree);
 
   Antlr4Node(const Antlr4Node& other);
   Antlr4Node& operator=(const Antlr4Node& other);
 
+  ~Antlr4Node() { std::cout << "Antlr4Node Destryoed" << std::endl; }
+
   SrcRange sourceRange() const;
 
-  std::vector<Antlr4Node>& getChildren() {
+  Children& getChildren() {
     return children_;
   };
 
@@ -31,10 +34,10 @@ public:
 
   bool setNode(const Antlr4Node& other);
 
-  void appendChild(Antlr4Node& node);
-  void appendChild(Antlr4Node&& node);
+  void appendChild(Node& node);
+  void appendChild(Node&& node);
 
-  Antlr4Node clone() const;
+  Node clone() const;
 
   bool operator==(const Antlr4Node&) const;
   antlr4::tree::ParseTree* tree() { return tree_; };
@@ -44,6 +47,8 @@ public:
   }
 
   Antlr4Node* withoutHeader();
+
+  int lang() { return lang_; }
 
 private:
   int lang_;

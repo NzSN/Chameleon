@@ -141,7 +141,41 @@ struct HeapResourceHolder: public Utility::TypeErasureWrapper {
     Utility::TypeErasureWrapper{t} {}
 };
 
+} // Utility
+
+/////////////////////////////////////////////////////////////////////////////
+//                               Type Traits                               //
+/////////////////////////////////////////////////////////////////////////////
+namespace Utility {
+
+template<typename T>
+struct is_derefable {
+  template<typename U>
+  static constexpr std::true_type check(decltype(&U::operator*));
+
+  template<typename>
+  static constexpr std::false_type check(...);
+
+  typedef decltype(check<T>(0)) type;
+
+  static constexpr bool value = type::value;
+};
+
+template<typename T>
+struct is_arrow {
+  template<typename U>
+  static constexpr std::true_type check(decltype(&U::operator->));
+
+  template<typename>
+  static constexpr std::false_type check(...);
+
+  typedef decltype(check<T>(0)) type;
+
+  static constexpr bool value = type::value;
+};
+
 
 } // Utility
+
 
 #endif /* UTILITY_H */

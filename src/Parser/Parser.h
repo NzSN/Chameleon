@@ -43,7 +43,7 @@ struct Parser {
            typename = std::enable_if_t<Storage == Utility::AUTOMATIC>>
   static T parse(std::istream* input) {
     adapters_.emplace_back(lang, P::parse(input));
-    return T::mapping(adapters_.back());
+    return T::template mapping<A, Utility::AUTOMATIC>(adapters_.back());
   }
 
   template<Concepts::NAryTree::NAryTree T,
