@@ -32,6 +32,7 @@ struct StrategyBase {
 template<Base::GPTMeta T>
 struct Strategy: public StrategyBase<T> {
 
+  Strategy() {}
   ~Strategy() {}
   Strategy(Rule<T> rule):
     bindedRule{rule} {}
