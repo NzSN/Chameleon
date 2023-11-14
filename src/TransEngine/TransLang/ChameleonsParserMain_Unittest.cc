@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <sstream>
+#include <utility>
 
 #include "ChameleonsParserMain-inl.h"
 #include "Base/generic_parsetree_antlr4.h"
@@ -16,8 +17,8 @@ using GPTAntlr4 = Base::GenericParseTree<Meta>;
 TEST(ChameleonsParserMainTest, Spec) {
   Compiler compiler;
 
-  std::istringstream target_codes{"1 + 2 + 3"};
-  GPTAntlr4 t =
+  std::istringstream target_codes{"1+2+3"};
+  Base::GptGeneric t =
     Parser
     ::ParserSelect<GPTAntlr4::TESTLANG>
     ::parser
@@ -39,11 +40,10 @@ TEST(ChameleonsParserMainTest, Spec) {
   //
   // The calling of operator() of program will
   // do transformation for t.
-  //Base::GptGeneric tt = t;
-  //std::optional<Base::GptGeneric> u = (*program)(tt);
+  std::optional<Base::GptGeneric> u = (*program)(t);
 
-  //EXPECT_TRUE(!u.has_value());
-  //EXPECT_TRUE(std::get<GPTAntlr4>(u).getText() == "3 + 2 + 1");
+  EXPECT_TRUE(u.has_value());
+  EXPECT_TRUE(std::get<GPTAntlr4>(u.value()).getText() == "3+2+1");
 }
 
 } // Compiler

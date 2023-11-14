@@ -59,7 +59,13 @@ public:
   GenericParseTree(const T& meta):
     parent{nullptr}, metaRef{meta} {}
   GenericParseTree(const GenericParseTree& other):
-    metaRef(other.metaRef) {}
+    metaRef(other.metaRef) {
+
+    for (auto& c: other.childs_) {
+      this->addChild(
+        std::make_unique<GenericParseTree>(*c));
+    }
+  }
 
   GenericParseTree& addChild(
     std::unique_ptr<GenericParseTree>&& child) {

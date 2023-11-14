@@ -42,8 +42,6 @@ struct MatchStra: public Strategy<T> {
     // PatternMatching TargetTerm within Environment with
     // left side pattern of Rule, all TermVars will be binded
     // to correspond terms during PatternMatching.
-    std::cout << const_cast<T&>(rule.leftSide->getMeta()).getText()
-              << std::endl;
     auto maybeMatch = Algorithms::patternMatchingTermCapture<T>(
       *rule.leftSide->withoutHeader(),
       *env.targetTerm(),
@@ -101,26 +99,14 @@ struct BuildStra: public Strategy<T> {
 
 template<Base::GPTMeta T>
 StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
-  std::unique_ptr<MatchStra<T>>
-    s = std::make_unique<MatchStra<T>>(rule);
-
-  std::cout << const_cast<T&>(rule.leftSide->getMeta()).getText()
-            << std::endl;
-
   // A rule is breakdown into Strategy language:
   //   match(r); build(r);
   StrategySeq<T> seq;
   seq.emplace_back(
     std::make_unique<MatchStra<T>>(rule));
 
-  std::cout << const_cast<T&>(rule.leftSide->getMeta()).getText()
-            << std::endl;
-
   seq.emplace_back(
     std::make_unique<BuildStra<T>>(rule));
-
-  std::cout << const_cast<T&>(rule.leftSide->getMeta()).getText()
-            << std::endl;
 
   return seq;
 }

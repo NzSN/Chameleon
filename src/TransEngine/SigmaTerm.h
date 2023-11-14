@@ -27,7 +27,7 @@ struct Pattern: public TreeLayer<Pattern<T>> {
     // Pattern will build it's own children.
     meta_{meta} {}
 
-  ~Pattern() { std::cout << "Pattern Destroyed" << std::endl; }
+  ~Pattern() {}
 
   bool isTermVar() const {
     return Utility::isTermVar(

@@ -23,7 +23,7 @@ public:
 
   Antlr4Node& operator=(const Antlr4Node& other);
 
-  ~Antlr4Node() { std::cout << "Antlr4Node Destryoed" << std::endl; }
+  ~Antlr4Node() {}
 
   SrcRange sourceRange() const;
 
