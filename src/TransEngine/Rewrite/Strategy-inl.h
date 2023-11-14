@@ -101,6 +101,12 @@ struct BuildStra: public Strategy<T> {
 
 template<Base::GPTMeta T>
 StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
+  std::unique_ptr<MatchStra<T>>
+    s = std::make_unique<MatchStra<T>>(rule);
+
+  std::cout << const_cast<T&>(rule.leftSide->getMeta()).getText()
+            << std::endl;
+
   // A rule is breakdown into Strategy language:
   //   match(r); build(r);
   StrategySeq<T> seq;

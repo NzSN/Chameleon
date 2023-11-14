@@ -42,8 +42,9 @@ struct Parser {
            Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
            typename = std::enable_if_t<Storage == Utility::AUTOMATIC>>
   static T parse(std::istream* input) {
-    adapters_.emplace_back(lang, P::parse(input));
-    return T::template mapping<A, Utility::AUTOMATIC>(adapters_.back());
+    adapters_.emplace_back(
+      std::make_unique<A>(lang, P::parse(input)));
+    return T::template mapping<A, Utility::AUTOMATIC>(*adapters_.back());
   }
 
   template<Concepts::NAryTree::NAryTree T,
@@ -52,12 +53,13 @@ struct Parser {
            int = 1>
   static std::unique_ptr<T>
   parse(std::istream* input) {
-    adapters_.emplace_back(lang, P::parse(input));
-    return T::template mapping<A, Utility::DYNAMIC>(adapters_.back());
+    adapters_.emplace_back(
+      std::make_unique<A>(lang, P::parse(input)));
+    return T::template mapping<A, Utility::DYNAMIC>(*adapters_.back());
   }
 
 private:
-  static std::vector<A> adapters_;
+  static std::vector<std::unique_ptr<A>> adapters_;
 
   UNINSTANTIALIZABLE(Parser);
 };

@@ -16,7 +16,7 @@ template<typename ExtNode,
          ExtParser<ExtNode> P,
          NodeAdapter<ExtNode> A,
          int lang>
-std::vector<A> Parser<ExtNode, P, A, lang>::adapters_ {};
+std::vector<std::unique_ptr<A>> Parser<ExtNode, P, A, lang>::adapters_ {};
 
 // Static Parser Selecter
 template<int lang> struct ParserSelect;
