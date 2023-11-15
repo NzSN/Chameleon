@@ -46,5 +46,32 @@ TEST(ChameleonsParserMainTest, Spec) {
   EXPECT_TRUE(std::get<GPTAntlr4>(u.value()).getText() == "3+2+1");
 }
 
+TEST(ChameleonsParserMainTest, WhereClause_Condition) {
+  Compiler compiler;
+
+  std::istringstream target_codes{"1+2+3"};
+  Base::GptGeneric t =
+    Parser
+    ::ParserSelect<GPTAntlr4::TESTLANG>
+    ::parser
+    ::parse<GPTAntlr4>(&target_codes);
+
+  std::istringstream rule_config{
+    "TARGET: TestLang \n"
+    "RULES:\n"
+    "Commutative: {| a+b+c |} => {| c+b+a |} "
+    " where a = 1 && b = 2 && c = 3"
+  };
+
+  std::shared_ptr<Program> program =
+    compiler.compile(rule_config);
+  std::optional<Base::GptGeneric> u = (*program)(t);
+
+  EXPECT_TRUE(u.has_value());
+  EXPECT_TRUE(std::get<GPTAntlr4>(u.value()).getText()
+              == "3+2+1");
+}
+
+
 } // Compiler
 } // TransEngine
