@@ -23,3 +23,13 @@ filegroup(
             ],
     visibility = ["//visibility:public"]
 )
+
+cc_test(
+    name = "transengine_unittest",
+    srcs = [":rewrite_srcs",
+            "Expr/Expr.h",
+            "Expr/Expr_Unittest.cc"],
+    deps = [
+         "@com_google_googletest//:gtest_main",
+         ]
+)
