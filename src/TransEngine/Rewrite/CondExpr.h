@@ -7,23 +7,30 @@
 #include "Base/generic_parsetree.h"
 #include "ExprTree.h"
 
+#include "TransEngine/SigmaTerm.h"
+
 
 namespace TransEngine {
 namespace Rewrite {
 
+template<Base::GPTMeta T>
 class CondExpr {
 public:
-  template<Base::GPTMeta T>
+
   bool operator()(Environment<T>* env) {}
 
 private:
-  // FIXME: Determination the content of
-  //        condition expression.
-  // Utility::BinExprTree<
-  // typename R,
-  // typename LEAF,
-  // typename OP,
-  // Environment<T>*> cond;
+  using PatternOP =
+    std::function<bool(
+      TransEngine::Pattern<T>&,
+      TransEngine::Pattern<T>&)>;
+
+  Utility::BinExprTree<
+    TransEngine::Pattern<T>,
+    TransEngine::Pattern<T>,
+    PatternOP,
+    Environment<T>*>
+  cond;
 };
 
 } // Rewrite

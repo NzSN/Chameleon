@@ -44,6 +44,11 @@ concept BinOP =
   { t(arg1, arg2, args...) } -> std::same_as<ARG>;
 };
 
+
+// Calculate expression repsresent by where clause.
+class PredicateExpr {};
+
+// This can used to evaluate strategy expressions.
 template<
   typename R,
   typename LEAF,
