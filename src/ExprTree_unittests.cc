@@ -52,14 +52,19 @@ struct ExprTreeTests: public ::testing::Test {
   }
 };
 
-using IntExprTree = BinExprTree<int,int,IntegerOP, int*>;
+using IntOperator =
+  std::function<int(std::optional<int>, std::optional<int>, int*)>;
+using IntExprTree =
+  BinExprTree<int, int,
+              IntOperator,
+              int*>;
 TEST(ExprTreeTests, Basics) {
   // +(1,2)
 
   // Spawn root
   IntExprTree tree{
     IntExprTree::OPERATOR,
-    std::make_unique<IntegerPlus>()};
+    IntegerPlus{}};
   // Then give two operands to this oeprator.
   tree.setL(std::make_unique<IntExprTree>(IntExprTree::OPERAND, 1));
   tree.setR(std::make_unique<IntExprTree>(IntExprTree::OPERAND, 2));
@@ -77,13 +82,13 @@ TEST(ExprTreeTests, WithUnary) {
   // Sawn root
   IntExprTree tree{
     IntExprTree::OPERATOR,
-    std::make_unique<IntegerPlus>()};
+    IntegerPlus{}};
 
   // Left child
   std::unique_ptr<IntExprTree> subPlus =
     std::make_unique<IntExprTree>(
       IntExprTree::OPERATOR,
-      std::make_unique<IntegerPlus>());
+      IntegerPlus{});
   subPlus->setL(std::make_unique<IntExprTree>(IntExprTree::OPERAND, 1));
   subPlus->setR(std::make_unique<IntExprTree>(IntExprTree::OPERAND, 2));
 
@@ -91,7 +96,7 @@ TEST(ExprTreeTests, WithUnary) {
   std::unique_ptr<IntExprTree> subPlusOne =
     std::make_unique<IntExprTree>(
       IntExprTree::OPERATOR,
-      std::make_unique<PlusOne>());
+      PlusOne{});
   subPlusOne->setL(std::make_unique<IntExprTree>(IntExprTree::OPERAND, 1));
 
   tree.setL(std::move(subPlus));

@@ -59,15 +59,15 @@ public:
     OPERAND
   };
 
-  using T_OP__ = std::unique_ptr<OP>;
+  using T_OP__ = OP;
   using T_CHILD__ = std::unique_ptr<BinExprTree>;
 
   BinExprTree() = default;
   BinExprTree(NodeType type, LEAF v):
-    type_{type}, op_{nullptr},
+    type_{type}, op_{},
     v_{v}, lhs_{nullptr}, rhs_{nullptr} {}
-  BinExprTree(NodeType type, std::unique_ptr<OP> op):
-    type_{type}, op_{std::move(op)},
+  BinExprTree(NodeType type, OP op):
+    type_{type}, op_{op},
     v_{}, lhs_{nullptr}, rhs_{nullptr} {}
 
   void setL(std::unique_ptr<BinExprTree> t) {
@@ -92,7 +92,7 @@ public:
         }
       }
 
-      return (*op_)(loperand, roperand, args...);
+      return op_(loperand, roperand, args...);
     } else {
       if (!std::is_convertible_v<LEAF, R>) {
         return std::nullopt;
@@ -104,7 +104,7 @@ public:
 
 private:
   NodeType type_;
-  std::unique_ptr<OP> op_;
+  OP op_;
   LEAF v_;
   std::unique_ptr<BinExprTree> lhs_;
   std::unique_ptr<BinExprTree> rhs_;
