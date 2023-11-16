@@ -1,41 +1,84 @@
 #ifndef EXPR_H
 #define EXPR_H
 
+#include <type_traits>
 #include <typeinfo>
 #include <memory>
 #include <variant>
 #include <stdexcept>
 
-#include "TransEngine/Rewrite/Environment.h"
+#include "../Environment.h"
 
 namespace TransEngine {
 namespace Expression {
 
 using TransEngine::Rewrite::Environment;
 
+#define IS_SAME_TYPE(X, Y) \
+  (typeid((X)) == typeid((Y)))
+
 /////////////////////////////////////////////////////////////////////////////
 //                                  Value                                  //
 /////////////////////////////////////////////////////////////////////////////
+
+#define AS_VALUE(X, T) static_cast<Value<T>&>((X))
 
 // Caution: Instance of Value should be able to pass by value
 //          and no resource release after instance destructed.
 template<Base::GPTMeta T>
 struct Value {
-  bool operator==(const Value& other) = 0;
+  ~Value() {}
+  virtual bool operator==(const Value& other) const = 0;
+  virtual std::unique_ptr<Value<T>> duplicate() const = 0;
+};
+
+// A type same as void in C++, () in Haskell.
+template<Base::GPTMeta T>
+struct Unit: public Value<T> {
+  Unit() {}
+  Unit(const Unit& other) {}
+  bool operator==(const Value<T>& other) const override {
+    if (IS_SAME_TYPE(*this, other)) {
+      std::cout << typeid(*this).name() << std::endl;
+      std::cout << typeid(other).name() << std::endl;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  std::unique_ptr<Value<T>> duplicate() const override {
+    std::unique_ptr<Value<T>> dup =
+      std::make_unique<Unit>(*this);
+
+    return dup;
+  }
 };
 
 template<Base::GPTMeta T>
-struct Unity: public Value<T> {};
-
-template<Base::GPTMeta T>
 struct Bool: public Value<T> {
+  Bool(): v{true} {}
+  Bool(const Bool& other):
+    v{other.v} {}
   Bool(bool v_): v{v_} {}
+  ~Bool() {}
 
-  bool operator==(const Bool& other) {
-    return v == other.v;
+  bool operator==(const Value<T>& other) const override {
+    if (IS_SAME_TYPE(*this, other)) {
+      return v == dynamic_cast<const Bool<T>&>(other).v;
+    } else {
+      return false;
+    }
   }
 
-  const bool v;
+  std::unique_ptr<Value<T>> duplicate() const override {
+    std::unique_ptr<Value<T>> dup =
+      std::make_unique<Bool>(*this);
+
+    return dup;
+  }
+
+  bool v;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -48,7 +91,7 @@ struct Arguments {
 
 template<Base::GPTMeta T>
 struct Function {
-  std::unique_ptr<Value<T>> operator()(Arguments<T>& args) = 0;
+  virtual std::unique_ptr<Value<T>> operator()(Arguments<T>* args) = 0;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,25 +99,44 @@ struct Function {
 /////////////////////////////////////////////////////////////////////////////
 template<Base::GPTMeta T>
 struct Expr {
-  std::unique_ptr<Value<T>> operator()(Environment<T>&) = 0;
+  ~Expr() {}
+  virtual std::unique_ptr<Value<T>> operator()(Environment<T>*) = 0;
+};
+
+template<Base::GPTMeta T>
+class Constant: public Expr<T> {
+public:
+
+  // A copy of Value is spawned if an Constant expression is evaluated,
+  // so Value is required to be copy constructible.
+  template<typename U,
+           typename = std::enable_if_t<std::is_base_of_v<Value<T>, U> &&
+                                       std::is_copy_constructible_v<U>>>
+  Constant(std::unique_ptr<U> v):
+    v_{std::move(v)} {}
+
+  std::unique_ptr<Value<T>> operator()(Environment<T>*) {
+    std::unique_ptr<Value<T>> copy = v_->duplicate();
+
+    return copy;
+  }
+
+  std::unique_ptr<Value<T>> v_;
 };
 
 template<Base::GPTMeta T>
 class Equal: public Expr<T> {
 public:
-  std::unique_ptr<Bool<T>> operator()(Environment<T>& env) {
-    std::unique_ptr<Value<T>> loperand = lhs_(env);
-    std::unique_ptr<Value<T>> roperand = rhs_(env);
+  Equal() {}
+  Equal(std::unique_ptr<Expr<T>> lhs,
+        std::unique_ptr<Expr<T>> rhs):
+    lhs_{std::move(lhs)}, rhs_{std::move(rhs)} {}
 
-    // Make sure type of loperand is same as
-    // roperand.
-    if (typeid(*loperand) != typeid(*roperand)) {
-      throw std::runtime_error(
-        "Failed to eval equality due to type of left operand "
-        "is different from right operand");
-    }
+  std::unique_ptr<Value<T>> operator()(Environment<T>* env) {
+    std::unique_ptr<Value<T>> loperand = (*lhs_)(env);
+    std::unique_ptr<Value<T>> roperand = (*rhs_)(env);
 
-    return *loperand == *roperand;
+    return std::make_unique<Bool<T>>(*loperand == *roperand);
   }
 private:
   std::unique_ptr<Expr<T>> lhs_;
@@ -84,16 +146,16 @@ private:
 template<Base::GPTMeta T>
 class Call: public Expr<T> {
 public:
-  std::unique_ptr<Value<T>> operator()(Environment<T>& env) {
+  std::unique_ptr<Value<T>> operator()(Environment<T>* env) {
     // Evaluat all subexpressions to arguments
     Arguments<T> arguments;
 
     for (auto& e: args) {
-      std::unique_ptr<Value<T>> v = (*e)(env);
-      arguments.args.push_back(*v);
+      Value<T> v = (*e)(env);
+      arguments.args.push_back(v);
     }
 
-    return (*f)(arguments);
+    return std::move((*f)(arguments));
   }
 private:
   std::unique_ptr<Function<T>> f;
