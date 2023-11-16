@@ -86,7 +86,7 @@ struct Bool: public Value<T> {
 /////////////////////////////////////////////////////////////////////////////
 template<Base::GPTMeta T>
 struct Arguments {
-  std::vector<Value<T>> args;
+  std::vector<std::unique_ptr<Value<T>>> args;
 };
 
 template<Base::GPTMeta T>
@@ -146,20 +146,24 @@ private:
 template<Base::GPTMeta T>
 class Call: public Expr<T> {
 public:
+  Call(std::unique_ptr<Function<T>> f,
+       std::vector<std::unique_ptr<Expr<T>>>&& args):
+    f_{std::move(f)}, args_{std::move(args)} {}
+
   std::unique_ptr<Value<T>> operator()(Environment<T>* env) {
     // Evaluat all subexpressions to arguments
     Arguments<T> arguments;
 
-    for (auto& e: args) {
-      Value<T> v = (*e)(env);
-      arguments.args.push_back(v);
+    for (auto& e: args_) {
+      std::unique_ptr<Value<T>> v = (*e)(env);
+      arguments.args.push_back(std::move(v));
     }
 
-    return std::move((*f)(arguments));
+    return std::move((*f_)(&arguments));
   }
 private:
-  std::unique_ptr<Function<T>> f;
-  std::vector<std::unique_ptr<Expr<T>>> args;
+  std::unique_ptr<Function<T>> f_;
+  std::vector<std::unique_ptr<Expr<T>>> args_;
 };
 
 } // Expression

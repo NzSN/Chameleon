@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <memory>
 #include "Expr.h"
 
 
@@ -52,30 +53,74 @@ TEST(ExpressionTest, EqualExpression) {
   EXPECT_TRUE(Bool<int>{false} == *b(nullptr));
 }
 
-struct GenUnit: public Function<int> {
+// This function will checkging whether all of
+// it's arguments has same type.
+struct CheckEquality: public Function<int> {
   std::unique_ptr<Value<int>> operator()(Arguments<int>* args) override {
-    ++counter;
-    return std::make_unique<Unit<int>>();
-  }
 
-  int counter = 0;
+    Value<int>& first = *args->args[0];
+    for (auto& c: args->args) {
+      if (!IS_SAME_TYPE(first, *c)) {
+        return std::make_unique<Bool<int>>(false);
+      }
+    }
+
+    return std::make_unique<Bool<int>>(true);
+  }
 };
 
 TEST(ExpressionTest, CallExpression) {
+  // Build up arguments
+  std::vector<std::unique_ptr<Expr<int>>> args;
+
+  args.emplace_back(
+    // Constant Expression
+    std::make_unique<Constant<int>>(
+      std::make_unique<Unit<int>>())
+  );
+
+  args.emplace_back(
+    // Constant Expression
+    std::make_unique<Constant<int>>(
+      std::make_unique<Unit<int>>())
+  );
+
   // GenUnit is a Chameleons function
-  GenUnit a{};
+  Call<int> c{
+    std::make_unique<CheckEquality>(),
+    std::move(args) };
 
-  // Got a Value once you evaluate the function,
-  // in this case GenUnit will
-  std::unique_ptr<Value<int>> v = a(nullptr);
+  // Got a Value once you evaluate the function.
+  std::unique_ptr<Value<int>> v = c(nullptr);
 
-  // Increase counter in function object
-  // by side effect of function.
-  a(nullptr);
-  a(nullptr);
+  EXPECT_TRUE(*v == Bool<int>{true});
+}
 
-  EXPECT_TRUE(*v == Unit<int>{});
-  EXPECT_TRUE(a.counter == 3);
+TEST(ExpressionTest, CallExpression_FalseCase) {
+  // Build up arguments
+  std::vector<std::unique_ptr<Expr<int>>> args;
+
+  args.emplace_back(
+    // Constant Expression
+    std::make_unique<Constant<int>>(
+      std::make_unique<Unit<int>>())
+  );
+
+  args.emplace_back(
+    // Constant Expression
+    std::make_unique<Constant<int>>(
+      std::make_unique<Bool<int>>())
+  );
+  // GenUnit is a Chameleons function
+  Call<int> c{
+    std::make_unique<CheckEquality>(),
+    std::move(args) };
+
+  // Got a Value once you evaluate the function.
+  std::unique_ptr<Value<int>> v = c(nullptr);
+
+  EXPECT_TRUE(*v == Bool<int>{false});
+
 }
 
 } // Expression
