@@ -5,7 +5,7 @@
 
 #include "Environment.h"
 #include "Base/generic_parsetree.h"
-#include "ExprTree.h"
+#include "Expr/Expr.h"
 
 #include "TransEngine/SigmaTerm.h"
 
@@ -20,17 +20,7 @@ public:
   bool operator()(Environment<T>* env) {}
 
 private:
-  using PatternOP =
-    std::function<bool(
-      TransEngine::Pattern<T>&,
-      TransEngine::Pattern<T>&)>;
-
-  Utility::BinExprTree<
-    TransEngine::Pattern<T>,
-    TransEngine::Pattern<T>,
-    PatternOP,
-    Environment<T>*>
-  cond;
+  Expression::Expr<T> condExpr;
 };
 
 } // Rewrite
