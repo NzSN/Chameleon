@@ -17,7 +17,7 @@ template<Base::GPTMeta T>
 class CondExpr {
 public:
 
-  bool operator()(Environment<T>* env) {}
+  bool operator()(Environment<T>* env);
 
 private:
   Expression::Expr<T> condExpr;
