@@ -98,6 +98,17 @@ struct BuildStra: public Strategy<T> {
 };
 
 template<Base::GPTMeta T>
+struct WhereStra: public Strategy<T> {
+  WhereStra() = default;
+
+  WhereStra(Rule<T> r): Strategy<T>{r} {}
+
+  Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
+
+  }
+};
+
+template<Base::GPTMeta T>
 StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
   // A rule is breakdown into Strategy language:
   //   match(r); build(r);

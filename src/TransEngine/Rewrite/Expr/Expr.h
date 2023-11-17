@@ -14,6 +14,11 @@ namespace Expression {
 
 using TransEngine::Rewrite::Environment;
 
+#define APPEND_EXPR(Es, E, V...)                 \
+  Es.emplace_back(                            \
+    std::make_unique<E>(V)                    \
+  )
+
 #define IS_SAME_TYPE(X, Y) \
   (typeid((X)) == typeid((Y)))
 
@@ -23,6 +28,12 @@ using TransEngine::Rewrite::Environment;
 
 #define AS_VALUE(X, T) static_cast<Value<T>&>((X))
 
+template<Base::GPTMeta T>
+struct Bool;
+
+template<Base::GPTMeta T>
+struct Unit;
+
 // Caution: Instance of Value should be able to pass by value
 //          and no resource release after instance destructed.
 template<Base::GPTMeta T>
@@ -30,6 +41,14 @@ struct Value {
   ~Value() {}
   virtual bool operator==(const Value& other) const = 0;
   virtual std::unique_ptr<Value<T>> duplicate() const = 0;
+
+  static bool isBoolean(Value<T>& v) {
+    return IS_SAME_TYPE(Bool<T>{}, v);
+  }
+
+  static bool isUnit(Value<T>& v) {
+    return IS_SAME_TYPE(Unit<T>{}, v);
+  }
 };
 
 // A type same as void in C++, () in Haskell.
@@ -106,7 +125,6 @@ struct Expr {
 template<Base::GPTMeta T>
 class Constant: public Expr<T> {
 public:
-
   // A copy of Value is spawned if an Constant expression is evaluated,
   // so Value is required to be copy constructible.
   template<typename U,
@@ -128,6 +146,7 @@ template<Base::GPTMeta T>
 class Equal: public Expr<T> {
 public:
   Equal() {}
+
   Equal(std::unique_ptr<Expr<T>> lhs,
         std::unique_ptr<Expr<T>> rhs):
     lhs_{std::move(lhs)}, rhs_{std::move(rhs)} {}

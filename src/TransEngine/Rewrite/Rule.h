@@ -5,7 +5,7 @@
 
 #include "Base/generic_parsetree.h"
 #include "TransEngine/SigmaTerm.h"
-//#include "CondExpr.h"
+#include "CondExpr.h"
 #include "Environment.h"
 
 namespace TransEngine {
@@ -16,6 +16,7 @@ struct Rule {
   Rule():
     label{}, leftSide{nullptr},
     rightSide{nullptr}, lang{}  {}
+
   Rule(std::string labelArg,
        Pattern<T>& leftSideArg,
        Pattern<T>& rightSideArg,
@@ -51,6 +52,10 @@ struct Rule {
 
     lang{other.lang} {}
 
+  void setCond(CondExpr<T> cond_) {
+    cond = std::move(cond_);
+  }
+
   const std::string label;
 
   std::shared_ptr<Pattern<T>> leftSide_shared;
@@ -60,7 +65,7 @@ struct Rule {
   Pattern<T>* rightSide;
 
   const int lang;
-  //const CondExpr cond;
+  CondExpr<T> cond;
 };
 
 } // Rewrite

@@ -100,17 +100,16 @@ TEST(ExpressionTest, CallExpression_FalseCase) {
   // Build up arguments
   std::vector<std::unique_ptr<Expr<int>>> args;
 
-  args.emplace_back(
-    // Constant Expression
-    std::make_unique<Constant<int>>(
-      std::make_unique<Unit<int>>())
-  );
+  APPEND_EXPR(
+    args,
+    Constant<int>,
+    std::make_unique<Unit<int>>());
 
-  args.emplace_back(
-    // Constant Expression
-    std::make_unique<Constant<int>>(
-      std::make_unique<Bool<int>>())
-  );
+  APPEND_EXPR(
+    args,
+    Constant<int>,
+    std::make_unique<Bool<int>>());
+
   // GenUnit is a Chameleons function
   Call<int> c{
     std::make_unique<CheckEquality>(),
@@ -121,6 +120,15 @@ TEST(ExpressionTest, CallExpression_FalseCase) {
 
   EXPECT_TRUE(*v == Bool<int>{false});
 
+}
+
+TEST(ExpressionTest, ValueIface_TypeCheck) {
+  std::unique_ptr<Value<int>> v = std::make_unique<Bool<int>>();
+  EXPECT_TRUE(Value<int>::isBoolean(*v));
+
+
+  std::unique_ptr<Value<int>> v2 = std::make_unique<Unit<int>>();
+  EXPECT_TRUE(Value<int>::isUnit(*v2));
 }
 
 } // Expression

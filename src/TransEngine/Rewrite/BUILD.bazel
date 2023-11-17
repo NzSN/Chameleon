@@ -9,6 +9,10 @@ filegroup(
             "Strategy.h", "Strategy-inl.h", "Strategy.cc",
             # Rule
             "Rule.h", "Rule.cc",
+            # Expr
+            "Expr/Expr.h",
+            # CondExpr
+            "CondExpr.h", "CondExpr-inl.h"
             ],
     visibility = ["//visibility:public"]
 )
@@ -20,6 +24,8 @@ filegroup(
             "Term-Unittests.cc",
             "Environment-Unittest.cc",
             "Strategy-Unittests.cc",
+            "Expr/Expr_Unittest.cc",
+            "CondExpr_Unittest.cc"
             ],
     visibility = ["//visibility:public"]
 )
