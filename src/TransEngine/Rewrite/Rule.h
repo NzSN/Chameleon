@@ -52,8 +52,8 @@ struct Rule {
 
     lang{other.lang} {}
 
-  void setCond(CondExpr<T> cond_) {
-    cond = std::move(cond_);
+  void setCond(CondExpr<T>& cond_) {
+    cond.push_back(cond_);
   }
 
   const std::string label;
@@ -65,7 +65,8 @@ struct Rule {
   Pattern<T>* rightSide;
 
   const int lang;
-  CondExpr<T> cond;
+
+  std::vector<CondExpr<T>> cond;
 };
 
 } // Rewrite

@@ -86,6 +86,26 @@ toLangID(std::string langID) {
 
 namespace {
 
+template<Base::GPTMeta T>
+bool createCondExprs(
+  ChameleonsParser::CondExprsContext* rCtx,
+  Rewrite::Rule<T>& rule) {
+
+
+}
+
+// Traverse the tree of where expressions
+// and spawn Conditional expressions and
+// Unconditional expressions for a given Rule.
+template<Base::GPTMeta T>
+bool createWhereExpressions(
+  ChameleonsParser::WhereExprsContext* rCtx,
+  Rewrite::Rule<T>& rule) {
+
+  // OK, just focus on conditional part currently.
+
+}
+
 template<Base::GPTMeta T, int lang>
 std::optional<Rewrite::Rule<T>>
 strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
@@ -109,6 +129,21 @@ strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
     std::move(leftSide),
     std::move(rightSide),
     lang};
+
+  // Spawning expression to handle where clause.
+  // This part is optional, deal with if where expression
+  // is present.
+  if (rCtx->whereExprs() != nullptr) {
+    bool success = createWhereExpressions(
+      rCtx->whereExprs(),
+      rule);
+    if (!success) {
+      // Program that where clause is in ill-formed
+      // is unusable.
+      throw std::runtime_error(
+        "Failed to parse where clause.");
+    }
+  }
 
   return rule;
 }

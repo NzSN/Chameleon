@@ -64,6 +64,15 @@ struct MatchStra: public Strategy<T> {
   }
 };
 
+template<Base::GPTMeta T>
+struct WhereStra: public Strategy<T> {
+  WhereStra() = default;
+
+  WhereStra(Rule<T> r): Strategy<T>{r} {}
+
+  Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {}
+};
+
 // Build right side pattern on Environment<T>::buildTerm_
 template<Base::GPTMeta T>
 struct BuildStra: public Strategy<T> {
@@ -108,7 +117,10 @@ struct WhereStra: public Strategy<T> {
   }
 };
 
-template<Base::GPTMeta T>
+// Without Where clause
+template<Base::GPTMeta T,
+         bool WHERE_CLAUSE,
+         typename>
 StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
   // A rule is breakdown into Strategy language:
   //   match(r); build(r);
@@ -121,6 +133,27 @@ StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
 
   return seq;
 }
+
+// With Where clause
+template<Base::GPTMeta T,
+         bool WHERE_CLAUSE,
+         typename,
+         int a>
+StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
+  StrategySeq<T> seq;
+
+  // Match Strategy
+  seq.emplace_back(
+    std::make_unique<MatchStra<T>>(rule));
+
+  // Where Strategy
+
+  // Build Strategy
+  seq.emplace_back(
+    std::make_unique<BuildStra<T>>(rule));
+}
+
+
 
 } // Rewrite
 } // TransEngine

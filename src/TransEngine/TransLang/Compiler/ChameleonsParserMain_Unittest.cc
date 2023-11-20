@@ -60,7 +60,7 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
     "TARGET: TestLang \n"
     "RULES: \n"
     "Commutative: {| a+b+c |} => {| c+b+a |} "
-    " where a = 1 AND b = 2 AND c = 3"
+    " where a = 1 AND b = 2 AND c = 3;"
   };
 
   std::shared_ptr<Program> program =
