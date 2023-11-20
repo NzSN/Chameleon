@@ -31,7 +31,7 @@ RDI_Multiply:
    {| I * E |} => {| L * E |}
    where I = RandomIdentifier::I AND
          Scope(I) = Scope(RandomIdentifier::I)
-         L = RD(I)
+         L := RD(I)
 
 STRATEGIES:
    rename-identifier =

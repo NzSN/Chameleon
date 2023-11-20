@@ -3,16 +3,12 @@ lexer grammar ChameleonsLexer;
 TARGET_TAG: 'TARGET:';
 RULE_TAG: 'RULES:';
 STRATEGY_TAG: 'STRATEGIES';
-WHERE: 'where';
-LOGICOP: ('AND' | 'OR' | 'NOT');
-ORDEROP: ('=' | '<' | '>' | '<=' | '>=');
-NUMBER: [0-9]+;
+WHERE: 'where' -> mode(WHERE_CLAUSE);
 IDENTIFIER
     : [a-zA-Z][a-zA-Z0-9]*
     ;
 COLON: ':';
 OPENBRACE: '{|' -> mode(PROGRAM);
-TERM_VAR: '%' [a-zA-Z]+;
 TRANSFORM: '=>';
 WS: [ \t\r\n]+ -> skip;
 
@@ -22,4 +18,17 @@ CODEBYTES
     : ((~[|])|'\\|')+
     ;
 CLOSEBRACE: '|}' -> mode(DEFAULT_MODE);
+//----------------------------------------------------------------
+
+// -------------------------- Where Clause -----------------------
+mode WHERE_CLAUSE;
+WHERE_EXPR_SEPERATOR: ';';
+FUNC: [a-zA-Z]+ '(' [a-zA-Z]+ ')';
+
+LOGICOP: ('AND' | 'OR' | 'NOT');
+ORDEROP: ('=' | '<' | '>' | '<=' | '>=');
+NUMBER: [0-9]+;
+
+TERM_VAR: [a-zA-Z]+;
+WS_WHERE: [ \t\r\n]+ -> skip;
 //----------------------------------------------------------------

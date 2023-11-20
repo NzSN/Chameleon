@@ -33,7 +33,7 @@ rewriteRule
       OPENBRACE sourcePattern CLOSEBRACE
       TRANSFORM
       OPENBRACE targetPattern CLOSEBRACE
-      WHERE condExprs
+      WHERE whereExprs
     ;
 
 sourcePattern
@@ -44,8 +44,13 @@ targetPattern
     : CODEBYTES
     ;
 
+whereExprs
+    : condExprs
+    | condExprs whereExprs
+    ;
+
 condExprs
-    : condExpr
+    : condExpr WHERE_EXPR_SEPERATOR
     | condExpr LOGICOP condExprs
     ;
 

@@ -38,6 +38,9 @@ public:
   virtual void enterTargetPattern(ChameleonsParser::TargetPatternContext *ctx) = 0;
   virtual void exitTargetPattern(ChameleonsParser::TargetPatternContext *ctx) = 0;
 
+  virtual void enterWhereExprs(ChameleonsParser::WhereExprsContext *ctx) = 0;
+  virtual void exitWhereExprs(ChameleonsParser::WhereExprsContext *ctx) = 0;
+
   virtual void enterCondExprs(ChameleonsParser::CondExprsContext *ctx) = 0;
   virtual void exitCondExprs(ChameleonsParser::CondExprsContext *ctx) = 0;
 

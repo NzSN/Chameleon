@@ -40,6 +40,9 @@ public:
   virtual void enterTargetPattern(ChameleonsParser::TargetPatternContext * /*ctx*/) override { }
   virtual void exitTargetPattern(ChameleonsParser::TargetPatternContext * /*ctx*/) override { }
 
+  virtual void enterWhereExprs(ChameleonsParser::WhereExprsContext * /*ctx*/) override { }
+  virtual void exitWhereExprs(ChameleonsParser::WhereExprsContext * /*ctx*/) override { }
+
   virtual void enterCondExprs(ChameleonsParser::CondExprsContext * /*ctx*/) override { }
   virtual void exitCondExprs(ChameleonsParser::CondExprsContext * /*ctx*/) override { }
 

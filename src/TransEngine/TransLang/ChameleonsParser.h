@@ -12,15 +12,16 @@
 class  ChameleonsParser : public antlr4::Parser {
 public:
   enum {
-    TARGET_TAG = 1, RULE_TAG = 2, STRATEGY_TAG = 3, WHERE = 4, LOGICOP = 5, 
-    ORDEROP = 6, NUMBER = 7, IDENTIFIER = 8, COLON = 9, OPENBRACE = 10, 
-    TERM_VAR = 11, TRANSFORM = 12, WS = 13, CODEBYTES = 14, CLOSEBRACE = 15
+    TARGET_TAG = 1, RULE_TAG = 2, STRATEGY_TAG = 3, WHERE = 4, IDENTIFIER = 5, 
+    COLON = 6, OPENBRACE = 7, TRANSFORM = 8, WS = 9, CODEBYTES = 10, CLOSEBRACE = 11, 
+    WHERE_EXPR_SEPERATOR = 12, FUNC = 13, LOGICOP = 14, ORDEROP = 15, NUMBER = 16, 
+    TERM_VAR = 17, WS_WHERE = 18
   };
 
   enum {
     RuleProg = 0, RuleTargetSection = 1, RuleRuleSection = 2, RuleStrategySection = 3, 
     RuleRewriteRules = 4, RuleRewriteRule = 5, RuleSourcePattern = 6, RuleTargetPattern = 7, 
-    RuleCondExprs = 8, RuleCondExpr = 9
+    RuleWhereExprs = 8, RuleCondExprs = 9, RuleCondExpr = 10
   };
 
   explicit ChameleonsParser(antlr4::TokenStream *input);
@@ -48,6 +49,7 @@ public:
   class RewriteRuleContext;
   class SourcePatternContext;
   class TargetPatternContext;
+  class WhereExprsContext;
   class CondExprsContext;
   class CondExprContext; 
 
@@ -145,7 +147,7 @@ public:
     antlr4::tree::TerminalNode *TRANSFORM();
     TargetPatternContext *targetPattern();
     antlr4::tree::TerminalNode *WHERE();
-    CondExprsContext *condExprs();
+    WhereExprsContext *whereExprs();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -186,11 +188,28 @@ public:
 
   TargetPatternContext* targetPattern();
 
+  class  WhereExprsContext : public antlr4::ParserRuleContext {
+  public:
+    WhereExprsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    CondExprsContext *condExprs();
+    WhereExprsContext *whereExprs();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  WhereExprsContext* whereExprs();
+
   class  CondExprsContext : public antlr4::ParserRuleContext {
   public:
     CondExprsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     CondExprContext *condExpr();
+    antlr4::tree::TerminalNode *WHERE_EXPR_SEPERATOR();
     antlr4::tree::TerminalNode *LOGICOP();
     CondExprsContext *condExprs();
 

@@ -47,6 +47,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitWhereExprs(ChameleonsParser::WhereExprsContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitCondExprs(ChameleonsParser::CondExprsContext *ctx) override {
     return visitChildren(ctx);
   }

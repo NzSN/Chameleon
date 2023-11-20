@@ -12,13 +12,14 @@
 class  ChameleonsLexer : public antlr4::Lexer {
 public:
   enum {
-    TARGET_TAG = 1, RULE_TAG = 2, STRATEGY_TAG = 3, WHERE = 4, LOGICOP = 5, 
-    ORDEROP = 6, NUMBER = 7, IDENTIFIER = 8, COLON = 9, OPENBRACE = 10, 
-    TERM_VAR = 11, TRANSFORM = 12, WS = 13, CODEBYTES = 14, CLOSEBRACE = 15
+    TARGET_TAG = 1, RULE_TAG = 2, STRATEGY_TAG = 3, WHERE = 4, IDENTIFIER = 5, 
+    COLON = 6, OPENBRACE = 7, TRANSFORM = 8, WS = 9, CODEBYTES = 10, CLOSEBRACE = 11, 
+    WHERE_EXPR_SEPERATOR = 12, FUNC = 13, LOGICOP = 14, ORDEROP = 15, NUMBER = 16, 
+    TERM_VAR = 17, WS_WHERE = 18
   };
 
   enum {
-    PROGRAM = 1
+    PROGRAM = 1, WHERE_CLAUSE = 2
   };
 
   explicit ChameleonsLexer(antlr4::CharStream *input);

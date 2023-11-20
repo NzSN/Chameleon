@@ -35,6 +35,8 @@ public:
 
     virtual std::any visitTargetPattern(ChameleonsParser::TargetPatternContext *context) = 0;
 
+    virtual std::any visitWhereExprs(ChameleonsParser::WhereExprsContext *context) = 0;
+
     virtual std::any visitCondExprs(ChameleonsParser::CondExprsContext *context) = 0;
 
     virtual std::any visitCondExpr(ChameleonsParser::CondExprContext *context) = 0;
