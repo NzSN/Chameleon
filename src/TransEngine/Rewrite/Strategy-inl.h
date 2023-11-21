@@ -70,6 +70,7 @@ struct WhereStra: public Strategy<T> {
 
   WhereStra(Rule<T> r): Strategy<T>{r} {}
 
+  // Evaluate all expression within where clause.
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {}
 };
 
@@ -103,17 +104,6 @@ struct BuildStra: public Strategy<T> {
       ::template mapping<T, Utility::DYNAMIC>(*metaCopy));
 
     return rule;
-  }
-};
-
-template<Base::GPTMeta T>
-struct WhereStra: public Strategy<T> {
-  WhereStra() = default;
-
-  WhereStra(Rule<T> r): Strategy<T>{r} {}
-
-  Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
-
   }
 };
 

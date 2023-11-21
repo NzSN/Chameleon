@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
 
 #pragma once
 
@@ -210,7 +210,6 @@ public:
     virtual size_t getRuleIndex() const override;
     CondExprContext *condExpr();
     antlr4::tree::TerminalNode *WHERE_EXPR_SEPERATOR();
-    antlr4::tree::TerminalNode *LOGICOP();
     CondExprsContext *condExprs();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -226,10 +225,12 @@ public:
   public:
     CondExprContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<antlr4::tree::TerminalNode *> TERM_VAR();
-    antlr4::tree::TerminalNode* TERM_VAR(size_t i);
-    antlr4::tree::TerminalNode *ORDEROP();
+    antlr4::tree::TerminalNode *TERM_VAR();
     antlr4::tree::TerminalNode *NUMBER();
+    std::vector<CondExprContext *> condExpr();
+    CondExprContext* condExpr(size_t i);
+    antlr4::tree::TerminalNode *ORDEROP();
+    antlr4::tree::TerminalNode *LOGICOP();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -239,7 +240,11 @@ public:
   };
 
   CondExprContext* condExpr();
+  CondExprContext* condExpr(int precedence);
 
+  bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
+
+  bool condExprSempred(CondExprContext *_localctx, size_t predicateIndex);
 
   // By default the static state used to implement the parser is lazily initialized during the first
   // call to the constructor. You can call this function if you wish to initialize the static state

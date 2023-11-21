@@ -87,23 +87,42 @@ toLangID(std::string langID) {
 namespace {
 
 template<Base::GPTMeta T>
+bool createCondExpr(
+  ChameleonsParser::CondExprContext* rCtx,
+  Rewrite::Rule<T>& rule) {
+
+}
+
+template<Base::GPTMeta T>
 bool createCondExprs(
   ChameleonsParser::CondExprsContext* rCtx,
   Rewrite::Rule<T>& rule) {
 
-
+  ChameleonsParser::CondExprsContext* current;
+  while (current != nullptr) {
+    bool success = createCondExpr(current->condExpr(), rule);
+    if (!success) return success;
+    current = current->condExprs();
+  }
 }
 
 // Traverse the tree of where expressions
-// and spawn Conditional expressions and
-// Unconditional expressions for a given Rule.
+// and spawn expressions.
 template<Base::GPTMeta T>
 bool createWhereExpressions(
   ChameleonsParser::WhereExprsContext* rCtx,
   Rewrite::Rule<T>& rule) {
 
-  // OK, just focus on conditional part currently.
+  ChameleonsParser::WhereExprsContext* current = rCtx;
+  while (current != nullptr) {
+    /* Generate CondExprs into Rule */
+    bool success = createCondExprs(
+      current->condExprs(), rule);
+    if (!success) return success;
 
+    /* Next WhereExprs */
+    current = current->whereExprs();
+  }
 }
 
 template<Base::GPTMeta T, int lang>

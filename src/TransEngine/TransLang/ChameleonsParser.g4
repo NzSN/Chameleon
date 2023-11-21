@@ -51,10 +51,12 @@ whereExprs
 
 condExprs
     : condExpr WHERE_EXPR_SEPERATOR
-    | condExpr LOGICOP condExprs
+    | condExpr condExprs
     ;
 
 condExpr
-    : TERM_VAR ORDEROP TERM_VAR
-    | TERM_VAR ORDEROP NUMBER
+    : condExpr ORDEROP condExpr
+    | condExpr LOGICOP condExpr
+    | TERM_VAR
+    | NUMBER
     ;

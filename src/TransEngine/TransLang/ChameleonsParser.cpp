@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
 
 
 #include "ChameleonsParserListener.h"
@@ -69,32 +69,35 @@ void chameleonsparserParserInitialize() {
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,18,97,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
-  	7,7,2,8,7,8,2,9,7,9,2,10,7,10,1,0,1,0,1,0,1,0,1,0,1,0,1,0,3,0,30,8,0,
-  	1,1,1,1,1,1,1,2,1,2,1,2,1,3,1,3,1,4,1,4,1,4,1,4,3,4,44,8,4,1,5,1,5,1,
-  	5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,
-  	1,5,1,5,3,5,68,8,5,1,6,1,6,1,7,1,7,1,8,1,8,1,8,1,8,3,8,78,8,8,1,9,1,9,
-  	1,9,1,9,1,9,1,9,1,9,3,9,87,8,9,1,10,1,10,1,10,1,10,1,10,1,10,3,10,95,
-  	8,10,1,10,0,0,11,0,2,4,6,8,10,12,14,16,18,20,0,0,91,0,29,1,0,0,0,2,31,
-  	1,0,0,0,4,34,1,0,0,0,6,37,1,0,0,0,8,43,1,0,0,0,10,67,1,0,0,0,12,69,1,
-  	0,0,0,14,71,1,0,0,0,16,77,1,0,0,0,18,86,1,0,0,0,20,94,1,0,0,0,22,23,3,
-  	2,1,0,23,24,3,4,2,0,24,30,1,0,0,0,25,26,3,2,1,0,26,27,3,4,2,0,27,28,3,
-  	6,3,0,28,30,1,0,0,0,29,22,1,0,0,0,29,25,1,0,0,0,30,1,1,0,0,0,31,32,5,
-  	1,0,0,32,33,5,5,0,0,33,3,1,0,0,0,34,35,5,2,0,0,35,36,3,8,4,0,36,5,1,0,
-  	0,0,37,38,5,3,0,0,38,7,1,0,0,0,39,44,3,10,5,0,40,41,3,10,5,0,41,42,3,
-  	8,4,0,42,44,1,0,0,0,43,39,1,0,0,0,43,40,1,0,0,0,44,9,1,0,0,0,45,46,5,
-  	5,0,0,46,47,5,6,0,0,47,48,5,7,0,0,48,49,3,12,6,0,49,50,5,11,0,0,50,51,
-  	5,8,0,0,51,52,5,7,0,0,52,53,3,14,7,0,53,54,5,11,0,0,54,68,1,0,0,0,55,
-  	56,5,5,0,0,56,57,5,6,0,0,57,58,5,7,0,0,58,59,3,12,6,0,59,60,5,11,0,0,
-  	60,61,5,8,0,0,61,62,5,7,0,0,62,63,3,14,7,0,63,64,5,11,0,0,64,65,5,4,0,
-  	0,65,66,3,16,8,0,66,68,1,0,0,0,67,45,1,0,0,0,67,55,1,0,0,0,68,11,1,0,
-  	0,0,69,70,5,10,0,0,70,13,1,0,0,0,71,72,5,10,0,0,72,15,1,0,0,0,73,78,3,
-  	18,9,0,74,75,3,18,9,0,75,76,3,16,8,0,76,78,1,0,0,0,77,73,1,0,0,0,77,74,
-  	1,0,0,0,78,17,1,0,0,0,79,80,3,20,10,0,80,81,5,12,0,0,81,87,1,0,0,0,82,
-  	83,3,20,10,0,83,84,5,14,0,0,84,85,3,18,9,0,85,87,1,0,0,0,86,79,1,0,0,
-  	0,86,82,1,0,0,0,87,19,1,0,0,0,88,89,5,17,0,0,89,90,5,15,0,0,90,95,5,17,
-  	0,0,91,92,5,17,0,0,92,93,5,15,0,0,93,95,5,16,0,0,94,88,1,0,0,0,94,91,
-  	1,0,0,0,95,21,1,0,0,0,6,29,43,67,77,86,94
+  	4,1,18,104,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
+  	7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,1,0,1,0,1,0,1,0,1,0,1,0,1,0,3,0,30,8,
+  	0,1,1,1,1,1,1,1,2,1,2,1,2,1,3,1,3,1,4,1,4,1,4,1,4,3,4,44,8,4,1,5,1,5,
+  	1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,
+  	5,1,5,1,5,3,5,68,8,5,1,6,1,6,1,7,1,7,1,8,1,8,1,8,1,8,3,8,78,8,8,1,9,1,
+  	9,1,9,1,9,1,9,1,9,3,9,86,8,9,1,10,1,10,1,10,3,10,91,8,10,1,10,1,10,1,
+  	10,1,10,1,10,1,10,5,10,99,8,10,10,10,12,10,102,9,10,1,10,0,1,20,11,0,
+  	2,4,6,8,10,12,14,16,18,20,0,0,100,0,29,1,0,0,0,2,31,1,0,0,0,4,34,1,0,
+  	0,0,6,37,1,0,0,0,8,43,1,0,0,0,10,67,1,0,0,0,12,69,1,0,0,0,14,71,1,0,0,
+  	0,16,77,1,0,0,0,18,85,1,0,0,0,20,90,1,0,0,0,22,23,3,2,1,0,23,24,3,4,2,
+  	0,24,30,1,0,0,0,25,26,3,2,1,0,26,27,3,4,2,0,27,28,3,6,3,0,28,30,1,0,0,
+  	0,29,22,1,0,0,0,29,25,1,0,0,0,30,1,1,0,0,0,31,32,5,1,0,0,32,33,5,5,0,
+  	0,33,3,1,0,0,0,34,35,5,2,0,0,35,36,3,8,4,0,36,5,1,0,0,0,37,38,5,3,0,0,
+  	38,7,1,0,0,0,39,44,3,10,5,0,40,41,3,10,5,0,41,42,3,8,4,0,42,44,1,0,0,
+  	0,43,39,1,0,0,0,43,40,1,0,0,0,44,9,1,0,0,0,45,46,5,5,0,0,46,47,5,6,0,
+  	0,47,48,5,7,0,0,48,49,3,12,6,0,49,50,5,11,0,0,50,51,5,8,0,0,51,52,5,7,
+  	0,0,52,53,3,14,7,0,53,54,5,11,0,0,54,68,1,0,0,0,55,56,5,5,0,0,56,57,5,
+  	6,0,0,57,58,5,7,0,0,58,59,3,12,6,0,59,60,5,11,0,0,60,61,5,8,0,0,61,62,
+  	5,7,0,0,62,63,3,14,7,0,63,64,5,11,0,0,64,65,5,4,0,0,65,66,3,16,8,0,66,
+  	68,1,0,0,0,67,45,1,0,0,0,67,55,1,0,0,0,68,11,1,0,0,0,69,70,5,10,0,0,70,
+  	13,1,0,0,0,71,72,5,10,0,0,72,15,1,0,0,0,73,78,3,18,9,0,74,75,3,18,9,0,
+  	75,76,3,16,8,0,76,78,1,0,0,0,77,73,1,0,0,0,77,74,1,0,0,0,78,17,1,0,0,
+  	0,79,80,3,20,10,0,80,81,5,12,0,0,81,86,1,0,0,0,82,83,3,20,10,0,83,84,
+  	3,18,9,0,84,86,1,0,0,0,85,79,1,0,0,0,85,82,1,0,0,0,86,19,1,0,0,0,87,88,
+  	6,10,-1,0,88,91,5,17,0,0,89,91,5,16,0,0,90,87,1,0,0,0,90,89,1,0,0,0,91,
+  	100,1,0,0,0,92,93,10,4,0,0,93,94,5,15,0,0,94,99,3,20,10,5,95,96,10,3,
+  	0,0,96,97,5,14,0,0,97,99,3,20,10,4,98,92,1,0,0,0,98,95,1,0,0,0,99,102,
+  	1,0,0,0,100,98,1,0,0,0,100,101,1,0,0,0,101,21,1,0,0,0,102,100,1,0,0,0,
+  	8,29,43,67,77,85,90,98,100
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -888,10 +891,6 @@ tree::TerminalNode* ChameleonsParser::CondExprsContext::WHERE_EXPR_SEPERATOR() {
   return getToken(ChameleonsParser::WHERE_EXPR_SEPERATOR, 0);
 }
 
-tree::TerminalNode* ChameleonsParser::CondExprsContext::LOGICOP() {
-  return getToken(ChameleonsParser::LOGICOP, 0);
-}
-
 ChameleonsParser::CondExprsContext* ChameleonsParser::CondExprsContext::condExprs() {
   return getRuleContext<ChameleonsParser::CondExprsContext>(0);
 }
@@ -933,13 +932,13 @@ ChameleonsParser::CondExprsContext* ChameleonsParser::condExprs() {
     exitRule();
   });
   try {
-    setState(86);
+    setState(85);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 4, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
       setState(79);
-      condExpr();
+      condExpr(0);
       setState(80);
       match(ChameleonsParser::WHERE_EXPR_SEPERATOR);
       break;
@@ -948,10 +947,8 @@ ChameleonsParser::CondExprsContext* ChameleonsParser::condExprs() {
     case 2: {
       enterOuterAlt(_localctx, 2);
       setState(82);
-      condExpr();
+      condExpr(0);
       setState(83);
-      match(ChameleonsParser::LOGICOP);
-      setState(84);
       condExprs();
       break;
     }
@@ -976,20 +973,28 @@ ChameleonsParser::CondExprContext::CondExprContext(ParserRuleContext *parent, si
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<tree::TerminalNode *> ChameleonsParser::CondExprContext::TERM_VAR() {
-  return getTokens(ChameleonsParser::TERM_VAR);
+tree::TerminalNode* ChameleonsParser::CondExprContext::TERM_VAR() {
+  return getToken(ChameleonsParser::TERM_VAR, 0);
 }
 
-tree::TerminalNode* ChameleonsParser::CondExprContext::TERM_VAR(size_t i) {
-  return getToken(ChameleonsParser::TERM_VAR, i);
+tree::TerminalNode* ChameleonsParser::CondExprContext::NUMBER() {
+  return getToken(ChameleonsParser::NUMBER, 0);
+}
+
+std::vector<ChameleonsParser::CondExprContext *> ChameleonsParser::CondExprContext::condExpr() {
+  return getRuleContexts<ChameleonsParser::CondExprContext>();
+}
+
+ChameleonsParser::CondExprContext* ChameleonsParser::CondExprContext::condExpr(size_t i) {
+  return getRuleContext<ChameleonsParser::CondExprContext>(i);
 }
 
 tree::TerminalNode* ChameleonsParser::CondExprContext::ORDEROP() {
   return getToken(ChameleonsParser::ORDEROP, 0);
 }
 
-tree::TerminalNode* ChameleonsParser::CondExprContext::NUMBER() {
-  return getToken(ChameleonsParser::NUMBER, 0);
+tree::TerminalNode* ChameleonsParser::CondExprContext::LOGICOP() {
+  return getToken(ChameleonsParser::LOGICOP, 0);
 }
 
 
@@ -1017,55 +1022,124 @@ std::any ChameleonsParser::CondExprContext::accept(tree::ParseTreeVisitor *visit
     return visitor->visitChildren(this);
 }
 
+
 ChameleonsParser::CondExprContext* ChameleonsParser::condExpr() {
-  CondExprContext *_localctx = _tracker.createInstance<CondExprContext>(_ctx, getState());
-  enterRule(_localctx, 20, ChameleonsParser::RuleCondExpr);
+   return condExpr(0);
+}
+
+ChameleonsParser::CondExprContext* ChameleonsParser::condExpr(int precedence) {
+  ParserRuleContext *parentContext = _ctx;
+  size_t parentState = getState();
+  ChameleonsParser::CondExprContext *_localctx = _tracker.createInstance<CondExprContext>(_ctx, parentState);
+  ChameleonsParser::CondExprContext *previousContext = _localctx;
+  (void)previousContext; // Silence compiler, in case the context is not used by generated code.
+  size_t startState = 20;
+  enterRecursionRule(_localctx, 20, ChameleonsParser::RuleCondExpr, precedence);
+
+    
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
 #else
   auto onExit = finally([=] {
 #endif
-    exitRule();
+    unrollRecursionContexts(parentContext);
   });
   try {
-    setState(94);
+    size_t alt;
+    enterOuterAlt(_localctx, 1);
+    setState(90);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx)) {
-    case 1: {
-      enterOuterAlt(_localctx, 1);
-      setState(88);
-      match(ChameleonsParser::TERM_VAR);
-      setState(89);
-      match(ChameleonsParser::ORDEROP);
-      setState(90);
-      match(ChameleonsParser::TERM_VAR);
-      break;
-    }
+    switch (_input->LA(1)) {
+      case ChameleonsParser::TERM_VAR: {
+        setState(88);
+        match(ChameleonsParser::TERM_VAR);
+        break;
+      }
 
-    case 2: {
-      enterOuterAlt(_localctx, 2);
-      setState(91);
-      match(ChameleonsParser::TERM_VAR);
-      setState(92);
-      match(ChameleonsParser::ORDEROP);
-      setState(93);
-      match(ChameleonsParser::NUMBER);
-      break;
-    }
+      case ChameleonsParser::NUMBER: {
+        setState(89);
+        match(ChameleonsParser::NUMBER);
+        break;
+      }
 
     default:
-      break;
+      throw NoViableAltException(this);
     }
-   
+    _ctx->stop = _input->LT(-1);
+    setState(100);
+    _errHandler->sync(this);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, _ctx);
+    while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
+      if (alt == 1) {
+        if (!_parseListeners.empty())
+          triggerExitRuleEvent();
+        previousContext = _localctx;
+        setState(98);
+        _errHandler->sync(this);
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 6, _ctx)) {
+        case 1: {
+          _localctx = _tracker.createInstance<CondExprContext>(parentContext, parentState);
+          pushNewRecursionContext(_localctx, startState, RuleCondExpr);
+          setState(92);
+
+          if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
+          setState(93);
+          match(ChameleonsParser::ORDEROP);
+          setState(94);
+          condExpr(5);
+          break;
+        }
+
+        case 2: {
+          _localctx = _tracker.createInstance<CondExprContext>(parentContext, parentState);
+          pushNewRecursionContext(_localctx, startState, RuleCondExpr);
+          setState(95);
+
+          if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
+          setState(96);
+          match(ChameleonsParser::LOGICOP);
+          setState(97);
+          condExpr(4);
+          break;
+        }
+
+        default:
+          break;
+        } 
+      }
+      setState(102);
+      _errHandler->sync(this);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, _ctx);
+    }
   }
   catch (RecognitionException &e) {
     _errHandler->reportError(this, e);
     _localctx->exception = std::current_exception();
     _errHandler->recover(this, _localctx->exception);
   }
-
   return _localctx;
+}
+
+bool ChameleonsParser::sempred(RuleContext *context, size_t ruleIndex, size_t predicateIndex) {
+  switch (ruleIndex) {
+    case 10: return condExprSempred(antlrcpp::downCast<CondExprContext *>(context), predicateIndex);
+
+  default:
+    break;
+  }
+  return true;
+}
+
+bool ChameleonsParser::condExprSempred(CondExprContext *_localctx, size_t predicateIndex) {
+  switch (predicateIndex) {
+    case 0: return precpred(_ctx, 4);
+    case 1: return precpred(_ctx, 3);
+
+  default:
+    break;
+  }
+  return true;
 }
 
 void ChameleonsParser::initialize() {

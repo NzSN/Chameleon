@@ -116,7 +116,7 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "(rewriteRules "
       "(rewriteRule "
       "R : {| (sourcePattern  T = 0 ) |} => {| (targetPattern  T = 1 ) |} "
-      "where (whereExprs (condExprs (condExpr T = T) ;))))))"
+      "where (whereExprs (condExprs (condExpr (condExpr T) = (condExpr T)) ;))))))"
       ));
   EXPECT_TRUE(
     ParseTreeMatching(
@@ -125,15 +125,15 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "R: {| T = 0 |} => {| T = 1 |} "
       " where T = 1 AND T = 2 OR T = 3;",
       // Expected
-      "(prog "
-      "(targetSection TARGET: Cpp) "
+      "(prog (targetSection TARGET: Cpp) "
       "(ruleSection RULES: "
       "(rewriteRules "
-      "(rewriteRule "
-      "R : {| (sourcePattern  T = 0 ) |} => {| (targetPattern  T = 1 ) |} "
-      "where (whereExprs (condExprs (condExpr T = 1) AND "
-      "(condExprs (condExpr T = 2) OR "
-      "(condExprs (condExpr T = 3) ;))))))))"
+      "(rewriteRule R : {| (sourcePattern  T = 0 ) |} => {| (targetPattern  T = 1 ) |} "
+      "where "
+      "(whereExprs (condExprs "
+      "(condExpr (condExpr (condExpr (condExpr T) = (condExpr 1)) AND "
+      "(condExpr (condExpr T) = (condExpr 2))) OR "
+      "(condExpr (condExpr T) = (condExpr 3))) ;))))))"
       ));
 
   //Multiple condition expression
@@ -145,20 +145,16 @@ TEST_F(ChameleonsTest, WhereCondition) {
       " where T = 1 AND T = 2 OR T = 3;"
       "       T = 1;",
       // Expected
-      "(prog "
-      "(targetSection TARGET: Cpp) "
+      "(prog (targetSection TARGET: Cpp) "
       "(ruleSection RULES: "
-      "(rewriteRules "
-      "(rewriteRule "
-      "R : {| (sourcePattern  T = 0 ) |} => {| (targetPattern  T = 1 ) |} "
+      "(rewriteRules (rewriteRule R : {| (sourcePattern  T = 0 ) |} => {| (targetPattern  T = 1 ) |} "
       "where "
-      // First where Expression
-      "(whereExprs (condExprs (condExpr T = 1) AND "
-      "(condExprs (condExpr T = 2) OR "
-      "(condExprs (condExpr T = 3) ;))) "
-      // Seconds where expression
-      "(whereExprs (condExprs (condExpr T = 1) ;))"
-      ")))))"
+      "(whereExprs "
+      "(condExprs "
+      "(condExpr (condExpr (condExpr (condExpr T) = (condExpr 1)) AND (condExpr (condExpr T) = (condExpr 2))) OR (condExpr (condExpr T) = (condExpr 3))) ;) "
+      "(whereExprs "
+      "(condExprs "
+      "(condExpr (condExpr T) = (condExpr 1)) ;)))))))"
       ));
 
 }
