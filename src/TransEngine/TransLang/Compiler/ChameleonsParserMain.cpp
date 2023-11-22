@@ -89,7 +89,10 @@ namespace {
 template<Base::GPTMeta T>
 bool createCondExpr(
   ChameleonsParser::CondExprContext* rCtx,
-  Rewrite::Rule<T>& rule) {}
+  Rewrite::Rule<T>& rule) {
+
+  return true;
+}
 
 template<Base::GPTMeta T>
 bool createCondExprs(
@@ -102,6 +105,8 @@ bool createCondExprs(
     if (!success) return success;
     current = current->condExprs();
   }
+
+  return true;
 }
 
 // Traverse the tree of where expressions
@@ -121,6 +126,8 @@ bool createWhereExpressions(
     /* Next WhereExprs */
     current = current->whereExprs();
   }
+
+  return true;
 }
 
 template<Base::GPTMeta T, int lang>

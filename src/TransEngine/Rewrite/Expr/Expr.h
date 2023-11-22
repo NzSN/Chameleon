@@ -10,10 +10,14 @@
 #include "TransEngine/Rewrite/Term.h"
 #include "TransEngine/Rewrite/Environment.h"
 
+#include "TransEngine/TransLang/ChameleonsLexer.h"
+#include "TransEngine/TransLang/ChameleonsParser.h"
+
 namespace TransEngine {
 namespace Expression {
 
 using TransEngine::Rewrite::Environment;
+using P = ChameleonsParser;
 
 #define APPEND_EXPR(Es, E, V...)                 \
   Es.emplace_back(                            \
@@ -23,6 +27,59 @@ using TransEngine::Rewrite::Environment;
 #define IS_SAME_TYPE(X, Y) \
   (typeid((X)) == typeid((Y)))
 
+#define EXPR_LIST(V) \
+  V(LOGICAL)         \
+  V(ORDER)           \
+  V(TERM)            \
+  V(NUMBER)
+
+enum ExprType {
+  ERROR_TYPE,
+  LOGICAL,
+  ORDER,
+  TERM,
+  NUMBER,
+  TYPE_COUNT,
+};
+
+enum OrderExprType {
+  EQUAL,
+  LESS,
+  LESS_EQUAL,
+  GREATER,
+  GREATER_EQUAL,
+};
+
+// Logical operator
+constexpr char LOGI_OP_AND[]  = "AND";
+constexpr char LOGI_OP_OR[] = "OR";
+
+// Order operator
+constexpr char ORDER_OP_EQ[] = "=";
+constexpr char ORDER_OP_LESSTHAN[] = "<";
+constexpr char ORDER_OP_LESSEQUAL[] = "<=";
+constexpr char ORDER_OP_GREATERTHAN[] = ">";
+constexpr char ORDER_OP_GREATEREQUAL[] = ">=";
+
+inline ExprType getExprType(P::CondExprContext* ctx) {
+  if (ctx->LOGICOP() != nullptr) {
+    return LOGICAL;
+  }
+
+  if (ctx->ORDEROP() != nullptr) {
+    return ORDER;
+  }
+
+  if (ctx->TERM_VAR() != nullptr) {
+    return TERM;
+  }
+
+  if (ctx->NUMBER() != nullptr) {
+    return NUMBER;
+  }
+
+  return ERROR_TYPE;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //                                  Value                                  //
@@ -319,7 +376,14 @@ private:
   std::unique_ptr<Expr<T>> rhs_;
 };
 
-#define ORDER_EXPR_DEFINE(__E, __OP)                                  \
+#define ORDER_EXPRS_LIST(V)                                                  \
+  V(Equal        , ==, EQUAL        , ORDER_OP_EQ)                                      \
+  V(LessThan     , < , LESS         , ORDER_OP_LESSTHAN)           \
+  V(LessEqual    , <=, LESS_EQUAL   , ORDER_OP_LESSEQUAL)  \
+  V(GreaterThan  , > , GREATER      , ORDER_OP_GREATERTHAN) \
+  V(GreaterEqual , >=, GREATER_EQUAL, ORDER_OP_GREATEREQUAL)
+
+#define ORDER_EXPR_DEFINE(__E, __OP, __ENUM, __STR)                   \
   namespace {                                                         \
                                                                       \
   template<typename T>                                                \
@@ -338,13 +402,9 @@ private:
   __E(std::unique_ptr<Expr<T>> lhs,                                   \
       std::unique_ptr<Expr<T>> rhs):                                  \
     __E##Base<T>{std::move(lhs), std::move(rhs)} {}                   \
-  }
+  };
 
-ORDER_EXPR_DEFINE(Equal, ==);
-ORDER_EXPR_DEFINE(LessThan, <);
-ORDER_EXPR_DEFINE(LessEqual, <=);
-ORDER_EXPR_DEFINE(GreaterThan, >=);
-ORDER_EXPR_DEFINE(GreaterEqual, >);
+ORDER_EXPRS_LIST(ORDER_EXPR_DEFINE);
 
 #undef ORDER_EXPR_DEFINE
 

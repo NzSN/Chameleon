@@ -68,9 +68,8 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   std::optional<Base::GptGeneric> u = (*program)(t);
 
   EXPECT_TRUE(u.has_value());
-
-  // Due to condition in where clause is not satisified
-  // so the target term should remain unchanged.
+  // Failure of rewrite is expected due to condition
+  // in where clause is not satisfied.
   EXPECT_TRUE(std::get<GPTAntlr4>(u.value()).getText()
               == "1+2+3");
 }
