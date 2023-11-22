@@ -63,7 +63,7 @@ private:
   std::unordered_map<TermIdent, Term<T>> bindings_;
 };
 
-/* Environment is a collection of Variable bindings. */
+  /* Environment is a collection of Variable bindings. */
 template<Base::GPTMeta T>
 class Environment {
 public:

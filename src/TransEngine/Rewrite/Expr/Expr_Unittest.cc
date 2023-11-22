@@ -2,6 +2,7 @@
 #include <memory>
 #include "Expr.h"
 
+#include "Base/generic_parsetree_inl.h"
 
 namespace TransEngine {
 namespace Expression {
@@ -126,9 +127,119 @@ TEST(ExpressionTest, ValueIface_TypeCheck) {
   std::unique_ptr<Value<int>> v = std::make_unique<Bool<int>>();
   EXPECT_TRUE(Value<int>::isBoolean(*v));
 
-
   std::unique_ptr<Value<int>> v2 = std::make_unique<Unit<int>>();
   EXPECT_TRUE(Value<int>::isUnit(*v2));
+}
+
+
+struct MetaTest {
+
+  MetaTest(std::string s):
+    value{s} {}
+
+  std::string getText() {
+    return value;
+  }
+
+  bool operator==(const MetaTest& other) const {
+    return value == other.value;
+  }
+
+  bool operator!=(const MetaTest& other) const {
+    return value != other.value;
+  }
+
+  std::string value;
+};
+
+TEST(ExpressionTest, TermRef) {
+  MetaTest m{"123"};
+  Base::GenericParseTree<MetaTest> tree{m};
+  Rewrite::Term<MetaTest> t{tree};
+  TermRef<MetaTest> v{"ID", t};
+
+  Environment<MetaTest> env;
+  env.bindings().bind("ID", t);
+
+  std::unique_ptr<Value<MetaTest>> termValue = v(&env);
+  EXPECT_TRUE(Value<MetaTest>::isString(*termValue));
+}
+
+TEST(ExpressionTest, LogicalAnd) {
+  // T T
+  {
+    LogiAndExpr<int> v_and{
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(true)),
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(true)),
+    };
+    EXPECT_TRUE(*v_and(nullptr) == Bool<int>{true});
+  }
+
+  // T F
+  {
+    LogiAndExpr<int> v_and{
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(true)),
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(false)),
+    };
+    EXPECT_TRUE(*v_and(nullptr) == Bool<int>{false});
+  }
+
+  // F T
+  {
+    LogiAndExpr<int> v_and{
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(false)),
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(true)),
+    };
+    EXPECT_TRUE(*v_and(nullptr) == Bool<int>{false});
+  }
+
+  // F F
+  {
+    LogiAndExpr<int> v_and{
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(false)),
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(false)),
+    };
+    EXPECT_TRUE(*v_and(nullptr) == Bool<int>{false});
+  }
+}
+
+TEST(ExpressionTest, LogicalOr) {
+  // T T
+  {
+    LogiOrExpr<int> v_or{
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(true)),
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(true)),
+    };
+    EXPECT_TRUE(*v_or(nullptr) == Bool<int>{true});
+  }
+  // T F
+  {
+    LogiOrExpr<int> v_or{
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(true)),
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(false)),
+    };
+    EXPECT_TRUE(*v_or(nullptr) == Bool<int>{true});
+  }
+  // F T
+  {
+    LogiOrExpr<int> v_or{
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(false)),
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(true)),
+    };
+    EXPECT_TRUE(*v_or(nullptr) == Bool<int>{true});
+  }
+  // F F
+  {
+    LogiOrExpr<int> v_or{
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(false)),
+      std::make_unique<Constant<int>>(std::make_unique<Bool<int>>(false)),
+    };
+    EXPECT_TRUE(*v_or(nullptr) == Bool<int>{false});
+  }
+}
+
+TEST(ExpressionTest, NumberOperator) {
+  /* TODO: Implement unittest for Expression::Number */
 }
 
 } // Expression

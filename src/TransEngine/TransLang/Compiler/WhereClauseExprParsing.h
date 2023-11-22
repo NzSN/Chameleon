@@ -27,6 +27,17 @@ enum OrderExprType {
   GREATER_EQUAL,
 };
 
+// Logical operator
+constexpr char LOGI_OP_AND[]  = "AND";
+constexpr char LOGI_OP_OR[] = "OR";
+
+// Order operator
+constexpr char ORDER_OP_EQ[] = "=";
+constexpr char ORDER_OP_LESSTHAN[] = "<";
+constexpr char ORDER_OP_LESSEQUAL[] = "<=";
+constexpr char ORDER_OP_GREATERTHAN[] = ">";
+constexpr char ORDER_OP_GREATEREQUAL[] = ">=";
+
 inline ExprType getExprType(P::CondExprContext* ctx) {
   if (ctx->LOGICOP() != nullptr) {
     return LOGICAL;
@@ -46,10 +57,6 @@ inline ExprType getExprType(P::CondExprContext* ctx) {
 
   return ERROR_TYPE;
 }
-
-template<Base::GPTMeta T>
-std::unique_ptr<Expression::Expr<T>>
-toLogicalExpr(P::CondExprContext* ctx);
 
 template<Base::GPTMeta T>
 std::unique_ptr<Expression::Expr<T>>

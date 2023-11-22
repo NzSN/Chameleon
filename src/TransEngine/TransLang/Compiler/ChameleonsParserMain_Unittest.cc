@@ -60,7 +60,7 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
     "TARGET: TestLang \n"
     "RULES: \n"
     "Commutative: {| a+b+c |} => {| c+b+a |} "
-    " where a = 1 AND b = 2 AND c = 3;"
+    " where a = 2 AND b = 1 AND c = 3;"
   };
 
   std::shared_ptr<Program> program =
@@ -68,8 +68,11 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   std::optional<Base::GptGeneric> u = (*program)(t);
 
   EXPECT_TRUE(u.has_value());
+
+  // Due to condition in where clause is not satisified
+  // so the target term should remain unchanged.
   EXPECT_TRUE(std::get<GPTAntlr4>(u.value()).getText()
-              == "3+2+1");
+              == "1+2+3");
 }
 
 

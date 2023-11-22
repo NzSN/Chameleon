@@ -7,7 +7,8 @@
 #include <variant>
 #include <stdexcept>
 
-#include "../Environment.h"
+#include "TransEngine/Rewrite/Term.h"
+#include "TransEngine/Rewrite/Environment.h"
 
 namespace TransEngine {
 namespace Expression {
@@ -22,6 +23,7 @@ using TransEngine::Rewrite::Environment;
 #define IS_SAME_TYPE(X, Y) \
   (typeid((X)) == typeid((Y)))
 
+
 /////////////////////////////////////////////////////////////////////////////
 //                                  Value                                  //
 /////////////////////////////////////////////////////////////////////////////
@@ -34,13 +36,16 @@ struct Bool;
 template<Base::GPTMeta T>
 struct Unit;
 
+template<Base::GPTMeta T>
+struct String;
+
 // Caution: Instance of Value should be able to pass by value
 //          and no resource release after instance destructed.
 template<Base::GPTMeta T>
 struct Value {
   ~Value() {}
   virtual bool operator==(const Value& other) const = 0;
-  virtual std::unique_ptr<Value<T>> duplicate() const = 0;
+  virtual std::unique_ptr<Value> duplicate() const = 0;
 
   static bool isBoolean(Value<T>& v) {
     return IS_SAME_TYPE(Bool<T>{}, v);
@@ -48,6 +53,10 @@ struct Value {
 
   static bool isUnit(Value<T>& v) {
     return IS_SAME_TYPE(Unit<T>{}, v);
+  }
+
+  static bool isString(Value<T>& v) {
+    return IS_SAME_TYPE(String<T>{}, v);
   }
 };
 
@@ -90,24 +99,77 @@ struct Bool: public Value<T> {
     }
   }
 
-  bool operator&&(const Value<T>& other) const override {
+  bool operator&&(const Value<T>& other) const {
     return v && dynamic_cast<const Bool<T>&>(other).v;
   }
 
-  bool operator||(const Value<T>& other) const override {
+  bool operator||(const Value<T>& other) const {
     return v || dynamic_cast<const Bool<T>&>(other).v;
   }
 
-  std::unique_ptr<Value<T>> duplicate() const override {
+  std::unique_ptr<Value<T>> duplicate() const {
     std::unique_ptr<Value<T>> dup =
       std::make_unique<Bool>(*this);
 
     return dup;
   }
 
-
-
   bool v;
+};
+
+// A type wrapper for std::string
+template<Base::GPTMeta T>
+struct String: public Value<T> {
+  String(): value{} {}
+  String(std::string v): value{v} {}
+
+  bool operator==(const Value<T>& other) const final {
+    if (IS_SAME_TYPE(*this, other)) {
+      return value == dynamic_cast<const String&>(other).value;
+    } else {
+      return false;
+    }
+  };
+
+  std::unique_ptr<Value<T>> duplicate() const final {
+    return std::make_unique<String>(value);
+  };
+
+  std::string value;
+};
+
+// 32bits signed integer
+template<Base::GPTMeta T>
+struct Number: public Value<T> {
+  Number(): value{} {}
+  Number(int32_t v): value{v} {}
+
+  #define ORDER_OP_DEFINE(OP)                        \
+    bool operator OP (const Number& other) {         \
+      return value OP other.value;                   \
+    }
+
+  ORDER_OP_DEFINE(==);
+  ORDER_OP_DEFINE(<);
+  ORDER_OP_DEFINE(<=);
+  ORDER_OP_DEFINE(>);
+  ORDER_OP_DEFINE(>=);
+
+  #undef ORDER_OP_DEFINE
+
+  #define NUMBER_OP_DEFINE(OP)                                      \
+    std::unique_ptr<Value<T>> operator OP (const Number& other) { \
+      return std::make_unique<Number>(value OP other.value);      \
+    }
+
+  NUMBER_OP_DEFINE(+);
+  NUMBER_OP_DEFINE(-);
+  NUMBER_OP_DEFINE(*);
+  NUMBER_OP_DEFINE(/);
+
+  #undef NUMBER_OP_DEFINE
+
+  int32_t value;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -132,6 +194,32 @@ struct Expr {
   virtual std::unique_ptr<Value<T>> operator()(Environment<T>*) = 0;
 };
 
+/* Rewrite Terms */
+template<Base::GPTMeta T>
+class TermRef: public Expr<T> {
+public:
+  TermRef(Rewrite::TermID tid, Rewrite::Term<T> term):
+    tid_{tid}, term_{term} {}
+
+  // Evaluating of TermRef will gain the underlying value of a Term.
+  std::unique_ptr<Value<T>> operator()(Environment<T>* env) {
+    // First to check that whether is binded
+    bool binded = env->bindings().isBinded(tid_);
+    if (!binded) {
+      throw std::runtime_error(
+        "Term is not binded " + tid_);
+    }
+
+    return std::make_unique<String<T>>(
+      term_.tree.get().getText());
+  }
+
+private:
+  Rewrite::TermID tid_;
+  Rewrite::Term<T> term_;
+};
+
+/* Literal values */
 template<Base::GPTMeta T>
 class Constant: public Expr<T> {
 public:
@@ -158,7 +246,8 @@ public:
   LogiAndExpr() {}
 
   LogiAndExpr(std::unique_ptr<Expr<T>> lhs,
-              std::unique_ptr<Expr<T>> rhs) {}
+              std::unique_ptr<Expr<T>> rhs):
+    lhs_{std::move(lhs)}, rhs_{std::move(rhs)} {}
 
   std::unique_ptr<Value<T>> operator()(Environment<T>* env) final {
     std::unique_ptr<Value<T>> loperand = (*lhs_)(env);
@@ -170,7 +259,8 @@ public:
         "Type of operand for logical or is wrong");
     }
 
-    return *loperand && *roperand;
+    return std::make_unique<Bool<T>>(
+      *dynamic_cast<Bool<T>*>(loperand.get()) && *roperand);
   }
 
 private:
@@ -184,7 +274,8 @@ public:
   LogiOrExpr() {}
 
   LogiOrExpr(std::unique_ptr<Expr<T>> lhs,
-              std::unique_ptr<Expr<T>> rhs) {}
+             std::unique_ptr<Expr<T>> rhs):
+    lhs_{std::move(lhs)}, rhs_{std::move(rhs)} {}
 
   std::unique_ptr<Value<T>> operator()(Environment<T>* env) final {
     std::unique_ptr<Value<T>> loperand = (*lhs_)(env);
@@ -196,28 +287,8 @@ public:
         "Type of operand for logical or is wrong");
     }
 
-    return *loperand || *roperand;
-  }
-
-private:
-  std::unique_ptr<Expr<T>> lhs_;
-  std::unique_ptr<Expr<T>> rhs_;
-};
-
-template<Base::GPTMeta T,
-         std::function<
-           std::unique_ptr<Value<T>>(Value<T>&, Value<T>&)> op>
-class OrderExpr: public Expr<T> {
-public:
-  OrderExpr() {}
-  OrderExpr(std::unique_ptr<Expr<T>> lhs,
-            std::unique_ptr<Expr<T>> rhs):
-    lhs_{std::move(lhs)}, rhs_{std::move(rhs)} {}
-
-  std::unique_ptr<Value<T>> operator()(Environment<T>* env) {
-    std::unique_ptr<Value<T>> loperand = (*lhs_)(env);
-    std::unique_ptr<Value<T>> roperand = (*rhs_)(env);
-    return op(*loperand, *roperand);
+    return std::make_unique<Bool<T>>(
+      *dynamic_cast<Bool<T>*>(loperand.get()) || *roperand);
   }
 
 private:
@@ -228,82 +299,54 @@ private:
 /////////////////////////////////////////////////////////////////////////////
 //                             Order Expression                            //
 /////////////////////////////////////////////////////////////////////////////
-template<Base::GPTMeta T>
-using EqualBase =
-  OrderExpr<T,
-  [](Value<T>& l, Value<T>& r) -> std::unique_ptr<Value<T>>{
-    return l == r;
-  }>;
-template<Base::GPTMeta T>
-class Equal: public EqualBase<T> {
+template<Base::GPTMeta T,
+         std::unique_ptr<Value<T>> (*op)(Value<T>&, Value<T>&)>
+class OrderExpr: public Expr<T> {
 public:
-  Equal() {}
-  Equal(std::unique_ptr<Expr<T>> lhs,
-        std::unique_ptr<Expr<T>> rhs):
-    EqualBase<T>{std::move(lhs), std::move(rhs)} {}
+  OrderExpr() {}
+  OrderExpr(std::unique_ptr<Expr<T>> lhs,
+            std::unique_ptr<Expr<T>> rhs):
+    lhs_{std::move(lhs)}, rhs_{std::move(rhs)} {}
+
+  std::unique_ptr<Value<T>> operator()(Environment<T>* env) {
+    std::unique_ptr<Value<T>> loperand = (*lhs_)(env);
+    std::unique_ptr<Value<T>> roperand = (*rhs_)(env);
+
+    return op(*loperand, *roperand);
+  }
+private:
+  std::unique_ptr<Expr<T>> lhs_;
+  std::unique_ptr<Expr<T>> rhs_;
 };
 
-template<Base::GPTMeta T>
-using LessThanBase =
-  OrderExpr<T,
-  [](Value<T>& l, Value<T>& r) -> std::unique_ptr<Value<T>>{
-    return l < r;
-  }>;
-template<Base::GPTMeta T>
-class LessThan: public LessThanBase<T> {
-public:
-  LessThan() {}
-  LessThan(std::unique_ptr<Expr<T>> lhs,
-        std::unique_ptr<Expr<T>> rhs):
-    EqualBase<T>{std::move(lhs), std::move(rhs)} {}
-};
+#define ORDER_EXPR_DEFINE(__E, __OP)                                  \
+  namespace {                                                         \
+                                                                      \
+  template<typename T>                                                \
+  std::unique_ptr<Value<T>> __E##Eval(Value<T>& lhs, Value<T>& rhs) { \
+    return std::make_unique<Bool<T>>(lhs __OP rhs);                   \
+  };                                                                  \
+  template<Base::GPTMeta T>                                           \
+  using __E##Base =                                                   \
+    OrderExpr<T, __E##Eval<T>>;                                       \
+  }                                                                   \
+                                                                      \
+  template<Base::GPTMeta T>                                           \
+  class __E: public __E##Base<T> {                                    \
+  public:                                                             \
+  __E() {}                                                            \
+  __E(std::unique_ptr<Expr<T>> lhs,                                   \
+      std::unique_ptr<Expr<T>> rhs):                                  \
+    __E##Base<T>{std::move(lhs), std::move(rhs)} {}                   \
+  }
 
-template<Base::GPTMeta T>
-using LessEqualBase =
-  OrderExpr<T,
-  [](Value<T>& l, Value<T>& r) -> std::unique_ptr<Value<T>>{
-    return l <= r;
-  }>;
-template<Base::GPTMeta T>
-class LessEqual: public LessEqualBase<T> {
-public:
-  LessEqual() {}
-  LessEqual(std::unique_ptr<Expr<T>> lhs,
-        std::unique_ptr<Expr<T>> rhs):
-    EqualBase<T>{std::move(lhs), std::move(rhs)} {}
-};
+ORDER_EXPR_DEFINE(Equal, ==);
+ORDER_EXPR_DEFINE(LessThan, <);
+ORDER_EXPR_DEFINE(LessEqual, <=);
+ORDER_EXPR_DEFINE(GreaterThan, >=);
+ORDER_EXPR_DEFINE(GreaterEqual, >);
 
-template<Base::GPTMeta T>
-using GreaterThanBase =
-  OrderExpr<T,
-  [](Value<T>& l, Value<T>& r) -> std::unique_ptr<Value<T>>{
-    return l > r;
-  }>;
-template<Base::GPTMeta T>
-class GreaterThan: public GreaterThanBase<T> {
-public:
-  GreaterThan() {}
-  GreaterThan(std::unique_ptr<Expr<T>> lhs,
-        std::unique_ptr<Expr<T>> rhs):
-    EqualBase<T>{std::move(lhs), std::move(rhs)} {}
-};
-
-template<Base::GPTMeta T>
-using GreaterEqualBase =
-  OrderExpr<T,
-  [](Value<T>& l, Value<T>& r) -> std::unique_ptr<Value<T>>{
-    return l >= r;
-  }>;
-template<Base::GPTMeta T>
-class GreaterEqual: public GreaterEqualBase<T> {
-public:
-  GreaterEqual() {}
-  GreaterEqual(std::unique_ptr<Expr<T>> lhs,
-        std::unique_ptr<Expr<T>> rhs):
-    EqualBase<T>{std::move(lhs), std::move(rhs)} {}
-};
-
-
+#undef ORDER_EXPR_DEFINE
 
 template<Base::GPTMeta T>
 class Call: public Expr<T> {

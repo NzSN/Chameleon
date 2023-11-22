@@ -11,6 +11,8 @@
 namespace TransEngine {
 namespace Rewrite {
 
+using TermID = std::string;
+
 /* This structure represent a subtree of
  * ParseTree, and this structures is used for
  * binding purposes. */

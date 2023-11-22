@@ -89,9 +89,7 @@ namespace {
 template<Base::GPTMeta T>
 bool createCondExpr(
   ChameleonsParser::CondExprContext* rCtx,
-  Rewrite::Rule<T>& rule) {
-
-}
+  Rewrite::Rule<T>& rule) {}
 
 template<Base::GPTMeta T>
 bool createCondExprs(

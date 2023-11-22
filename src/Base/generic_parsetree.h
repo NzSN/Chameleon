@@ -111,7 +111,7 @@ public:
   // For convenience, GenericParseTree will require that
   //
   std::string getText() const {
-    return const_cast<T&>(metaRef).tree()->getText();
+    return const_cast<T&>(metaRef).getText();
   }
 
   SrcRange getPos() {
