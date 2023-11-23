@@ -9,6 +9,9 @@ namespace TransEngine::Compiler::WhereClause {
 template<Base::GPTMeta T>
 using Expr_uptr = std::unique_ptr<Expression::Expr<T>>;
 
+/////////////////////////////////////////////////////////////////////////////
+//                             Trans Functions                             //
+/////////////////////////////////////////////////////////////////////////////
 template<Base::GPTMeta T,
          typename L>
 Expr_uptr<T> toLOGICAL_internal(P::CondExprContext* ctx)
@@ -31,9 +34,7 @@ Expr_uptr<T> toLOGICAL(P::CondExprContext* ctx) {
   }
 }
 
-template<Base::GPTMeta T,
-         typename O>
-
+template<Base::GPTMeta T, typename O>
 #define REQUIREMENTS__(__E, __OP, __ENUM, __STR) \
   std::same_as<O, Expression::__E<T>> ||
 // Workaround to prevent syntax error in REQUIREMENTS__
@@ -55,7 +56,7 @@ Expr_uptr<T> toORDER_internal(P::CondExprContext* ctx)
 template<Base::GPTMeta T>
 Expr_uptr<T> toORDER(P::CondExprContext* ctx) {
 
-  std::string OP = ctx->LOGICOP()->getText();
+  std::string OP = ctx->ORDEROP()->getText();
 
 #define TRANS_TO_EXPRS(__E, __OP, __ENUM, __STR)               \
   if (OP == Expression::__STR) {                               \
@@ -68,6 +69,18 @@ Expr_uptr<T> toORDER(P::CondExprContext* ctx) {
   return nullptr;
 }
 
+template<Base::GPTMeta T>
+Expr_uptr<T> toTERM(P::CondExprContext* ctx) {
+
+  return nullptr;
+}
+
+template<Base::GPTMeta T>
+Expr_uptr<T> toNUMBER(P::CondExprContext* ctx) {
+  return nullptr;
+}
+
+// Interface to outer world
 template<Base::GPTMeta T>
 Expr_uptr<T> toExpr(P::CondExprContext* ctx) {
 

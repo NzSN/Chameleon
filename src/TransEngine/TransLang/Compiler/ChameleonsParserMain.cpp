@@ -10,6 +10,8 @@
 #include "TransEngine/Rewrite/Rule.h"
 #include "ChameleonsParserMain-inl.h"
 
+#include "WhereClauseExprParsing-inl.h"
+
 namespace TransEngine {
 namespace Compiler {
 

@@ -54,3 +54,30 @@ cc_test(
          "@plog//:plog",
          "@rapidcheck//:rapidcheck"],
 )
+
+cc_test(
+    name = "where_clause_unittest",
+    srcs = [
+         ":chameleons_parser_srcs",
+            "Compiler/WhereClauseExprParsing.h",
+            "Compiler/WhereClauseExprParsing-inl.h",
+            "Compiler/WhereClauseExprParsing_unittest.cc",
+            "//src:utility_src",
+            "//src/TransEngine/Rewrite:rewrite_srcs",
+            "//src/Base:generic_parsetree",
+            "//src/Concepts:concepts_srcs",
+            "//src/Misc/testLanguage:testLang_parser_srcs",
+            "//src/TransEngine:pattern_matching",
+            "//src/Analysis:analyzer_src",
+         ],
+    copts = [
+          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          "-Isrc",
+          "-std=c++2a"],
+    deps = [
+         "@antlr4_runtime//:antlr4_runtime",
+         "@com_google_googletest//:gtest_main",
+         "@plog//:plog",
+         "@rapidcheck//:rapidcheck"],
+)

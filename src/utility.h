@@ -52,7 +52,8 @@ template<std::derived_from<antlr4::Lexer> Lexer,
          std::derived_from<antlr4::Parser> Parser,
          typename Entry>
 struct Antlr4ParseEnv {
-  Antlr4ParseEnv(std::string sentences, Entry entry): inputStream{sentences},
+  Antlr4ParseEnv(std::string sentences, Entry entry):
+    inputStream{sentences},
     input{inputStream},
     tokens{&lexer},
     lexer{&input},

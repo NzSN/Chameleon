@@ -388,7 +388,17 @@ private:
                                                                       \
   template<typename T>                                                \
   std::unique_ptr<Value<T>> __E##Eval(Value<T>& lhs, Value<T>& rhs) { \
-    return std::make_unique<Bool<T>>(lhs __OP rhs);                   \
+    /* Currentl, there are only small amout of types */               \
+    /* so do it by if statement. */                                   \
+    if (typeid(lhs) == typeid(Number<T>) &&                           \
+        typeid(rhs) == typeid(Number<T>)) {                                                             \
+      return std::make_unique<Bool<T>>(                                 \
+        dynamic_cast<Number<T>&>(lhs) __OP                              \
+        dynamic_cast<Number<T>&>(rhs));                                  \
+    } else {                                                            \
+      return std::make_unique<Bool<T>>(                                 \
+        lhs __OP rhs);                                                  \
+    }                                                                   \
   };                                                                  \
   template<Base::GPTMeta T>                                           \
   using __E##Base =                                                   \

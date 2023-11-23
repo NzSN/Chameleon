@@ -15,6 +15,8 @@ namespace Base {
 class Antlr4Node {
 public:
 
+  Antlr4Node() = default;
+
   using Node = std::unique_ptr<Antlr4Node>;
   using Children = std::vector<Node>;
   Antlr4Node(int lang, antlr4::tree::ParseTree* tree);
