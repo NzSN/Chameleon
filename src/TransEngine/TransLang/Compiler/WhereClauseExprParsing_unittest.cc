@@ -52,8 +52,8 @@ TEST_F(WhereClauseTest, introduce) {
 
   EXPECT_TRUE(result.size() == 3);
 
-  std::unique_ptr<Expression::Expr<Base::Antlr4Node>> expr =
-    WhereClause::toExpr<Base::Antlr4Node>(
+  std::unique_ptr<Expression::Expr> expr =
+    WhereClause::toExpr(
       dynamic_cast<ChameleonsParser::CondExprContext*>(result[0]));
 
   (*expr)(nullptr);

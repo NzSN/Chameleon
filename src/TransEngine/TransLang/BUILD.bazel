@@ -58,7 +58,7 @@ cc_test(
 cc_test(
     name = "where_clause_unittest",
     srcs = [
-         ":chameleons_parser_srcs",
+            ":chameleons_parser_srcs",
             "Compiler/WhereClauseExprParsing.h",
             "Compiler/WhereClauseExprParsing-inl.h",
             "Compiler/WhereClauseExprParsing_unittest.cc",

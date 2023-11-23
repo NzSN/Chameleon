@@ -10,7 +10,7 @@ filegroup(
             # Rule
             "Rule.h", "Rule.cc",
             # Expr
-            "Expr/Expr.h",
+            "Expr/Expr.h", "Expr/Expr.cc",
             # CondExpr
             "CondExpr.h", "CondExpr-inl.h"
             ],
@@ -34,6 +34,7 @@ cc_test(
     name = "transengine_unittest",
     srcs = [":rewrite_srcs",
             "Expr/Expr.h",
+            "Expr/Expr.cc",
             "Expr/Expr_Unittest.cc",
             "Environment.h",
             "//src/TransEngine/TransLang:chameleons_parser_srcs",

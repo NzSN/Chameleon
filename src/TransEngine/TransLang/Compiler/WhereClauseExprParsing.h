@@ -10,9 +10,7 @@ using P = ChameleonsParser;
 
 namespace TransEngine::Compiler::WhereClause {
 
-template<Base::GPTMeta T>
-std::unique_ptr<Expression::Expr<T>>
-toExpr(P::CondExprContext* ctx);
+std::unique_ptr<Expression::Expr> toExpr(P::CondExprContext* ctx);
 
 
 } // TransEngine::Compiler::WhereClause

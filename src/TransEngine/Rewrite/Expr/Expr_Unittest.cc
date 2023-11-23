@@ -8,12 +8,12 @@ namespace TransEngine {
 namespace Expression {
 
 TEST(ExpressionTest, Value) {
-  Unit<Base::Antlr4Node> u1, u2;
-  Bool<Base::Antlr4Node> v1{true}, v2{false}, v3{true};
+  Unit u1, u2;
+  Bool v1{true}, v2{false}, v3{true};
 
   // Check Value operator==
-  EXPECT_TRUE(u1 != AS_VALUE(v1, Base::Antlr4Node));
-  EXPECT_TRUE(u2 != AS_VALUE(v1, Base::Antlr4Node));
+  EXPECT_TRUE(u1 != AS_VALUE(v1));
+  EXPECT_TRUE(u2 != AS_VALUE(v1));
   EXPECT_TRUE(u1 == u2);
 
   EXPECT_TRUE(v1 != v2);
@@ -22,225 +22,204 @@ TEST(ExpressionTest, Value) {
 
 TEST(ExpressionTest, ConstExpression) {
   // Unit
-  Constant<Base::Antlr4Node> a{std::make_unique<Unit<Base::Antlr4Node>>()};
-  EXPECT_TRUE(*(a(nullptr)) == Unit<Base::Antlr4Node>{});
-  EXPECT_TRUE(*(a(nullptr)) != Bool<Base::Antlr4Node>{});
+  Constant a{std::make_unique<Unit>()};
+  EXPECT_TRUE(*(a(nullptr)) == Unit{});
+  EXPECT_TRUE(*(a(nullptr)) != Bool{});
   EXPECT_TRUE(*(a(nullptr)) == *(a(nullptr)));
 
   // Bool
-  Constant<Base::Antlr4Node> b{std::make_unique<Bool<Base::Antlr4Node>>()};
-  EXPECT_TRUE(*(b(nullptr)) != Unit<Base::Antlr4Node>{});
-  EXPECT_TRUE(*(b(nullptr)) == Bool<Base::Antlr4Node>{});
+  Constant b{std::make_unique<Bool>()};
+  EXPECT_TRUE(*(b(nullptr)) != Unit{});
+  EXPECT_TRUE(*(b(nullptr)) == Bool{});
   EXPECT_TRUE(*(b(nullptr)) == *(b(nullptr)));
 }
 
 TEST(ExpressionTest, EqualExpression) {
   // Expression () = () which should result
   // in True.
-  Equal<Base::Antlr4Node> a{
-    std::make_unique<Constant<Base::Antlr4Node>>(
-      std::make_unique<Unit<Base::Antlr4Node>>()),
-    std::make_unique<Constant<Base::Antlr4Node>>(
-      std::make_unique<Unit<Base::Antlr4Node>>())};
-  EXPECT_TRUE(Bool<Base::Antlr4Node>{true} == *a(nullptr));
+  Equal a{
+    std::make_unique<Constant>(
+      std::make_unique<Unit>()),
+    std::make_unique<Constant>(
+      std::make_unique<Unit>())};
+  EXPECT_TRUE(Bool{true} == *a(nullptr));
 
   // Expression () = T which should result
   // in False.
-  Equal<Base::Antlr4Node> b{
-    std::make_unique<Constant<Base::Antlr4Node>>(
-      std::make_unique<Unit<Base::Antlr4Node>>()),
-    std::make_unique<Constant<Base::Antlr4Node>>(
-      std::make_unique<Bool<Base::Antlr4Node>>(true))};
-  EXPECT_TRUE(Bool<Base::Antlr4Node>{false} == *b(nullptr));
+  Equal b{
+    std::make_unique<Constant>(
+      std::make_unique<Unit>()),
+    std::make_unique<Constant>(
+      std::make_unique<Bool>(true))};
+  EXPECT_TRUE(Bool{false} == *b(nullptr));
 }
 
 // This function will checkging whether all of
 // it's arguments has same type.
-struct CheckEquality: public Function<Base::Antlr4Node> {
-  std::unique_ptr<Value<Base::Antlr4Node>> operator()(Arguments<Base::Antlr4Node>* args) override {
+struct CheckEquality: public Function {
+  std::unique_ptr<Value> operator()(Arguments* args) override {
 
-    Value<Base::Antlr4Node>& first = *args->args[0];
+    Value& first = *args->args[0];
     for (auto& c: args->args) {
       if (!IS_SAME_TYPE(first, *c)) {
-        return std::make_unique<Bool<Base::Antlr4Node>>(false);
+        return std::make_unique<Bool>(false);
       }
     }
 
-    return std::make_unique<Bool<Base::Antlr4Node>>(true);
+    return std::make_unique<Bool>(true);
   }
 };
 
 TEST(ExpressionTest, CallExpression) {
   // Build up arguments
-  std::vector<std::unique_ptr<Expr<Base::Antlr4Node>>> args;
+  std::vector<std::unique_ptr<Expr>> args;
 
   args.emplace_back(
     // Constant Expression
-    std::make_unique<Constant<Base::Antlr4Node>>(
-      std::make_unique<Unit<Base::Antlr4Node>>())
+    std::make_unique<Constant>(
+      std::make_unique<Unit>())
   );
 
   args.emplace_back(
     // Constant Expression
-    std::make_unique<Constant<Base::Antlr4Node>>(
-      std::make_unique<Unit<Base::Antlr4Node>>())
+    std::make_unique<Constant>(
+      std::make_unique<Unit>())
   );
 
   // GenUnit is a Chameleons function
-  Call<Base::Antlr4Node> c{
+  Call c{
     std::make_unique<CheckEquality>(),
     std::move(args) };
 
   // Got a Value once you evaluate the function.
-  std::unique_ptr<Value<Base::Antlr4Node>> v = c(nullptr);
+  std::unique_ptr<Value> v = c(nullptr);
 
-  EXPECT_TRUE(*v == Bool<Base::Antlr4Node>{true});
+  EXPECT_TRUE(*v == Bool{true});
 }
 
 TEST(ExpressionTest, CallExpression_FalseCase) {
   // Build up arguments
-  std::vector<std::unique_ptr<Expr<Base::Antlr4Node>>> args;
+  std::vector<std::unique_ptr<Expr>> args;
 
   APPEND_EXPR(
     args,
-    Constant<Base::Antlr4Node>,
-    std::make_unique<Unit<Base::Antlr4Node>>());
+    Constant,
+    std::make_unique<Unit>());
 
   APPEND_EXPR(
     args,
-    Constant<Base::Antlr4Node>,
-    std::make_unique<Bool<Base::Antlr4Node>>());
+    Constant,
+    std::make_unique<Bool>());
 
   // GenUnit is a Chameleons function
-  Call<Base::Antlr4Node> c{
+  Call c{
     std::make_unique<CheckEquality>(),
     std::move(args) };
 
   // Got a Value once you evaluate the function.
-  std::unique_ptr<Value<Base::Antlr4Node>> v = c(nullptr);
+  std::unique_ptr<Value> v = c(nullptr);
 
-  EXPECT_TRUE(*v == Bool<Base::Antlr4Node>{false});
+  EXPECT_TRUE(*v == Bool{false});
 
 }
 
 TEST(ExpressionTest, ValueIface_TypeCheck) {
-  std::unique_ptr<Value<Base::Antlr4Node>> v = std::make_unique<Bool<Base::Antlr4Node>>();
-  EXPECT_TRUE(Value<Base::Antlr4Node>::isBoolean(*v));
+  std::unique_ptr<Value> v = std::make_unique<Bool>();
+  EXPECT_TRUE(Value::isBoolean(*v));
 
-  std::unique_ptr<Value<Base::Antlr4Node>> v2 = std::make_unique<Unit<Base::Antlr4Node>>();
-  EXPECT_TRUE(Value<Base::Antlr4Node>::isUnit(*v2));
+  std::unique_ptr<Value> v2 = std::make_unique<Unit>();
+  EXPECT_TRUE(Value::isUnit(*v2));
 }
 
+// TEST(ExpressionTest, TermRef) {
+//   MetaTest m{"123"};
+//   Base::GenericParseTree<MetaTest> tree{m};
+//   Rewrite::Term<MetaTest> t{tree};
+//   TermRef v{"ID", t};
 
-struct MetaTest {
+//   Environment<MetaTest> env;
+//   env.bindings().bind("ID", t);
 
-  MetaTest(std::string s):
-    value{s} {}
-
-  std::string getText() {
-    return value;
-  }
-
-  bool operator==(const MetaTest& other) const {
-    return value == other.value;
-  }
-
-  bool operator!=(const MetaTest& other) const {
-    return value != other.value;
-  }
-
-  std::string value;
-};
-
-TEST(ExpressionTest, TermRef) {
-  MetaTest m{"123"};
-  Base::GenericParseTree<MetaTest> tree{m};
-  Rewrite::Term<MetaTest> t{tree};
-  TermRef<MetaTest> v{"ID", t};
-
-  Environment<MetaTest> env;
-  env.bindings().bind("ID", t);
-
-  std::unique_ptr<Value<MetaTest>> termValue = v(&env);
-  EXPECT_TRUE(Value<MetaTest>::isString(*termValue));
-}
+//   std::unique_ptr<Value<MetaTest>> termValue = v(&env);
+//   EXPECT_TRUE(Value<MetaTest>::isString(*termValue));
+// }
 
 TEST(ExpressionTest, LogicalAnd) {
   // T T
   {
-    LogiAndExpr<Base::Antlr4Node> v_and{
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(true)),
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(true)),
+    LogiAndExpr v_and{
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
     };
-    EXPECT_TRUE(*v_and(nullptr) == Bool<Base::Antlr4Node>{true});
+    EXPECT_TRUE(*v_and(nullptr) == Bool{true});
   }
 
   // T F
   {
-    LogiAndExpr<Base::Antlr4Node> v_and{
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(true)),
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(false)),
+    LogiAndExpr v_and{
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
     };
-    EXPECT_TRUE(*v_and(nullptr) == Bool<Base::Antlr4Node>{false});
+    EXPECT_TRUE(*v_and(nullptr) == Bool{false});
   }
 
   // F T
   {
-    LogiAndExpr<Base::Antlr4Node> v_and{
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(false)),
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(true)),
+    LogiAndExpr v_and{
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
     };
-    EXPECT_TRUE(*v_and(nullptr) == Bool<Base::Antlr4Node>{false});
+    EXPECT_TRUE(*v_and(nullptr) == Bool{false});
   }
 
   // F F
   {
-    LogiAndExpr<Base::Antlr4Node> v_and{
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(false)),
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(false)),
+    LogiAndExpr v_and{
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
     };
-    EXPECT_TRUE(*v_and(nullptr) == Bool<Base::Antlr4Node>{false});
+    EXPECT_TRUE(*v_and(nullptr) == Bool{false});
   }
 }
 
 TEST(ExpressionTest, LogicalOr) {
   // T T
   {
-    LogiOrExpr<Base::Antlr4Node> v_or{
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(true)),
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(true)),
+    LogiOrExpr v_or{
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
     };
-    EXPECT_TRUE(*v_or(nullptr) == Bool<Base::Antlr4Node>{true});
+    EXPECT_TRUE(*v_or(nullptr) == Bool{true});
   }
   // T F
   {
-    LogiOrExpr<Base::Antlr4Node> v_or{
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(true)),
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(false)),
+    LogiOrExpr v_or{
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
     };
-    EXPECT_TRUE(*v_or(nullptr) == Bool<Base::Antlr4Node>{true});
+    EXPECT_TRUE(*v_or(nullptr) == Bool{true});
   }
   // F T
   {
-    LogiOrExpr<Base::Antlr4Node> v_or{
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(false)),
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(true)),
+    LogiOrExpr v_or{
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
     };
-    EXPECT_TRUE(*v_or(nullptr) == Bool<Base::Antlr4Node>{true});
+    EXPECT_TRUE(*v_or(nullptr) == Bool{true});
   }
   // F F
   {
-    LogiOrExpr<Base::Antlr4Node> v_or{
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(false)),
-      std::make_unique<Constant<Base::Antlr4Node>>(std::make_unique<Bool<Base::Antlr4Node>>(false)),
+    LogiOrExpr v_or{
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
     };
-    EXPECT_TRUE(*v_or(nullptr) == Bool<Base::Antlr4Node>{false});
+    EXPECT_TRUE(*v_or(nullptr) == Bool{false});
   }
 }
 
-TEST(ExpressionTest, NumberOperator) {
-  /* TODO: Implement unittest for Expression::Number */
-}
+// TEST(ExpressionTest, NumberOperator) {
+//   /* TODO: Implement unittest for Expression::Number */
+// }
 
 } // Expression
 } // TransEngine

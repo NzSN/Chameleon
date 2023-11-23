@@ -23,7 +23,7 @@ public:
   CondExpr(const CondExpr& ce):
     condition_{ce.condition_} {}
 
-  CondExpr(std::unique_ptr<Expression::Expr<T>>&& condition):
+  CondExpr(std::unique_ptr<Expression::Expr>&& condition):
     condition_{std::move(condition)} {}
 
   bool isEmpty() const {
@@ -36,7 +36,7 @@ private:
 
   // Shared ownership here due to rule is copyable
   // which imply that CondExpr should also copyable.
-  std::shared_ptr<Expression::Expr<T>> condition_;
+  std::shared_ptr<Expression::Expr> condition_;
 };
 
 } // Rewrite
