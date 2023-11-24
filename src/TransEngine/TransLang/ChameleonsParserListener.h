@@ -47,6 +47,12 @@ public:
   virtual void enterCondExpr(ChameleonsParser::CondExprContext *ctx) = 0;
   virtual void exitCondExpr(ChameleonsParser::CondExprContext *ctx) = 0;
 
+  virtual void enterTerm(ChameleonsParser::TermContext *ctx) = 0;
+  virtual void exitTerm(ChameleonsParser::TermContext *ctx) = 0;
+
+  virtual void enterAssignExpr(ChameleonsParser::AssignExprContext *ctx) = 0;
+  virtual void exitAssignExpr(ChameleonsParser::AssignExprContext *ctx) = 0;
+
   virtual void enterCallExpr(ChameleonsParser::CallExprContext *ctx) = 0;
   virtual void exitCallExpr(ChameleonsParser::CallExprContext *ctx) = 0;
 

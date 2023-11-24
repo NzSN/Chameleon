@@ -59,6 +59,14 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitTerm(ChameleonsParser::TermContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitAssignExpr(ChameleonsParser::AssignExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitCallExpr(ChameleonsParser::CallExprContext *ctx) override {
     return visitChildren(ctx);
   }

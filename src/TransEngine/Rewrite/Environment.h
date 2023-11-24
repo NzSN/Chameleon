@@ -32,7 +32,7 @@ public:
     bindings_.insert_or_assign(ident, term);
   }
 
-  const Term<T> operator[](const TermIdent& ident) const {
+  Term<T>& operator[](const TermIdent& ident) {
     if (bindings_.contains(ident)) {
       return std::get<1>(*bindings_.find(ident));
     } else {
@@ -58,6 +58,7 @@ public:
   void clear() {
     bindings_.clear();
   }
+
 
 private:
   std::unordered_map<TermIdent, Term<T>> bindings_;

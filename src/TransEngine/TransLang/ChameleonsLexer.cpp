@@ -60,7 +60,7 @@ void chameleonslexerLexerInitialize() {
       "TARGET_TAG", "RULE_TAG", "STRATEGY_TAG", "WHERE", "IDENTIFIER", "COLON", 
       "OPENBRACE", "TRANSFORM", "WS", "CODEBYTES", "CLOSEBRACE", "WHERE_EXPR_SEPERATOR", 
       "LOGICOP", "ORDEROP", "ASSIGN", "LBRACE", "RBRACE", "COMMA", "STRING", 
-      "TERM_VAR", "WS_WHERE"
+      "WHERE_IDENTIFIER", "WS_WHERE"
     },
     std::vector<std::string>{
       "DEFAULT_TOKEN_CHANNEL", "HIDDEN"
@@ -77,7 +77,7 @@ void chameleonslexerLexerInitialize() {
       "", "TARGET_TAG", "RULE_TAG", "STRATEGY_TAG", "WHERE", "IDENTIFIER", 
       "COLON", "OPENBRACE", "TRANSFORM", "WS", "CODEBYTES", "CLOSEBRACE", 
       "WHERE_EXPR_SEPERATOR", "LOGICOP", "ORDEROP", "ASSIGN", "LBRACE", 
-      "RBRACE", "COMMA", "STRING", "TERM_VAR", "WS_WHERE"
+      "RBRACE", "COMMA", "STRING", "WHERE_IDENTIFIER", "WS_WHERE"
     }
   );
   static const int32_t serializedATNSegment[] = {

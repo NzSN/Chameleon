@@ -156,5 +156,24 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "(condExprs "
       "(condExpr (condExpr T) = (condExpr \"D\")) ;)))))))"
       ));
+}
 
+
+TEST_F(ChameleonsTest, WhereCondition_CallExpr) {
+  EXPECT_TRUE(
+    ParseTreeMatching(
+      "TARGET: LANG \n"
+      "RULES: \n"
+      "R: {| T + 0 |} => {| T |}"
+      // Notes the side effects apply to T by operator
+      // := only appear after build strategy is applied.
+      " where T := RD(T);",
+
+      "(prog "
+      "(targetSection TARGET: LANG) "
+      "(ruleSection RULES: "
+      "(rewriteRules "
+      "(rewriteRule R : {| (sourcePattern  T + 0 ) |} => {| (targetPattern  T ) |} "
+      "where (whereExprs (condExprs (condExpr (assignExpr T := (condExpr (callExpr RD ( (arguments T) ))))) ;))))))"
+      ));
 }

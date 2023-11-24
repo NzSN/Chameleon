@@ -41,6 +41,10 @@ public:
 
     virtual std::any visitCondExpr(ChameleonsParser::CondExprContext *context) = 0;
 
+    virtual std::any visitTerm(ChameleonsParser::TermContext *context) = 0;
+
+    virtual std::any visitAssignExpr(ChameleonsParser::AssignExprContext *context) = 0;
+
     virtual std::any visitCallExpr(ChameleonsParser::CallExprContext *context) = 0;
 
     virtual std::any visitArguments(ChameleonsParser::ArgumentsContext *context) = 0;

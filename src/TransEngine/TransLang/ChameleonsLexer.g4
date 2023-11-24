@@ -35,6 +35,9 @@ RBRACE: ')';
 COMMA: ',';
 
 STRING: '"' [a-zA-Z0-9 ]+ '"';
-TERM_VAR: [a-zA-Z]+;
+
+
+WHERE_IDENTIFIER: [a-zA-Z]+;
+
 WS_WHERE: [ \t\r\n]+ -> skip;
 //----------------------------------------------------------------

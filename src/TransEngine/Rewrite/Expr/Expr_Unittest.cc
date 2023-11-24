@@ -131,18 +131,21 @@ TEST(ExpressionTest, ValueIface_TypeCheck) {
   EXPECT_TRUE(Value::isUnit(*v2));
 }
 
-// TEST(ExpressionTest, TermRef) {
-//   MetaTest m{"123"};
-//   Base::GenericParseTree<MetaTest> tree{m};
-//   Rewrite::Term<MetaTest> t{tree};
-//   TermRef v{"ID", t};
+struct Antlr4ParseTreeStub: public antlr4::tree::ParseTree {
 
-//   Environment<MetaTest> env;
-//   env.bindings().bind("ID", t);
+};
 
-//   std::unique_ptr<Value<MetaTest>> termValue = v(&env);
-//   EXPECT_TRUE(Value<MetaTest>::isString(*termValue));
-// }
+TEST(ExpressionTest, TermRef) {
+  Base::GenericParseTree<MetaTest> tree{m};
+  Rewrite::Term<MetaTest> t{tree};
+  TermRef v{"ID", t};
+
+  Environment<MetaTest> env;
+  env.bindings().bind("ID", t);
+
+  std::unique_ptr<Value<MetaTest>> termValue = v(&env);
+  EXPECT_TRUE(Value<MetaTest>::isString(*termValue));
+}
 
 TEST(ExpressionTest, LogicalAnd) {
   // T T

@@ -18,6 +18,8 @@ using TermID = std::string;
  * binding purposes. */
 template<Base::GPTMeta T>
 struct Term {
+  Term() {}
+
   Term(Base::GenericParseTree<T>& t):
     tree{t} {}
   Term(const Term& other):

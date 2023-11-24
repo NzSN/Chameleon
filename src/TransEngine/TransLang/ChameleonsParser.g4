@@ -58,15 +58,24 @@ condExpr
     : condExpr ORDEROP condExpr
     | condExpr LOGICOP condExpr
     | callExpr
-    | TERM_VAR
+    | assignExpr
+    | term
     | STRING
     ;
 
+term
+    : WHERE_IDENTIFIER
+    ;
+
+assignExpr
+    : WHERE_IDENTIFIER ASSIGN condExpr
+    ;
+
 callExpr
-    : IDENTIFIER LBRACE arguments RBRACE
+    : WHERE_IDENTIFIER LBRACE arguments RBRACE
     ;
 
 arguments
-    : TERM_VAR
-    | TERM_VAR COMMA arguments
+    : WHERE_IDENTIFIER
+    | WHERE_IDENTIFIER COMMA arguments
     ;

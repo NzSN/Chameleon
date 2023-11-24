@@ -49,6 +49,12 @@ public:
   virtual void enterCondExpr(ChameleonsParser::CondExprContext * /*ctx*/) override { }
   virtual void exitCondExpr(ChameleonsParser::CondExprContext * /*ctx*/) override { }
 
+  virtual void enterTerm(ChameleonsParser::TermContext * /*ctx*/) override { }
+  virtual void exitTerm(ChameleonsParser::TermContext * /*ctx*/) override { }
+
+  virtual void enterAssignExpr(ChameleonsParser::AssignExprContext * /*ctx*/) override { }
+  virtual void exitAssignExpr(ChameleonsParser::AssignExprContext * /*ctx*/) override { }
+
   virtual void enterCallExpr(ChameleonsParser::CallExprContext * /*ctx*/) override { }
   virtual void exitCallExpr(ChameleonsParser::CallExprContext * /*ctx*/) override { }
 

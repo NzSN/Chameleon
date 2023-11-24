@@ -76,7 +76,7 @@ inline ExprType getExprType(P::CondExprContext* ctx) {
     return ORDER;
   }
 
-  if (ctx->TERM_VAR() != nullptr) {
+  if (ctx->term() != nullptr) {
     return TERM;
   }
 
@@ -115,6 +115,36 @@ struct OrderValue: public Value {
   virtual bool operator<=(const OrderValue& other) const = 0;
   virtual bool operator>(const OrderValue& other) const = 0;
   virtual bool operator>=(const OrderValue& other) const = 0;
+};
+
+struct Term: public Value {
+  Term() {}
+  ~Term() {}
+
+  std::unique_ptr<Value> duplicate() const {
+    return std::make_unique<Term>(Term{term});
+  }
+
+  Term(Rewrite::Term<Adapter>* term_):
+    term{term_} {}
+
+  bool operator==(const Value& other) const {
+    return term == dynamic_cast<const Term&>(other).term;
+  }
+
+  bool operator=(const Value& other) {
+    if (typeid(other) != typeid(Value)) {
+      return false;
+    } else {
+      return term = dynamic_cast<const Term&>(other).term;
+    }
+  }
+
+  const Rewrite::Term<Adapter>* getTerm() const {
+    return term;
+  }
+
+  Rewrite::Term<Adapter>* term;
 };
 
 // A type same as void in C++, () in Haskell.
@@ -253,7 +283,7 @@ struct Expr {
 class TermRef: public Expr {
 public:
   TermRef(Rewrite::TermID tid,
-          Rewrite::Term<Adapter> term):
+          Term term):
     tid_{tid}, term_{term} {}
 
   // Evaluating of TermRef will gain the underlying
@@ -268,13 +298,23 @@ public:
         "Term is not binded " + tid_);
     }
 
+    if (term_.term == nullptr) { return nullptr; }
+
     return std::make_unique<String>(
-      term_.tree.get().getText());
+      term_.term->tree.get().getText());
+  }
+
+  Rewrite::TermID ID() const {
+    return tid_;
+  }
+
+  Term TERM() const {
+    return term_;
   }
 
 private:
   Rewrite::TermID tid_;
-  Rewrite::Term<Adapter> term_;
+  Term term_;
 };
 
 /* Literal values */
@@ -433,6 +473,45 @@ public:
 private:
   std::unique_ptr<Function> f_;
   std::vector<std::unique_ptr<Expr>> args_;
+};
+
+class Assign: public Expr {
+public:
+  Assign(std::unique_ptr<Expr> left,
+         std::unique_ptr<Expr> right):
+    left_{std::move(left)}, right_{std::move(right)} {}
+
+  // Evaluating of Assignment expression is result in
+  // replace of Rewrite::Term in Environment which TermID
+  // specified by left value(left value is force to TermRef).
+  std::unique_ptr<Value> operator()(Environment<Adapter>* env) {
+    if (typeid(*left_) != (typeid(TermRef))) {
+      return nullptr;
+    }
+
+    TermRef* termRef_l = dynamic_cast<TermRef*>(left_.get());
+    TermRef* termRef_r = dynamic_cast<TermRef*>(right_.get());
+
+    // First, check the validity of assignment.
+    if (!env->bindings().isBinded(termRef_l->ID())) {
+      // The Term is not binded with an GenericParseTree,
+      // a term without binding with GenericParseTree is not
+      // valid in assignment due to the semantic of assignment.
+      return nullptr;
+    } else {
+      env->bindings().unbind(termRef_l->ID());
+      env->bindings().bind(
+        termRef_l->ID(),
+        *termRef_r->TERM().term);
+    }
+
+    return std::make_unique<Term>(
+      &env->bindings()[termRef_l->ID()]);
+  }
+
+private:
+  std::unique_ptr<Expr> left_;
+  std::unique_ptr<Expr> right_;
 };
 
 } // Expression

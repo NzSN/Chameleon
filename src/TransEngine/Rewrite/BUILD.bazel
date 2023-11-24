@@ -33,8 +33,6 @@ filegroup(
 cc_test(
     name = "transengine_unittest",
     srcs = [":rewrite_srcs",
-            "Expr/Expr.h",
-            "Expr/Expr.cc",
             "Expr/Expr_Unittest.cc",
             "Environment.h",
             "//src/TransEngine/TransLang:chameleons_parser_srcs",
