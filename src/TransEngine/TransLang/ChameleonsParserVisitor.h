@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
 
 #pragma once
 
@@ -40,6 +40,10 @@ public:
     virtual std::any visitCondExprs(ChameleonsParser::CondExprsContext *context) = 0;
 
     virtual std::any visitCondExpr(ChameleonsParser::CondExprContext *context) = 0;
+
+    virtual std::any visitCallExpr(ChameleonsParser::CallExprContext *context) = 0;
+
+    virtual std::any visitArguments(ChameleonsParser::ArgumentsContext *context) = 0;
 
 
 };

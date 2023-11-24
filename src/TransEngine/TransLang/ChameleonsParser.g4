@@ -57,6 +57,16 @@ condExprs
 condExpr
     : condExpr ORDEROP condExpr
     | condExpr LOGICOP condExpr
+    | callExpr
     | TERM_VAR
-    | NUMBER
+    | STRING
+    ;
+
+callExpr
+    : IDENTIFIER LBRACE arguments RBRACE
+    ;
+
+arguments
+    : TERM_VAR
+    | TERM_VAR COMMA arguments
     ;

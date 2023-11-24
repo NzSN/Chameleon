@@ -123,7 +123,7 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "TARGET: Cpp\n"
       "RULES:\n"
       "R: {| T = 0 |} => {| T = 1 |} "
-      " where T = 1 AND T = 2 OR T = 3;",
+      " where T = \"ABC\" AND T = \"CAB\" OR T = \"AAA\";",
       // Expected
       "(prog (targetSection TARGET: Cpp) "
       "(ruleSection RULES: "
@@ -131,9 +131,9 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "(rewriteRule R : {| (sourcePattern  T = 0 ) |} => {| (targetPattern  T = 1 ) |} "
       "where "
       "(whereExprs (condExprs "
-      "(condExpr (condExpr (condExpr (condExpr T) = (condExpr 1)) AND "
-      "(condExpr (condExpr T) = (condExpr 2))) OR "
-      "(condExpr (condExpr T) = (condExpr 3))) ;))))))"
+      "(condExpr (condExpr (condExpr (condExpr T) = (condExpr \"ABC\")) AND "
+      "(condExpr (condExpr T) = (condExpr \"CAB\"))) OR "
+      "(condExpr (condExpr T) = (condExpr \"AAA\"))) ;))))))"
       ));
 
   //Multiple condition expression
@@ -142,8 +142,8 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "TARGET: Cpp\n"
       "RULES:\n"
       "R: {| T = 0 |} => {| T = 1 |} "
-      " where T = 1 AND T = 2 OR T = 3;"
-      "       T = 1;",
+      " where T = \"A\" AND T = \"B\" OR T = \"C\";"
+      "       T = \"D\";",
       // Expected
       "(prog (targetSection TARGET: Cpp) "
       "(ruleSection RULES: "
@@ -151,10 +151,10 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "where "
       "(whereExprs "
       "(condExprs "
-      "(condExpr (condExpr (condExpr (condExpr T) = (condExpr 1)) AND (condExpr (condExpr T) = (condExpr 2))) OR (condExpr (condExpr T) = (condExpr 3))) ;) "
+      "(condExpr (condExpr (condExpr (condExpr T) = (condExpr \"A\")) AND (condExpr (condExpr T) = (condExpr \"B\"))) OR (condExpr (condExpr T) = (condExpr \"C\"))) ;) "
       "(whereExprs "
       "(condExprs "
-      "(condExpr (condExpr T) = (condExpr 1)) ;)))))))"
+      "(condExpr (condExpr T) = (condExpr \"D\")) ;)))))))"
       ));
 
 }

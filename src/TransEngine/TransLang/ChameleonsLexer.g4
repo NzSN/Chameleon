@@ -23,12 +23,18 @@ CLOSEBRACE: '|}' -> mode(DEFAULT_MODE);
 // -------------------------- Where Clause -----------------------
 mode WHERE_CLAUSE;
 WHERE_EXPR_SEPERATOR: ';';
-FUNC: [a-zA-Z]+ '(' [a-zA-Z]+ ')';
 
 LOGICOP: ('AND' | 'OR' | 'NOT');
 ORDEROP: ('=' | '<' | '>' | '<=' | '>=');
-NUMBER: [0-9]+;
 
+ASSIGN: ':=';
+
+LBRACE: '(';
+RBRACE: ')';
+
+COMMA: ',';
+
+STRING: '"' [a-zA-Z0-9 ]+ '"';
 TERM_VAR: [a-zA-Z]+;
 WS_WHERE: [ \t\r\n]+ -> skip;
 //----------------------------------------------------------------

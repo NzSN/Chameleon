@@ -18,7 +18,8 @@ RandomIdentifier:
     {| T I = E |} => {| T L = E |}
     # Conditional Parts of Rewrite Rule
     where <Type>T AND;
-          <Identifier>I;
+          IsTerminal(I);
+          I = "A";
           L := RD(I);
 
 RDI_Assign:

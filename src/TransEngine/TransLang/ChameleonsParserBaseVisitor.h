@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
 
 #pragma once
 
@@ -56,6 +56,14 @@ public:
   }
 
   virtual std::any visitCondExpr(ChameleonsParser::CondExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitCallExpr(ChameleonsParser::CallExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitArguments(ChameleonsParser::ArgumentsContext *ctx) override {
     return visitChildren(ctx);
   }
 

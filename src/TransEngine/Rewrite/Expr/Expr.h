@@ -37,14 +37,14 @@ using P = ChameleonsParser;
   V(LOGICAL)         \
   V(ORDER)           \
   V(TERM)            \
-  V(NUMBER)
+  V(CONSTANT)
 
 enum ExprType {
   ERROR_TYPE,
   LOGICAL,
   ORDER,
   TERM,
-  NUMBER,
+  CONSTANT,
   TYPE_COUNT,
 };
 
@@ -80,8 +80,8 @@ inline ExprType getExprType(P::CondExprContext* ctx) {
     return TERM;
   }
 
-  if (ctx->NUMBER() != nullptr) {
-    return NUMBER;
+  if (ctx->STRING() != nullptr) {
+    return CONSTANT;
   }
 
   return ERROR_TYPE;

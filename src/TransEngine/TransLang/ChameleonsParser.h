@@ -1,5 +1,5 @@
 
-// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.1
+// Generated from ./ChameleonsParser.g4 by ANTLR 4.13.0
 
 #pragma once
 
@@ -14,14 +14,15 @@ public:
   enum {
     TARGET_TAG = 1, RULE_TAG = 2, STRATEGY_TAG = 3, WHERE = 4, IDENTIFIER = 5, 
     COLON = 6, OPENBRACE = 7, TRANSFORM = 8, WS = 9, CODEBYTES = 10, CLOSEBRACE = 11, 
-    WHERE_EXPR_SEPERATOR = 12, FUNC = 13, LOGICOP = 14, ORDEROP = 15, NUMBER = 16, 
-    TERM_VAR = 17, WS_WHERE = 18
+    WHERE_EXPR_SEPERATOR = 12, LOGICOP = 13, ORDEROP = 14, ASSIGN = 15, 
+    LBRACE = 16, RBRACE = 17, COMMA = 18, STRING = 19, TERM_VAR = 20, WS_WHERE = 21
   };
 
   enum {
     RuleProg = 0, RuleTargetSection = 1, RuleRuleSection = 2, RuleStrategySection = 3, 
     RuleRewriteRules = 4, RuleRewriteRule = 5, RuleSourcePattern = 6, RuleTargetPattern = 7, 
-    RuleWhereExprs = 8, RuleCondExprs = 9, RuleCondExpr = 10
+    RuleWhereExprs = 8, RuleCondExprs = 9, RuleCondExpr = 10, RuleCallExpr = 11, 
+    RuleArguments = 12
   };
 
   explicit ChameleonsParser(antlr4::TokenStream *input);
@@ -51,7 +52,9 @@ public:
   class TargetPatternContext;
   class WhereExprsContext;
   class CondExprsContext;
-  class CondExprContext; 
+  class CondExprContext;
+  class CallExprContext;
+  class ArgumentsContext; 
 
   class  ProgContext : public antlr4::ParserRuleContext {
   public:
@@ -225,8 +228,9 @@ public:
   public:
     CondExprContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    CallExprContext *callExpr();
     antlr4::tree::TerminalNode *TERM_VAR();
-    antlr4::tree::TerminalNode *NUMBER();
+    antlr4::tree::TerminalNode *STRING();
     std::vector<CondExprContext *> condExpr();
     CondExprContext* condExpr(size_t i);
     antlr4::tree::TerminalNode *ORDEROP();
@@ -241,6 +245,41 @@ public:
 
   CondExprContext* condExpr();
   CondExprContext* condExpr(int precedence);
+  class  CallExprContext : public antlr4::ParserRuleContext {
+  public:
+    CallExprContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IDENTIFIER();
+    antlr4::tree::TerminalNode *LBRACE();
+    ArgumentsContext *arguments();
+    antlr4::tree::TerminalNode *RBRACE();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  CallExprContext* callExpr();
+
+  class  ArgumentsContext : public antlr4::ParserRuleContext {
+  public:
+    ArgumentsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *TERM_VAR();
+    antlr4::tree::TerminalNode *COMMA();
+    ArgumentsContext *arguments();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ArgumentsContext* arguments();
+
 
   bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
 
