@@ -116,7 +116,7 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "(rewriteRules "
       "(rewriteRule "
       "R : {| (sourcePattern  T = 0 ) |} => {| (targetPattern  T = 1 ) |} "
-      "where (whereExprs (condExprs (condExpr (condExpr T) = (condExpr T)) ;))))))"
+      "where (whereExprs (condExprs (condExpr (condExpr (term T)) = (condExpr (term T))) ;))))))"
       ));
   EXPECT_TRUE(
     ParseTreeMatching(
@@ -131,9 +131,9 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "(rewriteRule R : {| (sourcePattern  T = 0 ) |} => {| (targetPattern  T = 1 ) |} "
       "where "
       "(whereExprs (condExprs "
-      "(condExpr (condExpr (condExpr (condExpr T) = (condExpr \"ABC\")) AND "
-      "(condExpr (condExpr T) = (condExpr \"CAB\"))) OR "
-      "(condExpr (condExpr T) = (condExpr \"AAA\"))) ;))))))"
+      "(condExpr (condExpr (condExpr (condExpr (term T)) = (condExpr \"ABC\")) AND "
+      "(condExpr (condExpr (term T)) = (condExpr \"CAB\"))) OR "
+      "(condExpr (condExpr (term T)) = (condExpr \"AAA\"))) ;))))))"
       ));
 
   //Multiple condition expression
@@ -151,10 +151,10 @@ TEST_F(ChameleonsTest, WhereCondition) {
       "where "
       "(whereExprs "
       "(condExprs "
-      "(condExpr (condExpr (condExpr (condExpr T) = (condExpr \"A\")) AND (condExpr (condExpr T) = (condExpr \"B\"))) OR (condExpr (condExpr T) = (condExpr \"C\"))) ;) "
+      "(condExpr (condExpr (condExpr (condExpr (term T)) = (condExpr \"A\")) AND (condExpr (condExpr (term T)) = (condExpr \"B\"))) OR (condExpr (condExpr (term T)) = (condExpr \"C\"))) ;) "
       "(whereExprs "
       "(condExprs "
-      "(condExpr (condExpr T) = (condExpr \"D\")) ;)))))))"
+      "(condExpr (condExpr (term T)) = (condExpr \"D\")) ;)))))))"
       ));
 }
 
@@ -174,6 +174,8 @@ TEST_F(ChameleonsTest, WhereCondition_CallExpr) {
       "(ruleSection RULES: "
       "(rewriteRules "
       "(rewriteRule R : {| (sourcePattern  T + 0 ) |} => {| (targetPattern  T ) |} "
-      "where (whereExprs (condExprs (condExpr (assignExpr T := (condExpr (callExpr RD ( (arguments T) ))))) ;))))))"
+      "where (whereExprs (condExprs "
+      "(condExpr (assignExpr T := "
+      "(condExpr (callExpr RD ( (arguments T) ))))) ;))))))"
       ));
 }
