@@ -169,6 +169,9 @@ bool Antlr4Node::operator==(const Antlr4Node& node) const {
   if (this->tree_->getTreeType() ==
       antlr4::tree::ParseTreeType::TERMINAL) {
 
+    std::cout << this->tree_->getText() << std::endl;
+    std::cout << node.tree_->getText() << std::endl;
+
     // Check equality of contents of terminal
     if (this->tree_->getText() !=
         node.tree_->getText()) {

@@ -46,6 +46,39 @@ TEST(ChameleonsParserMainTest, Spec) {
   EXPECT_TRUE(std::get<GPTAntlr4>(u.value()).getText() == "3+2+1");
 }
 
+// A Chameleon Function, plus a number by 1
+namespace TransExpr = TransEngine::Expression;
+struct Plus: public TransExpr::Function {
+  std::unique_ptr<TransExpr::Value> operator()(
+    TransExpr::Arguments* args) {
+
+    if (args->args.size() != 1) {
+      return nullptr;
+    }
+
+    // Try to convert the text presentation to integer,
+    // no effects if failed to convert.
+    if (!TransExpr::Value::isTerm(*args->args[0])) {
+      return nullptr;
+    }
+
+    TransExpr::Term* term = dynamic_cast<TransExpr::Term*>(
+      args->args[0].get());
+
+    std::string numberMaybe = term->term->tree.get().getText();
+
+    int number{};
+
+    try {
+      number = std::stoi(numberMaybe);
+    } catch (const std::invalid_argument& e) {
+      return nullptr;
+    } catch (const std::out_of_range& e) {
+      return nullptr;
+    }
+  }
+};
+
 TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   Compiler compiler;
 
@@ -60,7 +93,7 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
     "TARGET: TestLang \n"
     "RULES: \n"
     "Commutative: {| a+b+c |} => {| c+b+a |} "
-    " where a = 2 AND b = 1 AND c = 3;"
+    " where a := Plus(a);"
   };
 
   std::shared_ptr<Program> program =
@@ -68,10 +101,8 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   std::optional<Base::GptGeneric> u = (*program)(t);
 
   EXPECT_TRUE(u.has_value());
-  // Failure of rewrite is expected due to condition
-  // in where clause is not satisfied.
   EXPECT_TRUE(std::get<GPTAntlr4>(u.value()).getText()
-              == "1+2+3");
+              == "3+2+2");
 }
 
 

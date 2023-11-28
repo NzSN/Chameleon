@@ -41,8 +41,13 @@ struct Term {
     return tree.get() == other.tree.get();
   }
 
+  bool operator!=(const Term& other) const {
+    return tree.get() != other.tree.get();
+  }
+
   using RefWrapperGPT =
-    std::reference_wrapper<Base::GenericParseTree<T>>;
+    std::reference_wrapper<
+    Base::GenericParseTree<T>>;
   RefWrapperGPT tree;
 
   // Users should use Term as value.

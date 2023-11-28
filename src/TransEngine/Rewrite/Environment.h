@@ -45,9 +45,12 @@ public:
     return bindings_.contains(ident);
   }
 
-  void unbind(const TermIdent& ident) {
+  bool unbind(const TermIdent& ident) {
     if (bindings_.contains(ident)) {
       bindings_.erase(ident);
+      return true;
+    } else {
+      return false;
     }
   }
 

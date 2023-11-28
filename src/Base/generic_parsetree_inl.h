@@ -25,9 +25,9 @@ bool GenericParseTree<T>::operator==(
       if (l.childs_.size() != r.childs_.size()) {
         return false;
       } else {
-        // Terminal
         if (l.childs_.size() == 0) {
-          return true;
+          // Terminal
+          return l.metaRef == r.metaRef;
         }
 
         std::vector<GenericParseTree*> l_children(l.childs_.size());

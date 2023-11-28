@@ -96,6 +96,7 @@ inline ExprType getExprType(P::CondExprContext* ctx) {
 struct Bool;
 struct Unit;
 struct String;
+struct Term;
 
 // Caution: Instance of Value should be able to pass by value
 //          and no resource release after instance destructed.
@@ -108,6 +109,7 @@ struct Value {
   static bool isBoolean(Value& v);
   static bool isUnit(Value& v);
   static bool isString(Value& v);
+  static bool isTerm(Value& v);
 };
 
 struct OrderValue: public Value {
@@ -275,6 +277,14 @@ struct Function {
 /////////////////////////////////////////////////////////////////////////////
 struct Expr {
   ~Expr() {}
+
+  static std::unique_ptr<Value> eval(
+    std::unique_ptr<Expr>& expr,
+    Environment<Base::Antlr4Node>* env) {
+
+    return (*expr)(env);
+  }
+
   virtual std::unique_ptr<Value> operator()(
     Environment<Adapter>*) = 0;
 };
@@ -300,8 +310,7 @@ public:
 
     if (term_.term == nullptr) { return nullptr; }
 
-    return std::make_unique<String>(
-      term_.term->tree.get().getText());
+    return term_.duplicate();
   }
 
   Rewrite::TermID ID() const {
@@ -468,16 +477,16 @@ public:
       arguments.args.push_back(std::move(v));
     }
 
-    return std::move((*f_)(&arguments));
+    return (*f_)(&arguments);
   }
 private:
   std::unique_ptr<Function> f_;
   std::vector<std::unique_ptr<Expr>> args_;
 };
 
-class Assign: public Expr {
+class Assignment: public Expr {
 public:
-  Assign(std::unique_ptr<Expr> left,
+  Assignment(std::unique_ptr<Expr> left,
          std::unique_ptr<Expr> right):
     left_{std::move(left)}, right_{std::move(right)} {}
 
@@ -490,7 +499,6 @@ public:
     }
 
     TermRef* termRef_l = dynamic_cast<TermRef*>(left_.get());
-    TermRef* termRef_r = dynamic_cast<TermRef*>(right_.get());
 
     // First, check the validity of assignment.
     if (!env->bindings().isBinded(termRef_l->ID())) {
@@ -499,10 +507,26 @@ public:
       // valid in assignment due to the semantic of assignment.
       return nullptr;
     } else {
-      env->bindings().unbind(termRef_l->ID());
-      env->bindings().bind(
-        termRef_l->ID(),
-        *termRef_r->TERM().term);
+      // Evaluating the right hand side expression.
+      std::unique_ptr<Value> v = Expr::eval(right_, env);
+      if (typeid(*v) != typeid(Term)) {
+        // Assignment is an operator of Term, which type is
+        // Assignment :: Term -> Term -> Term
+        std::cout << typeid(*v).name() << std::endl;
+        return nullptr;
+      } else {
+        Term* term = dynamic_cast<Term*>(v.get());
+
+        bool success = env->bindings().unbind(termRef_l->ID());
+        if (!success) {
+          std::cout << "failed to unbind" << std::endl;
+          return nullptr;
+        }
+
+        env->bindings().bind(
+          termRef_l->ID(),
+          *term->term);
+      }
     }
 
     return std::make_unique<Term>(

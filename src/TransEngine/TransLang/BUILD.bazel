@@ -5,6 +5,18 @@ filegroup(
     visibility = ["//visibility:public"]
 )
 
+filegroup(
+    name = "chameleons_compiler_srcs",
+    srcs = [
+            "Compiler/ChameleonsParserMain.h",
+            "Compiler/ChameleonsParserMain-inl.h",
+            "Compiler/ChameleonsParserMain.cpp",
+            "Compiler/ChameleonsParserMain_Unittest.cc",
+            "Compiler/WhereClauseExprParsing.h",
+            "Compiler/WhereClauseExprParsing-inl.h",
+         ]
+)
+
 cc_test(
     name = "chameleons_parser_unittest",
     srcs = [":chameleons_parser_srcs",
@@ -25,12 +37,7 @@ cc_test(
 cc_test(
     name = "chameleonsmain_unittest",
     srcs = [":chameleons_parser_srcs",
-
-            # Compiler
-            "Compiler/ChameleonsParserMain.h",
-            "Compiler/ChameleonsParserMain-inl.h",
-            "Compiler/ChameleonsParserMain.cpp",
-            "Compiler/ChameleonsParserMain_Unittest.cc",
+            ":chameleons_compiler_srcs",
 
             "//src/Concepts:concepts_srcs",
             "//src/Misc/testLanguage:testLang_parser_srcs",

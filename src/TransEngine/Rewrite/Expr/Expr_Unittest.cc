@@ -152,7 +152,11 @@ struct Antlr4ParseTreeStub: public antlr4::tree::ParseTree {
   }
 
   bool operator==(const ParseTree &other) {
-    return true;
+    if (typeid(other) != typeid(Antlr4ParseTreeStub)) {
+      return false;
+    }
+    return text ==
+      dynamic_cast<const Antlr4ParseTreeStub&>(other).text;
   }
 
   std::any accept(antlr4::tree::ParseTreeVisitor* visitor) {
@@ -167,7 +171,7 @@ struct Antlr4ParseTreeStub: public antlr4::tree::ParseTree {
     return antlr4::misc::Interval{};
   }
 
-  std::string text;
+  const std::string text;
 };
 
 TEST(ExpressionTest, TermRef) {
@@ -185,7 +189,7 @@ TEST(ExpressionTest, TermRef) {
   env.bindings().bind("ID", t);
 
   std::unique_ptr<Value> termValue = v(&env);
-  EXPECT_TRUE(Value::isString(*termValue));
+  EXPECT_TRUE(Value::isTerm(*termValue));
 }
 
 TEST(ExpressionTest, LogicalAnd) {
@@ -261,9 +265,64 @@ TEST(ExpressionTest, LogicalOr) {
   }
 }
 
-// TEST(ExpressionTest, NumberOperator) {
-//   /* TODO: Implement unittest for Expression::Number */
-// }
+struct IDENTITY: public Function {
+  IDENTITY(): Function{} {}
+  std::unique_ptr<Value> operator()(Arguments* args) {
+    if (args->args.size() != 1) {
+      return nullptr;
+    }
+
+    return args->args[0]->duplicate();
+  }
+};
+
+TEST(ExpressionTest, Assignment) {
+  Environment<Base::Antlr4Node> env;
+
+  // Create left operand of assignment
+  // which should be a TermRef expression.
+  Antlr4ParseTreeStub stub{"123"};
+  Base::Antlr4Node node{2, &stub};
+  Base::GenericParseTree<Base::Antlr4Node> tree{node};
+  Rewrite::Term<Base::Antlr4Node> t{tree};
+  env.bindings().bind("ID", t);
+
+  Term term{&env.bindings()["ID"]};
+  std::unique_ptr<TermRef> left =
+    std::make_unique<TermRef>("ID", term);
+
+  // Create right operand, A function call return
+  // a Term Value.
+  Antlr4ParseTreeStub stub2{"1234"};
+  Base::Antlr4Node node2{2, &stub2};
+  Base::GenericParseTree<Base::Antlr4Node> tree2{node2};
+  Rewrite::Term<Base::Antlr4Node> t2{tree2};
+  Term term2{&t2};
+
+  std::vector<std::unique_ptr<Expr>> args;
+  args.push_back(std::make_unique<TermRef>("ID", term2));
+
+  std::unique_ptr<Call> right = std::make_unique<Call>(
+    std::make_unique<IDENTITY>(), std::move(args));
+
+  // Finally able to create and evaluating assignment.
+  Assignment assignment{std::move(left), std::move(right)};
+
+  assignment(&env);
+
+  // Assert that the Term in
+  EXPECT_TRUE(env.bindings().isBinded("ID"));
+  // Caution: Assignment only gurantee that the term specified by
+  //          left side expression is replace by the term specified
+  //          by right hand side.
+  //
+  //          It does not gurantee that the left hand side term remain
+  //          referece to original Rewrite::Term after evaluate of assignment,
+  //          so you should not expect things like:
+  //
+  //          env.bindings()["ID"] == term.term
+  EXPECT_TRUE(env.bindings()["ID"].tree.get().getText() == "1234");
+}
 
 } // Expression
 } // TransEngine
