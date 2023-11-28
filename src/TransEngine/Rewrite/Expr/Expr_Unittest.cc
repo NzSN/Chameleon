@@ -132,19 +132,60 @@ TEST(ExpressionTest, ValueIface_TypeCheck) {
 }
 
 struct Antlr4ParseTreeStub: public antlr4::tree::ParseTree {
+  Antlr4ParseTreeStub(std::string text_):
+    antlr4::tree::ParseTree{
+      antlr4::tree::ParseTreeType::TERMINAL},
+    text{text_} {}
 
+  ~Antlr4ParseTreeStub() {}
+
+  std::string toStringTree(bool pretty = false) {
+    return "";
+  }
+
+  std::string toString() {
+    return text;
+  }
+
+  std::string toStringTree(antlr4::Parser* parser, bool pretty = false) {
+    return text;
+  }
+
+  bool operator==(const ParseTree &other) {
+    return true;
+  }
+
+  std::any accept(antlr4::tree::ParseTreeVisitor* visitor) {
+    return 0;
+  }
+
+  std::string getText() {
+    return text;
+  }
+
+  antlr4::misc::Interval getSourceInterval() {
+    return antlr4::misc::Interval{};
+  }
+
+  std::string text;
 };
 
 TEST(ExpressionTest, TermRef) {
-  Base::GenericParseTree<MetaTest> tree{m};
-  Rewrite::Term<MetaTest> t{tree};
-  TermRef v{"ID", t};
+  Antlr4ParseTreeStub stub{"123"};
+  Base::Antlr4Node node{2, &stub};
+  Base::GenericParseTree<Base::Antlr4Node> tree{node};
+  Rewrite::Term<Base::Antlr4Node> t{tree};
 
-  Environment<MetaTest> env;
+  // Create a term
+  Term term{&t};
+
+  TermRef v{"ID", term};
+
+  Environment<Base::Antlr4Node> env;
   env.bindings().bind("ID", t);
 
-  std::unique_ptr<Value<MetaTest>> termValue = v(&env);
-  EXPECT_TRUE(Value<MetaTest>::isString(*termValue));
+  std::unique_ptr<Value> termValue = v(&env);
+  EXPECT_TRUE(Value::isString(*termValue));
 }
 
 TEST(ExpressionTest, LogicalAnd) {
