@@ -18,7 +18,7 @@ namespace Compiler {
 std::optional<Base::GptSupportLang>
 toLangID(std::string);
 
-std::optional<std::shared_ptr<Program>>
+std::optional<std::unique_ptr<Program>>
 programFromRules(ChameleonsParser::RewriteRulesContext *rCtx,
                  Base::GptSupportLang lang);
 
@@ -79,12 +79,12 @@ struct CompileListener: public ChameleonsParserBaseListener {
     if (!progMaybe.has_value()) {
       program = nullptr;
     } else {
-      program = progMaybe.value();
+      program = std::move(progMaybe.value());
     }
   }
 
 
-  std::shared_ptr<Program> program;
+  std::unique_ptr<Program> program;
   StrategeMode mode;
   Base::GptSupportLang targetLang;
 };

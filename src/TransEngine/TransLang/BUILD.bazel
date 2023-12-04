@@ -12,6 +12,7 @@ filegroup(
             "Compiler/ChameleonsParserMain-inl.h",
             "Compiler/ChameleonsParserMain.cpp",
             "Compiler/ChameleonsParserMain_Unittest.cc",
+            "Compiler/ChameleonsParserMain_Helper.h",
             "Compiler/WhereClauseExprParsing.h",
             "Compiler/WhereClauseExprParsing-inl.h",
          ]

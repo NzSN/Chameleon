@@ -37,7 +37,13 @@ using P = ChameleonsParser;
   V(LOGICAL)         \
   V(ORDER)           \
   V(TERM)            \
-  V(CONSTANT)
+  V(CONSTANT)        \
+  V(CALL)            \
+  V(ASSIGNMENT)
+
+#define LOGI_EXPR_LIST(V) \
+  V(LOGI_OP_AND, LogiAndExpr) \
+  V(LOGI_OP_OR, LogiOrExpr)
 
 enum ExprType {
   ERROR_TYPE,
@@ -45,6 +51,8 @@ enum ExprType {
   ORDER,
   TERM,
   CONSTANT,
+  CALL,
+  ASSIGNMENT,
   TYPE_COUNT,
 };
 
@@ -84,6 +92,14 @@ inline ExprType getExprType(P::CondExprContext* ctx) {
     return CONSTANT;
   }
 
+  if (ctx->callExpr() != nullptr) {
+    return CALL;
+  }
+
+  if (ctx->assignExpr() != nullptr) {
+    return ASSIGNMENT;
+  }
+
   return ERROR_TYPE;
 }
 
@@ -120,7 +136,7 @@ struct OrderValue: public Value {
 };
 
 struct Term: public Value {
-  Term() {}
+  Term(): term{nullptr} {}
   ~Term() {}
 
   std::unique_ptr<Value> duplicate() const {
@@ -144,6 +160,10 @@ struct Term: public Value {
 
   const Rewrite::Term<Adapter>* getTerm() const {
     return term;
+  }
+
+  bool isEmpty() const {
+    return term == nullptr;
   }
 
   Rewrite::Term<Adapter>* term;
@@ -289,12 +309,11 @@ struct Expr {
     Environment<Adapter>*) = 0;
 };
 
-/* Rewrite Terms */
+/* Expression to to gain the Term reside in
+ * Environment. */
 class TermRef: public Expr {
 public:
-  TermRef(Rewrite::TermID tid,
-          Term term):
-    tid_{tid}, term_{term} {}
+  TermRef(Rewrite::TermID tid): tid_{tid} {}
 
   // Evaluating of TermRef will gain the underlying
   // value of a Term.
@@ -308,22 +327,15 @@ public:
         "Term is not binded " + tid_);
     }
 
-    if (term_.term == nullptr) { return nullptr; }
-
-    return term_.duplicate();
+    return std::make_unique<Term>(&env->bindings()[tid_]);
   }
 
   Rewrite::TermID ID() const {
     return tid_;
   }
 
-  Term TERM() const {
-    return term_;
-  }
-
 private:
   Rewrite::TermID tid_;
-  Term term_;
 };
 
 /* Literal values */

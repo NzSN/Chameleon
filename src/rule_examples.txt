@@ -37,5 +37,5 @@ RDI_Multiply:
 STRATEGIES:
    rename-identifier =
      RandomIdentifier
-     <+ RDI_Assign {Global}
-     <+ RDI_Multiply {Global}
+     <+ RDI_Assign
+     <+ RDI_Multiply

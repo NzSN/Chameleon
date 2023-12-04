@@ -18,7 +18,7 @@ TEST(ChameleonsParserMainTest, Spec) {
   Compiler compiler;
 
   std::istringstream target_codes{"1+2+3"};
-  Base::GptGeneric t =
+  Base::GenericParseTree<Adapter> t =
     Parser
     ::ParserSelect<GPTAntlr4::TESTLANG>
     ::parser
@@ -32,7 +32,7 @@ TEST(ChameleonsParserMainTest, Spec) {
 
   // What we expect is program consist of
   // strategies.
-  std::shared_ptr<Program> program =
+  std::unique_ptr<Program> program =
     compiler.compile(rule_config);
 
   // Suppose there exists a parse tree t
@@ -83,7 +83,7 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   Compiler compiler;
 
   std::istringstream target_codes{"1+2+3"};
-  Base::GptGeneric t =
+  Base::GenericParseTree<Adapter> t =
     Parser
     ::ParserSelect<GPTAntlr4::TESTLANG>
     ::parser
@@ -96,7 +96,7 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
     " where a := Plus(a);"
   };
 
-  std::shared_ptr<Program> program =
+  std::unique_ptr<Program> program =
     compiler.compile(rule_config);
   std::optional<Base::GptGeneric> u = (*program)(t);
 

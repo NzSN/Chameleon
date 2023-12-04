@@ -18,10 +18,13 @@ template<Base::GPTMeta T>
 struct Strategy;
 
 template<Base::GPTMeta T>
-using StrategySet = std::set<std::unique_ptr<Strategy<T>>>;
+using StrategyUnique = std::unique_ptr<Strategy<T>>;
 
 template<Base::GPTMeta T>
-using StrategySeq = std::vector<std::unique_ptr<Strategy<T>>>;
+using StrategySet = std::set<StrategyUnique<T>>;
+
+template<Base::GPTMeta T>
+using StrategySeq = std::vector<StrategyUnique<T>>;
 
 template<Base::GPTMeta T>
 struct StrategyBase {

@@ -22,24 +22,12 @@ Program::operator()(Base::GptGeneric& tree,
   return std::nullopt;
 }
 
-std::optional<Base::GptGeneric>
-EvalTestLang(Base::GptGeneric& tree,
-             Rewrite::StrategySeqGeneric& straSeq) {
-  using StraSeqAntlr4 = Rewrite::StrategySeq<Base::Antlr4Node>;
-
-  // Convert to concrete type, TestLang
-  // use Antlr4 ParseTree to represent
-  // it's grammar structure.
-  Base::Antlr4GPT treeAntlr4 =
-    std::get<Base::Antlr4GPT>(tree);
-
-  // Apply same process to strategies
-  Rewrite::StrategySeq<Base::Antlr4Node>
-    seq = std::move(std::get<StraSeqAntlr4>(straSeq));
-
+std::optional<Base::GenericParseTree<Adapter>>
+EvalTestLang(Base::GenericParseTree<Adapter>& tree,
+             Rewrite::StrategySeq<Adapter>& straSeq) {
   // Checking that all strategies are binded with
   // rules.
-  for (auto& s: seq) {
+  for (auto& s: straSeq) {
     if (s->bindedRule.leftSide == nullptr ||
         s->bindedRule.rightSide == nullptr) {
       // Strategy must binded with a rule
@@ -49,27 +37,26 @@ EvalTestLang(Base::GptGeneric& tree,
   }
 
   // Setup environment
-  Environment<Base::Antlr4Node> env{};
-  env.setTargetTerm(&treeAntlr4);
+  Environment<Adapter> env{};
+  env.setTargetTerm(&tree);
 
   // Evaluating all strategies with
   // target rules.
-  for (auto& s: seq) {
+  for (auto& s: straSeq) {
     (*s)(s->bindedRule, env);
   }
 
-  return treeAntlr4;
+  return tree;
 }
 
-std::optional<Base::GptGeneric>
-Program::operator()(Base::GptGeneric& tree) {
+std::optional<Base::GenericParseTree<Adapter>>
+Program::operator()(Base::GenericParseTree<Adapter>& tree) {
   switch (lang_) {
   case Base::GptSupportLang::TESTLANG:
     return EvalTestLang(tree, strategies_);
-    break;
+  default:
+    return std::nullopt;
   }
-
-  return std::nullopt;
 }
 
 
@@ -86,12 +73,19 @@ toLangID(std::string langID) {
   }
 }
 
-namespace {
-
+// Transform CondExprContext to
 template<Base::GPTMeta T>
 bool createCondExpr(
   ChameleonsParser::CondExprContext* rCtx,
   Rewrite::Rule<T>& rule) {
+
+  // Convert CondExprContext to Rewrite::CondExpr
+  std::unique_ptr<Expression::Expr> expr =
+    WhereClause::toExpr(rCtx);
+  Rewrite::CondExpr<T> cond{std::move(expr)};
+
+  // Append condition expression to Rule.
+  rule.appendCond(cond);
 
   return true;
 }
@@ -209,9 +203,7 @@ strategiesFromRules(ChameleonsParser::RewriteRulesContext* rCtx) {
   }
 }
 
-}
-
-std::optional<std::shared_ptr<Program>>
+std::optional<std::unique_ptr<Program>>
 programFromRules(ChameleonsParser::RewriteRulesContext* rCtx,
                  Base::GptSupportLang lang) {
 
@@ -222,12 +214,12 @@ programFromRules(ChameleonsParser::RewriteRulesContext* rCtx,
 
   switch (lang) {
   case Base::GptSupportLang::TESTLANG: {
-    std::optional<Rewrite::StrategySeq<Base::Antlr4Node>>
-      straMaybe = strategiesFromRules<Base::Antlr4Node,
+    std::optional<Rewrite::StrategySeq<Adapter>>
+      straMaybe = strategiesFromRules<Adapter,
                                       Base::GptSupportLang::TESTLANG>(rCtx);
     if (straMaybe.has_value()) {
-      Rewrite::StrategySeqGeneric stras {std::move(straMaybe.value())};
-      return std::make_shared<Program>(lang, stras);
+      Rewrite::StrategySeq<Adapter> stras {std::move(straMaybe.value())};
+      return std::make_unique<Program>(lang, stras);
     } else {
       return std::nullopt;
     }
@@ -238,7 +230,7 @@ programFromRules(ChameleonsParser::RewriteRulesContext* rCtx,
   }
 }
 
-std::shared_ptr<Program> Compiler::compile(std::istream& stream) {
+std::unique_ptr<Program> Compiler::compile(std::istream& stream) {
   antlr4::ANTLRInputStream input(stream);
   ChameleonsLexer lexer(&input);
   antlr4::CommonTokenStream tokens(&lexer);
@@ -252,7 +244,7 @@ std::shared_ptr<Program> Compiler::compile(std::istream& stream) {
   CompileListener listener;
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
 
-  return listener.program;
+  return std::move(listener.program);
 }
 
 } // Compiler

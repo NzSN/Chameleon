@@ -76,10 +76,26 @@ DEFINE_PARSING_FUNCTION(ORDER) {
 
 DEFINE_PARSING_FUNCTION(TERM) {
 
-  return nullptr;
+  if (!ctx->term()) { return nullptr; }
+
+  std::string identifier;
+  if (ctx->term()->WHERE_IDENTIFIER()) {
+    identifier = ctx->term()->WHERE_IDENTIFIER()->getText();
+  }
+
+  return std::make_unique<Expression::TermRef>(
+    identifier, );
 }
 
 DEFINE_PARSING_FUNCTION(CONSTANT) {
+  return nullptr;
+}
+
+DEFINE_PARSING_FUNCTION(CALL) {
+  return nullptr;
+}
+
+DEFINE_PARSING_FUNCTION(ASSIGNMENT) {
   return nullptr;
 }
 

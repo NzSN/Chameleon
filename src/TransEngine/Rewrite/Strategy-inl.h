@@ -71,7 +71,9 @@ struct WhereStra: public Strategy<T> {
   WhereStra(Rule<T> r): Strategy<T>{r} {}
 
   // Evaluate all expression within where clause.
-  Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {}
+  Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
+
+  }
 };
 
 // Build right side pattern on Environment<T>::buildTerm_

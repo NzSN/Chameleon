@@ -3,7 +3,7 @@
 
 #include <optional>
 
-#include "Base/generic_parsetree.h"
+#include "Base/generic_parsetree_antlr4.h"
 #include "Analysis/analyzer.h"
 #include "GenericTypes.h"
 
@@ -12,12 +12,22 @@
 namespace TransEngine {
 namespace Compiler {
 
+using Adapter = Base::Antlr4Node;
+
 // Program is consist of sequence of strategies.
 class Program {
 public:
+  Program(Base::GptSupportLang lang):
+    lang_{lang}, strategies_{} {}
+
   Program(Base::GptSupportLang lang,
-          Rewrite::StrategySeqGeneric& stras):
+          Rewrite::StrategySeq<Adapter>& stras):
     lang_{lang}, strategies_{std::move(stras)} {}
+
+  bool write(Rewrite::StrategyUnique<Adapter> stra) {
+    strategies_.push_back(std::move(stra));
+    return true;
+  }
 
   std::optional<Base::GptGeneric>
   operator()(Base::GptGeneric& tree,
@@ -26,13 +36,13 @@ public:
   // program run in this case, without metainfo,
   // has no syntax and semantcis knowledge about
   // target parsetree.
-  std::optional<Base::GptGeneric>
-  operator()(Base::GptGeneric& tree);
+  std::optional<Base::GenericParseTree<Adapter>>
+  operator()(Base::GenericParseTree<Adapter>& tree);
 
 private:
   Base::GptSupportLang lang_;
 
-  Rewrite::StrategySeqGeneric strategies_;
+  Rewrite::StrategySeq<Adapter> strategies_;
 };
 
 // Compile rule configuration into
@@ -40,7 +50,7 @@ private:
 // ParseTree of target languages.
 struct Compiler {
 
-  std::shared_ptr<Program> compile(std::istream& input);
+  std::unique_ptr<Program> compile(std::istream& input);
 
 };
 

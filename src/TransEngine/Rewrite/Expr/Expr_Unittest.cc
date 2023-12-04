@@ -183,7 +183,7 @@ TEST(ExpressionTest, TermRef) {
   // Create a term
   Term term{&t};
 
-  TermRef v{"ID", term};
+  TermRef v{"ID"};
 
   Environment<Base::Antlr4Node> env;
   env.bindings().bind("ID", t);
@@ -289,7 +289,7 @@ TEST(ExpressionTest, Assignment) {
 
   Term term{&env.bindings()["ID"]};
   std::unique_ptr<TermRef> left =
-    std::make_unique<TermRef>("ID", term);
+    std::make_unique<TermRef>("ID");
 
   // Create right operand, A function call return
   // a Term Value.
@@ -297,10 +297,10 @@ TEST(ExpressionTest, Assignment) {
   Base::Antlr4Node node2{2, &stub2};
   Base::GenericParseTree<Base::Antlr4Node> tree2{node2};
   Rewrite::Term<Base::Antlr4Node> t2{tree2};
-  Term term2{&t2};
 
   std::vector<std::unique_ptr<Expr>> args;
-  args.push_back(std::make_unique<TermRef>("ID", term2));
+  args.push_back(std::make_unique<Constant>(
+                   std::make_unique<Term>(&t2)));
 
   std::unique_ptr<Call> right = std::make_unique<Call>(
     std::make_unique<IDENTITY>(), std::move(args));
