@@ -11,7 +11,6 @@
 
 #include "TransEngine/Rewrite/Term.h"
 #include "TransEngine/Rewrite/Environment.h"
-
 #include "TransEngine/TransLang/ChameleonsLexer.h"
 #include "TransEngine/TransLang/ChameleonsParser.h"
 
@@ -474,6 +473,7 @@ ORDER_EXPRS_LIST(ORDER_EXPR_DEFINE);
 
 #undef ORDER_EXPR_DEFINE
 
+// Calling a function from function table.
 class Call: public Expr {
 public:
   Call(std::unique_ptr<Function> f,

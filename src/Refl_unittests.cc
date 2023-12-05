@@ -17,9 +17,11 @@ TEST(ReflTests, Basics) {
       return ARefl{};
     });
   ASSERT_TRUE(success);
+  ASSERT_TRUE(Refl::DefaultRefl::isRegistered<ARefl>("ARefl"));
+  ASSERT_TRUE(!Refl::DefaultRefl::isRegistered<ARefl>("Arefl"));
 
   ARefl v = Utility::Refl::DefaultRefl::
-    reflect<ARefl>("Arefl");
+    reflect<ARefl>("ARefl");
 
   ASSERT_EQ(v.value(), 0);
 }

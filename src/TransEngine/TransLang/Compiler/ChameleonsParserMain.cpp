@@ -11,6 +11,7 @@
 #include "ChameleonsParserMain-inl.h"
 
 #include "WhereClauseExprParsing-inl.h"
+#include "Registered-Functions.h"
 
 namespace TransEngine {
 namespace Compiler {
@@ -51,6 +52,12 @@ EvalTestLang(Base::GenericParseTree<Adapter>& tree,
 
 std::optional<Base::GenericParseTree<Adapter>>
 Program::operator()(Base::GenericParseTree<Adapter>& tree) {
+
+  /* Infrastraucture initializations */
+
+  // Register Chameleon functions to reflect system.
+  registerFunctions(lang_);
+
   switch (lang_) {
   case Base::GptSupportLang::TESTLANG:
     return EvalTestLang(tree, strategies_);
@@ -58,7 +65,6 @@ Program::operator()(Base::GenericParseTree<Adapter>& tree) {
     return std::nullopt;
   }
 }
-
 
 std::unordered_map<std::string, Base::GptSupportLang> langs = {
   {"TestLang", Base::GptSupportLang::TESTLANG}
@@ -82,7 +88,7 @@ bool createCondExpr(
   // Convert CondExprContext to Rewrite::CondExpr
   std::unique_ptr<Expression::Expr> expr =
     WhereClause::toExpr(rCtx);
-  Rewrite::CondExpr<T> cond{std::move(expr)};
+  Rewrite::CondExpr cond{std::move(expr)};
 
   // Append condition expression to Rule.
   rule.appendCond(cond);
@@ -119,7 +125,6 @@ bool createWhereExpressions(
       current->condExprs(), rule);
     if (!success) return success;
 
-    /* Next WhereExprs */
     current = current->whereExprs();
   }
 

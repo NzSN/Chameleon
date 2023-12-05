@@ -1,19 +1,28 @@
 #ifndef WHERECLAUSEEXPRPARSING_INL_H
 #define WHERECLAUSEEXPRPARSING_INL_H
 
+#include <vector>
 #include <type_traits>
+#include "Refl.h"
 #include "WhereClauseExprParsing.h"
+
+#include "TransEngine/TransLang/ChameleonsParser.h"
 
 namespace TransEngine::Compiler::WhereClause {
 
 using Expr_uptr = std::unique_ptr<Expression::Expr>;
 
-#define DEFINE_PARSING_FUNCTION(EXPR_TYPE) \
+#define DEFINE_PARSING_FUNCTION(EXPR_TYPE)                            \
+  /* Make sure type of EXPR_TYPE is Expression::ExprTYpe */           \
+  template<Expression::ExprType T = Expression::EXPR_TYPE>            \
   inline Expr_uptr to##EXPR_TYPE(P::CondExprContext* ctx)
 
 #define CALL_PARSING_FUNCTION(EXPR_TYPE, CTX_PTR) \
   to##EXPR_TYPE(CTX_PTR)
 
+#define PENDING_TO_IMPL throw std::runtime_error(\
+    std::string(__FUNCTION__) + "() IS NOT IMPLEMENT (" \
+    __FILE__ + ":" + std::to_string(__LINE__) + ")" )
 
 /////////////////////////////////////////////////////////////////////////////
 //                             Trans Functions                             //
@@ -55,8 +64,7 @@ Expr_uptr toORDER_internal(P::CondExprContext* ctx)
 {
   Expr_uptr expr_uptr;
 
-  return std::make_unique<O>(
-    toExpr(ctx->condExpr(0)), toExpr(ctx->condExpr(1)));
+  return toExpr(ctx->condExpr(0)), toExpr(ctx->condExpr(1));
 }
 
 DEFINE_PARSING_FUNCTION(ORDER) {
@@ -74,8 +82,9 @@ DEFINE_PARSING_FUNCTION(ORDER) {
   return nullptr;
 }
 
+// An expression that reference to Term reside
+// in Environment.
 DEFINE_PARSING_FUNCTION(TERM) {
-
   if (!ctx->term()) { return nullptr; }
 
   std::string identifier;
@@ -84,19 +93,73 @@ DEFINE_PARSING_FUNCTION(TERM) {
   }
 
   return std::make_unique<Expression::TermRef>(
-    identifier, );
+    identifier);
 }
 
 DEFINE_PARSING_FUNCTION(CONSTANT) {
-  return nullptr;
+  PENDING_TO_IMPL;
 }
 
+// Currently, Chameleon functions are
+// operators of Term.
 DEFINE_PARSING_FUNCTION(CALL) {
-  return nullptr;
+  if (!ctx->callExpr()) { return nullptr; }
+
+  std::string functionId = ctx->callExpr()
+                              ->WHERE_IDENTIFIER()
+                              ->getSymbol()
+                              ->getText();
+
+  // Get the function object.
+  std::unique_ptr<Expression::Function> f{
+    Utility
+    ::Refl
+    ::DefaultRefl
+    ::reflect<Expression::Function*>(functionId)};
+
+  // Next to get all of its arguments.
+  std::vector<std::unique_ptr<Expression::Expr>> args;
+  if (!ctx->callExpr()->arguments()) {
+    // Empty arguments
+    return std::make_unique<Expression::Call>(
+      std::move(f), std::move(args));
+  } else {
+    // Currently, Functioin is just an operator of Term.
+    // So type of all arguments are TermRef.
+    ChameleonsParser::ArgumentsContext* arguments =
+      ctx->callExpr()->arguments();
+
+    while (arguments) {
+      std::unique_ptr<Expression::Expr> arg =
+        std::make_unique<Expression::TermRef>(
+          arguments->WHERE_IDENTIFIER()->getText());
+
+      args.push_back(std::move(arg));
+
+      arguments = arguments->arguments();
+    }
+
+    return std::make_unique<Expression::Call>(
+      std::move(f), std::move(args));
+  }
 }
 
 DEFINE_PARSING_FUNCTION(ASSIGNMENT) {
-  return nullptr;
+  if (!ctx->assignExpr()) { return nullptr; }
+
+  ChameleonsParser::AssignExprContext* assignCtx = ctx->assignExpr();
+
+  // Buildup a TermRef as left hand side expression
+  std::string leftTermID = assignCtx->WHERE_IDENTIFIER()->getText();
+  std::unique_ptr<Expression::TermRef> leftExpr =
+    std::make_unique<Expression::TermRef>(
+      assignCtx->WHERE_IDENTIFIER()->getText());
+
+  std::unique_ptr<Expression::Expr> rightExpr =
+    toExpr(assignCtx->condExpr());
+
+  return std::make_unique<Expression::Assignment>(
+    std::move(leftExpr), std::move(rightExpr));
 }
 
 // Interface to outer world

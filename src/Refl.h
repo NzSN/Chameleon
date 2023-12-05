@@ -1,6 +1,7 @@
 #ifndef REFL_H
 #define REFL_H
 
+#include <iostream>
 #include <array>
 #include <functional>
 #include <any>
@@ -78,7 +79,30 @@ public:
 
   template<typename T>
   static constexpr T reflect(std::string name) {
-    return std::any_cast<T>(all[0].ctor(std::nullopt));
+    int idx = 0;
+    while (idx < N) {
+      if (all[idx].className.data == name) {
+        std::cout << typeid(T).name() << std::endl;
+        std::cout << typeid(all[idx].ctor(std::nullopt)).name()
+                  << std::endl;
+        return std::any_cast<T>(all[idx].ctor(std::nullopt));
+      }
+      ++idx;
+    }
+    throw std::runtime_error("Failed to reflect type: " + name);
+  }
+
+  template<typename T>
+  static constexpr bool isRegistered(std::string name) {
+    int idx = 0;
+    while (idx < N) {
+      if (all[idx].className.data == name) {
+        return true;
+      }
+      ++idx;
+    }
+
+    return false;
   }
 
 private:

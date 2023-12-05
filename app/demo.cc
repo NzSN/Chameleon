@@ -26,6 +26,7 @@ public:
     for (auto is: importSyms) {
       std::cout << is << " ";
     }
+
     std::cout << "from " << fromModule << std::endl;
 
     std::cout << ctx->getStart()->getCharPositionInLine()
@@ -47,7 +48,6 @@ int main(int argc, char *argv[]) {
   TypeScriptLexer lexer(&input);
   antlr4::CommonTokenStream tokens(&lexer);
   TypeScriptParser parser(&tokens);
-
 
   antlr4::tree::ParseTree *tree = parser.program();
 

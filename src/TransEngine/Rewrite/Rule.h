@@ -52,7 +52,7 @@ struct Rule {
 
     lang{other.lang} {}
 
-  void appendCond(CondExpr<T>& cond_) {
+  void appendCond(CondExpr& cond_) {
     cond.push_back(cond_);
   }
 
@@ -67,7 +67,7 @@ struct Rule {
   const int lang;
 
   // Expressions within WhereClause.
-  std::vector<CondExpr<T>> cond;
+  std::vector<CondExpr> cond;
 };
 
 } // Rewrite

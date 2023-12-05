@@ -13,7 +13,6 @@
 namespace TransEngine {
 namespace Rewrite {
 
-template<Base::GPTMeta T>
 class CondExpr {
 public:
   // Default constructor will construct an
@@ -30,7 +29,7 @@ public:
     return condition_.get() == nullptr;
   }
 
-  bool operator()(Environment<T>* env);
+  inline bool operator()(Environment<Base::Antlr4Node>* env);
 
 private:
 

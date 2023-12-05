@@ -22,6 +22,7 @@ cc_test(
         "//src/Parser:parser_unittest_src",
         "//src/Analysis:analyzer_unittest_src",
         "//src/TransEngine:transformer_unittest_srcs",
+        "//src/TransEngine/TransLang:chameleons_parser_srcs",
         ":refl_src",
         "Refl_unittests.cc",
         "ExprTree.h",

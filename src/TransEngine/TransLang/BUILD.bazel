@@ -12,9 +12,10 @@ filegroup(
             "Compiler/ChameleonsParserMain-inl.h",
             "Compiler/ChameleonsParserMain.cpp",
             "Compiler/ChameleonsParserMain_Unittest.cc",
-            "Compiler/ChameleonsParserMain_Helper.h",
             "Compiler/WhereClauseExprParsing.h",
             "Compiler/WhereClauseExprParsing-inl.h",
+            "Compiler/Functions.h",
+            "Compiler/Registered-Functions.h",
          ]
 )
 
@@ -49,6 +50,7 @@ cc_test(
             "//src/TransEngine:pattern_matching",
             "//src/Parser:parser_source",
             "//src/Parser:external_parser_src",
+            "//src:refl_src",
             ],
     copts = [
           "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",

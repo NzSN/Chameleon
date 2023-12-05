@@ -9,7 +9,7 @@
 
 namespace Base {
 
-namespace {
+namespace TestLang {
 
 using Concepts::NAryTree::TransformInfo;
 
@@ -103,7 +103,7 @@ Antlr4Node::Node cloneTestLang(
 Antlr4Node::Node Antlr4Node::clone() const {
   switch (lang_) {
   case GenericParseTree<Antlr4Node>::TESTLANG:
-    return cloneTestLang(this);
+    return TestLang::cloneTestLang(this);
   default:
     throw std::runtime_error("Failed to clone Antlr4Node");
   }
@@ -168,9 +168,6 @@ bool Antlr4Node::operator==(const Antlr4Node& node) const {
 
   if (this->tree_->getTreeType() ==
       antlr4::tree::ParseTreeType::TERMINAL) {
-
-    std::cout << this->tree_->getText() << std::endl;
-    std::cout << node.tree_->getText() << std::endl;
 
     // Check equality of contents of terminal
     if (this->tree_->getText() !=
