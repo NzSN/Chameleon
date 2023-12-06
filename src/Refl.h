@@ -15,6 +15,7 @@ namespace Utility {
 
 // Var doesn't not manage the life of datas.
 struct Var {
+  Var(): data{} {}
   Var(void* ptr): data{ptr} {}
 
   Var(const Var& other) {
@@ -30,6 +31,28 @@ struct Var {
   //        GC is supported.
   void* data;
 };
+
+template<typename T>
+class VarScopeGuard {
+public:
+  VarScopeGuard(Var data):
+    data_{data} {}
+  VarScopeGuard(std::optional<Var> data):
+    data_{} {
+
+    if (data.has_value()) {
+      data_.data = data.value().data;
+    }
+  }
+  ~VarScopeGuard() {
+    if (data_.data) {
+      delete reinterpret_cast<T*>(data_.data);
+    }
+  }
+private:
+  Var data_;
+};
+
 
 struct Type {
   using Constructor = Var(*)();

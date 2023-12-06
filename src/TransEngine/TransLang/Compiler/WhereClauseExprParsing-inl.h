@@ -111,7 +111,12 @@ DEFINE_PARSING_FUNCTION(CALL) {
                               ->getText();
 
   // Get the function object.
-  std::unique_ptr<Expression::Function> f{};
+  std::optional<Utility::Var> v = Utility::Reflection::construct("functionId");
+  if (!v.has_value()) {
+    return nullptr;
+  }
+  std::unique_ptr<Expression::Function> f{
+    v.value().convert<Expression::Function>()};
 
   // Next to get all of its arguments.
   std::vector<std::unique_ptr<Expression::Expr>> args;

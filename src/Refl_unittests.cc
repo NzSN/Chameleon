@@ -30,6 +30,7 @@ TEST(ReflTests, Basics_new) {
 
   std::optional<Utility::Var> vMaybe =
     Utility::Reflection::construct("Derived");
+  Utility::VarScopeGuard<Derived> guard(vMaybe);
 
   Base* b = vMaybe.value().convert<Base>();
   EXPECT_TRUE(b->value() == 1);
