@@ -1,27 +1,36 @@
 #include <gtest/gtest.h>
 #include <optional>
 #include <any>
+#include <string.h>
 
 #include "Refl.h"
 
-namespace Refl = Utility::Refl;
-
-struct ARefl {
-  int value() { return 0; }
+struct Base {
+  virtual int value() const { return 0; }
 };
 
-TEST(ReflTests, Basics) {
-  bool success = Refl::DefaultRefl::addReflectType(
-    Stringify(ARefl),
-    [](std::optional<std::any> arg) -> std::any {
-      return ARefl{};
+struct Derived: public Base {
+  int value() const override { return 1; }
+};
+
+constexpr Base ctor() {
+  return Base{};
+}
+
+constexpr Derived ctor_D() {
+  return Derived{};
+}
+
+TEST(ReflTests, Basics_new) {
+  Utility::Reflection::registering(
+    Stringify(Derived),
+    []() -> Utility::Var {
+      return Utility::Var{new Derived()};
     });
-  ASSERT_TRUE(success);
-  ASSERT_TRUE(Refl::DefaultRefl::isRegistered<ARefl>("ARefl"));
-  ASSERT_TRUE(!Refl::DefaultRefl::isRegistered<ARefl>("Arefl"));
 
-  ARefl v = Utility::Refl::DefaultRefl::
-    reflect<ARefl>("ARefl");
+  std::optional<Utility::Var> vMaybe =
+    Utility::Reflection::construct("Derived");
 
-  ASSERT_EQ(v.value(), 0);
+  Base* b = vMaybe.value().convert<Base>();
+  EXPECT_TRUE(b->value() == 1);
 }

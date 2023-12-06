@@ -1,125 +1,68 @@
 #ifndef REFL_H
 #define REFL_H
 
-#include <iostream>
-#include <array>
-#include <functional>
-#include <any>
+#include <string>
+#include <vector>
 #include <optional>
-#include <stdexcept>
+#include <algorithm>
+#include <typeindex>
 
 namespace Utility {
-namespace Refl {
+
+/////////////////////////////////////////////////////////////////////////////
+//               A Simple reflection to mapping string to objects          //
+/////////////////////////////////////////////////////////////////////////////
+
+// Var doesn't not manage the life of datas.
+struct Var {
+  Var(void* ptr): data{ptr} {}
+
+  Var(const Var& other) {
+    data = other.data;
+  }
+
+  template<typename T>
+  T* convert() const {
+    return reinterpret_cast<T*>(data);
+  }
+
+  // FIXME: Currently, this lead to memory leaks until
+  //        GC is supported.
+  void* data;
+};
+
+struct Type {
+  using Constructor = Var(*)();
+
+  std::string name;
+  Constructor ctor;
+};
 
 #define Stringify(...) #__VA_ARGS__
-constexpr const unsigned MAXIMUM_CLASSNAME = 256;
-constexpr unsigned NUM_OF_REFLECTS = 100;
 
-template<std::size_t N>
-struct ConstStr {
-
-  ConstStr() = default;
-
-  template<std::size_t M>
-  constexpr ConstStr(const char (&other)[M]) {
-    if (N < M) {
-      throw std::runtime_error("...");
-    }
-
-    reset();
-    for (unsigned i = 0; i < M; ++i) {
-      data[i] = other[i];
-    }
-  }
-
-  template<std::size_t M>
-  constexpr ConstStr& operator=(const char (&other)[M]) {
-    if (N < M) {
-      return *this;
-    }
-
-    reset();
-    for (unsigned i = 0; i < M; ++i) {
-      data[i] = other[i];
-    }
-
-    return *this;
-  }
-
-  constexpr void reset() {
-    for (unsigned i = 0; i < N; ++i) {
-      data[i] = 0;
-    }
-  }
-
-  char data[N+1];
-};
-
-template<std::size_t N>
-class Refl {
+class Reflection {
 public:
-  using Constructor = std::any (*)(std::optional<std::any>);
-  struct TypeInfo {
-    ConstStr<MAXIMUM_CLASSNAME> className;
-    Constructor ctor;
-  };
-
-  template<std::size_t M>
-  static constexpr bool addReflectType(
-    const char (&name)[M], Constructor ctor) {
-
-    if (!(idx < N)) {
-      return false;
-    }
-
-    TypeInfo info{name, ctor};
-    all[idx++] = info;
-    return true;
+  static void registering(std::string name, Var(*ctor)()) {
+    types.push_back(Type{name, ctor});
   }
 
-  template<typename T>
-  static constexpr T reflect(std::string name) {
-    int idx = 0;
-    while (idx < N) {
-      if (all[idx].className.data == name) {
-        std::cout << typeid(T).name() << std::endl;
-        std::cout << typeid(all[idx].ctor(std::nullopt)).name()
-                  << std::endl;
-        return std::any_cast<T>(all[idx].ctor(std::nullopt));
-      }
-      ++idx;
+  static std::optional<Var> construct(std::string type) {
+    auto found_iter = std::find_if(types.begin(), types.end(),
+                                [&](const Type& t) -> bool {
+                                  return t.name == type;
+                                });
+    if (found_iter != types.end()) {
+      return found_iter->ctor();
+    } else {
+      return std::nullopt;
     }
-    throw std::runtime_error("Failed to reflect type: " + name);
   }
-
-  template<typename T>
-  static constexpr bool isRegistered(std::string name) {
-    int idx = 0;
-    while (idx < N) {
-      if (all[idx].className.data == name) {
-        return true;
-      }
-      ++idx;
-    }
-
-    return false;
-  }
-
 private:
-  static unsigned idx;
-  static std::array<TypeInfo, N> all;
+  static std::vector<Type> types;
 };
 
-template<size_t N>
-unsigned Refl<N>::idx = 0;
+inline std::vector<Type> Reflection::types = {};
 
-template<size_t N>
-std::array<typename Refl<N>::TypeInfo, N>
-Refl<N>::all = {};
-
-using DefaultRefl = Refl<NUM_OF_REFLECTS>;
-
-} // Refl
 } // Utility
 
 #endif /* REFL_H */
