@@ -7,17 +7,19 @@
 
 struct Base {
   virtual int value() const { return 0; }
+  virtual ~Base() {}
 };
 
 struct Derived: public Base {
+  ~Derived() {}
   int value() const override { return 1; }
 };
 
-constexpr Base ctor() {
+Base ctor() {
   return Base{};
 }
 
-constexpr Derived ctor_D() {
+Derived ctor_D() {
   return Derived{};
 }
 
@@ -30,7 +32,7 @@ TEST(ReflTests, Basics_new) {
 
   std::optional<Utility::Var> vMaybe =
     Utility::Reflection::construct("Derived");
-  Utility::VarScopeGuard<Derived> guard(vMaybe);
+  Utility::VarScopeGuard<Derived> guard{vMaybe};
 
   Base* b = vMaybe.value().convert<Base>();
   EXPECT_TRUE(b->value() == 1);

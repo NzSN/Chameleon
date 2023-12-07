@@ -13,7 +13,10 @@ namespace Utility {
 //               A Simple reflection to mapping string to objects          //
 /////////////////////////////////////////////////////////////////////////////
 
-// Var doesn't not manage the life of datas.
+template<typename T>
+class VarScopeGuard;
+
+// Var does not gurantee to manage memory point by data.
 struct Var {
   Var(): data{} {}
   Var(void* ptr): data{ptr} {}
@@ -27,8 +30,10 @@ struct Var {
     return reinterpret_cast<T*>(data);
   }
 
-  // FIXME: Currently, this lead to memory leaks until
-  //        GC is supported.
+private:
+  template<typename T>
+  friend class VarScopeGuard;
+
   void* data;
 };
 
