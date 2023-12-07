@@ -5,7 +5,7 @@
 
 #include "Base/generic_parsetree.h"
 #include "TransEngine/SigmaTerm.h"
-#include "CondExpr.h"
+#include "CondExpr-inl.h"
 #include "Environment.h"
 
 namespace TransEngine {
@@ -50,7 +50,9 @@ struct Rule {
     leftSide{other.leftSide},
     rightSide{other.rightSide},
 
-    lang{other.lang} {}
+    lang{other.lang},
+
+    cond{other.cond} {}
 
   void appendCond(CondExpr& cond_) {
     cond.push_back(cond_);

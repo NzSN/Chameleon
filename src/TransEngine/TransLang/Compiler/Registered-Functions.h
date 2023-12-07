@@ -5,15 +5,17 @@
 #include "Functions.h"
 #include "GenericTypes.h"
 
+namespace TransEngine {
+namespace Compiler {
 
 // Register functions of correspond lang to reflect system.
 inline void registerFunctions(Base::GptSupportLang lang) {
 
 #define REGISTER_FUNCTIONS(F)                       \
-  Utility::Refl::DefaultRefl::addReflectType(       \
+  Utility::Reflection::registering(                 \
     Stringify(F),                                   \
-    [](std::optional<std::any> arg) -> std::any {   \
-      return new F();                               \
+    []() -> Utility::Var {                          \
+      return Utility::Var{new F()};                 \
     })
 
   switch (lang) {
@@ -27,5 +29,8 @@ inline void registerFunctions(Base::GptSupportLang lang) {
 
 #undef REGISTER_FUNCTIONS
 }
+
+} // Compiler
+} // TransEngine
 
 #endif /* REGISTERED_FUNCTIONS_H */

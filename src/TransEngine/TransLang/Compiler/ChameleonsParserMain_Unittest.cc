@@ -1,3 +1,6 @@
+#include <plog/Log.h>
+#include <plog/Initializers/ConsoleInitializer.h>
+#include <plog/Formatters/TxtFormatter.h>
 #include <gtest/gtest.h>
 #include <sstream>
 #include <utility>
@@ -7,6 +10,8 @@
 
 #include "Parser/Parser-inl.h"
 #include "Parser/ExternalParser.h"
+
+#include "Registered-Functions.h"
 
 namespace TransEngine {
 namespace Compiler {
@@ -63,10 +68,22 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
     " where a := Plus(a);"
   };
 
+  // Initialize infrastructures that
+  // compiler is depends.
+
+  // plog
+  plog::init<plog::TxtFormatterUtcTime>(
+    plog::debug, plog::streamStdOut);
+
+  // Reflections
+  registerFunctions(Base::GptSupportLang::TESTLANG);
+
+  // Compiling
   std::unique_ptr<Program> program =
     compiler.compile(rule_config);
   std::optional<Base::GptGeneric> u = (*program)(t);
 
+  // Assert
   EXPECT_TRUE(u.has_value());
   EXPECT_TRUE(std::get<GPTAntlr4>(u.value()).getText()
               == "3+2+2");

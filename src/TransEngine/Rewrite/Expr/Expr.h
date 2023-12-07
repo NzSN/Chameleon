@@ -30,7 +30,7 @@ using P = ChameleonsParser;
   )
 
 #define IS_SAME_TYPE(X, Y) \
-  (typeid((X)) == typeid((Y)))
+  (typeid(X) == typeid(Y))
 
 #define EXPR_LIST(V) \
   V(LOGICAL)         \
@@ -135,15 +135,23 @@ struct OrderValue: public Value {
 };
 
 struct Term: public Value {
-  Term(): term{nullptr} {}
   ~Term() {}
 
   std::unique_ptr<Value> duplicate() const {
-    return std::make_unique<Term>(Term{term});
+    if (!term) {
+      return std::make_unique<Term>(term);
+    } else {
+      // Unable to duplicate a Term if
+      // it hold a dangling RewriteTerm.
+      return nullptr;
+    }
   }
 
   Term(Rewrite::Term<Adapter>* term_):
-    term{term_} {}
+    term{term_}, dangleTerm{*term_} {}
+
+  Term(Rewrite::Term<Adapter> dangleTerm_):
+    dangleTerm{std::move(dangleTerm_)}, term{} {}
 
   bool operator==(const Value& other) const {
     return term == dynamic_cast<const Term&>(other).term;
@@ -165,7 +173,17 @@ struct Term: public Value {
     return term == nullptr;
   }
 
+  bool isDangling() const {
+    return term == nullptr;
+  }
+
   Rewrite::Term<Adapter>* term;
+
+  // Sometimes a Term represent a Term that generate by
+  // a calling, such kind of Terms does not reside in Environment.
+  // Hence, there should be somewhere to place. dangleTerm is the
+  // place to store those term
+  Rewrite::Term<Adapter> dangleTerm;
 };
 
 // A type same as void in C++, () in Haskell.
@@ -251,12 +269,12 @@ struct Number: public OrderValue {
   }
 
 #define ORDER_OP_DEFINE(OP, VT)                                     \
-  bool operator OP (const VT& other) const {       \
-    if (typeid(Number) != typeid(other)) {                         \
-      throw std::runtime_error("Type error");                   \
-    } else {                                                    \
-      return value OP dynamic_cast<const Number&>(other).value; \
-    }                                                           \
+  bool operator OP (const VT& other) const {                        \
+    if (typeid(Number) != typeid(other)) {                          \
+      throw std::runtime_error("Type error");                       \
+    } else {                                                        \
+      return value OP dynamic_cast<const Number&>(other).value;     \
+    }                                                               \
   }
 
   ORDER_OP_DEFINE(==, Value);
@@ -521,13 +539,20 @@ public:
     } else {
       // Evaluating the right hand side expression.
       std::unique_ptr<Value> v = Expr::eval(right_, env);
+
+      if (v == nullptr) {
+        throw std::runtime_error(
+          "Failed to evaluate right expression of assignment expr");
+      }
+
       if (typeid(*v) != typeid(Term)) {
         // Assignment is an operator of Term, which type is
         // Assignment :: Term -> Term -> Term
-        std::cout << typeid(*v).name() << std::endl;
         return nullptr;
       } else {
         Term* term = dynamic_cast<Term*>(v.get());
+        Rewrite::Term<Adapter> rTerm = term->isDangling() ?
+          term->dangleTerm : *term->term;
 
         bool success = env->bindings().unbind(termRef_l->ID());
         if (!success) {
@@ -537,7 +562,7 @@ public:
 
         env->bindings().bind(
           termRef_l->ID(),
-          *term->term);
+          rTerm);
       }
     }
 

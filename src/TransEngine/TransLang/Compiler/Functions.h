@@ -1,6 +1,8 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include "utility.h"
+
 #include "TransEngine/Rewrite/Expr/Expr.h"
 #include "TransEngine/Rewrite/Environment.h"
 
@@ -11,6 +13,11 @@
 #define TESTLANG_FUNCTIONS(V) \
   V(Plus)
 
+// FIXME: Debug purposes
+inline std::unique_ptr<Base::Antlr4Node> A;
+inline std::unique_ptr<Base::GenericParseTree<Base::Antlr4Node>> B;
+
+// Plus :: Term -> Term
 struct Plus: public TransEngine::Expression::Function {
   Plus() {}
 
@@ -47,7 +54,7 @@ struct Plus: public TransEngine::Expression::Function {
 
     // After that reconstruct a Term from the new number
     //
-    // FIXME: Need a backing store to hold those resource allocated
+    // FIXME: Need a backing store to manage those resource allocated
     //        during evaluation of WhereClause otherwise segfault.
     std::unique_ptr<Base::Antlr4Node> metaCopy = gpt->getMeta().clone();
     std::unique_ptr<Base::GenericParseTree<Base::Antlr4Node>>
@@ -55,11 +62,27 @@ struct Plus: public TransEngine::Expression::Function {
       Base::GenericParseTree<Base::Antlr4Node>
       ::mapping<Base::Antlr4Node, Utility::DYNAMIC>(*metaCopy);
 
-    // The type of underlying tree node should be antlr4::CommonToken,
+    // Replace the original node by the copy node
+    //
+    // FIXME: If parser does not to manage the resource of
+    //        the original node once it has been replaced
+    //        and those resource should be reclaim here.
+    // gpt->setNode(*gptCopy);
+
+    // The type of underlying tree node should be antlr4::tree::TerminalNodeImpl,
     // which is a WritableToken. Hence, able to write the number into it.
+    if (typeid(*const_cast<Base::Antlr4Node&>(gptCopy->getMeta()).tree())
+        != typeid(antlr4::tree::TerminalNodeImpl)) {
+      return nullptr;
+    }
+
+    antlr4::tree::TerminalNodeImpl* node =
+      dynamic_cast<antlr4::tree::TerminalNodeImpl*>(
+        const_cast<Base::Antlr4Node&>(
+          gptCopy->getMeta()).tree());
+
     antlr4::CommonToken* token =
-      dynamic_cast<antlr4::CommonToken*>(
-        const_cast<Base::Antlr4Node&>(gptCopy->getMeta()).tree());
+      dynamic_cast<antlr4::CommonToken*>(node->getSymbol());
     if (!token) {
       // Underlying type is not an antlr4::CommonToken
       return nullptr;
@@ -69,9 +92,13 @@ struct Plus: public TransEngine::Expression::Function {
 
     // Create Term from gptCopy.
     TransEngine::Rewrite::Term<Base::Antlr4Node> rTerm{*gptCopy};
-    return std::make_unique<TransEngine::Expression::Term>(&rTerm);
+
+    // FIXME: Debug purposes
+    A = std::move(metaCopy);
+    B = std::move(gptCopy);
+
+    return std::make_unique<TransEngine::Expression::Term>(rTerm);
   }
 };
-
 
 #endif /* FUNCTIONS_H */

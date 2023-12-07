@@ -52,12 +52,6 @@ EvalTestLang(Base::GenericParseTree<Adapter>& tree,
 
 std::optional<Base::GenericParseTree<Adapter>>
 Program::operator()(Base::GenericParseTree<Adapter>& tree) {
-
-  /* Infrastraucture initializations */
-
-  // Register Chameleon functions to reflect system.
-  registerFunctions(lang_);
-
   switch (lang_) {
   case Base::GptSupportLang::TESTLANG:
     return EvalTestLang(tree, strategies_);
@@ -88,6 +82,10 @@ bool createCondExpr(
   // Convert CondExprContext to Rewrite::CondExpr
   std::unique_ptr<Expression::Expr> expr =
     WhereClause::toExpr(rCtx);
+  if (expr == nullptr) {
+    return false;
+  }
+
   Rewrite::CondExpr cond{std::move(expr)};
 
   // Append condition expression to Rule.
@@ -101,7 +99,7 @@ bool createCondExprs(
   ChameleonsParser::CondExprsContext* rCtx,
   Rewrite::Rule<T>& rule) {
 
-  ChameleonsParser::CondExprsContext* current;
+  ChameleonsParser::CondExprsContext* current = rCtx;
   while (current != nullptr) {
     bool success = createCondExpr(current->condExpr(), rule);
     if (!success) return success;
@@ -134,6 +132,9 @@ bool createWhereExpressions(
 template<Base::GPTMeta T, int lang>
 std::optional<Rewrite::Rule<T>>
 strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
+
+  PLOG_DEBUG << "Parsing RewriteRule...";
+
   // Generate left side pattern and right side pattern
   std::istringstream ls{rCtx->sourcePattern()->getText()};
   std::unique_ptr<Pattern<T>> leftSide =
@@ -155,6 +156,8 @@ strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
     std::move(rightSide),
     lang};
 
+  PLOG_DEBUG << "Parsing Where Clause...";
+
   // Spawning expression to handle where clause.
   // This part is optional, deal with if where expression
   // is present.
@@ -167,8 +170,12 @@ strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
       // is unusable.
       throw std::runtime_error(
         "Failed to parse where clause.");
+    } else {
+      PLOG_DEBUG << "Parsing Where Clause...Done";
     }
   }
+
+  PLOG_DEBUG << "Parsing RewriteRule...Done";
 
   return rule;
 }
@@ -189,9 +196,18 @@ strategiesFromRules(ChameleonsParser::RewriteRulesContext* rCtx) {
   }
 
   // Then break the rule down into strategies
-  Rewrite::StrategySeq<T> straSeq {
-    Rewrite::ruleBreakDown(ruleMaybe.value())
-  };
+  Rewrite::StrategySeq<T> straSeq;
+  if (ruleMaybe.value().cond.size() > 0) {
+    // Conditional Rewrite Rule
+    PLOG_DEBUG << "BreakDown RewriteRule into Strategies: "
+                  "Conditional RewriteRule";
+    straSeq = Rewrite::ruleBreakDown<T, true>(ruleMaybe.value());
+  } else {
+    // Unconditional Rewrite Rule
+    PLOG_DEBUG << "BreakDown RewriteRule into Strategies: "
+                  "Unconditional RewriteRule";
+    straSeq = Rewrite::ruleBreakDown(ruleMaybe.value());
+  }
 
   std::optional<Rewrite::StrategySeq<T>>
     remain = strategiesFromRules<T, lang>(rCtx->rewriteRules());
@@ -236,20 +252,29 @@ programFromRules(ChameleonsParser::RewriteRulesContext* rCtx,
 }
 
 std::unique_ptr<Program> Compiler::compile(std::istream& stream) {
+
+  PLOG_DEBUG << "Compiling...";
+  PLOG_DEBUG << "Build Parser...";
+
+  // Parser Initialization
   antlr4::ANTLRInputStream input(stream);
   ChameleonsLexer lexer(&input);
   antlr4::CommonTokenStream tokens(&lexer);
   ChameleonsParser parser(&tokens);
-
   antlr4::tree::ParseTree *tree = parser.prog();
 
-  // Use listener or visitor to traverse Chameleons
-  // ParseTree then translate into Program.
+  PLOG_DEBUG << "Build Parser... Done";
 
   CompileListener listener;
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
 
-  return std::move(listener.program);
+  if (listener.program == nullptr) {
+    PLOG_DEBUG << "Compiling...Failed";
+    return nullptr;
+  } else {
+    PLOG_DEBUG << "Compiling...Done";
+    return std::move(listener.program);
+  }
 }
 
 } // Compiler

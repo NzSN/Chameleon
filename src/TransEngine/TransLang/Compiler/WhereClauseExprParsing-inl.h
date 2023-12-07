@@ -1,6 +1,7 @@
 #ifndef WHERECLAUSEEXPRPARSING_INL_H
 #define WHERECLAUSEEXPRPARSING_INL_H
 
+#include <plog/Log.h>
 #include <vector>
 #include <type_traits>
 #include "Refl.h"
@@ -23,6 +24,16 @@ using Expr_uptr = std::unique_ptr<Expression::Expr>;
 #define PENDING_TO_IMPL throw std::runtime_error(\
     std::string(__FUNCTION__) + "() IS NOT IMPLEMENT (" \
     __FILE__ + ":" + std::to_string(__LINE__) + ")" )
+
+#define PLOG_DEBUG_PARSING_EXPR_ENTER(T) \
+  PLOG_DEBUG << std::string("Parsing ") + #T + " expression... (" + \
+  __FILE__ + ":" + std::to_string(__LINE__) + ")"
+#define PLOG_DEBUG_PARSING_EXPR_OK(T) \
+  PLOG_DEBUG << std::string("Parsing ") + #T + " expression...DONE (" + \
+  __FILE__ + ":" + std::to_string(__LINE__) + ")"
+#define PLOG_DEBUG_PARSING_EXPR_FAILED(T) \
+  PLOG_DEBUG << std::string("Parsing ") + #T + " expression...FAILED (" + \
+  __FILE__ + ":" + std::to_string(__LINE__) + ")"
 
 /////////////////////////////////////////////////////////////////////////////
 //                             Trans Functions                             //
@@ -85,13 +96,19 @@ DEFINE_PARSING_FUNCTION(ORDER) {
 // An expression that reference to Term reside
 // in Environment.
 DEFINE_PARSING_FUNCTION(TERM) {
-  if (!ctx->term()) { return nullptr; }
+  PLOG_DEBUG_PARSING_EXPR_ENTER(TERM);
+
+  if (!ctx->term()) {
+    PLOG_DEBUG_PARSING_EXPR_FAILED(TERM);
+    return nullptr;
+  }
 
   std::string identifier;
   if (ctx->term()->WHERE_IDENTIFIER()) {
     identifier = ctx->term()->WHERE_IDENTIFIER()->getText();
   }
 
+  PLOG_DEBUG_PARSING_EXPR_OK(TERM);
   return std::make_unique<Expression::TermRef>(
     identifier);
 }
@@ -103,16 +120,24 @@ DEFINE_PARSING_FUNCTION(CONSTANT) {
 // Currently, Chameleon functions are
 // operators of Term.
 DEFINE_PARSING_FUNCTION(CALL) {
-  if (!ctx->callExpr()) { return nullptr; }
+  PLOG_DEBUG_PARSING_EXPR_ENTER(CALL);
+
+  if (!ctx->callExpr()) {
+    PLOG_DEBUG_PARSING_EXPR_FAILED(CALL);
+    return nullptr;
+  }
 
   std::string functionId = ctx->callExpr()
                               ->WHERE_IDENTIFIER()
                               ->getSymbol()
                               ->getText();
+  PLOG_DEBUG << "FunctionID is " + functionId;
 
   // Get the function object.
-  std::optional<Utility::Var> v = Utility::Reflection::construct("functionId");
+  std::optional<Utility::Var> v =
+    Utility::Reflection::construct(functionId);
   if (!v.has_value()) {
+    PLOG_DEBUG_PARSING_EXPR_FAILED(CALL);
     return nullptr;
   }
   std::unique_ptr<Expression::Function> f{
@@ -140,13 +165,19 @@ DEFINE_PARSING_FUNCTION(CALL) {
       arguments = arguments->arguments();
     }
 
+    PLOG_DEBUG_PARSING_EXPR_OK(CALL);
     return std::make_unique<Expression::Call>(
       std::move(f), std::move(args));
   }
 }
 
 DEFINE_PARSING_FUNCTION(ASSIGNMENT) {
-  if (!ctx->assignExpr()) { return nullptr; }
+  PLOG_DEBUG_PARSING_EXPR_ENTER(ASSIGNMENT);
+
+  if (!ctx->assignExpr()) {
+    PLOG_DEBUG_PARSING_EXPR_FAILED(ASSIGNMENT);
+    return nullptr;
+  }
 
   ChameleonsParser::AssignExprContext* assignCtx = ctx->assignExpr();
 
@@ -158,16 +189,25 @@ DEFINE_PARSING_FUNCTION(ASSIGNMENT) {
 
   std::unique_ptr<Expression::Expr> rightExpr =
     toExpr(assignCtx->condExpr());
+  if (rightExpr == nullptr) {
+    PLOG_DEBUG_PARSING_EXPR_FAILED(ASSIGNMENT);
+    return nullptr;
+  }
 
+  PLOG_DEBUG_PARSING_EXPR_OK(ASSIGNMENT);
   return std::make_unique<Expression::Assignment>(
     std::move(leftExpr), std::move(rightExpr));
 }
 
 // Interface to outer world
 inline Expr_uptr toExpr(P::CondExprContext* ctx) {
+  PLOG_DEBUG << "Parsing condition expressions...";
 
-  if (ctx == nullptr)
+  if (ctx == nullptr) {
+    PLOG_DEBUG << "Parsing condition expressions...Failed: "
+                  "Context is nullptr";
     return nullptr;
+  }
 
   Expression::ExprType type = Expression::getExprType(ctx);
 
@@ -179,6 +219,7 @@ inline Expr_uptr toExpr(P::CondExprContext* ctx) {
   EXPR_LIST(TRANS_EXPR);
 #undef HANDLE_EXPR
 
+  PLOG_DEBUG << "Parsing condition expressions...Failed";
   return nullptr;
 }
 

@@ -16,7 +16,7 @@ bool Value::isString(Value &v) {
 }
 
 bool Value::isTerm(Value &v) {
-  return IS_SAME_TYPE(Term{}, v);
+  return IS_SAME_TYPE(Term, v);
 }
 
 

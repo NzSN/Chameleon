@@ -58,6 +58,7 @@ struct Pattern: public TreeLayer<Pattern<T>> {
 
     if (parent == nullptr) {
       /* Ignored case */
+      return false;
     } else {
       const_cast<T&>(meta_).setNode(
         *(term.tree.get().getMeta().clone()));

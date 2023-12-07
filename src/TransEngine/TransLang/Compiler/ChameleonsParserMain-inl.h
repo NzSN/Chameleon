@@ -1,3 +1,4 @@
+#include <plog/Log.h>
 #include <stdexcept>
 #include <optional>
 #include <memory>
@@ -40,10 +41,14 @@ struct CompileListener: public ChameleonsParserBaseListener {
     // Strategies section is optional so
     // no need to check.
     if (ctx->targetSection() == nullptr) {
+      PLOG_DEBUG << "Target section is required";
+
       throw std::runtime_error(
         "TARGET Section is required\n");
     }
     if (ctx->ruleSection() == nullptr) {
+      PLOG_DEBUG << "Rule section is required";
+
       throw std::runtime_error(
         "RULE Section is required\n");
     }
@@ -53,21 +58,29 @@ struct CompileListener: public ChameleonsParserBaseListener {
 
     // Next to determine which target language
     // the program need to deal with.
-    auto langMaybe = toLangID(ctx->targetSection()
+    std::string langStr = ctx->targetSection()
                           ->IDENTIFIER()
-                          ->getText());
+                          ->getText();
+    auto langMaybe = toLangID(langStr);
     if (langMaybe.has_value()) {
       targetLang = langMaybe.value();
+      PLOG_DEBUG << "Target lang is " + langStr;
     } else {
+      PLOG_DEBUG << "Lang " + langStr + " is not supported";
       throw std::runtime_error(
         "Unsupported language");
     }
   }
 
   void enterRewriteRules(ChameleonsParser::RewriteRulesContext* ctx) {
+
     if (mode == USER_DEFINED) {
       /* FIXME: Need to implement */
+      PLOG_DEBUG << "Parsing RewriteRule in USER_DEFINED "
+                    "Mode due to Strategies section is provide";
     }
+
+    PLOG_DEBUG << "Parsing RewriteRule in DefaultMode";
 
     /* Default Mode
      *
@@ -82,7 +95,6 @@ struct CompileListener: public ChameleonsParserBaseListener {
       program = std::move(progMaybe.value());
     }
   }
-
 
   std::unique_ptr<Program> program;
   StrategeMode mode;

@@ -2,6 +2,7 @@
 #define STRATEGY_INL_H
 
 #include <iostream>
+#include <plog/Log.h>
 #include <stdexcept>
 
 #include "Term.h"
@@ -72,7 +73,11 @@ struct WhereStra: public Strategy<T> {
 
   // Evaluate all expression within where clause.
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
+    for (auto& expr: rule.cond) {
+      expr(&env);
+    }
 
+    return rule;
   }
 };
 
@@ -90,8 +95,7 @@ struct BuildStra: public Strategy<T> {
     // Try to replace all TermVars with terms have
     // binded.
     std::unique_ptr<Pattern<T>>
-      copy = Pattern<T>
-               ::template mapping<T, Utility::DYNAMIC>(*metaCopy);
+      copy = Pattern<T>::template mapping<T, Utility::DYNAMIC>(*metaCopy);
     std::vector<Pattern<T>*> vars = copy->termVars();
     for (auto v: vars) {
       // Perform replacement onto Pattern
@@ -139,10 +143,14 @@ StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
     std::make_unique<MatchStra<T>>(rule));
 
   // Where Strategy
+  seq.emplace_back(
+    std::make_unique<WhereStra<T>>(rule));
 
   // Build Strategy
   seq.emplace_back(
     std::make_unique<BuildStra<T>>(rule));
+
+  return seq;
 }
 
 
