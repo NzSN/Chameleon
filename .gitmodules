@@ -1,18 +1,6 @@
 [submodule "third_party/grammars-v4"]
 	path = third_party/grammars-v4
 	url = https://github.com/antlr/grammars-v4.git
-[submodule "third_party/plog"]
-	path = third_party/plog
-	url = https://github.com/SergiusTheBest/plog.git
-[submodule "third_party/rapidcheck"]
-	path = third_party/rapidcheck
-	url = https://github.com/emil-e/rapidcheck.git
-[submodule "third_party/tree-sitter"]
-	path = third_party/tree-sitter
-	url = https://github.com/tree-sitter/tree-sitter.git
-[submodule "third_party/argparse"]
-	path = third_party/argparse
-	url = https://github.com/p-ranav/argparse.git
 [submodule "parsers/tree-sitter-wgsl"]
 	path = parsers/tree-sitter-wgsl
 	url = https://github.com/mehmetoguzderin/tree-sitter-wgsl.git
