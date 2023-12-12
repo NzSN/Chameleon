@@ -25,8 +25,6 @@ cc_test(
             "ChameleonsParser_unittests.cc",
             "//src:utility_src"],
     copts = [
-          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
-          "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           "-Isrc",
           "-std=c++2a"],
     linkopts = ["-lglog", "-lfmt"],
@@ -53,8 +51,6 @@ cc_test(
             "//src:refl_src",
             ],
     copts = [
-          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
-          "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           "-Isrc",
           "-std=c++2a"],
     linkopts = ["-lglog", "-lfmt"],
@@ -81,8 +77,6 @@ cc_test(
             "//src/Analysis:analyzer_src",
          ],
     copts = [
-          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
-          "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           "-Isrc",
           "-std=c++2a"],
     deps = [
