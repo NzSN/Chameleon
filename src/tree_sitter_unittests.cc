@@ -7,7 +7,46 @@
 extern "C" {
 
 TSLanguage *tree_sitter_json();
+TSLanguage *tree_sitter_wgsl();
 
+}
+
+TEST(TreeSitter, WGSL_Failed) {
+ // Create a parser.
+  TSParser *parser = ts_parser_new();
+
+  // Set the parser's language (WGSL in this case).
+  ts_parser_set_language(parser, tree_sitter_wgsl());
+
+  const char* source_code = "m.mkjlk";
+  TSTree *tree = ts_parser_parse_string(
+    parser,
+    NULL,
+    source_code,
+    strlen(source_code));
+
+  TSNode root_node = ts_tree_root_node(tree);
+}
+
+
+TEST(TreeSitter, WGSL) {
+ // Create a parser.
+  TSParser *parser = ts_parser_new();
+
+  // Set the parser's language (WGSL in this case).
+  ts_parser_set_language(parser, tree_sitter_wgsl());
+
+  const char* source_code =
+    "struct Uniforms { modelViewProjectionMatrix: mat4x4<f32>,"
+    "maxStorableFragments: u32,"
+    "targetWidth: u32 };";
+  TSTree *tree = ts_parser_parse_string(
+    parser,
+    NULL,
+    source_code,
+    strlen(source_code));
+
+  TSNode root_node = ts_tree_root_node(tree);
 }
 
 
@@ -45,12 +84,7 @@ TEST(TreeSitter, Intro) {
   assert(ts_node_named_child_count(array_node) == 2);
   assert(ts_node_child_count(number_node) == 0);
 
-  // Print the syntax tree as an S-expression.
-  char *string = ts_node_string(root_node);
-  printf("Syntax tree: %s\n", string);
-
   // Free all of the heap-allocated memory.
-  free(string);
   ts_tree_delete(tree);
   ts_parser_delete(parser);
 }

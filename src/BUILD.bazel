@@ -31,8 +31,8 @@ cc_test(
     copts = [
           "-std=c++2a",
           "-Isrc",
-          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
-          "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          "-Ibazel-out/k8-fastbuild/bin/external/_main~antlr4_dep~antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
+          "-Ibazel-out/k8-dbg/bin/external/_main~antlr4_dep~antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           ],
     deps = [
          "@googletest//:gtest_main",
@@ -47,11 +47,13 @@ cc_test(
     name = "tree_sitter_test",
     srcs = [
             "tree_sitter_unittests.cc",
+            "//parsers:wgsl_treesitter_parser_srcs",
             "//parsers:json_treesitter_parser_srcs",
         ],
     copts = [
         "-Iexternal/tree_sitter/tree_sitter/include",
-        "-Iparsers/tree-sitter-json/src"
+        "-Iparsers/tree-sitter-json/src",
+        "-Iparsers/tree-sitter-wgsl/src",
         ],
     deps = [
          "@googletest//:gtest_main",

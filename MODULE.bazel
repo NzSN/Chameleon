@@ -12,3 +12,21 @@ module(
 
 bazel_dep(name = "googletest", version = "1.14.0")
 bazel_dep(name = "rules_foreign_cc", version = "0.10.1")
+
+# External repositories
+
+# Antlr4
+antlr4_dep = use_extension("//:bazel/extensions.bzl", "antlr4_dep")
+use_repo(antlr4_dep, "antlr4_runtime")
+
+# Rapidcheck
+rapidcheck_dep = use_extension("//:bazel/extensions.bzl", "rapidcheck_dep")
+use_repo(rapidcheck_dep, "rapidcheck")
+
+# Plog
+plog_dep = use_extension("//:bazel/extensions.bzl", "plog_dep")
+use_repo(plog_dep, "plog")
+
+# TreeSitter
+tree_sitter_dep = use_extension("//:bazel/extensions.bzl", "treesitter_dep")
+use_repo(tree_sitter_dep, "tree_sitter")

@@ -1,3 +1,4 @@
 startup
 build --cxxopt=-std=c++2a
 build --cxxopt=-fconcepts-diagnostics-depth=2
+common --enable_bzlmod
