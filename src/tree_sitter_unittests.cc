@@ -18,7 +18,7 @@ TEST(TreeSitter, WGSL_Failed) {
   // Set the parser's language (WGSL in this case).
   ts_parser_set_language(parser, tree_sitter_wgsl());
 
-  const char* source_code = "m.mkjlk";
+  const char* source_code = "a = ??";
   TSTree *tree = ts_parser_parse_string(
     parser,
     NULL,
@@ -26,6 +26,7 @@ TEST(TreeSitter, WGSL_Failed) {
     strlen(source_code));
 
   TSNode root_node = ts_tree_root_node(tree);
+  EXPECT_TRUE(ts_node_has_error(root_node));
 }
 
 
@@ -37,9 +38,11 @@ TEST(TreeSitter, WGSL) {
   ts_parser_set_language(parser, tree_sitter_wgsl());
 
   const char* source_code =
-    "struct Uniforms { modelViewProjectionMatrix: mat4x4<f32>,"
-    "maxStorableFragments: u32,"
-    "targetWidth: u32 };";
+    "struct Uniforms { "
+    "  modelViewProjectionMatrix: mat4x4<f32>,"
+    "  maxStorableFragments: u32,"
+    "  targetWidth: u32 "
+    "};";
   TSTree *tree = ts_parser_parse_string(
     parser,
     NULL,
@@ -47,6 +50,7 @@ TEST(TreeSitter, WGSL) {
     strlen(source_code));
 
   TSNode root_node = ts_tree_root_node(tree);
+  EXPECT_TRUE(!ts_node_has_error(root_node));
 }
 
 
