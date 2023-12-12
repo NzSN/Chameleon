@@ -13,3 +13,9 @@
 [submodule "third_party/argparse"]
 	path = third_party/argparse
 	url = https://github.com/p-ranav/argparse.git
+[submodule "parsers/tree-sitter-wgsl"]
+	path = parsers/tree-sitter-wgsl
+	url = https://github.com/mehmetoguzderin/tree-sitter-wgsl.git
+[submodule "parsers/tree-sitter-json"]
+	path = parsers/tree-sitter-json
+	url = https://github.com/tree-sitter/tree-sitter-json.git

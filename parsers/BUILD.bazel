@@ -5,6 +5,26 @@ filegroup(
     visibility = ["//visibility:public"]
 )
 
+filegroup(
+    name = "wgsl_treesitter_parser_srcs",
+    srcs = [
+         "tree-sitter-wgsl/src/parser.c",
+         "tree-sitter-wgsl/src/scanner.c",
+         "tree-sitter-wgsl/src/tree_sitter/parser.h"
+         ],
+    visibility = ["//visibility:public"]
+)
+
+filegroup(
+    name = "json_treesitter_parser_srcs",
+    srcs = [
+         "tree-sitter-json/src/parser.c",
+         "tree-sitter-json/src/tree_sitter/parser.h"
+         ],
+    visibility = ["//visibility:public"]
+)
+
+
 cc_library(
     name = "ts_parser",
     srcs = [":ts_parser_srcs"],

@@ -58,6 +58,18 @@ new_local_repository(
 )
 
 new_local_repository(
+    name = "tree_sitter_json",
+    path = "parsers/tree-sitter-json",
+    build_file = "@//:bazel/external_builds/BUILD.tree-sitter-json"
+)
+
+new_local_repository(
+    name = "tree_sitter_wgsl",
+    path = "parsers/tree-sitter-wgsl",
+    build_file = "@//:bazel/external_builds/BUILD.tree-sitter-wgsl"
+)
+
+new_local_repository(
     name = "argparse",
     path = "third_party/argparse",
     build_file = "@//:bazel/external_builds/BUILD.argparse"
