@@ -32,7 +32,7 @@ cc_test(
     linkopts = ["-lglog", "-lfmt"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
-         "@com_google_googletest//:gtest_main",
+         "@googletest//:gtest_main",
          "@rapidcheck//:rapidcheck"],
 )
 
@@ -60,7 +60,7 @@ cc_test(
     linkopts = ["-lglog", "-lfmt"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
-         "@com_google_googletest//:gtest_main",
+         "@googletest//:gtest_main",
          "@plog//:plog",
          "@rapidcheck//:rapidcheck"],
 )
@@ -87,7 +87,7 @@ cc_test(
           "-std=c++2a"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
-         "@com_google_googletest//:gtest_main",
+         "@googletest//:gtest_main",
          "@plog//:plog",
          "@rapidcheck//:rapidcheck"],
 )

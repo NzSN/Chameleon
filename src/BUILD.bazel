@@ -35,7 +35,7 @@ cc_test(
           "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           ],
     deps = [
-         "@com_google_googletest//:gtest_main",
+         "@googletest//:gtest_main",
          "@rapidcheck//:rapidcheck",
          "@antlr4_runtime//:antlr4_runtime",
          "@plog//:plog",
@@ -54,7 +54,7 @@ cc_test(
         "-Iparsers/tree-sitter-json/src"
         ],
     deps = [
-         "@com_google_googletest//:gtest_main",
+         "@googletest//:gtest_main",
          "@tree_sitter//:tree_sitter",
          ]
 )
