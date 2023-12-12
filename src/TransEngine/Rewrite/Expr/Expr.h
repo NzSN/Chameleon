@@ -138,7 +138,7 @@ struct Term: public Value {
   ~Term() {}
 
   std::unique_ptr<Value> duplicate() const {
-    if (!term) {
+    if (term) {
       return std::make_unique<Term>(term);
     } else {
       // Unable to duplicate a Term if
