@@ -4,3 +4,4 @@ ide_env
 bazel-*
 compile_flags.txt
 states
+MODULE.bazel.lock
