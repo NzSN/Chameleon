@@ -6,6 +6,12 @@ filegroup(
 )
 
 filegroup(
+    name = "wgsl_parser_srcs",
+    srcs = glob(["wgsl/**"]),
+    visibility = ["//visibility:public"]
+)
+
+filegroup(
     name = "wgsl_treesitter_parser_srcs",
     srcs = [
          "tree-sitter-wgsl/src/parser.c",
@@ -24,14 +30,20 @@ filegroup(
     visibility = ["//visibility:public"]
 )
 
+cc_library(
+    name = "wgsl_parser",
+    srcs = [":wgsl_parser_srcs"],
+    linkstatic = True,
+    copts = ["-std=c++20"],
+    deps = ["@antlr4_runtime//:antlr4_runtime"],
+    visibility = ["//visibility:public"]
+)
 
 cc_library(
     name = "ts_parser",
     srcs = [":ts_parser_srcs"],
     linkstatic = True,
     copts = [
-          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
-          "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           "-std=c++20"
           ],
 

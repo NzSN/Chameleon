@@ -4,8 +4,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 def antlr4_repo():
     http_archive(
         name = "antlr4_runtime",
-        urls =["https://www.antlr.org/download/antlr4-cpp-runtime-4.13.0-source.zip"],
-        sha256 = "2e5db62acdca9adc3329c485c3b9ce3029e40d13cc9c3e74ced354e818cb63e9",
+        urls =["https://www.antlr.org/download/antlr4-cpp-runtime-4.13.1-source.zip"],
         build_file = "@//:bazel/external_builds/BUILD.antlr4_rumtime")
 
 def rapidcheck_repo():

@@ -1,12 +1,20 @@
 cc_binary(
     name = "demo",
     srcs = ["demo.cc"],
-    copts = [
-          "-Ibazel-out/k8-fastbuild/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
-          "-std=c++20"
-    ],
+    copts = ["-std=c++20"],
     deps = [
          "//parsers:ts_parser",
+         "@antlr4_runtime//:antlr4_runtime",
+         "@plog//:plog"
+         ],
+)
+
+cc_binary(
+    name = "demo_wgsl",
+    srcs = ["demo_wgsl.cc"],
+    copts = ["-std=c++20"],
+    deps = [
+         "//parsers:wgsl_parser",
          "@antlr4_runtime//:antlr4_runtime",
          "@plog//:plog"
          ],

@@ -1,0 +1,267 @@
+grammar WGSL;
+
+WS: [ \t\r\n]+ -> skip;
+Positive: '+';
+Minus: '-';
+Star: '*';
+Dash: '/';
+MOD: '%';
+Left_angle: '<' ;
+Right_angle: '>' ;
+template_args_start:  Left_angle  ;
+template_args_end: Right_angle   ;
+
+additive_operator: Minus | Positive   ;
+multiplicative_operator: Star | Dash | MOD;
+
+argument_expression_list: '('  (expression  (','  expression )* ','? )? ')'  ;
+
+assignment_statement: 
+  Compound_assignment_operator   
+| '='   ;
+
+Ident_pattern_token: ([_\p{XID_Start}][\p{XID_Continue}]+)|([\p{XID_Start}])   ;
+
+shift_expression_post_unary_expression:
+  (multiplicative_operator  unary_expression )*  (additive_operator  unary_expression (multiplicative_operator  unary_expression )* )*
+| Shift_left  unary_expression
+| Shift_right  unary_expression  ;
+
+attribute: 
+  '@'  'align' '(' expression ','? ')'  
+| '@'  'binding' '(' expression ','? ')'  
+| '@'  'builtin' '(' expression ','? ')'  
+| '@'  'compute'  
+| '@'  'const'  
+| '@'  'diagnostic' diagnostic_control  
+| '@'  'fragment'  
+| '@'  'group' '(' expression ','? ')'  
+| '@'  'id' '(' expression ','? ')'  
+| '@'  'interpolate' '(' expression ','? ')'  
+| '@'  'interpolate' '(' expression ',' expression ','? ')'  
+| '@'  'invariant'  
+| '@'  'location' '(' expression ','? ')'  
+| '@'  'must_use'  
+| '@'  'size' '(' expression ','? ')'  
+| '@'  'vertex'  
+| '@'  'workgroup_size' '(' expression ','? ')'  
+| '@'  'workgroup_size' '(' expression ',' expression ','? ')'  
+| '@'  'workgroup_size' '(' expression ',' expression ',' expression ','? ')'  ;
+
+bitwise_expression_post_unary_expression: 
+  '&'  unary_expression ('&'  unary_expression )*  
+| '^'  unary_expression ('^'  unary_expression )*  
+| '|'  unary_expression ('|'  unary_expression )*  ;
+
+Bool_literal: 
+  'false'   
+| 'true'   ;
+
+case_selector: 
+  expression   
+| 'default'   ;
+
+component_or_swizzle_specifier: 
+  '.'  member_ident component_or_swizzle_specifier?  
+| '.'  Swizzle_name component_or_swizzle_specifier?  
+| '['  expression ']' component_or_swizzle_specifier?  ;
+
+Compound_assignment_operator: 
+  '<<='   
+| '>>='   
+| '%='   
+| '&='   
+| '*='   
+| '+='   
+| '-='   
+| '/='   
+| '^='   
+| '|='   ;
+
+compound_statement: attribute*  '{' statement* '}'  ;
+
+core_lhs_expression: 
+  ident   
+| '('  lhs_expression ')'  ;
+
+Decimal_float_literal: 
+  '0' [fh]
+| [0-9]* '.' [0-9]+([eE][+-]?[0-9]+)?[fh]?
+| [0-9]+[eE][+-]?[0-9]+[fh]?   
+| [0-9]+ '.' [0-9]*([eE][+-]?[0-9]+)?[fh]?
+| [1-9][0-9]*[fh]   ;
+
+Decimal_int_literal: 
+  '0' [iu]?
+| [1-9][0-9]*[iu]?   ;
+
+diagnostic_control: '('  Severity_control_name ',' diagnostic_rule_name ','? ')'  ;
+
+diagnostic_rule_name: 
+  Ident_pattern_token   
+| Ident_pattern_token  '.' Ident_pattern_token  ;
+
+expression: 
+  unary_expression  bitwise_expression_post_unary_expression  
+| unary_expression  relational_expression_post_unary_expression  
+| unary_expression  relational_expression_post_unary_expression '&&' unary_expression relational_expression_post_unary_expression ('&&'  unary_expression relational_expression_post_unary_expression )*  
+| unary_expression  relational_expression_post_unary_expression '||' unary_expression relational_expression_post_unary_expression ('||'  unary_expression relational_expression_post_unary_expression )*  ;
+
+float_literal: 
+  Decimal_float_literal   
+| Hex_float_literal   ;
+
+for_init: 
+  ident  template_elaborated_ident_post_ident argument_expression_list  
+| variable_or_value_statement   
+| variable_updating_statement   ;
+
+for_update: 
+  ident  template_elaborated_ident_post_ident argument_expression_list  
+| variable_updating_statement   ;
+
+global_decl: 
+  attribute*  'fn' ident '(' (attribute*  ident ':' type_specifier (','  param )* ','? )? ')' ('->'  attribute* ident template_elaborated_ident_post_ident )? attribute* '{' statement* '}'  
+| attribute*  'var' (template_args_start  expression (','  expression )* ','? template_args_end )? optionally_typed_ident ('='  expression )? ';'
+| global_value_decl  ';'  
+| ';'   
+| 'alias'  ident '=' ident template_elaborated_ident_post_ident ';'  
+| 'const_assert'  expression ';'  
+| 'struct'  ident '{' attribute* member_ident ':' type_specifier (','  attribute* member_ident ':' type_specifier )* ','? '}'  ;
+
+global_directive: 
+  'diagnostic'  '(' Severity_control_name ',' diagnostic_rule_name ','? ')' ';'  
+| 'enable'  Ident_pattern_token (','  Ident_pattern_token )* ','? ';'  
+| 'requires'  Ident_pattern_token (','  Ident_pattern_token )* ','? ';'  ;
+
+global_value_decl: 
+  attribute*  'override' optionally_typed_ident ('='  expression )?  
+| 'const'  optionally_typed_ident '=' expression  ;
+
+Hex_float_literal: 
+  '0' [xX][0-9a-fA-F]* '.' [0-9a-fA-F]+([pP][+-]?[0-9]+[fh]?)?
+| '0' [xX][0-9a-fA-F]+[pP][+-]?[0-9]+[fh]?
+| '0' [xX][0-9a-fA-F]+ '.' [0-9a-fA-F]*([pP][+-]?[0-9]+[fh]?)?   ;
+
+ident: Ident_pattern_token   ;
+
+Hex_int_literal: '0' [xX][0-9a-fA-F]+[iu]?   ;
+
+int_literal: 
+  Decimal_int_literal   
+| Hex_int_literal   ;
+
+lhs_expression: 
+  core_lhs_expression  component_or_swizzle_specifier?  
+| '&'  lhs_expression  
+| Star  lhs_expression  ;
+
+literal: 
+  Bool_literal   
+| float_literal   
+| int_literal   ;
+
+member_ident: Ident_pattern_token   ;
+
+
+optionally_typed_ident: ident  (':'  type_specifier )?  ;
+
+param: attribute*  ident ':' type_specifier  ;
+
+primary_expression: 
+  ident  template_elaborated_ident_post_ident
+| ident  template_elaborated_ident_post_ident '(' (expression  (','  expression )* ','? )? ')'
+| literal   
+| '('  expression ')'  ;
+
+greater_than: Right_angle   ;
+
+Greater_than_equal: '>='   ;
+
+less_than: Left_angle   ;
+
+Less_than_equal: '<='   ;
+
+Shift_left: '<<'   ;
+
+Shift_right: '>>'   ;
+
+Break_statement: 'break'   ;
+
+Continue_statement: 'continue'   ;
+
+relational_expression_post_unary_expression: 
+  shift_expression_post_unary_expression   
+| shift_expression_post_unary_expression  greater_than unary_expression shift_expression_post_unary_expression
+| shift_expression_post_unary_expression  Greater_than_equal unary_expression shift_expression_post_unary_expression  
+| shift_expression_post_unary_expression  less_than unary_expression shift_expression_post_unary_expression
+| shift_expression_post_unary_expression  Less_than_equal unary_expression shift_expression_post_unary_expression  
+| shift_expression_post_unary_expression  '!=' unary_expression shift_expression_post_unary_expression  
+| shift_expression_post_unary_expression  '==' unary_expression shift_expression_post_unary_expression  ;
+
+Severity_control_name: 
+  'error'   
+| 'info'   
+| 'off'   
+| 'warning'   ;
+
+statement: 
+  attribute*  'for' '(' for_init? ';' expression? ';' for_update? ')' compound_statement  
+| attribute*  'if' expression compound_statement ('else'  'if' expression compound_statement )* ('else'  compound_statement )?  
+| attribute*  'loop' attribute* '{' statement* ('continuing'  attribute* '{' statement* ('break'  'if' expression ';' )? '}' )? '}'  
+| attribute*  'switch' expression attribute* '{' switch_clause* '}'  
+| attribute*  'while' expression compound_statement  
+| compound_statement   
+| ident  template_elaborated_ident_post_ident '(' (expression  (','  expression )* ','? )? ')' ';'  
+| variable_or_value_statement  ';'  
+| variable_updating_statement  ';'  
+| Break_statement  ';'  
+| Continue_statement  ';'  
+| ';'   
+| 'const_assert'  expression ';'  
+| 'discard'  ';'  
+| 'return'  expression? ';'  ;
+
+switch_clause: 
+  'case'  case_selector (','  case_selector )* ','? ':'? compound_statement  
+| 'default'  ':'? compound_statement  ;
+
+Swizzle_name: 
+  [rgba]   
+| [rgba][rgba]   
+| [rgba][rgba][rgba]   
+| [rgba][rgba][rgba][rgba]   
+| [xyzw]   
+| [xyzw][xyzw]   
+| [xyzw][xyzw][xyzw]   
+| [xyzw][xyzw][xyzw][xyzw]   ;
+
+template_arg_expression: expression   ;
+
+template_elaborated_ident_post_ident: (template_args_start  template_arg_expression (','  expression )* ','? template_args_end )?   ;
+
+translation_unit: global_directive*  global_decl*  ;
+
+type_specifier: ident  (template_args_start  template_arg_expression (','  expression )* ','? template_args_end )?  ;
+
+unary_expression: 
+  primary_expression  component_or_swizzle_specifier?  
+| '!'  unary_expression  
+| '&'  unary_expression  
+| Star  unary_expression
+| '-'  unary_expression  
+| '~'  unary_expression  ;
+
+variable_decl: 'var'  (template_args_start  expression (','  expression )* ','? template_args_end )? optionally_typed_ident  ;
+
+variable_or_value_statement: 
+  variable_decl   
+| variable_decl  '=' expression  
+| 'const'  optionally_typed_ident '=' expression  
+| 'let'  optionally_typed_ident '=' expression  ;
+
+variable_updating_statement: 
+  lhs_expression  ('='  | Compound_assignment_operator ) expression  
+| lhs_expression  '++'  
+| lhs_expression  '--'  
+| '_'  '=' expression  ;
