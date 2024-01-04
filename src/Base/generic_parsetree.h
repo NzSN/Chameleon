@@ -31,10 +31,11 @@ concept GPTMappable =
   Concepts::NAryTree::NAryTree<T> &&
   requires(T t) {
     // Source information
-    // { t.sourceRange() } -> std::same_as<SrcRange>;
+    { t.sourceRange() } -> std::same_as<SrcRange>;
     { t.getText() } -> std::same_as<std::string>;
     { t.setNode(t) } -> std::same_as<bool>;
 };
+
 
 /////////////////////////////////////////////////////////////////////////////
 //                             GenericParseTree                            //
