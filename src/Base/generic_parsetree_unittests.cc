@@ -44,10 +44,6 @@ GenericParseTree<int> genTreeWithN(const int n) {
           // M is in range [0, remain]
           int m = *rc::gen::inRange(0, nsubs);
 
-          if (m > 0) {
-            std::cout << "Sub" << std::endl;
-          }
-
           genSubTreeWithN(&child, m);
           nsubs -= m;
         }

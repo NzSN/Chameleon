@@ -19,7 +19,5 @@ public:
 
   virtual void enterExpr(TestLangParser::ExprContext *ctx) = 0;
   virtual void exitExpr(TestLangParser::ExprContext *ctx) = 0;
-
-
 };
 

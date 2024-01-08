@@ -175,14 +175,35 @@ struct is_arrow {
   static constexpr bool value = type::value;
 };
 
+template<typename T>
+concept Hashable = requires(T a) {
+  { std::hash<T>{}(a) } -> std::convertible_to<std::size_t>;
+};
+
 } // Utility
 
 /////////////////////////////////////////////////////////////////////////////
 //                              Code Snippets                              //
 /////////////////////////////////////////////////////////////////////////////
+namespace Utility {} // Utility
+
+
+/////////////////////////////////////////////////////////////////////////////
+//                            Category Concepts                            //
+/////////////////////////////////////////////////////////////////////////////
+
 namespace Utility {
 
-} // Utility
+template<template<typename X> class F, typename T>
+struct Functor {
+  Functor(T a_): a{a_} {}
 
+  virtual std::function<F<T>(F<T>)>
+  operator()(std::function<T(T)> f) const = 0;
+
+  T a;
+};
+
+} // Utility
 
 #endif /* UTILITY_H */

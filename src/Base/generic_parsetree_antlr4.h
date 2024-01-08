@@ -3,8 +3,13 @@
 
 #include "generic_parsetree_inl.h"
 
-namespace Base {
+/////////////////////////////////////////////////////////////////////////////
+//                         ANTLR4 DeepCopy Listener                        //
+/////////////////////////////////////////////////////////////////////////////
+#include "generic_parsetree_antlr4_testlang_deepcopy.h"
 
+
+namespace Base {
 // Due to antlr4::tree::ParseTree does not
 // satisfy the constraint of GPTMeta then
 // an adapter is required.

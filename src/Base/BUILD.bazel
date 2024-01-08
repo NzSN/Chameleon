@@ -4,6 +4,8 @@ filegroup(
     srcs = [
          "generic_parsetree_antlr4.cc",
          "generic_parsetree_antlr4.h",
+         "generic_parsetree_antlr4_testlang_deepcopy.h",
+         "generic_parsetree_antlr4_deepcopy.h",
          "generic_parsetree_libclang.cc",
          "generic_parsetree_inl.h",
          "generic_parsetree.h",
@@ -19,6 +21,7 @@ filegroup(
          # Generic ParseTree
          ":generic_parsetree",
          "generic_parsetree_unittests.cc",
+         "generic_parsetree_antlr4_unittests.cc",
          "//src/Misc/testLanguage:testLang_parser_srcs"],
     visibility = ["//visibility:public"],
 )
