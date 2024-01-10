@@ -138,47 +138,47 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
 #define _PC(PARSER, CTX) PARSER::_C(CTX)
 #define _PC_PTR(PARSER, CTX) PARSER::_C(CTX)*
 
-#define COPY_ANTLR4_NON_TERMINAL(PARSER, ENTRY, CTX)                          \
-  void enter##CTX(PARSER::_C(CTX) *ctx) {                             \
-    _PC_PTR(PARSER,CTX) copy;                                         \
-    if (std::string(#ENTRY) == std::string(#CTX)) {                             \
-      /* ENTRY should has no parent. */                               \
-      copy = new _PC(PARSER, CTX)(nullptr, -1);                       \
-      /* Build mapping between them */                                \
-      _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);           \
-    } else {                                                          \
-      auto node = _NSS(CopyRealm)<_NSS(TreeNode)*>(ctx->parent)();            \
-      if (node.has_value()) {                                         \
-        copy = new _PC(PARSER,CTX)(                                   \
-          dynamic_cast<antlr4::ParserRuleContext*>(node.value()),              \
-          ctx->invokingState);                                        \
-        /* Mapping should be made before buildup connect to parent */ \
-        /* otherwise violate precondition of buildUpConnect() */      \
-        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);         \
-        _NSS(buildUpConnect)(ctx, copy);                              \
-      } else {                                                        \
-        copy = new _PC(PARSER,CTX)(                                   \
-          nullptr,                                                    \
-          ctx->invokingState);                                        \
-        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);         \
-      }                                                               \
-    }                                                                 \
-  }                                                                   \
+#define COPY_ANTLR4_NON_TERMINAL(PARSER, ENTRY, CTX)                   \
+  void enter##CTX(PARSER::_C(CTX) *ctx) {                              \
+    _PC_PTR(PARSER,CTX) copy;                                          \
+    if (std::string(#ENTRY) == std::string(#CTX)) {                    \
+      /* ENTRY should has no parent. */                                \
+      copy = new _PC(PARSER, CTX)(nullptr, -1);                        \
+      /* Build mapping between them */                                 \
+      _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);            \
+    } else {                                                           \
+      auto node = _NSS(CopyRealm)<_NSS(TreeNode)*>(ctx->parent)();     \
+      if (node.has_value()) {                                          \
+        copy = new _PC(PARSER,CTX)(                                    \
+          dynamic_cast<antlr4::ParserRuleContext*>(node.value()),      \
+          ctx->invokingState);                                         \
+        /* Mapping should be made before buildup connect to parent */  \
+        /* otherwise violate precondition of buildUpConnect() */       \
+        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);          \
+        _NSS(buildUpConnect)(ctx, copy);                               \
+      } else {                                                         \
+        copy = new _PC(PARSER,CTX)(                                    \
+          nullptr,                                                     \
+          ctx->invokingState);                                         \
+        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);          \
+      }                                                                \
+    }                                                                  \
+  }                                                                    \
   void exit##CTX(PARSER::CTX##Context *ctx) {}
 
-#define COPY_ANTLR4_TERMINAL() \
-  void visitTerminal(antlr4::tree::TerminalNode *node) {                \
-    antlr4::tree::TerminalNodeImpl* copy =                              \
-      new antlr4::tree::TerminalNodeImpl(node->getSymbol());            \
-    std::optional<_NSS(TreeNode)*> parent =                                   \
-      _NSS(CopyRealm)<_NSS(TreeNode)*>(node->parent)();                   \
+#define COPY_ANTLR4_TERMINAL()                                         \
+  void visitTerminal(antlr4::tree::TerminalNode *node) {               \
+    antlr4::tree::TerminalNodeImpl* copy =                             \
+      new antlr4::tree::TerminalNodeImpl(node->getSymbol());           \
+    std::optional<_NSS(TreeNode)*> parent =                            \
+      _NSS(CopyRealm)<_NSS(TreeNode)*>(node->parent)();                \
     if (parent.has_value()) {                                          \
-      copy->setParent(                                                  \
-        dynamic_cast<antlr4::RuleContext*>(parent.value()));             \
-      _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(node, copy);             \
-      _NSS(buildUpConnect(dynamic_cast<_NSS(TreeNode)*>(node), copy));       \
+      copy->setParent(                                                 \
+        dynamic_cast<antlr4::RuleContext*>(parent.value()));           \
+      _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(node, copy);           \
+      _NSS(buildUpConnect(dynamic_cast<_NSS(TreeNode)*>(node), copy)); \
     } else {                                                           \
-      /* Which should be impossible, just ignore the case */              \
+      /* Which should be impossible, just ignore the case */           \
     }                                                                  \
   }
 

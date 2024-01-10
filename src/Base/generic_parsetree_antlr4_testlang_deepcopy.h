@@ -25,6 +25,8 @@ inline TreeNode* clone(TreeNode* tree) {
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
 
   std::optional<TreeNode*> copyRoot =  CopyRealm(tree)();
+  CopyRealm::clear();
+
   return copyRoot.has_value() ?
     copyRoot.value() : nullptr;
 }

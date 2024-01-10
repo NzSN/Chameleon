@@ -27,10 +27,6 @@ struct AntlrDeepCopy: public ::testing::Test {
         expr, entry);
   }
 
-  void TearDown() final {
-    Antlr4DeepCopy::CopyRealm<TreeNode*>::clear();
-  }
-
   std::unique_ptr<
     Utility::Antlr4ParseEnv<
       TestLangLexer, TestLangParser, Entry>> env;
@@ -43,7 +39,9 @@ RC_GTEST_FIXTURE_PROP(AntlrDeepCopy, Basic, ()) {
   bool equal = Concepts::NAryTree::equal<TreeNode, TreeNode>(
     *copy, *(env->tree),
     [](const TreeNode& l, const TreeNode& r) -> bool {
-      return true;
+      // Make sure l and r not the same node but
+      // structure of tree remain equal.
+      return &l != &r;
     });
   RC_ASSERT(equal);
   RC_ASSERT(copy->getText() == env->tree->getText());
