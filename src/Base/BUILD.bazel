@@ -5,6 +5,7 @@ filegroup(
          "generic_parsetree_antlr4.cc",
          "generic_parsetree_antlr4.h",
          "generic_parsetree_antlr4_testlang_deepcopy.h",
+         "generic_parsetree_antlr4_wgsl_deepcopy.h",
          "generic_parsetree_antlr4_deepcopy.h",
          "generic_parsetree_libclang.cc",
          "generic_parsetree_inl.h",

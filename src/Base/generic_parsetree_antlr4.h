@@ -7,6 +7,7 @@
 //                         ANTLR4 DeepCopy Listener                        //
 /////////////////////////////////////////////////////////////////////////////
 #include "generic_parsetree_antlr4_testlang_deepcopy.h"
+#include "generic_parsetree_antlr4_wgsl_deepcopy.h"
 
 
 namespace Base {

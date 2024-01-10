@@ -9,105 +9,35 @@
 
 namespace Base {
 
-namespace TestLang {
+#define LANGS(V)                                \
+  /* FIELDS : Namespace | LANG_ENUM */          \
+  V(TestLang, TESTLANG)                         \
+  V(WGSL, WGSL)
 
-using Concepts::NAryTree::TransformInfo;
-
-TestLangParser::ProgContext*
-cloneProgContext(TestLangParser::ProgContext* node,
-                 TransformInfo<Antlr4Node>& info) {
-
-  // Start Rule
-  // FIXME: This resource is not managed any entities
-  //        memory leak is possible.
-  TestLangParser::ProgContext* copy =
-    new TestLangParser::ProgContext(nullptr, -1);
-
-  return copy;
-}
-
-TestLangParser::ExprContext*
-cloneExprContext(TestLangParser::ExprContext* node,
-                 TransformInfo<Antlr4Node>& info) {
-  // FIXME: This resource is not managed any entities
-  //        memory leak is possible.
-  TestLangParser::ExprContext* copy =
-    new TestLangParser::ExprContext(
-      dynamic_cast<TestLangParser::ExprContext*>(
-        info.parent != nullptr ?
-          info.parent->tree() : nullptr),
-      node->invokingState);
-
-  return copy;
-}
-
-std::unique_ptr<Antlr4Node>
-cloneTestLangNode(const Antlr4Node& node,
-                  TransformInfo<Antlr4Node>& info) {
-
-  Antlr4Node& node_nonconst =
-    const_cast<Antlr4Node&>(node);
-
-  const std::type_info& tinfo =
-    typeid(*node_nonconst.tree());
-
-  if (tinfo == typeid(TestLangParser::ProgContext)) {
-    TestLangParser::ProgContext* copy =
-      cloneProgContext(
-        dynamic_cast<TestLangParser::ProgContext*>(node_nonconst.tree()),
-        info);
-
-    return std::make_unique<Antlr4Node>(
-      Antlr4Node(GenericParseTree<Antlr4Node>::TESTLANG, copy));
-
-  } else if (tinfo == typeid(TestLangParser::ExprContext)) {
-    TestLangParser::ExprContext* copy =
-      cloneExprContext(
-        dynamic_cast<TestLangParser::ExprContext*>(node_nonconst.tree()),
-        info);
-    return std::make_unique<Antlr4Node>(
-      Antlr4Node(GenericParseTree<Antlr4Node>::TESTLANG, copy));
-
-  } else if (tinfo == typeid(antlr4::tree::TerminalNodeImpl)) {
-    antlr4::tree::TerminalNodeImpl* copy =
-      new antlr4::tree::TerminalNodeImpl(
-        dynamic_cast<antlr4::tree::TerminalNodeImpl*>(node_nonconst.tree())->getSymbol());
-
-    copy->setParent(
-      info.parent != nullptr ?
-      dynamic_cast<antlr4::RuleContext*>(info.parent->tree()) :
-      nullptr);
-
-    return std::make_unique<Antlr4Node>(Antlr4Node(
-      GenericParseTree<Antlr4Node>::TESTLANG,
-      copy));
+#define ANTLR_COPY_LANG_SPECIFIC(NAMESPACE, LANG_ENUM)         \
+  case GenericParseTree<Antlr4Node>::LANG_ENUM: {              \
+    antlr4::tree::ParseTree* copy =                            \
+      NAMESPACE::clone(const_cast<Antlr4Node*>(this)->tree()); \
+    return std::make_unique<Antlr4Node>(                       \
+      GenericParseTree<Antlr4Node>::LANG_ENUM,                 \
+      copy);                                                   \
   }
 
-  /* Unknown type */
-  throw std::runtime_error(
-    "Unknow TestLang NodeType: " + std::string(tinfo.name()));
-}
-
-Antlr4Node::Node cloneTestLang(
-  const Antlr4Node* tree) {
-
-  return std::move(Concepts
-                   ::NAryTree
-                   ::transform_unique<Antlr4Node>(
-                     tree, cloneTestLangNode));
-}
-
-}
+#define ANTLR_COPY_LANG(LANG)                               \
+  switch (LANG) {                                           \
+    LANGS(ANTLR_COPY_LANG_SPECIFIC);                        \
+  default:                                                  \
+    throw std::runtime_error("Failed to clone Antlr4Node"); \
+  }
 
 // Deep copy
 Antlr4Node::Node Antlr4Node::clone() const {
-  switch (lang_) {
-  case GenericParseTree<Antlr4Node>::TESTLANG:
-    return TestLang::cloneTestLang(this);
-  default:
-    throw std::runtime_error("Failed to clone Antlr4Node");
-  }
+  ANTLR_COPY_LANG(lang_);
 }
+
+#undef ANTLR_COPY_LANG
+#undef ANTLR_COPY_LANG_SPECIFIC
+#undef LANGS
 
 Antlr4Node::Antlr4Node(int lang, antlr4::tree::ParseTree* tree):
   lang_{lang}, tree_{tree} {

@@ -6,30 +6,13 @@
 
 namespace TestLang {
 
-using TreeNode = Antlr4DeepCopy::TreeNode;
-using CopyRealm = Antlr4DeepCopy::CopyRealm<TreeNode*>;
+#define TEST_LANG_CONTEXTS(V)   \
+  V(TestLangParser, Prog, Prog) \
+  V(TestLangParser, Prog, Expr)
 
-#define COPY_ANTLR4_TESTLANG_NODE(CTX) \
-  COPY_ANTLR4_NON_TERMINAL(TestLangParser, Prog, CTX)
-#define TEST_LANG_CONTEXTS(V) \
-  V(Prog) \
-  V(Expr)
-
-struct TestLangDeepCopyListener: public TestLangBaseListener {
-  TEST_LANG_CONTEXTS(COPY_ANTLR4_TESTLANG_NODE);
-  COPY_ANTLR4_TERMINAL();
-};
-
-inline TreeNode* clone(TreeNode* tree) {
-  TestLangDeepCopyListener listener;
-  antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
-
-  std::optional<TreeNode*> copyRoot =  CopyRealm(tree)();
-  CopyRealm::clear();
-
-  return copyRoot.has_value() ?
-    copyRoot.value() : nullptr;
-}
+DEEPCOPY_IMPL(
+  TestLangBaseListener,
+  TEST_LANG_CONTEXTS);
 
 } // TestLang
 

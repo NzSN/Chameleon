@@ -58,7 +58,9 @@ cc_test(
          "@antlr4_runtime//:antlr4_runtime",
          "@googletest//:gtest_main",
          "@plog//:plog",
-         "@rapidcheck//:rapidcheck"],
+         "@rapidcheck//:rapidcheck",
+         "//parsers:wgsl_parser"
+         ],
 )
 
 cc_test(

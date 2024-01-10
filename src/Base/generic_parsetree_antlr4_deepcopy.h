@@ -1,5 +1,8 @@
 /* This file contains tools to generate deep copy listener
- * for antlr trees. */
+ * for antlr trees.
+ *
+ * TODO: Resource leaks may occurs if user don't manage
+ *       life time of copy nodes. Need a GC ? */
 
 #ifndef GENERIC_PARSETREE_ANTLR4_DEEPCOPY_H
 #define GENERIC_PARSETREE_ANTLR4_DEEPCOPY_H
@@ -166,7 +169,7 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
   }                                                                    \
   void exit##CTX(PARSER::CTX##Context *ctx) {}
 
-#define COPY_ANTLR4_TERMINAL()                                         \
+#define COPY_ANTLR4_TERMINAL                                           \
   void visitTerminal(antlr4::tree::TerminalNode *node) {               \
     antlr4::tree::TerminalNodeImpl* copy =                             \
       new antlr4::tree::TerminalNodeImpl(node->getSymbol());           \
@@ -178,8 +181,24 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
       _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(node, copy);           \
       _NSS(buildUpConnect(dynamic_cast<_NSS(TreeNode)*>(node), copy)); \
     } else {                                                           \
-      /* Which should be impossible, just ignore the case */           \
+      _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(node, copy);           \
     }                                                                  \
+  }
+
+#define DEEPCOPY_IMPL(BASE_LISTENER, CTXs)                             \
+  struct __LISTENER: public BASE_LISTENER {                            \
+    CTXs(COPY_ANTLR4_NON_TERMINAL);                                    \
+    COPY_ANTLR4_TERMINAL;                                              \
+  };                                                                   \
+  inline _NSS(TreeNode)* clone(_NSS(TreeNode)* tree) {                 \
+    __LISTENER listener;                                               \
+    antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);      \
+                                                                       \
+    std::optional<_NSS(TreeNode)*> copyRoot = _NSS(CopyRealm)(tree)(); \
+    _NSS(CopyRealm)<_NSS(TreeNode)*>::clear();                         \
+                                                                       \
+    return copyRoot.has_value() ?                                      \
+    copyRoot.value() : nullptr;                                        \
   }
 
 } // Antlr4DeepCopy

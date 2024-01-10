@@ -38,6 +38,7 @@ cc_test(
          "@antlr4_runtime//:antlr4_runtime",
          "@plog//:plog",
          "//parsers:ts_parser",
+         "//parsers:wgsl_parser",
          ],
 )
 

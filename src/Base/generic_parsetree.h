@@ -49,6 +49,7 @@ public:
     CPP = 1,
     // Testing purposes
     TESTLANG = 2,
+    WGSL = 3,
     NUM_OF_LANG_SUPPORTED,
   };
 

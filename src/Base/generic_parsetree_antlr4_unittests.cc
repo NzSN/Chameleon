@@ -49,4 +49,8 @@ RC_GTEST_FIXTURE_PROP(AntlrDeepCopy, Basic, ()) {
   return;
 }
 
+TEST(WGSLDeepCopy, Basics) {
+
+}
+
 } // TestLang
