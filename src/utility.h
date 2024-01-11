@@ -8,7 +8,9 @@
 #include <ranges>
 #include <concepts>
 #include <functional>
+#include <type_traits>
 
+#include "Base/langs.h"
 #include "antlr4-runtime.h"
 
 namespace Utility {
@@ -95,7 +97,23 @@ Antlr4_GenParseTree(std::string sentences, Entry entry) {
 
 std::string testLangRandomExpr(unsigned numOfOperands);
 
-bool isTermVar(std::string str);
+
+template<int LANG=Base::SUPPORTED_LANGUAGE::TESTLANG,
+         typename = std::enable_if_t<LANG == Base::SUPPORTED_LANGUAGE::TESTLANG>>
+bool isTermVar(std::string str) {
+  if (str.size() != 1) return false;
+  char c = str[0];
+
+  return 'a' <= c && c <= 'z';
+}
+
+template<int LANG=Base::SUPPORTED_LANGUAGE::WGSL,
+         typename = std::enable_if_t<LANG == Base::SUPPORTED_LANGUAGE::WGSL>,
+         int = 1>
+bool isTermVar(std::string str) {
+  if (str.size() != 3) return false;
+  return str[0] == '_' && str[1] == '_';
+}
 
 // Type-Erasure Wrapper
 struct TypeErasureWrapper {

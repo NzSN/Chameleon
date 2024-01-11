@@ -89,6 +89,7 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
               == "3+2+2");
 }
 
+TEST(ChameleonsParserMainTest, WGSL) {}
 
 } // Compiler
 } // TransEngine

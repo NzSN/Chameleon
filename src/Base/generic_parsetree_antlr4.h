@@ -57,7 +57,7 @@ public:
 
   Antlr4Node* withoutHeader();
 
-  int lang() { return lang_; }
+  int lang() const { return lang_; }
 
 private:
   int lang_;

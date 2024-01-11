@@ -1,6 +1,8 @@
 #include "utility.h"
 #include <gtest/gtest.h>
 #include <rapidcheck/gtest.h>
+#include <type_traits>
+
 
 namespace Utility {
 
@@ -21,14 +23,6 @@ std::string testLangRandomExpr(unsigned numOfOperands) {
     sentence += testLangRandomExpr(numOfOperands);
     return sentence;
   }
-
-}
-
-bool isTermVar(std::string str) {
-  if (str.size() != 1) return false;
-  char c = str[0];
-
-  return 'a' <= c && c <= 'z';
 }
 
 } // Utility

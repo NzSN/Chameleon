@@ -30,8 +30,18 @@ struct Pattern: public TreeLayer<Pattern<T>> {
   ~Pattern() {}
 
   bool isTermVar() const {
-    return Utility::isTermVar(
-      const_cast<T&>(meta_).getText());
+    // FIXME: Temporary workaround to recognize
+    //        TermVar.
+    switch (meta_.lang()) {
+      case Base::GenericParseTree<int>::TESTLANG:
+        return Utility::isTermVar(
+          const_cast<T&>(meta_).getText());
+      case Base::GenericParseTree<int>::WGSL:
+        // Chec
+        return true;
+    default:
+      return false;
+    }
   }
 
   std::string termID() const {

@@ -20,6 +20,7 @@ assignment_statement:
   Compound_assignment_operator   
 | '='   ;
 
+Ident_term_var: '__' [a-z];
 Ident_pattern_token: ([_\p{XID_Start}][\p{XID_Continue}]+)|([\p{XID_Start}])   ;
 
 shift_expression_post_unary_expression:
@@ -143,7 +144,7 @@ Hex_float_literal:
 | '0' [xX][0-9a-fA-F]+[pP][+-]?[0-9]+[fh]?
 | '0' [xX][0-9a-fA-F]+ '.' [0-9a-fA-F]*([pP][+-]?[0-9]+[fh]?)?   ;
 
-ident: Ident_pattern_token   ;
+ident: Ident_pattern_token | Ident_term_var ;
 
 Hex_int_literal: '0' [xX][0-9a-fA-F]+[iu]?   ;
 
