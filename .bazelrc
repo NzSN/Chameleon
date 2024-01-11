@@ -1,4 +1,5 @@
 startup
 build --cxxopt=-std=c++2a
 build --cxxopt=-fconcepts-diagnostics-depth=2
+build --noincompatible_sandbox_hermetic_tmp
 common --enable_bzlmod
