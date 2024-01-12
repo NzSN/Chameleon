@@ -14,17 +14,17 @@
 class  WGSLListener : public antlr4::tree::ParseTreeListener {
 public:
 
-  virtual void enterAdditive_operator(WGSLParser::Additive_operatorContext *ctx) = 0;
-  virtual void exitAdditive_operator(WGSLParser::Additive_operatorContext *ctx) = 0;
-
-  virtual void enterMultiplicative_operator(WGSLParser::Multiplicative_operatorContext *ctx) = 0;
-  virtual void exitMultiplicative_operator(WGSLParser::Multiplicative_operatorContext *ctx) = 0;
-
   virtual void enterTemplate_args_start(WGSLParser::Template_args_startContext *ctx) = 0;
   virtual void exitTemplate_args_start(WGSLParser::Template_args_startContext *ctx) = 0;
 
   virtual void enterTemplate_args_end(WGSLParser::Template_args_endContext *ctx) = 0;
   virtual void exitTemplate_args_end(WGSLParser::Template_args_endContext *ctx) = 0;
+
+  virtual void enterAdditive_operator(WGSLParser::Additive_operatorContext *ctx) = 0;
+  virtual void exitAdditive_operator(WGSLParser::Additive_operatorContext *ctx) = 0;
+
+  virtual void enterMultiplicative_operator(WGSLParser::Multiplicative_operatorContext *ctx) = 0;
+  virtual void exitMultiplicative_operator(WGSLParser::Multiplicative_operatorContext *ctx) = 0;
 
   virtual void enterArgument_expression_list(WGSLParser::Argument_expression_listContext *ctx) = 0;
   virtual void exitArgument_expression_list(WGSLParser::Argument_expression_listContext *ctx) = 0;

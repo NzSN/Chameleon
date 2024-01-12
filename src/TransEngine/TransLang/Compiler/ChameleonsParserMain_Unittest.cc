@@ -89,7 +89,30 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
               == "3+2+2");
 }
 
-TEST(ChameleonsParserMainTest, WGSL) {}
+TEST(ChameleonsParserMainTest, WGSL) {
+  Compiler compiler;
+
+  std::istringstream target_codes{
+    "fn main() {\n"
+    "  a = __b + __c;"
+    "}"
+  };
+  Base::GenericParseTree<Adapter> t =
+    Parser
+    ::ParserSelect<Base::SUPPORTED_LANGUAGE::WGSL>
+    ::parser
+    ::parse<GPTAntlr4>(&target_codes);
+
+  std::istringstream rule_config{
+    "TARGET: TestLang \n"
+    "RULES: \n"
+    "Commutative: {| a+b+c |} => {| c+b+a |} "
+    " where a := Plus(a);"
+  };
+
+
+
+}
 
 } // Compiler
 } // TransEngine

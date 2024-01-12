@@ -23,16 +23,16 @@ public:
     T__50 = 51, T__51 = 52, T__52 = 53, T__53 = 54, T__54 = 55, T__55 = 56, 
     T__56 = 57, T__57 = 58, T__58 = 59, T__59 = 60, T__60 = 61, WS = 62, 
     Positive = 63, Minus = 64, Star = 65, Dash = 66, MOD = 67, Left_angle = 68, 
-    Right_angle = 69, Ident_pattern_token = 70, Bool_literal = 71, Compound_assignment_operator = 72, 
-    Decimal_float_literal = 73, Decimal_int_literal = 74, Hex_float_literal = 75, 
-    Hex_int_literal = 76, Greater_than_equal = 77, Less_than_equal = 78, 
-    Shift_left = 79, Shift_right = 80, Break_statement = 81, Continue_statement = 82, 
-    Severity_control_name = 83, Swizzle_name = 84
+    Right_angle = 69, Sigma_term = 70, Ident_pattern_token = 71, Bool_literal = 72, 
+    Compound_assignment_operator = 73, Decimal_float_literal = 74, Decimal_int_literal = 75, 
+    Hex_float_literal = 76, Hex_int_literal = 77, Greater_than_equal = 78, 
+    Less_than_equal = 79, Shift_left = 80, Shift_right = 81, Break_statement = 82, 
+    Continue_statement = 83, Severity_control_name = 84, Swizzle_name = 85
   };
 
   enum {
-    RuleAdditive_operator = 0, RuleMultiplicative_operator = 1, RuleTemplate_args_start = 2, 
-    RuleTemplate_args_end = 3, RuleArgument_expression_list = 4, RuleAssignment_statement = 5, 
+    RuleTemplate_args_start = 0, RuleTemplate_args_end = 1, RuleAdditive_operator = 2, 
+    RuleMultiplicative_operator = 3, RuleArgument_expression_list = 4, RuleAssignment_statement = 5, 
     RuleShift_expression_post_unary_expression = 6, RuleAttribute = 7, RuleBitwise_expression_post_unary_expression = 8, 
     RuleCase_selector = 9, RuleComponent_or_swizzle_specifier = 10, RuleCompound_statement = 11, 
     RuleCore_lhs_expression = 12, RuleDiagnostic_control = 13, RuleDiagnostic_rule_name = 14, 
@@ -64,10 +64,10 @@ public:
   antlr4::atn::SerializedATNView getSerializedATN() const override;
 
 
-  class Additive_operatorContext;
-  class Multiplicative_operatorContext;
   class Template_args_startContext;
   class Template_args_endContext;
+  class Additive_operatorContext;
+  class Multiplicative_operatorContext;
   class Argument_expression_listContext;
   class Assignment_statementContext;
   class Shift_expression_post_unary_expressionContext;
@@ -108,6 +108,32 @@ public:
   class Variable_or_value_statementContext;
   class Variable_updating_statementContext; 
 
+  class  Template_args_startContext : public antlr4::ParserRuleContext {
+  public:
+    Template_args_startContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Left_angle();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  Template_args_startContext* template_args_start();
+
+  class  Template_args_endContext : public antlr4::ParserRuleContext {
+  public:
+    Template_args_endContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Right_angle();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  Template_args_endContext* template_args_end();
+
   class  Additive_operatorContext : public antlr4::ParserRuleContext {
   public:
     Additive_operatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -136,32 +162,6 @@ public:
   };
 
   Multiplicative_operatorContext* multiplicative_operator();
-
-  class  Template_args_startContext : public antlr4::ParserRuleContext {
-  public:
-    Template_args_startContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *Left_angle();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  Template_args_startContext* template_args_start();
-
-  class  Template_args_endContext : public antlr4::ParserRuleContext {
-  public:
-    Template_args_endContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *Right_angle();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  Template_args_endContext* template_args_end();
 
   class  Argument_expression_listContext : public antlr4::ParserRuleContext {
   public:
@@ -458,6 +458,7 @@ public:
     IdentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Ident_pattern_token();
+    antlr4::tree::TerminalNode *Sigma_term();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

@@ -29,6 +29,14 @@ struct ParserSelect<Base::GenericParseTree<Base::Antlr4Node>::TESTLANG> {
                  Base::GenericParseTree<Base::Antlr4Node>::TESTLANG> parser;
 };
 
+template<>
+struct ParserSelect<Base::SUPPORTED_LANGUAGE::WGSL> {
+  typedef Parser<antlr4::tree::ParseTree*,
+                 WGSLLangExt,
+                 Base::Antlr4Node,
+                 Base::SUPPORTED_LANGUAGE::WGSL> parser;
+};
+
 // Dynamic Parser Selecter
 using ParserT = std::variant<
   ParserSelect<Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>::parser

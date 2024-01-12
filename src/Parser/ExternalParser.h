@@ -41,6 +41,9 @@ struct TestLangExt {
   static std::vector<EnvPtr> envs;
 };
 
+struct WGSLLangExt {
+};
+
 } // Parser
 
 #endif /* EXTERNALPARSER_H */

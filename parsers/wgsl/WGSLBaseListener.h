@@ -16,17 +16,17 @@
 class  WGSLBaseListener : public WGSLListener {
 public:
 
-  virtual void enterAdditive_operator(WGSLParser::Additive_operatorContext * /*ctx*/) override { }
-  virtual void exitAdditive_operator(WGSLParser::Additive_operatorContext * /*ctx*/) override { }
-
-  virtual void enterMultiplicative_operator(WGSLParser::Multiplicative_operatorContext * /*ctx*/) override { }
-  virtual void exitMultiplicative_operator(WGSLParser::Multiplicative_operatorContext * /*ctx*/) override { }
-
   virtual void enterTemplate_args_start(WGSLParser::Template_args_startContext * /*ctx*/) override { }
   virtual void exitTemplate_args_start(WGSLParser::Template_args_startContext * /*ctx*/) override { }
 
   virtual void enterTemplate_args_end(WGSLParser::Template_args_endContext * /*ctx*/) override { }
   virtual void exitTemplate_args_end(WGSLParser::Template_args_endContext * /*ctx*/) override { }
+
+  virtual void enterAdditive_operator(WGSLParser::Additive_operatorContext * /*ctx*/) override { }
+  virtual void exitAdditive_operator(WGSLParser::Additive_operatorContext * /*ctx*/) override { }
+
+  virtual void enterMultiplicative_operator(WGSLParser::Multiplicative_operatorContext * /*ctx*/) override { }
+  virtual void exitMultiplicative_operator(WGSLParser::Multiplicative_operatorContext * /*ctx*/) override { }
 
   virtual void enterArgument_expression_list(WGSLParser::Argument_expression_listContext * /*ctx*/) override { }
   virtual void exitArgument_expression_list(WGSLParser::Argument_expression_listContext * /*ctx*/) override { }
