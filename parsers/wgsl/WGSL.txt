@@ -129,7 +129,7 @@ global_decl:
 | ';'   
 | 'alias'  ident '=' ident template_elaborated_ident_post_ident ';'  
 | 'const_assert'  expression ';'  
-| 'struct'  ident '{' attribute* member_ident ':' type_specifier (','  attribute* member_ident ':' type_specifier )* ','? '}'  ;
+| 'struct'  ident '{' attribute* member_ident ':' type_specifier (','  attribute* member_ident ':' type_specifier )* ','? '}';
 
 global_directive: 
   'diagnostic'  '(' Severity_control_name ',' diagnostic_rule_name ','? ')' ';'  
@@ -214,8 +214,8 @@ statement:
 | attribute*  'switch' expression attribute* '{' switch_clause* '}'  
 | attribute*  'while' expression compound_statement  
 | compound_statement   
-| ident  template_elaborated_ident_post_ident '(' (expression  (','  expression )* ','? )? ')' ';'  
-| variable_or_value_statement  ';'  
+| ident  template_elaborated_ident_post_ident '(' (expression  (','  expression )* ','? )? ')' ';'
+| variable_or_value_statement  ';'
 | variable_updating_statement  ';'  
 | Break_statement  ';'  
 | Continue_statement  ';'  
@@ -242,7 +242,7 @@ template_arg_expression: expression   ;
 
 template_elaborated_ident_post_ident: (template_args_start  template_arg_expression (','  expression )* ','? template_args_end )?   ;
 
-translation_unit: global_directive*  global_decl*  ;
+translation_unit: global_directive*  global_decl* statement*;
 
 type_specifier: ident  (template_args_start  template_arg_expression (','  expression )* ','? template_args_end )?  ;
 
