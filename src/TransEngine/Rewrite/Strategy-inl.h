@@ -43,25 +43,26 @@ struct MatchStra: public Strategy<T> {
     // PatternMatching TargetTerm within Environment with
     // left side pattern of Rule, all TermVars will be binded
     // to correspond terms during PatternMatching.
-    auto maybeMatch = Algorithms::patternMatchingTermCapture<T>(
+    Algorithms::patternMatchingTermCapture<T>(
       *rule.leftSide->withoutHeader(),
       *env.targetTerm(),
-      &env);
+      &env)
+      .and_then([&](auto tree) -> std::optional<Base::GenericParseTree<T> *>{
+          // Setup the term that have matched, so conseque
+          // straties able to apply changed.
+          env.setMatchTerm(tree);
+          return tree;
+        })
+      .or_else([&] -> std::optional<Base::GenericParseTree<T> *> {
+          // Reset all bindings otherwise
+          // INVARIANT break which will
+          // cause dirty bindings to allow
+          // ill-formed rule to perform.
+          env.bindings().clear();
+          return std::nullopt;
+        });
 
-    if (!maybeMatch.has_value()) {
-      // Reset all bindings otherwise
-      // INVARIANT break which will
-      // cause dirty bindings to allow
-      // ill-formed rule to perform.
-      env.bindings().clear();
       return rule;
-    }
-
-    // Setup the term that have matched, so conseque
-    // straties able to apply changed.
-    env.setMatchTerm(maybeMatch.value());
-
-    return rule;
   }
 };
 

@@ -2,6 +2,7 @@
 filegroup(
     name = "pattern_matching",
     srcs = ["SigmaTerm.h",
+            "SigmaTerm_Antlr.h",
             "PatternMatching.h"],
     visibility = ["//visibility:public"]
 )

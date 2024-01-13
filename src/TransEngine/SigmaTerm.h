@@ -6,12 +6,15 @@
 #include <iostream>
 #include <string>
 
+#include "Base/langs.h"
 #include "Rewrite/Term.h"
 #include "utility.h"
 #include "Concepts/n_ary_tree.h"
 #include "Base/generic_parsetree.h"
 
 #include "Base/TreeLayer.h"
+
+#include "SigmaTerm_Antlr.h"
 
 namespace TransEngine {
 
@@ -30,20 +33,15 @@ struct Pattern: public TreeLayer<Pattern<T>> {
   ~Pattern() {}
 
   bool isTermVar() const {
-    // FIXME: Temporary workaround to recognize
-    //        TermVar.
     switch (meta_.lang()) {
       case Base::GenericParseTree<int>::TESTLANG:
-        return Utility::isTermVar<>(
-          const_cast<T&>(meta_).getText());
+        return SIGMA_TERM::isTermVar(const_cast<T&>(meta_));
       case Base::GenericParseTree<int>::WGSL:
-        // Chec
-        return true;
+        return SIGMA_TERM::isTermVar<Base::SUPPORTED_LANGUAGE::WGSL>(
+          const_cast<T&>(meta_));
     default:
       return false;
-    }
-  }
-
+    }}
   std::string termID() const {
     return const_cast<T&>(meta_).tree()->getText();
   }

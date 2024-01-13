@@ -98,23 +98,6 @@ Antlr4_GenParseTree(std::string sentences, Entry entry) {
 std::string testLangRandomExpr(unsigned numOfOperands);
 
 
-template<int LANG=Base::SUPPORTED_LANGUAGE::TESTLANG,
-         typename = std::enable_if_t<LANG == Base::SUPPORTED_LANGUAGE::TESTLANG>>
-bool isTermVar(std::string str) {
-  if (str.size() != 1) return false;
-  char c = str[0];
-
-  return 'a' <= c && c <= 'z';
-}
-
-template<int LANG=Base::SUPPORTED_LANGUAGE::TESTLANG,
-         typename = std::enable_if_t<LANG == Base::SUPPORTED_LANGUAGE::WGSL>,
-         int = 1>
-bool isTermVar(std::string str) {
-  if (str.size() != 3) return false;
-  return str[0] == '_' && str[1] == '_';
-}
-
 // Type-Erasure Wrapper
 struct TypeErasureWrapper {
   template<typename _Ty>

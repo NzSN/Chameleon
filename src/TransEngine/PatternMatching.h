@@ -44,7 +44,7 @@ patternMatchingTermCapture(
         Base::GenericParseTree<T>>(
           pattern, subjectTree,
           [&env](const TransEngine::Pattern<T>& lhs,
-             const Base::GenericParseTree<T>& rhs) {
+                 const Base::GenericParseTree<T>& rhs) {
 
             if (lhs.isTermVar()) {
               // Capture Term Variables
@@ -52,11 +52,20 @@ patternMatchingTermCapture(
                 env->bindings().bind(
                  lhs.termID(),
                   Term(const_cast<Base::GenericParseTree<T>&>(rhs)));
+              } else {
+                return true;
               }
               return true;
             } else {
               return lhs.getMeta() == rhs.getMeta();
             }
+          },
+          // Predicate to detect extra condition to exits,
+          // in this case, the extra condition is reach a TermVar
+          // of a pattern.
+          [](const TransEngine::Pattern<T>& lhs,
+             const Base::GenericParseTree<T>& rhs) {
+            return lhs.isTermVar();
           });
     };
 

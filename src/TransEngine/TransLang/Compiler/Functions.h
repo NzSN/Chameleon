@@ -69,17 +69,17 @@ struct Plus: public TransEngine::Expression::Function {
     //        and those resource should be reclaim here.
     // gpt->setNode(*gptCopy);
 
-    // The type of underlying tree node should be antlr4::tree::TerminalNodeImpl,
-    // which is a WritableToken. Hence, able to write the number into it.
-    if (typeid(*const_cast<Base::Antlr4Node&>(gptCopy->getMeta()).tree())
-        != typeid(antlr4::tree::TerminalNodeImpl)) {
+    // The type of underlying tree node should be antlr4::tree::ExprContext.
+    if (typeid(*gptCopy->getMetaMutable().tree())
+        != typeid(TestLangParser::ExprContext)) {
       return nullptr;
     }
 
-    antlr4::tree::TerminalNodeImpl* node =
-      dynamic_cast<antlr4::tree::TerminalNodeImpl*>(
-        const_cast<Base::Antlr4Node&>(
-          gptCopy->getMeta()).tree());
+    TestLangParser::ExprContext* context =
+      dynamic_cast<TestLangParser::ExprContext*>(
+        gptCopy->getMetaMutable().tree());
+
+    antlr4::tree::TerminalNode* node = context->INT();
 
     antlr4::CommonToken* token =
       dynamic_cast<antlr4::CommonToken*>(node->getSymbol());

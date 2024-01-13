@@ -40,6 +40,7 @@ TEST(ChameleonsParserMainTest, Spec) {
   std::unique_ptr<Program> program =
     compiler.compile(rule_config);
 
+
   // Suppose there exists a parse tree t
   // and analyze data i.
   //

@@ -120,8 +120,12 @@ std::vector<T*> search(const T& t, std::function<bool(T&)> p) {
 
 template<NAryTree T, NAryTree R>
 bool equal(const T& l, const R& r,
-           std::function<bool(const T&, const R&)> equal_fn) {
+           std::function<bool(const T&, const R&)> equal_fn,
+           std::function<bool(const T&, const R&)> bottom_fn = nullptr) {
   bool isEqual = equal_fn(l, r);
+  if (bottom_fn && bottom_fn(l, r)) {
+    return isEqual;
+  }
 
   const auto& children_l = getChildren(l);
   const auto& children_r = getChildren(r);
@@ -140,7 +144,8 @@ bool equal(const T& l, const R& r,
     const T& lchild = derefMaybe(*lcurrent);
     const R& rchild = derefMaybe(*rcurrent);
 
-    isEqual &= Concepts::NAryTree::equal(lchild, rchild, equal_fn);
+    isEqual &= Concepts::NAryTree::equal(
+      lchild, rchild, equal_fn, bottom_fn);
 
     if (!isEqual) return isEqual;
 

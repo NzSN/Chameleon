@@ -123,6 +123,10 @@ public:
     return metaRef;
   }
 
+  T& getMetaMutable() {
+    return const_cast<T&>(metaRef);
+  }
+
 private:
   friend struct GenericParseTreeTest;
   const T& metaRef;
