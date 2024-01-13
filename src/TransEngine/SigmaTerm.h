@@ -34,7 +34,7 @@ struct Pattern: public TreeLayer<Pattern<T>> {
     //        TermVar.
     switch (meta_.lang()) {
       case Base::GenericParseTree<int>::TESTLANG:
-        return Utility::isTermVar(
+        return Utility::isTermVar<>(
           const_cast<T&>(meta_).getText());
       case Base::GenericParseTree<int>::WGSL:
         // Chec

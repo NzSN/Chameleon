@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <utility>
 #include <type_traits>
 #include <optional>
 #include <ranges>
@@ -189,39 +190,28 @@ strategiesFromRules(ChameleonsParser::RewriteRulesContext* rCtx) {
   }
 
   // Generate Rule from RewriteRuleContext
-  std::optional<Rewrite::Rule<T>> ruleMaybe =
-    strategyFromRule<T, lang>(rCtx->rewriteRule());
-  if (!ruleMaybe.has_value()) {
-    return std::nullopt;
-  }
-
-  // Then break the rule down into strategies
-  Rewrite::StrategySeq<T> straSeq;
-  if (ruleMaybe.value().cond.size() > 0) {
-    // Conditional Rewrite Rule
-    PLOG_DEBUG << "BreakDown RewriteRule into Strategies: "
-                  "Conditional RewriteRule";
-    straSeq = Rewrite::ruleBreakDown<T, true>(ruleMaybe.value());
-  } else {
-    // Unconditional Rewrite Rule
-    PLOG_DEBUG << "BreakDown RewriteRule into Strategies: "
-                  "Unconditional RewriteRule";
-    straSeq = Rewrite::ruleBreakDown(ruleMaybe.value());
-  }
-
-  std::optional<Rewrite::StrategySeq<T>>
-    remain = strategiesFromRules<T, lang>(rCtx->rewriteRules());
-  if (!remain.has_value()) {
-    return straSeq;
-  } else {
-    // Concate two strategies sequences.
-    straSeq.insert(
-      straSeq.end(),
-      std::make_move_iterator(remain.value().begin()),
-      std::make_move_iterator(remain.value().end()));
-
-    return straSeq;
-  }
+  return strategyFromRule<T, lang>(rCtx->rewriteRule())
+    // Then break the rule down into strategies
+    .transform(
+      [](auto&& rule) {
+        return rule.cond.size() > 0 ?
+          Rewrite::ruleBreakDown<T, true>(rule) :
+          Rewrite::ruleBreakDown(rule);
+      })
+    // Parsing remaining rewrite rules
+    .and_then([&](auto&& seq) -> std::optional<Rewrite::StrategySeq<T>> {
+      return strategiesFromRules<T, lang>(rCtx->rewriteRules())
+        .transform(
+          [&](auto&& seq_) {
+            seq.insert(seq.end(),
+                       std::make_move_iterator(seq_.begin()),
+                       std::make_move_iterator(seq_.end()));
+            return std::move(seq);
+          })
+        .or_else([&] -> std::optional<Rewrite::StrategySeq<T>> {
+            return std::move(seq);
+          });
+      });
 }
 
 std::optional<std::unique_ptr<Program>>
@@ -233,21 +223,22 @@ programFromRules(ChameleonsParser::RewriteRulesContext* rCtx,
     return std::nullopt;
   }
 
+  using LANGS = Base::SUPPORTED_LANGUAGE;
+
   switch (lang) {
-  case Base::GptSupportLang::TESTLANG: {
-    std::optional<Rewrite::StrategySeq<Adapter>>
-      straMaybe = strategiesFromRules<Adapter,
-                                      Base::GptSupportLang::TESTLANG>(rCtx);
-    if (straMaybe.has_value()) {
-      Rewrite::StrategySeq<Adapter> stras {std::move(straMaybe.value())};
-      return std::make_unique<Program>(lang, stras);
-    } else {
-      return std::nullopt;
-    }
-    break;
+  case LANGS::TESTLANG: {
+    return strategiesFromRules<Adapter, LANGS::TESTLANG>(rCtx)
+      .transform([lang](auto&& stra) {
+        return std::make_unique<Program>(
+          lang,
+          std::move(stra));
+      });
+  }
+  case LANGS::WGSL: {
+    std::unreachable();
   }
   default:
-    return std::nullopt;
+    std::unreachable();
   }
 }
 

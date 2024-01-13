@@ -107,7 +107,7 @@ bool isTermVar(std::string str) {
   return 'a' <= c && c <= 'z';
 }
 
-template<int LANG=Base::SUPPORTED_LANGUAGE::WGSL,
+template<int LANG=Base::SUPPORTED_LANGUAGE::TESTLANG,
          typename = std::enable_if_t<LANG == Base::SUPPORTED_LANGUAGE::WGSL>,
          int = 1>
 bool isTermVar(std::string str) {

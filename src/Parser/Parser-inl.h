@@ -21,21 +21,17 @@ std::vector<std::unique_ptr<A>> Parser<ExtNode, P, A, lang>::adapters_ {};
 // Static Parser Selecter
 template<int lang> struct ParserSelect;
 
-template<>
-struct ParserSelect<Base::GenericParseTree<Base::Antlr4Node>::TESTLANG> {
-  typedef Parser<antlr4::tree::ParseTree*,
-                 TestLangExt,
-                 Base::Antlr4Node,
-                 Base::GenericParseTree<Base::Antlr4Node>::TESTLANG> parser;
+#define PARSER_SELECT_IMPL(                                       \
+  NSS, LANG_ENUM, EXT_PARSER, LEXER, PARSER, ENTRY, ENTRY_MEMBER) \
+  template<>                                                      \
+  struct ParserSelect<Base::SUPPORTED_LANGUAGE::LANG_ENUM> {      \
+  typedef Parser<antlr4::tree::ParseTree*,                        \
+    EXT_PARSER,                                                   \
+    Base::Antlr4Node,                                             \
+    Base::SUPPORTED_LANGUAGE::LANG_ENUM> parser;                  \
 };
 
-template<>
-struct ParserSelect<Base::SUPPORTED_LANGUAGE::WGSL> {
-  typedef Parser<antlr4::tree::ParseTree*,
-                 WGSLLangExt,
-                 Base::Antlr4Node,
-                 Base::SUPPORTED_LANGUAGE::WGSL> parser;
-};
+SUPPORTED_LANG_LIST(PARSER_SELECT_IMPL);
 
 // Dynamic Parser Selecter
 using ParserT = std::variant<

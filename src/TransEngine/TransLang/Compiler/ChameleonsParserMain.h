@@ -21,7 +21,7 @@ public:
     lang_{lang}, strategies_{} {}
 
   Program(Base::GptSupportLang lang,
-          Rewrite::StrategySeq<Adapter>& stras):
+          Rewrite::StrategySeq<Adapter>&& stras):
     lang_{lang}, strategies_{std::move(stras)} {}
 
   bool write(Rewrite::StrategyUnique<Adapter> stra) {

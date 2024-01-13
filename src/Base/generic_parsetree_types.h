@@ -1,4 +1,5 @@
 #include <variant>
+#include "langs.h"
 #include "generic_parsetree_antlr4.h"
 
 namespace Base {
@@ -9,7 +10,6 @@ using GptGeneric =
   GenericParseTree<Antlr4Node>
   >;
 
-using GptSupportLang =
-  GenericParseTree<int>::SUPPORTED_LANGUAGE;
+using GptSupportLang = SUPPORTED_LANGUAGE;
 
 } // Base

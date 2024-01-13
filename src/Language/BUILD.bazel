@@ -14,7 +14,6 @@ cc_test(
          "//src/Concepts:concepts_srcs"],
     copts = [
           "-Isrc",
-          "-std=c++2a",
           ],
     deps = [
          "@googletest//:gtest_main",

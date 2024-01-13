@@ -94,7 +94,7 @@ TEST(ChameleonsParserMainTest, WGSL) {
 
   std::istringstream target_codes{
     "fn main() {\n"
-    "  a = __b + __c;"
+    "  a = b + c;"
     "}"
   };
   Base::GenericParseTree<Adapter> t =
@@ -104,14 +104,10 @@ TEST(ChameleonsParserMainTest, WGSL) {
     ::parse<GPTAntlr4>(&target_codes);
 
   std::istringstream rule_config{
-    "TARGET: TestLang \n"
+    "TARGET: WGSL \n"
     "RULES: \n"
-    "Commutative: {| a+b+c |} => {| c+b+a |} "
-    " where a := Plus(a);"
+    "Commutative: {| a = __b + __c |} => {| a = __c + __b |}"
   };
-
-
-
 }
 
 } // Compiler
