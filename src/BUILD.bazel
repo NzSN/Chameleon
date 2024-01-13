@@ -29,7 +29,6 @@ cc_test(
         "ExprTree_unittests.cc",
         ],
     copts = [
-          "-std=c++2a",
           "-Isrc",
           ],
     deps = [

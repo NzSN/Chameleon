@@ -25,8 +25,7 @@ cc_test(
             "ChameleonsParser_unittests.cc",
             "//src:utility_src"],
     copts = [
-          "-Isrc",
-          "-std=c++2a"],
+          "-Isrc"],
     linkopts = ["-lglog", "-lfmt"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
@@ -50,10 +49,7 @@ cc_test(
             "//src/Parser:external_parser_src",
             "//src:refl_src",
             ],
-    copts = [
-          "-Isrc",
-          "-std=c++2a"],
-    linkopts = ["-lglog", "-lfmt"],
+    copts = ["-Isrc"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
          "@googletest//:gtest_main",
@@ -79,8 +75,7 @@ cc_test(
             "//src/Analysis:analyzer_src",
          ],
     copts = [
-          "-Isrc",
-          "-std=c++2a"],
+          "-Isrc"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
          "@googletest//:gtest_main",
