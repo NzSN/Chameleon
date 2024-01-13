@@ -151,18 +151,19 @@ struct Term: public Value {
     term{term_}, dangleTerm{*term_} {}
 
   Term(Rewrite::Term<Adapter> dangleTerm_):
-    dangleTerm{std::move(dangleTerm_)}, term{} {}
+    term{}, dangleTerm{std::move(dangleTerm_)} {}
 
   bool operator==(const Value& other) const {
     return term == dynamic_cast<const Term&>(other).term;
   }
 
-  bool operator=(const Value& other) {
-    if (typeid(other) != typeid(Value)) {
-      return false;
-    } else {
-      return term = dynamic_cast<const Term&>(other).term;
-    }
+  bool operator==(const Term& other) const {
+    return term == other.term;
+  }
+
+  Term& operator=(const Value& other) {
+    term = dynamic_cast<const Term&>(other).term;
+    return *this;
   }
 
   const Rewrite::Term<Adapter>* getTerm() const {
@@ -190,6 +191,14 @@ struct Term: public Value {
 struct Unit: public Value {
   Unit() {}
   Unit(const Unit& other) {}
+  bool operator==(const Unit& other) const {
+    if (IS_SAME_TYPE(*this, other)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   bool operator==(const Value& other) const override {
     if (IS_SAME_TYPE(*this, other)) {
       return true;
@@ -216,6 +225,14 @@ struct Bool: public Value {
   bool operator==(const Value& other) const override {
     if (IS_SAME_TYPE(*this, other)) {
       return v == dynamic_cast<const Bool&>(other).v;
+    } else {
+      return false;
+    }
+  }
+
+  bool operator==(const Bool& other) const {
+    if (IS_SAME_TYPE(*this, other)) {
+      return v == other.v;
     } else {
       return false;
     }
@@ -467,16 +484,13 @@ private:
   V(GreaterEqual , >=, GREATER_EQUAL, ORDER_OP_GREATEREQUAL, OrderValue)
 
 #define ORDER_EXPR_DEFINE(__E, __OP, __ENUM, __STR, __ValueType)    \
-  namespace {                                                       \
-                                                                    \
   inline std::unique_ptr<Value> __E##Eval(Value& lhs, Value& rhs) { \
     /* Currentl, there are only small amout of types */             \
     /* so do it by if statement. */                                 \
-      return std::make_unique<Bool>(                                \
-        dynamic_cast<__ValueType&>(lhs) __OP                        \
-        dynamic_cast<__ValueType&>(rhs));                           \
-    }                                                               \
-  };                                                                \
+    return std::make_unique<Bool>(                                  \
+      dynamic_cast<__ValueType&>(lhs) __OP                          \
+      dynamic_cast<__ValueType&>(rhs));                             \
+  }                                                                 \
   using __E##Base =                                                 \
     OrderExpr<__E##Eval>;                                           \
   class __E: public __E##Base {                                     \
