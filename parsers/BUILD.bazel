@@ -34,6 +34,7 @@ cc_library(
     name = "wgsl_parser",
     srcs = [":wgsl_parser_srcs"],
     linkstatic = True,
+    copts = ["-w"],
     deps = ["@antlr4_runtime//:antlr4_runtime"],
     visibility = ["//visibility:public"]
 )
@@ -42,6 +43,7 @@ cc_library(
     name = "ts_parser",
     srcs = [":ts_parser_srcs"],
     linkstatic = True,
+    copts = ["-w"],
     deps = ["@antlr4_runtime//:antlr4_runtime"],
     visibility = ["//visibility:public"]
 )
