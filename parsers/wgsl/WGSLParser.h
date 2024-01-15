@@ -1,5 +1,5 @@
 
-// Generated from ./WGSL.txt by ANTLR 4.13.1
+// Generated from ./WGSL.txt by ANTLR 4.13.0
 
 #pragma once
 
@@ -700,6 +700,8 @@ public:
     Global_directiveContext* global_directive(size_t i);
     std::vector<Global_declContext *> global_decl();
     Global_declContext* global_decl(size_t i);
+    std::vector<StatementContext *> statement();
+    StatementContext* statement(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
