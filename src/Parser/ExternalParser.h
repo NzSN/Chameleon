@@ -29,12 +29,9 @@ namespace Parser {
     parse(std::istream *s) {                                   \
       Entry entry = &PARSER::ENTRY_MEMBER;                     \
                                                                \
-      std::string expression;                                  \
-      *s >> expression;                                        \
-                                                               \
       std::unique_ptr<Env> env =                               \
         Utility::Antlr4_GenParseTree<LEXER, PARSER>(           \
-          expression, entry);                                  \
+          *s, entry);                                          \
       tree = env->tree;                                        \
       envs.push_back(std::move(env));                          \
       return tree;                                             \

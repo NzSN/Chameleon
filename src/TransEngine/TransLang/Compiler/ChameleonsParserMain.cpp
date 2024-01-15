@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Base/langs.h"
 #include <utility>
 #include <type_traits>
 #include <optional>
@@ -225,18 +226,19 @@ programFromRules(ChameleonsParser::RewriteRulesContext* rCtx,
 
   using LANGS = Base::SUPPORTED_LANGUAGE;
 
+#define LANGS_CASES(                                             \
+  NSS, LANG_ENUM, EXT, LEXER, PARSER, ENTRY, ENTRY_MEMBER)       \
+  case LANGS::LANG_ENUM: {                                        \
+    return strategiesFromRules<Adapter, LANGS::LANG_ENUM>(rCtx)   \
+      .transform([lang](auto&& stra) {                           \
+        return std::make_unique<Program>(                        \
+          lang,                                                  \
+          std::move(stra));                                      \
+      });                                                        \
+  }
+
   switch (lang) {
-  case LANGS::TESTLANG: {
-    return strategiesFromRules<Adapter, LANGS::TESTLANG>(rCtx)
-      .transform([lang](auto&& stra) {
-        return std::make_unique<Program>(
-          lang,
-          std::move(stra));
-      });
-  }
-  case LANGS::WGSL: {
-    std::unreachable();
-  }
+    SUPPORTED_LANG_LIST(LANGS_CASES)
   default:
     std::unreachable();
   }
