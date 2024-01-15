@@ -22,7 +22,7 @@ using GPTAntlr4 = Base::GenericParseTree<Meta>;
 TEST(ChameleonsParserMainTest, Spec) {
   Compiler compiler;
 
-  std::istringstream target_codes{"1+2+3"};
+  std::istringstream target_codes{"1 + 2 + 3"};
   Base::GenericParseTree<Adapter> t =
     Parser
     ::ParserSelect<GPTAntlr4::TESTLANG>
@@ -32,7 +32,7 @@ TEST(ChameleonsParserMainTest, Spec) {
   std::istringstream rule_config{
     "TARGET: TestLang \n"
     "RULES:\n"
-    "Commutative: {| a+b+c |} => {| c+b+a |}"
+    "Commutative: {| a + b + c |} => {| c + b + a |}"
   };
 
   // What we expect is program consist of
@@ -55,7 +55,7 @@ TEST(ChameleonsParserMainTest, Spec) {
 TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   Compiler compiler;
 
-  std::istringstream target_codes{"1+2+3"};
+  std::istringstream target_codes{"1 + 2 + 3"};
   Base::GenericParseTree<Adapter> t =
     Parser
     ::ParserSelect<GPTAntlr4::TESTLANG>
@@ -65,7 +65,7 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   std::istringstream rule_config{
     "TARGET: TestLang \n"
     "RULES: \n"
-    "Commutative: {| a+b+c |} => {| c+b+a |} "
+    "Commutative: {| a + b + c |} => {| c + b + a |} "
     " where a := Plus(a);"
   };
 
@@ -104,10 +104,17 @@ TEST(ChameleonsParserMainTest, WGSL) {
   std::istringstream rule_config{
     "TARGET: WGSL \n"
     "RULES: \n"
-    "Commutative: {| a = __b + __c |} => {| a = __c + __b |}"
+    "Commutative: {| a = __b + __c; |} => {| a = __c + __b; |}"
   };
 
-  std::cout << t.getText() << std::endl;
+  // plog
+  plog::init<plog::TxtFormatterUtcTime>(
+    plog::debug, plog::streamStdOut);
+
+  // Compiling
+  std::unique_ptr<Program> program =
+    compiler.compile(rule_config);
+  std::optional<Base::GptGeneric> u = (*program)(t);
 }
 
 } // Compiler

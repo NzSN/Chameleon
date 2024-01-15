@@ -57,13 +57,16 @@ Program::operator()(Base::GenericParseTree<Adapter>& tree) {
   switch (lang_) {
   case Base::GptSupportLang::TESTLANG:
     return EvalTestLang(tree, strategies_);
+  case Base::GptSupportLang::WGSL:
+    return EvalTestLang(tree, strategies_);
   default:
-    return std::nullopt;
+    std::unreachable();
   }
 }
 
 std::unordered_map<std::string, Base::GptSupportLang> langs = {
-  {"TestLang", Base::GptSupportLang::TESTLANG}
+  {"TestLang", Base::GptSupportLang::TESTLANG},
+  {"WGSL", Base::GptSupportLang::WGSL}
 };
 
 std::optional<Base::GptSupportLang>

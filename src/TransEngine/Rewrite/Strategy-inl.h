@@ -62,7 +62,7 @@ struct MatchStra: public Strategy<T> {
           return std::nullopt;
         });
 
-      return rule;
+    return rule;
   }
 };
 

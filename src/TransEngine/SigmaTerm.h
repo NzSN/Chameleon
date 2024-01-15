@@ -91,6 +91,10 @@ struct Pattern: public TreeLayer<Pattern<T>> {
     return meta_;
   }
 
+  T& getMetaMut() {
+    return const_cast<T&>(meta_);
+  }
+
   Pattern* parent;
 
   Pattern& addChild(std::unique_ptr<Pattern>&& child) {

@@ -97,16 +97,12 @@ bool Antlr4Node::operator==(const Antlr4Node& node) const {
   }
 
   if (this->tree_->getTreeType() ==
-      antlr4::tree::ParseTreeType::TERMINAL) {
-
-    // Check equality of contents of terminal
-    if (this->tree_->getText() !=
-        node.tree_->getText()) {
-      return false;
-    }
+      antlr4::tree::ParseTreeType::RULE) {
+    return typeid(*this->tree_) == typeid(*node.tree_);
+  } else if (this->tree_->getTreeType() ==
+             antlr4::tree::ParseTreeType::TERMINAL) {
+    return this->tree_->getText() == node.tree_->getText();
   }
-
-  return true;
 }
 
 SrcRange Antlr4Node::sourceRange() const {
@@ -166,6 +162,9 @@ Antlr4Node* Antlr4Node::withoutHeader() {
   if (typeid(*tree_) ==
       typeid(TestLangParser::ProgContext)) {
     return children_[0].get();
+  } else if (typeid(*tree_) ==
+             typeid(WGSLParser::Translation_unitContext)) {
+    return this;
   } else {
     return this;
   }
