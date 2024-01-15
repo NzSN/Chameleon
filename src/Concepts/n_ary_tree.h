@@ -104,12 +104,15 @@ template<NAryTree T>
 std::vector<T*> search(const T& t, std::function<bool(T&)> p) {
   std::vector<T*> result;
 
+  T& tMut = const_cast<T&>(t);
+  if (p(tMut)) {
+    result.push_back(&tMut);
+  }
+
   for (auto& c: getChildren(t)) {
     T& v = derefMaybe(c);
-    if (p(v)) {
-      result.push_back(&v);
-    }
     auto subResult = search(v, p);
+
     for (auto c: subResult) {
       result.push_back(c);
     }
@@ -123,6 +126,8 @@ bool equal(const T& l, const R& r,
            std::function<bool(const T&, const R&)> equal_fn,
            std::function<bool(const T&, const R&)> bottom_fn = nullptr) {
   bool isEqual = equal_fn(l, r);
+  if (!isEqual) { return false; }
+
   if (bottom_fn && bottom_fn(l, r)) {
     return isEqual;
   }
