@@ -696,12 +696,11 @@ public:
   public:
     Translation_unitContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    StatementContext *statement();
     std::vector<Global_directiveContext *> global_directive();
     Global_directiveContext* global_directive(size_t i);
     std::vector<Global_declContext *> global_decl();
     Global_declContext* global_decl(size_t i);
-    std::vector<StatementContext *> statement();
-    StatementContext* statement(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

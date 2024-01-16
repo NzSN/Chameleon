@@ -242,7 +242,7 @@ template_arg_expression: expression   ;
 
 template_elaborated_ident_post_ident: (template_args_start  template_arg_expression (','  expression )* ','? template_args_end )?   ;
 
-translation_unit: global_directive*  global_decl* statement*;
+translation_unit: global_directive*  global_decl* statement;
 
 type_specifier: ident  (template_args_start  template_arg_expression (','  expression )* ','? template_args_end )?  ;
 
