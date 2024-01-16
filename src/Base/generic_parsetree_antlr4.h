@@ -55,7 +55,7 @@ public:
     return tree_->getText();
   }
 
-  Antlr4Node* withoutHeader();
+  Antlr4Node* lowerAsPossible();
 
   int lang() const { return lang_; }
 

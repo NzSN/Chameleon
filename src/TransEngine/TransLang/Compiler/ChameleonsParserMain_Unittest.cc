@@ -115,6 +115,10 @@ TEST(ChameleonsParserMainTest, WGSL) {
   std::unique_ptr<Program> program =
     compiler.compile(rule_config);
   std::optional<Base::GptGeneric> u = (*program)(t);
+
+  EXPECT_TRUE(u.has_value());
+  EXPECT_TRUE(std::get<GPTAntlr4>(u.value()).getText()
+              == "fnmain(){a=c+b;}");
 }
 
 } // Compiler

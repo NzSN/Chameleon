@@ -51,14 +51,6 @@ patternMatchingTermCapture(
             Base::GenericParseTree<T>& rhsMut =
               const_cast<Base::GenericParseTree<T>&>(rhs);
 
-            std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
-            std::cout << "Pattern Node:" <<
-              typeid(*lhsMut.getMetaMut().tree()).name() << ":"
-                      << lhsMut.getMetaMut().getText() << std::endl;
-            std::cout << "Tree Node:" <<
-              typeid(*rhsMut.getMetaMutable().tree()).name() << ":"
-                      << rhsMut.getMetaMutable().getText() << std::endl;
-
             if (lhs.isTermVar()) {
               // Capture Term Variables
               if (env != nullptr) {
@@ -66,20 +58,12 @@ patternMatchingTermCapture(
                  lhs.termID(),
                   Term(const_cast<Base::GenericParseTree<T>&>(rhs)));
               } else {
-                std::cout << "Match 0" << std::endl;
                 return true;
               }
-                std::cout << "Match 1" << std::endl;
               return true;
             } else {
-              if (lhs.getMeta() == rhs.getMeta())
-                std::cout << "Match 2" << std::endl;
-              else
-                std::cout << "Mismatch" << std::endl;
               return lhs.getMeta() == rhs.getMeta();
             }
-
-            std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl << std::endl;
           },
           // Predicate to detect extra condition to exits,
           // in this case, the extra condition is reach a TermVar

@@ -44,7 +44,7 @@ struct MatchStra: public Strategy<T> {
     // left side pattern of Rule, all TermVars will be binded
     // to correspond terms during PatternMatching.
     Algorithms::patternMatchingTermCapture<T>(
-      *rule.leftSide->withoutHeader(),
+      *rule.leftSide->lowerAsPossible(),
       *env.targetTerm(),
       &env)
       .and_then([&](auto tree) -> std::optional<Base::GenericParseTree<T> *>{

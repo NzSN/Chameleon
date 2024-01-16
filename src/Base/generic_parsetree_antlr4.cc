@@ -2,7 +2,9 @@
 #include <exception>
 #include <typeinfo>
 #include <stdexcept>
+#include <utility>
 
+#include "langs.h"
 #include "tree/ParseTreeType.h"
 #include "generic_parsetree_antlr4.h"
 #include "Misc/testLanguage/TestLangParser.h"
@@ -157,16 +159,60 @@ void Antlr4Node::appendChild(Node&& node) {
   children_.push_back(std::move(node));
 }
 
+namespace {
 
-Antlr4Node* Antlr4Node::withoutHeader() {
-  if (typeid(*tree_) ==
-      typeid(TestLangParser::ProgContext)) {
-    return children_[0].get();
-  } else if (typeid(*tree_) ==
-             typeid(WGSLParser::Translation_unitContext)) {
-    return this;
+Antlr4Node* lowerAsPossible_TESTLANG(Antlr4Node* node) {
+  if (typeid(*node->tree()) == typeid(TestLangParser::ProgContext)) {
+    return node->getChildren()[0].get();
   } else {
-    return this;
+    return node;
+  }
+}
+
+Antlr4Node* lowerAsPossible_WGSL(Antlr4Node* node) {
+  antlr4::tree::ParseTree* tree{node->tree()};
+
+  if (typeid(*tree) ==
+      typeid(WGSLParser::Translation_unitContext)) {
+    using Ctx = WGSLParser::Translation_unitContext;
+    Ctx* ctx = dynamic_cast<Ctx*>(tree);
+    if (ctx->global_decl().size() != 0 &&
+        ctx->global_directive().size() != 0) {
+      // Already the lowest height without lost of
+      // informations.
+      return node;
+    } else if (ctx->global_decl().size() != 0) {
+      if (ctx->global_decl().size() > 1) {
+        return node;
+      } else {
+        return node->getChildren()[0].get();
+      }
+    } else if (ctx->global_directive().size() != 0) {
+      if (ctx->global_directive().size() > 1) {
+        return node;
+      } else {
+        return node->getChildren()[0].get();
+      }
+    } else if (ctx->statement() != nullptr) {
+      return node->getChildren()[0].get();
+    } else {
+      std::unreachable();
+    }
+  }
+}
+
+}
+
+// Lower the root node to the lowest node that
+// without lost informations.
+Antlr4Node* Antlr4Node::lowerAsPossible() {
+  switch (lang_) {
+    case Base::SUPPORTED_LANGUAGE::TESTLANG:
+      return lowerAsPossible_TESTLANG(this);
+    case Base::SUPPORTED_LANGUAGE::WGSL:
+      return lowerAsPossible_WGSL(this);
+  default:
+    std::unreachable();
   }
 }
 

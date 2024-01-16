@@ -102,8 +102,8 @@ struct Pattern: public TreeLayer<Pattern<T>> {
     return *children_.back();
   }
 
-  Pattern* withoutHeader() {
-    T* afterHeader = const_cast<T&>(meta_).withoutHeader();
+  Pattern* lowerAsPossible() {
+    T* afterHeader = const_cast<T&>(meta_).lowerAsPossible();
     if (afterHeader == nullptr) {
       return nullptr;
     }
