@@ -26,8 +26,8 @@ Program::operator()(Base::GptGeneric& tree,
 }
 
 std::optional<Base::GenericParseTree<Adapter>>
-EvalTestLang(Base::GenericParseTree<Adapter>& tree,
-             Rewrite::StrategySeq<Adapter>& straSeq) {
+doEvalStrategies(Base::GenericParseTree<Adapter>& tree,
+                 Rewrite::StrategySeq<Adapter>& straSeq) {
   // Checking that all strategies are binded with
   // rules.
   for (auto& s: straSeq) {
@@ -54,14 +54,7 @@ EvalTestLang(Base::GenericParseTree<Adapter>& tree,
 
 std::optional<Base::GenericParseTree<Adapter>>
 Program::operator()(Base::GenericParseTree<Adapter>& tree) {
-  switch (lang_) {
-  case Base::GptSupportLang::TESTLANG:
-    return EvalTestLang(tree, strategies_);
-  case Base::GptSupportLang::WGSL:
-    return EvalTestLang(tree, strategies_);
-  default:
-    std::unreachable();
-  }
+  return doEvalStrategies(tree, strategies_);
 }
 
 std::unordered_map<std::string, Base::GptSupportLang> langs = {

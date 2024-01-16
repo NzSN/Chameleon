@@ -120,16 +120,9 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
 
   TreeNode* parent = parentMaybe.value();
   bool alreadyBinded =
-    std::find_if(parent->children.begin(),
-                 parent->children.end(),
-                 [&copy](TreeNode* node) -> bool {
-                   return node == copy;
-                 })
-    != parent->children.end();
+    std::ranges::contains(parent->children, copy);
 
-  if (alreadyBinded) {
-    return true;
-  } else {
+  if (!alreadyBinded) {
     parentMaybe.value()->children.push_back(copy);
   }
 
