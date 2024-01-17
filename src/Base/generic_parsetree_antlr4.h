@@ -11,6 +11,7 @@
 
 
 namespace Base {
+
 // Due to antlr4::tree::ParseTree does not
 // satisfy the constraint of GPTMeta then
 // an adapter is required.

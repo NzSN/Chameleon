@@ -1,5 +1,8 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+
 
 def antlr4_repo():
     http_archive(
@@ -27,3 +30,9 @@ def tree_sitter_repo():
         remote = "https://github.com/tree-sitter/tree-sitter.git",
         branch = "master",
         build_file = "@//:bazel/external_builds/BUILD.tree-sitter")
+
+def oilpan_repo():
+    git_repository(
+        name = "oilpan",
+        remote = "https://github.com/oilpan-gc/cppgc.git",
+        branch = "main")

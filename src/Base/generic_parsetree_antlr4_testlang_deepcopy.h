@@ -14,8 +14,8 @@ DEEPCOPY_IMPL(
   TestLangBaseListener,
   TEST_LANG_CONTEXTS);
 
-} // TestLang
 
+} // TestLang
 
 
 #endif /* GENERIC_PARSETREE_ANTLR4_TESTLANG_DEEPCOPY_H */

@@ -2,6 +2,7 @@ load("//:bazel/repositories.bzl", "antlr4_repo")
 load("//:bazel/repositories.bzl", "rapidcheck_repo")
 load("//:bazel/repositories.bzl", "plog_repo")
 load("//:bazel/repositories.bzl", "tree_sitter_repo")
+load("//:bazel/repositories.bzl", "oilpan_repo")
 
 # Antlr4
 def _antlr4_dep_impl(_ctx):
@@ -27,3 +28,9 @@ def _treesitter_dep_impl(_ctx):
     tree_sitter_repo()
 treesitter_dep = module_extension(
     implementation = _treesitter_dep_impl)
+
+# Oilpan
+def _oilpan_dep_impl(_ctx):
+    oilpan_repo()
+oilpan_dep = module_extension(
+    implementation = _oilpan_dep_impl)

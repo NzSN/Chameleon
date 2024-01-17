@@ -111,18 +111,18 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
     parentMaybe = CopyRealm<TreeNode*>(orig->parent)(),
     imgOfOrigMaybe = CopyRealm<TreeNode*>(orig)();
 
-  if (orig->parent == nullptr ||
-      !parentMaybe.has_value() ||
+  if (orig->parent == nullptr     ||
+      !parentMaybe.has_value()    ||
       !imgOfOrigMaybe.has_value() ||
       imgOfOrigMaybe.value() != copy) {
     return false;
   }
 
   TreeNode* parent = parentMaybe.value();
-  bool alreadyBinded =
-    std::ranges::contains(parent->children, copy);
+  bool binded = std::ranges::contains(
+    parent->children, copy);
 
-  if (!alreadyBinded) {
+  if (!binded) {
     parentMaybe.value()->children.push_back(copy);
   }
 

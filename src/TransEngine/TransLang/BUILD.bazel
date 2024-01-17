@@ -29,7 +29,7 @@ cc_test(
     linkopts = ["-lglog", "-lfmt"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
-         "@googletest//:gtest_main",
+         "@com_google_googletest//:gtest_main",
          "@rapidcheck//:rapidcheck"],
 )
 
@@ -52,7 +52,7 @@ cc_test(
     copts = ["-Isrc"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
-         "@googletest//:gtest_main",
+         "@com_google_googletest//:gtest_main",
          "@plog//:plog",
          "@rapidcheck//:rapidcheck",
          "//parsers:wgsl_parser"
@@ -78,7 +78,7 @@ cc_test(
           "-Isrc"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
-         "@googletest//:gtest_main",
+         "@com_google_googletest//:gtest_main",
          "@plog//:plog",
          "@rapidcheck//:rapidcheck"],
 )

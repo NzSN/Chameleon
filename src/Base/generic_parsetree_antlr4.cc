@@ -128,6 +128,10 @@ bool Antlr4Node::setNode(const Antlr4Node& other) {
     return false;
   }
 
+  if (!tree_->parent) {
+    return false;
+  }
+
   antlr4::tree::ParseTree* tree = tree_;
   std::vector<antlr4::tree::ParseTree*>&
     siblings = tree_->parent->children;

@@ -104,13 +104,18 @@ struct BuildStra: public Strategy<T> {
       v->bind(term);
     }
 
-    // Replace the matched tree with the tree the
-    // just builded.
-    env.matchTerm()->setNode(
-      *Base::GenericParseTree<T>
-      ::template mapping<T, Utility::DYNAMIC>(*metaCopy));
+    if (env.matchTerm()->parent != nullptr) {
+        // Replace the matched tree with the tree the
+        // just builded.
+      env.matchTerm()->setNode(
+        *Base::GenericParseTree<T>
+        ::template mapping<T, Utility::DYNAMIC>(*metaCopy));
 
-    return rule;
+      return rule;
+    } else {
+      // The entire tree is required to be
+      // replaced.
+    }
   }
 };
 

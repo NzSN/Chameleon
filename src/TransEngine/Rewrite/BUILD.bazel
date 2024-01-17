@@ -47,7 +47,7 @@ cc_test(
           "-Ibazel-out/k8-dbg/bin/external/antlr4_runtime/antlr4_runtime/include/antlr4-runtime",
           ],
     deps = [
-         "@googletest//:gtest_main",
+         "@com_google_googletest//:gtest_main",
          "@antlr4_runtime//:antlr4_runtime",
          "@rapidcheck//:rapidcheck",
          "@plog//:plog",

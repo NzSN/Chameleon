@@ -41,6 +41,7 @@ int main(int argc, char *argv[]) {
   plog::init<plog::TxtFormatterUtcTime>(plog::info, plog::streamStdOut);
   PLOG_INFO << "Done";
 
+  {
   std::ifstream stream;
   stream.open(argv[1]);
 
@@ -60,5 +61,7 @@ int main(int argc, char *argv[]) {
 
   MyListener listener;
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
+  }
+
   return 0;
 }
