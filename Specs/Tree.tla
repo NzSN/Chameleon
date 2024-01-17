@@ -20,15 +20,14 @@ LOCAL TreeRelations(Nodes) ==
     \* Restrict maximum number of Children
     \* to make it enumerable.
     LET Children == (UNION {[1..n -> Nodes]: n \in 0..Cardinality(Nodes)})
-    IN  [Nodes -> Children \union {NULL}]
+    IN  [Nodes -> Children]
 
 LOCAL Descdent(Node, relation) ==
     LET D[N \in DOMAIN relation] ==
-        IF relation[N] = <<>> \/ relation[N] = NULL
+        IF relation[N] = <<>>
           THEN {} ELSE
           LET nodes == DOMAIN relation
-              Childs == { c \in {relation[N][i]: i \in 1..Len(relation[N])}:
-                          relation[c] /= NULL}
+              Childs == {c: c \in {relation[N][i]: i \in 1..Len(relation[N])} }
               InDirect == {D[c]: c \in Childs}
           IN (UNION InDirect) \union Childs
     IN D[Node]
@@ -43,39 +42,32 @@ LOCAL IsTree(relation) ==
     IN
         \* Assert that a node unable to be a Parent of itself.
         /\ \A x \in nodes:
-             relation[x] /= NULL =>
-                \A i \in 1..Len(relation[x]): relation[x][i] /= x
+             \A i \in 1..Len(relation[x]): relation[x][i] /= x
         \* Assert that only one path from parent to it's child.
         /\ \A x \in nodes:
-             relation[x] /= NULL =>
-                \A i \in 1..Len(relation[x]):
-                \A j \in 1..Len(relation[x]) \ {i}:
-                    relation[x][i] /= relation[x][j]
+            \A i \in 1..Len(relation[x]):
+            \A j \in 1..Len(relation[x]) \ {i}:
+                relation[x][i] /= relation[x][j]
         \* Assert that every node has only one parent.
         /\ \A x \in nodes:
-             relation[x] /= NULL =>
-                \E y \in nodes \ {x}:
-                    relation[y] /= NULL =>
-                        \A i \in 1..Len(relation[x]):
-                        \A j \in 1..Len(relation[y]):
-                            /\ relation[x][i] /= relation[y][j]
+           \A y \in nodes \ {x}:
+           \A i \in 1..Len(relation[x]):
+           \A j \in 1..Len(relation[y]):
+                relation[x][i] /= relation[y][j]
         \* Assert that root has no parent,
         /\ \E ordering \in all_seqs:
-           \A x \in nodes:
-            relation[x] /= NULL =>
-                \A i \in 1..Len(relation[x]):
-                    Root(ordering) /= relation[x][i]
+            \A x \in nodes:
+            \A i \in 1..Len(relation[x]):
+                Root(ordering) /= relation[x][i]
         \* Assert that no cycle
         /\ \A x \in nodes:
-             relation[x] /= NULL =>
                \A y \in nodes \ {x}:
-                 relation[y] /= NULL /\ x \in CODOMAIN(relation[y]) =>
+                 x \in CODOMAIN(relation[y]) =>
                    y \notin CODOMAIN(relation[x])
         \* Assert that every nodes except Root is descdent of Root
         \* which make sure a relation correspond to only one Tree.
         /\ \E ordering \in all_seqs:
            \A x \in nodes:
-             relation[x] /= NULL =>
                 \/ x = Root(ordering)
                 \/ x \in Descdent(Root(ordering), relation)
 
@@ -93,9 +85,6 @@ IsExists(T, Node) ==
 AddNode(T, Node, New) ==
     LET TT == T @@ (New :> <<>>)
     IN  [TT EXCEPT ![Node] = Append(TT[Node], New)]
-
-DelNode(T, Node) ==
-    [T EXCEPT ![Node] = NULL]
 
 GetChild(T, Node, N) ==
     IF IsExists(T, Node) /\ Len(T[Node]) >= N
@@ -116,28 +105,21 @@ GetRoot(T) ==
        ELSE NULL
 
 (*Tree Property Predicates*)
+UniqueParent(T) ==
+      LET nodes == DOMAIN T
+      IN  \A x \in nodes:
+          \A y \in nodes\{x}:
+            T[x] /= <<>> /\ T[y] /= <<>> =>
+                \A i \in 1..Len(T[x]):
+                \A j \in 1..Len(T[y]):
+                    T[x][i] /= T[y][j]
 Ring(T) ==
     IF CODOMAIN(T) = {<<>>}
     THEN FALSE
-    ELSE (DOMAIN T = CODOMAIN(T))
+    ELSE UniqueParent(T) /\
+         \A y \in Descdent(GetRoot(T), T):
+           GetRoot(T) \in CODOMAIN(T[y])
 
-OneParent(T) ==
-      LET nodes == DOMAIN T
-      IN  \E x \in nodes:
-          \E y \in nodes:
-          \E i \in 1..Cardinality(nodes)-1:
-          \E j \in 1..Cardinality(nodes)-1:
-            /\ x /= y
-            /\ T[x][i] /= T[y][j]
-RingToRoot(T) ==
-    LET nodes == DOMAIN T
-        all_seqs == [1..Cardinality(nodes) -> nodes]
-    IN  \A ordering \in all_seqs:
-        \A x \in nodes:
-          IF T[x] = <<>> THEN FALSE
-          ELSE
-            \A i \in 1..Cardinality(nodes)-1:
-                /\ Root(ordering) = T[x][i]
 OneTree(T) ==
     LET nodes == DOMAIN T
         all_seqs == [1..Cardinality(nodes) -> nodes]
