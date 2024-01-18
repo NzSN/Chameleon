@@ -1,12 +1,14 @@
 ---- MODULE Transformer ----
-CONSTANT RuleConfig, Rule, NULL, ParseTree
+CONSTANT Rule, RuleConfig, NULL, ParseTree
 VARIABLES transformer
 
-ParsingRuleConfig[config \in RuleConfig] ==
+ParseConfig[config \in RuleConfig] ==
   CHOOSE r \in Rule: TRUE
 
+\* ParseTree -> ParseTree
 Transform[ast \in ParseTree,
           rule \in Rule] ==
+  \* TODO: Specify how transformation done
   CHOOSE t \in ParseTree: TRUE
 
 TypeInvariant ==
@@ -15,17 +17,17 @@ TypeInvariant ==
 Init ==
   /\ TypeInvariant
 
-Transforming(ast, rule) ==
+Transforming(ast, config) ==
   /\ ast \in ParseTree
   /\ transformer' = [transformer EXCEPT
-                     !.out = Transform[ast,rule]]
+                     !.out = Transform[ast,ParseConfig[config]]]
 
 TransDone ==
   /\ transformer.out # NULL
   /\ UNCHANGED transformer
 
 Next == \/ \E t \in ParseTree:
-           \E r \in RuleConfig: Transforming(t,r)
+           \E r \in Rule: Transforming(t,r)
         \/ TransDone
 
 Spec == Init /\ [][Next]_transformer

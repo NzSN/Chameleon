@@ -1,5 +1,5 @@
 ----- MODULE Chameleon -----
-CONSTANTS NULL, Rule, ParseTree
+CONSTANTS NULL, Rule, ParseTree, RuleConfig
 VARIABLES parser, transformer, state
 
 
@@ -8,6 +8,13 @@ LOCAL INSTANCE Naturals
 LOCAL INSTANCE TreeSamples WITH NULL <- NULL
 
 Sentence == 1..3
+
+\* Definition of states
+INIT         == 0
+PARSING      == 1
+PARSED       == 2
+TRANSFORMING == 3
+TRANSFORMED  == 4
 
 ParseFunc[s \in Sentence] == CHOOSE t \in ParseTree: TRUE
 
@@ -23,11 +30,11 @@ TransformerInst == INSTANCE Transformer WITH
   NULL <- NULL,
   Rule <- Rule,
   transformer <- transformer,
-  ParseTree <- ParseTree
-
+  ParseTree <- ParseTree,
+  RuleConfig <- RuleConfig
 
 TypeInvariant ==
-    /\ state = 0
+    /\ state = INIT
     /\ parser = [rdy |-> 1, sentence |-> NULL, ast |-> NULL]
     /\ ParserInst!TypeInvariant
 
@@ -36,31 +43,37 @@ Init == /\ TypeInvariant
         /\ TransformerInst!Init
 
 Parsing == /\ \E s \in Sentence: ParserInst!Parsing(s)
-           /\ state = 0
-           /\ state' = 1
+           /\ state = INIT
+           /\ state' = PARSING
            /\ UNCHANGED <<transformer>>
 
 ParseDone == /\ ParserInst!ParseDone
-              /\ state = 1
-              /\ state' = 2
+              /\ state = PARSING
+              /\ state' = PARSED
               /\ UNCHANGED <<transformer>>
 
 Transforming ==
-  /\ \E rule \in Rule:
-    TransformerInst!Transforming(parser.ast, rule)
-  /\ state = 2
-  /\ state' = 3
+  /\ \E config \in RuleConfig:
+    TransformerInst!Transforming(parser.ast, config)
+  /\ state = PARSED
+  /\ state' = TRANSFORMING
   /\ UNCHANGED <<parser>>
 
 TransDone ==
   /\ TransformerInst!TransDone
-  /\ state = 3
-  /\ UNCHANGED <<parser, state, transformer>>
+  /\ state = TRANSFORMING
+  /\ state' = TRANSFORMED
+  /\ UNCHANGED <<parser, transformer>>
+
+DONE ==
+  /\ state = TRANSFORMED
+  /\ UNCHANGED <<parser, transformer, state>>
 
 Next == \/ Parsing
         \/ ParseDone
         \/ Transforming
         \/ TransDone
+        \/ DONE
 
 Spec == Init /\ [][Next]_<<parser, transformer, state>>
 ==========================
