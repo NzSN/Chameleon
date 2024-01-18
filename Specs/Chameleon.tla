@@ -48,9 +48,9 @@ Parsing == /\ \E s \in Sentence: ParserInst!Parsing(s)
            /\ UNCHANGED <<transformer>>
 
 ParseDone == /\ ParserInst!ParseDone
-              /\ state = PARSING
-              /\ state' = PARSED
-              /\ UNCHANGED <<transformer>>
+             /\ state = PARSING
+             /\ state' = PARSED
+             /\ UNCHANGED <<transformer>>
 
 Transforming ==
   /\ \E config \in RuleConfig:
@@ -61,6 +61,7 @@ Transforming ==
 
 TransDone ==
   /\ TransformerInst!TransDone
+  /\ transformer.out \in ParseTree
   /\ state = TRANSFORMING
   /\ state' = TRANSFORMED
   /\ UNCHANGED <<parser, transformer>>
