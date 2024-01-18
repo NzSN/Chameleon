@@ -1,4 +1,0 @@
----- MODULE AnalyzerMain ----
-EXTENDS Analyzer
-
-=============================

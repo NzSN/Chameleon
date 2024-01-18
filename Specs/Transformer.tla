@@ -1,46 +1,31 @@
 ---- MODULE Transformer ----
-CONSTANT RuleConfig, Rule, NULL
+CONSTANT RuleConfig, Rule, NULL, ParseTree
 VARIABLES transformer
-
-LOCAL INSTANCE TreeSamples WITH NULL <- NULL
 
 ParsingRuleConfig[config \in RuleConfig] ==
   CHOOSE r \in Rule: TRUE
 
-Transform[info \in ParsedData,
-          ast \in TreeSamples,
+Transform[ast \in ParseTree,
           rule \in Rule] ==
-  CHOOSE t \in TreeSamples: TRUE
+  CHOOSE t \in ParseTree: TRUE
 
 TypeInvariant ==
-  transformer = [rdy |-> 1, rule |-> NULL, out |-> NULL]
+  transformer = [out |-> NULL]
 
 Init ==
   /\ TypeInvariant
 
-ParseRuleConfig(config) ==
-  /\ transformer.rule = NULL
-  /\ transformer.rdy = 1
-  /\ transformer' = [transformer EXCEPT !.rule = ParsingRuleConfig[config]]
-
-
-Transforming(info, ast) ==
-  /\ transformer.rdy = 1
-  /\ transformer.rule # NULL
-  /\ info \in ParsedData
-  /\ ast \in TreeSamples
+Transforming(ast, rule) ==
+  /\ ast \in ParseTree
   /\ transformer' = [transformer EXCEPT
-                     !.rdy = 0,
-                     !.out = Transform[info,ast,transformer.rule]]
+                     !.out = Transform[ast,rule]]
 
 TransDone ==
-  /\ transformer.rdy = 0
   /\ transformer.out # NULL
   /\ UNCHANGED transformer
 
-Next == \/ \E c \in RuleConfig: ParseRuleConfig(c)
-        \/ \E info \in ParsedData:
-            \E t \in TreeSamples: Transforming(info, t)
+Next == \/ \E t \in ParseTree:
+           \E r \in RuleConfig: Transforming(t,r)
         \/ TransDone
 
 Spec == Init /\ [][Next]_transformer

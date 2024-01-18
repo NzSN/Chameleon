@@ -1,6 +1,6 @@
 ----- MODULE Chameleon -----
-CONSTANTS NULL, RuleConfig, Rule
-VARIABLES parser, analyzer, transformer, state
+CONSTANTS NULL, Rule, ParseTree
+VARIABLES parser, transformer, state
 
 
 LOCAL INSTANCE TLC
@@ -9,77 +9,58 @@ LOCAL INSTANCE TreeSamples WITH NULL <- NULL
 
 Sentence == 1..3
 
-ParseFunc[s \in Sentence] == CHOOSE t \in TreeSamples: TRUE
+ParseFunc[s \in Sentence] == CHOOSE t \in ParseTree: TRUE
 
 ParserInst == INSTANCE Parser WITH
   NULL <- NULL,
   \* Type of Sentence of
   Sentence <- Sentence,
   parseF <- ParseFunc,
-  parser <- parser
-
-AnalyzerInst == INSTANCE Analyzer WITH
-  NULL <- NULL,
-  analyzer <- analyzer
+  parser <- parser,
+  ParseTree <- ParseTree
 
 TransformerInst == INSTANCE Transformer WITH
   NULL <- NULL,
-  RuleConfig <- RuleConfig,
   Rule <- Rule,
-  transformer <- transformer
+  transformer <- transformer,
+  ParseTree <- ParseTree
 
 
 TypeInvariant ==
     /\ state = 0
     /\ parser = [rdy |-> 1, sentence |-> NULL, ast |-> NULL]
-    /\ analyzer = [rdy |-> 1, ast |-> NULL, info |-> NULL]
     /\ ParserInst!TypeInvariant
-    /\ AnalyzerInst!TypeInvariant
 
 Init == /\ TypeInvariant
         /\ ParserInst!Init
-        /\ AnalyzerInst!Init
         /\ TransformerInst!Init
 
 Parsing == /\ \E s \in Sentence: ParserInst!Parsing(s)
            /\ state = 0
            /\ state' = 1
-           /\ UNCHANGED <<analyzer, transformer>>
+           /\ UNCHANGED <<transformer>>
 
 ParseDone == /\ ParserInst!ParseDone
               /\ state = 1
               /\ state' = 2
-              /\ UNCHANGED <<analyzer, transformer>>
-
-Analyzing == /\ AnalyzerInst!Analyzing(parser.ast)
-             /\ state = 2
-             /\ state' = 3
-             /\ UNCHANGED <<parser, transformer>>
-
-AnalyzeDone == /\ AnalyzerInst!AnalyzeDone
-                /\ state = 3
-                /\ state' = 4
-                /\ UNCHANGED <<parser, transformer>>
-
-ParseRuleConfig ==
-  /\ \E config \in RuleConfig: TransformerInst!ParseRuleConfig(config)
-  /\ state = 4
-  /\ state' = 5
-  /\ UNCHANGED <<parser, analyzer>>
+              /\ UNCHANGED <<transformer>>
 
 Transforming ==
-  /\ TransformerInst!Transforming(analyzer.info, parser.ast)
-  /\ state = 5
-  /\ state' = 6
-  /\ UNCHANGED <<parser, analyzer>>
+  /\ \E rule \in Rule:
+    TransformerInst!Transforming(parser.ast, rule)
+  /\ state = 2
+  /\ state' = 3
+  /\ UNCHANGED <<parser>>
 
 TransDone ==
   /\ TransformerInst!TransDone
-  /\ state = 6
-  /\ UNCHANGED <<parser, analyzer, state>>
+  /\ state = 3
+  /\ UNCHANGED <<parser, state, transformer>>
 
-Next == \/ Parsing \/ ParseDone \/ Analyzing \/ AnalyzeDone
-        \/ ParseRuleConfig \/ Transforming \/ TransDone
+Next == \/ Parsing
+        \/ ParseDone
+        \/ Transforming
+        \/ TransDone
 
-Spec == Init /\ [][Next]_<<parser, analyzer, transformer, state>>
+Spec == Init /\ [][Next]_<<parser, transformer, state>>
 ==========================

@@ -1,10 +1,9 @@
 ---- MODULE Parser ----
-CONSTANTS NULL, Sentence, parseF
+CONSTANTS NULL, Sentence, ParseTree, parseF
 VARIABLES parser
 
 LOCAL INSTANCE Naturals
 LOCAL INSTANCE TLC
-LOCAL INSTANCE TreeSamples WITH NULL <- NULL
 
 TypeInvariant ==
     /\ parser = [rdy |-> 1,
@@ -15,7 +14,7 @@ Init == /\ TypeInvariant
         /\ parser.rdy = 1
         /\ parser.sentence = NULL
         /\ parser.ast = NULL
-        /\ parseF \in [Sentence -> TreeSamples]
+        /\ parseF \in [1..3 -> ParseTree]
 
 Parsing(sentence) ==
     /\ parser.rdy = 1
