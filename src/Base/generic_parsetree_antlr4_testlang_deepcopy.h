@@ -4,11 +4,9 @@
 #include  "generic_parsetree_antlr4_deepcopy.h"
 #include "src/Misc/testLanguage/TestLangBaseListener.h"
 
-namespace TestLang {
+#include "generic_parsetree_antlr4_testlang.h"
 
-#define TEST_LANG_CONTEXTS(V)   \
-  V(TestLangParser, Prog, Prog) \
-  V(TestLangParser, Prog, Expr)
+namespace TestLang {
 
 DEEPCOPY_IMPL(
   TestLangBaseListener,
