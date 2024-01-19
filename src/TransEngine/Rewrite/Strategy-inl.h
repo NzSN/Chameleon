@@ -4,6 +4,8 @@
 #include <iostream>
 #include <plog/Log.h>
 #include <stdexcept>
+#include <algorithm>
+
 
 #include "Term.h"
 #include "Strategy.h"
@@ -66,18 +68,32 @@ struct MatchStra: public Strategy<T> {
   }
 };
 
+struct FAILED_TO_EVALUATE_WHERE: public std::exception {
+  ~FAILED_TO_EVALUATE_WHERE() {}
+  const char* what() const noexcept {
+    return "Failed to evaluaate where expressions";
+  }
+};
+
+// Where clause to control side effects that happened
+// during Match Strategy.
 template<Base::GPTMeta T>
 struct WhereStra: public Strategy<T> {
   WhereStra() = default;
-
   WhereStra(Rule<T> r): Strategy<T>{r} {}
 
   // Evaluate all expression within where clause.
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
-    for (auto& expr: rule.cond) {
-      expr(&env);
+    bool success = std::all_of(rule.cond.begin(),
+                               rule.cond.end(),
+                               [&env](auto& cond) {
+                                 return cond(&env);
+                               });
+    if (!success) {
+      // Clear side effects make by MatchStrategy.
+      env.bindings().clear();
+      env.setMatchTerm(nullptr);
     }
-
     return rule;
   }
 };
@@ -90,6 +106,10 @@ struct BuildStra: public Strategy<T> {
 
   ~BuildStra() {}
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
+    // Make sure there are matches need to be tramsform
+    if (!env.matchTerm()) {
+      return rule;
+    }
 
     std::unique_ptr<T> metaCopy = rule.rightSide->getMeta().clone();
 
@@ -115,6 +135,10 @@ struct BuildStra: public Strategy<T> {
     } else {
       // The entire tree is required to be
       // replaced.
+      //
+      // TODO: Case that need to replace the whole
+      //       match term.
+      std::unreachable();
     }
   }
 };

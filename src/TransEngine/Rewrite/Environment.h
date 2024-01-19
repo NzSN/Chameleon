@@ -94,14 +94,6 @@ public:
     matchTerm_ = t;
   }
 
-  Base::GenericParseTree<T>* buildTerm() {
-    return buildTerm_;
-  }
-
-  void setBuildTerm(Base::GenericParseTree<T>* t) {
-    buildTerm_ = t;
-  }
-
   Bindings<T>& bindings() {
     return bindings_;
   }
@@ -115,9 +107,11 @@ public:
   }
 
 private:
+  // Target Term is the Term to be transformed.
   Base::GenericParseTree<T>* targetTerm_;
+  // The parts that match by left side patterns.
   Base::GenericParseTree<T>* matchTerm_;
-  Base::GenericParseTree<T>* buildTerm_;
+
   Bindings<T> bindings_;
   std::vector<Utility::HeapResourceHolder> resources;
   const AnalysisData* analysisData_;

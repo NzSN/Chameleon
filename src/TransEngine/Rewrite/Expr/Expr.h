@@ -330,7 +330,7 @@ struct Function {
 //                                Expression                               //
 /////////////////////////////////////////////////////////////////////////////
 struct Expr {
-  ~Expr() {}
+  virtual ~Expr() {}
 
   static std::unique_ptr<Value> eval(
     std::unique_ptr<Expr>& expr,

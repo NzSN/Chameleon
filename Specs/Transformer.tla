@@ -4,6 +4,7 @@ VARIABLES transformer
 
 LOCAL INSTANCE Sequences
 LOCAL INSTANCE Naturals
+LOCAL INSTANCE Strategy
 
 Strategy == [Rule \X ParseTree -> Rule \X ParseTree]
 ToStrategies[rule \in Rule] ==

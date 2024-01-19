@@ -182,7 +182,48 @@ TEST_F(StrategySuccess, TRYCASE) {
 
   auto* t = const_cast<Node&>(target->getMeta()).tree();
   t->children = const_cast<Node&>(rPattern->getMeta()).tree()->children;
+}
 
+// Side effects make by Match Strategy is required
+// to revert if any where expression is evaluating to
+// FALSE.
+TEST_F(StrategySuccess, FailedOnWhereExpr) {
+  Environment<Node> env{};
+  env.setTargetTerm(target.get());
+
+  // Add Where Expression, that always evaluate for
+  // false, to rule
+  CondExpr expr{
+    std::make_unique<Expression::Constant>(
+      std::make_unique<Expression::Bool>(false))};
+  rule->appendCond(expr);
+
+  MatchStra<Node> match{};
+  WhereStra<Node> where{};
+  BuildStra<Node> build{};
+
+  EXPECT_TRUE(env.bindings().size() == 0);
+  EXPECT_TRUE(env.matchTerm() == nullptr);
+
+  // Evaluating of Match Strategy result in
+  // a state that there are some new bindings
+  // and a term matched by left pattern of rule
+  // is set to environment.
+  match(*rule, env);
+  EXPECT_TRUE(env.bindings().size() > 0);
+  EXPECT_TRUE(env.matchTerm() != nullptr);
+
+  // All those side effects will be revert
+  // once where expressions declared here,
+  // due to the expression declared here always
+  // result in FALSE.
+  where(*rule, env);
+  EXPECT_TRUE(env.bindings().size() == 0);
+  EXPECT_TRUE(env.matchTerm() == nullptr);
+
+  // Finally, Build Strategy should be evaluating
+  // without erros in this case.
+  build(*rule, env);
 }
 
 } // Rewrite
