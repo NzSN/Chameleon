@@ -50,15 +50,7 @@ struct Strategy: public StrategyBase<T> {
 // Break down a transform rule into Strategies
 // due to this system use Strategy language
 // low-level core language to describe transformations.
-template<Base::GPTMeta T,
-         bool WHERE_CLAUSE = false,
-         typename = std::enable_if_t<!WHERE_CLAUSE>>
-StrategySeq<T> ruleBreakDown(Rule<T>& rule);
-
-template<Base::GPTMeta T,
-         bool WHERE_CLAUSE = false,
-         typename = std::enable_if_t<WHERE_CLAUSE>,
-         int a = 1>
+template<Base::GPTMeta T>
 StrategySeq<T> ruleBreakDown(Rule<T>& rule);
 
 } // Rewrite

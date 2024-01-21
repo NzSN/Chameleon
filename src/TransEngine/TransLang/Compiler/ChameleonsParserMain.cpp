@@ -191,9 +191,7 @@ strategiesFromRules(ChameleonsParser::RewriteRulesContext* rCtx) {
     // Then break the rule down into strategies
     .transform(
       [](auto&& rule) {
-        return rule.cond.size() > 0 ?
-          Rewrite::ruleBreakDown<T, true>(rule) :
-          Rewrite::ruleBreakDown(rule);
+          return Rewrite::ruleBreakDown(rule);
       })
     // Parsing remaining rewrite rules
     .and_then([&](auto&& seq) -> std::optional<Rewrite::StrategySeq<T>> {

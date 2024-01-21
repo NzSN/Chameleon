@@ -1,6 +1,8 @@
 #ifndef LANGS_H
 #define LANGS_H
 
+#include <concepts>
+
 namespace Base {
 
 enum SUPPORTED_LANGUAGE {
@@ -13,6 +15,13 @@ enum SUPPORTED_LANGUAGE {
   WGSL = 3,
   NUM_OF_LANG_SUPPORTED,
 };
+
+template<SUPPORTED_LANGUAGE lang>
+concept isTestLang = lang == SUPPORTED_LANGUAGE::TESTLANG;
+
+template<SUPPORTED_LANGUAGE lang>
+concept isWGSL = lang == SUPPORTED_LANGUAGE::WGSL;
+
 
 // FIELD DESCRIPTIONS
 // | Namespace | LANG ENUM | EXTERNAL PARSER | LEXER | PARSER | ENTRY | ENTRY_MEMBER |

@@ -39,8 +39,8 @@ template<typename ExtNode,
 struct Parser {
 
   template<Concepts::NAryTree::NAryTree T,
-           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
-           typename = std::enable_if_t<Storage == Utility::AUTOMATIC>>
+           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC>
+  requires Utility::isAutoStorage<Storage>
   static T parse(std::istream* input) {
     adapters_.emplace_back(
       std::make_unique<A>(lang, P::parse(input)));
@@ -48,9 +48,8 @@ struct Parser {
   }
 
   template<Concepts::NAryTree::NAryTree T,
-           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
-           typename = std::enable_if_t<Storage == Utility::DYNAMIC>,
-           int = 1>
+           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC>
+  requires Utility::isDynamicStorage<Storage>
   static std::unique_ptr<T>
   parse(std::istream* input) {
     adapters_.emplace_back(

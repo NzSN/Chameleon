@@ -20,14 +20,17 @@ enum MatchAlgor {
   NORMAL
 };
 
+template<MatchAlgor A>
+concept PATTERMATCH_ALGO_NAIVE = A == MatchAlgor::NORMAL;
+
 template<Base::GPTMeta T>
 using CaptureTerms = std::unordered_map<
   typename TransEngine::Pattern<T>::TermID,
   Base::GenericParseTree<T>*>;
 
 template<Base::GPTMeta T,
-         MatchAlgor select = NORMAL,
-         typename = std::enable_if_t<select == NORMAL>>
+         MatchAlgor algor = MatchAlgor::NORMAL>
+requires PATTERMATCH_ALGO_NAIVE<algor>
 std::optional<Base::GenericParseTree<T>*>
 patternMatchingTermCapture(
   const TransEngine::Pattern<T>& pattern,
@@ -92,8 +95,8 @@ patternMatchingTermCapture(
 
 
 template<Base::GPTMeta T,
-         MatchAlgor select = NORMAL,
-         typename = std::enable_if_t<select == NORMAL>>
+         MatchAlgor algor = MatchAlgor::NORMAL>
+requires PATTERMATCH_ALGO_NAIVE<algor>
 std::optional<Base::GenericParseTree<T>*>
 patternMatching(TransEngine::Pattern<T>& pattern,
                 Base::GenericParseTree<T>& subjectTree) {

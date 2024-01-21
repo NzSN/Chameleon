@@ -8,11 +8,12 @@
 #include <tuple>
 
 namespace Utility {
-namespace {template<
+namespace {
+template<
   typename V,
   typename R,
-  typename... ARGS,
-  typename = std::enable_if_t<std::is_invocable_r_v<R, V, ARGS...>>>
+  typename... ARGS>
+requires std::invocable<V,ARGS...>
 R evaluate(V v, ARGS... args) {
   return v(args...);
 }
@@ -20,12 +21,11 @@ R evaluate(V v, ARGS... args) {
 template<
   typename V,
   typename R,
-  typename... ARGS,
-  typename = std::enable_if_t<!std::is_invocable_r_v<R, V, ARGS...>>,
-  int = 0>
+  typename... ARGS>
 R evaluate(V v, ARGS... args) {
   return v;
 }
+
 }
 
 template<typename T, typename R, typename... ARGS>

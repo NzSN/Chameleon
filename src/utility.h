@@ -20,6 +20,13 @@ enum ALLOC_STORAGE_DURATION {
   DYNAMIC,
 };
 
+template<ALLOC_STORAGE_DURATION duration>
+concept isAutoStorage = duration == ALLOC_STORAGE_DURATION::AUTOMATIC;
+
+template<ALLOC_STORAGE_DURATION duration>
+concept isDynamicStorage = duration == ALLOC_STORAGE_DURATION::DYNAMIC;
+
+
 template<typename T, typename E>
 concept RangeTuple = std::ranges::range<T> &&
   requires(T t, std::tuple<E, E> pair) {

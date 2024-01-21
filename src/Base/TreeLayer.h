@@ -13,8 +13,8 @@ struct TreeLayer {
   T& addChild(T type);
 
   template<Concepts::NAryTree::NAryTree U,
-           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
-           typename = std::enable_if_t<Storage == Utility::AUTOMATIC>>
+           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC>
+  requires Utility::isAutoStorage<Storage>
   static T mapping(const U& o) {
     T tree = T(o);
     for (auto& c: Concepts::NAryTree::getChildren(o)) {
@@ -33,9 +33,8 @@ struct TreeLayer {
   // Cases that every nodes of generated Treelayer
   // is dynamics, with type std::unique_ptr<T>.
   template<Concepts::NAryTree::NAryTree U,
-           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC,
-           typename = std::enable_if_t<Storage == Utility::DYNAMIC>,
-           int = 1>
+           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC>
+  requires Utility::isDynamicStorage<Storage>
   static std::unique_ptr<T>
   mapping(const U& o) {
     std::unique_ptr<T> tree = std::make_unique<T>(o);

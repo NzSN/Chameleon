@@ -14,8 +14,8 @@
 
 namespace SIGMA_TERM {
 
-template<int LANG=Base::SUPPORTED_LANGUAGE::TESTLANG,
-         typename = std::enable_if_t<LANG == Base::SUPPORTED_LANGUAGE::TESTLANG>>
+template<Base::SUPPORTED_LANGUAGE LANG = Base::SUPPORTED_LANGUAGE::TESTLANG>
+requires Base::isTestLang<LANG>
 bool isTermVar(Base::Antlr4Node& node) {
   std::string literal = node.getText();
   if (typeid(*node.tree()) == typeid(TestLangParser::ExprContext)) {
@@ -30,9 +30,8 @@ bool isTermVar(Base::Antlr4Node& node) {
   }
 }
 
-template<int LANG=Base::SUPPORTED_LANGUAGE::TESTLANG,
-         typename = std::enable_if_t<LANG == Base::SUPPORTED_LANGUAGE::WGSL>,
-         int = 1>
+template<Base::SUPPORTED_LANGUAGE LANG = Base::SUPPORTED_LANGUAGE::TESTLANG>
+requires Base::isWGSL<LANG>
 bool isTermVar(Base::Antlr4Node& node) {
   std::string literal = node.getText();
   if (typeid(*node.tree()) == typeid(WGSLParser::IdentContext)) {

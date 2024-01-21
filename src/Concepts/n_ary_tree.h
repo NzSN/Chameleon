@@ -60,41 +60,35 @@ auto& getChildren(const T& t) {
 }
 
 // Raw pointer version
-template<typename T,
-         typename = std::enable_if_t<std::is_pointer_v<T>>>
+template<typename T>
+requires std::is_pointer_v<T>
 auto& derefMaybe(T t) {
   return *t;
 }
 
 // Deal with smart pointer
-template<typename T,
-         typename = std::enable_if_t<
-           !std::is_pointer_v<T> &&
-           (Utility::is_derefable<T>::value &&
-           Utility::is_arrow<T>::value)>,
-         int i = 0>
+template<typename T>
+requires Utility::is_derefable<T>::value &&
+         Utility::is_arrow<T>::value &&
+         (!std::is_pointer_v<T>)
 auto& derefMaybe(T& t) {
   return *t;
 }
 
-template<typename T,
-         typename = std::enable_if_t<
-           !std::is_pointer_v<T> &&
-           (Utility::is_derefable<T>::value &&
-           Utility::is_arrow<T>::value)>,
-         int i = 0>
+template<typename T>
+requires Utility::is_derefable<T>::value &&
+         Utility::is_arrow<T>::value &&
+         (!std::is_pointer_v<T>)
 auto& derefMaybe(const T& t) {
   return *t;
 }
 
 
 // Value semantic
-template<typename T,
-         typename = std::enable_if_t<
-           !std::is_pointer_v<T> &&
-           !(Utility::is_derefable<T>::value ||
-             Utility::is_arrow<T>::value)
-           >>
+template<typename T>
+requires (!std::is_pointer_v<T>) &&
+         (!Utility::is_derefable<T>::value) &&
+         (!Utility::is_arrow<T>::value)
 T& derefMaybe(T& t) {
   return t;
 }

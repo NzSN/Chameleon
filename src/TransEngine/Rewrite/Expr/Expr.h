@@ -377,9 +377,9 @@ class Constant: public Expr {
 public:
   // A copy of Value is spawned if an Constant expression is evaluated,
   // so Value is required to be copy constructible.
-  template<typename U,
-           typename = std::enable_if_t<std::is_base_of_v<Value, U> &&
-                                       std::is_copy_constructible_v<U>>>
+  template<typename U>
+  requires std::derived_from<U, Value> &&
+           std::copy_constructible<U>
   Constant(std::unique_ptr<U> v):
     v_{std::move(v)} {}
 
