@@ -86,7 +86,7 @@ public:
       case SUPPORTED_LANG::WGSL:
         return transform<SUPPORTED_LANG::WGSL>(program.get());
       default:
-        std::unreachable;
+        std::unreachable();
       }
     })();
 
