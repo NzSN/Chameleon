@@ -125,8 +125,8 @@ struct BuildStra: public Strategy<T> {
     }
 
     if (env.matchTerm()->parent != nullptr) {
-        // Replace the matched tree with the tree the
-        // just builded.
+      // Replace the matched tree with the tree the
+      // just builded.
       env.matchTerm()->setNode(
         *Base::GenericParseTree<T>
         ::template mapping<T, Utility::DYNAMIC>(*metaCopy));

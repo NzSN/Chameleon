@@ -9,6 +9,14 @@
 
 #include "TransEngine/Rewrite/Strategy-inl.h"
 
+#include "cppgc/allocation.h"
+#include "cppgc/default-platform.h"
+#include "cppgc/garbage-collected.h"
+#include "cppgc/heap.h"
+#include "cppgc/member.h"
+#include "cppgc/visitor.h"
+
+
 namespace TransEngine {
 namespace Compiler {
 
@@ -27,6 +35,10 @@ public:
   bool write(Rewrite::StrategyUnique<Adapter> stra) {
     strategies_.push_back(std::move(stra));
     return true;
+  }
+
+  Base::SUPPORTED_LANGUAGE lang() const {
+    return lang_;
   }
 
   std::optional<Base::GptGeneric>
@@ -53,6 +65,85 @@ struct Compiler {
   std::unique_ptr<Program> compile(std::istream& input);
 
 };
+
+class ChameleonsMain {
+public:
+  using SUPPORTED_LANG = Base::SUPPORTED_LANGUAGE;
+
+  ChameleonsMain(std::istream* ruleConfig, std::istream* targetCodes):
+    ruleConfig_(ruleConfig), targetCodes_(targetCodes) {}
+
+  std::optional<std::string>
+  operator()() {
+    // Spawn Rule Compiler
+    Compiler compiler;
+
+    // Initialize GC
+    auto cppgc_platform = std::make_shared<cppgc::DefaultPlatform>();
+    cppgc::InitializeProcess(cppgc_platform->GetPageAllocator());
+
+    // Compiling Rule into program
+    std::unique_ptr<Program> program =
+      compiler.compile(*ruleConfig_);
+    Base::SUPPORTED_LANGUAGE lang = program->lang();
+
+    // Transforming
+    std::optional<std::string> transedProg = ([&] {
+      switch (lang) {
+      case SUPPORTED_LANG::TESTLANG:
+        return transform<SUPPORTED_LANG::TESTLANG>(program.get());
+      case SUPPORTED_LANG::WGSL:
+        return transform<SUPPORTED_LANG::WGSL>(program.get());
+      default:
+        std::unreachable;
+      }
+    })();
+
+    cppgc::ShutdownProcess();
+
+    return transedProg;
+  }
+
+private:
+  template<SUPPORTED_LANG lang = SUPPORTED_LANG::TESTLANG>
+  requires Base::isTestLang<lang>
+  Base::GptGeneric parse(std::istream* s) {
+    return
+      Parser
+      ::ParserSelect<Base::SUPPORTED_LANGUAGE::TESTLANG>
+      ::parser
+      ::parse<Base::GenericParseTree<Base::Antlr4Node>>(s);
+  }
+
+  template<SUPPORTED_LANG lang = SUPPORTED_LANG::TESTLANG>
+  requires Base::isWGSL<lang>
+  Base::GptGeneric parse(std::istream* s) {
+    return
+      Parser
+      ::ParserSelect<Base::SUPPORTED_LANGUAGE::WGSL>
+      ::parser
+      ::parse<Base::GenericParseTree<Base::Antlr4Node>>(s);
+  }
+
+  template<SUPPORTED_LANG lang = SUPPORTED_LANG::TESTLANG>
+  requires Base::isTestLang<lang> ||
+           Base::isWGSL<lang>
+  std::optional<std::string> transform(Program* program) {
+    using Tree = Base::GenericParseTree<Base::Antlr4Node>;
+    Base::GptGeneric tree = parse<lang>(targetCodes_);
+
+    Tree t = std::get<Tree>(tree);
+
+    return (*program)(t).transform(
+      [](auto&& tree) {
+        return tree.getText();
+      });
+  }
+
+  std::istream* ruleConfig_;
+  std::istream* targetCodes_;
+};
+
 
 } // Compiler
 } // TransEngine

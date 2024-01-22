@@ -55,7 +55,8 @@ cc_test(
          "@com_google_googletest//:gtest_main",
          "@plog//:plog",
          "@rapidcheck//:rapidcheck",
-         "//parsers:wgsl_parser"
+         "//parsers:wgsl_parser",
+         "@oilpan//:cppgc",
          ],
 )
 

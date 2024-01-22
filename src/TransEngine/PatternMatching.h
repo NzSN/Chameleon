@@ -37,7 +37,7 @@ patternMatchingTermCapture(
   Base::GenericParseTree<T>& subjectTree,
   Environment<T>* env) {
 
-  const auto matchingSubTree =
+  const auto matching =
     [](const TransEngine::Pattern<T>& pattern,
        const Base::GenericParseTree<T>& subjectTree,
        Environment<T>* env) -> bool {
@@ -78,7 +78,7 @@ patternMatchingTermCapture(
     };
 
   // Maching on the root of subject tree
-  if (matchingSubTree(pattern, subjectTree, env)) {
+  if (matching(pattern, subjectTree, env)) {
     return &subjectTree;
   }
 
