@@ -9,14 +9,6 @@
 
 #include "TransEngine/Rewrite/Strategy-inl.h"
 
-#include "cppgc/allocation.h"
-#include "cppgc/default-platform.h"
-#include "cppgc/garbage-collected.h"
-#include "cppgc/heap.h"
-#include "cppgc/member.h"
-#include "cppgc/visitor.h"
-
-
 namespace TransEngine {
 namespace Compiler {
 
@@ -79,8 +71,7 @@ public:
     Compiler compiler;
 
     // Initialize GC
-    auto cppgc_platform = std::make_shared<cppgc::DefaultPlatform>();
-    cppgc::InitializeProcess(cppgc_platform->GetPageAllocator());
+    Utility::ScopeGC gc{};
 
     // Compiling Rule into program
     std::unique_ptr<Program> program =
@@ -98,8 +89,6 @@ public:
         std::unreachable;
       }
     })();
-
-    cppgc::ShutdownProcess();
 
     return transedProg;
   }
