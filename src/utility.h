@@ -13,13 +13,6 @@
 #include "Base/langs.h"
 #include "antlr4-runtime.h"
 
-#include "cppgc/allocation.h"
-#include "cppgc/default-platform.h"
-#include "cppgc/garbage-collected.h"
-#include "cppgc/heap.h"
-#include "cppgc/member.h"
-#include "cppgc/visitor.h"
-
 namespace Utility {
 
 enum ALLOC_STORAGE_DURATION {
@@ -177,19 +170,6 @@ struct HeapResourceHolder: public Utility::TypeErasureWrapper {
   template<typename T>
   HeapResourceHolder(T t):
     Utility::TypeErasureWrapper{t} {}
-};
-
-struct ScopeGC {
-  ScopeGC(): platform_{std::make_shared<cppgc::DefaultPlatform>()} {
-    cppgc::InitializeProcess(platform_->GetPageAllocator());
-  }
-
-  ~ScopeGC() {
-    cppgc::ShutdownProcess();
-  }
-
-private:
- std::shared_ptr<cppgc::DefaultPlatform> platform_;
 };
 
 } // Utility

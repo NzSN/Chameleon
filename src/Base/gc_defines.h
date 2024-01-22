@@ -13,8 +13,23 @@
 
 namespace Base::GC {
 
+struct GC {
+  GC(): platform_{std::make_shared<cppgc::DefaultPlatform>()} {
+    cppgc::InitializeProcess(platform_->GetPageAllocator());
+  }
+
+  ~GC() {
+    cppgc::ShutdownProcess();
+  }
+
+private:
+ std::shared_ptr<cppgc::DefaultPlatform> platform_;
+};
+
+
 class GCObject: public cppgc::GarbageCollected<GCObject> {
-  void Trace(cppgc::Visitor* visitor) {
+public:
+  void Trace(cppgc::Visitor* visitor) const {
     for (auto& o: objs_) {
       visitor->Trace(o);
     }

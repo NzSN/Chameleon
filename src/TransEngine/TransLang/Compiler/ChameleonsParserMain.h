@@ -8,6 +8,7 @@
 #include "GenericTypes.h"
 
 #include "TransEngine/Rewrite/Strategy-inl.h"
+#include "Base/gc_defines.h"
 
 namespace TransEngine {
 namespace Compiler {
@@ -71,7 +72,7 @@ public:
     Compiler compiler;
 
     // Initialize GC
-    Utility::ScopeGC gc{};
+    Base::GC::GC gc{};
 
     // Compiling Rule into program
     std::unique_ptr<Program> program =
