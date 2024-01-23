@@ -13,6 +13,8 @@
 #include "Base/langs.h"
 #include "antlr4-runtime.h"
 
+#include "Base/config.h"
+
 namespace Utility {
 
 enum ALLOC_STORAGE_DURATION {
@@ -232,6 +234,14 @@ struct Functor {
   operator()(std::function<T(T)> f) const = 0;
 
   T a;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+//                                  CONFIG                                 //
+/////////////////////////////////////////////////////////////////////////////
+template<typename T>
+struct TypeMapping {
+  using type = T;
 };
 
 } // Utility

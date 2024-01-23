@@ -6,11 +6,12 @@
 #include <string>
 #include <typeinfo>
 
+#include "utility.h"
 #include "Base/langs.h"
 #include "Base/generic_parsetree_antlr4.h"
-
 #include "Misc/testLanguage/TestLangParser.h"
 #include "parsers/wgsl/WGSLParser.h"
+#include "Base/generic_parsetree_antlr4_gc.h"
 
 namespace SIGMA_TERM {
 
@@ -18,7 +19,11 @@ template<Base::SUPPORTED_LANGUAGE LANG = Base::SUPPORTED_LANGUAGE::TESTLANG>
 requires Base::isTestLang<LANG>
 bool isTermVar(Base::Antlr4Node& node) {
   std::string literal = node.getText();
-  if (typeid(*node.tree()) == typeid(TestLangParser::ExprContext)) {
+
+  const std::type_info& info = typeid(*node.tree());
+
+  if (info == typeid(TestLangParser::ExprContext) ||
+      info == typeid(Utility::TypeMapping<TestLangParser::ExprContext>::type)) {
     if (literal.size() != 1) {
       return false;
     }
@@ -34,14 +39,16 @@ template<Base::SUPPORTED_LANGUAGE LANG = Base::SUPPORTED_LANGUAGE::TESTLANG>
 requires Base::isWGSL<LANG>
 bool isTermVar(Base::Antlr4Node& node) {
   std::string literal = node.getText();
-  if (typeid(*node.tree()) == typeid(WGSLParser::IdentContext)) {
+
+  const std::type_info& info = typeid(*node.tree());
+
+  if (info == typeid(WGSLParser::IdentContext) ||
+      info == typeid(Utility::TypeMapping<WGSLParser::IdentContext>::type)) {
     if (literal.size() != 3) return false;
     return literal[0] == '_' && literal[1] == '_';
   } else {
     return false;
   }
-
-  std::unreachable();
 }
 
 

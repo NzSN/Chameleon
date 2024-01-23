@@ -34,8 +34,7 @@ requires PATTERMATCH_ALGO_NAIVE<algor>
 std::optional<Base::GenericParseTree<T>*>
 patternMatchingTermCapture(
   const TransEngine::Pattern<T>& pattern,
-  Base::GenericParseTree<T>& subjectTree,
-  Environment<T>* env) {
+  Base::GenericParseTree<T>& subjectTree, Environment<T>* env) {
 
   const auto matching =
     [](const TransEngine::Pattern<T>& pattern,

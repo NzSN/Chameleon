@@ -10,22 +10,34 @@
 #include "cppgc/member.h"
 #include "cppgc/visitor.h"
 
-
 namespace Base::GC {
+
+namespace Process {
+inline cppgc::Heap* gc_heap = nullptr;
+}
+
 
 struct GC {
   GC(): platform_{std::make_shared<cppgc::DefaultPlatform>()} {
     cppgc::InitializeProcess(platform_->GetPageAllocator());
+    heap_ = cppgc::Heap::Create(platform_);
+
+    Process::gc_heap = heap_.get();
+  }
+
+  cppgc::Heap* heap() {
+    return heap_.get();
   }
 
   ~GC() {
     cppgc::ShutdownProcess();
+    Process::gc_heap = nullptr;
   }
 
 private:
- std::shared_ptr<cppgc::DefaultPlatform> platform_;
+  std::shared_ptr<cppgc::DefaultPlatform> platform_;
+  std::unique_ptr<cppgc::Heap> heap_;
 };
-
 
 class GCObject: public cppgc::GarbageCollected<GCObject> {
 public:
@@ -34,13 +46,12 @@ public:
       visitor->Trace(o);
     }
   }
-  void newReach(GCObject *obj) {
+  void reach(GCObject *obj) {
     objs_.push_back(obj);
   }
 private:
   std::list<cppgc::Member<GCObject>> objs_;
 };
-
 
 }
 

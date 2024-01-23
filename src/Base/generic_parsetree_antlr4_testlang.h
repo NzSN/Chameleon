@@ -1,11 +1,11 @@
 #ifndef GENERIC_PARSETREE_ANTLR4_TESTLANG_H
 #define GENERIC_PARSETREE_ANTLR4_TESTLANG_H
 
-namespace Testlang {
+namespace TestLang {
 
 #define TEST_LANG_CONTEXTS(V)   \
-  V(TestLangParser, Prog, Prog) \
-  V(TestLangParser, Prog, Expr)
+  V(TestLang, TestLangParser, Prog, Prog) \
+  V(TestLang, TestLangParser, Prog, Expr)
 
 }
 

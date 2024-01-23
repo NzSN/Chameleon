@@ -16,6 +16,7 @@ filegroup(
          "generic_parsetree_concrete.h",
          "generic_parsetree_types.h",
          "gc_defines.h",
+         "config.h",
          "TreeLayer.h",
          "langs.h"],
     visibility = ["//visibility:public"],

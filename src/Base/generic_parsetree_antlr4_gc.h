@@ -1,12 +1,42 @@
 #ifndef GENERIC_PARSETREE_ANTLR4_GC_H_
 #define GENERIC_PARSETREE_ANTLR4_GC_H_
 
+#include <concepts>
+
+#include "utility.h"
 #include "gc_defines.h"
 
-#define DECLARE_AS_GC_OBJECT(PARSER, ENTRY, NODE) \
+#define DECLARE_AS_GC_OBJECT(LANG, PARSER, ENTRY, NODE) \
   class NODE##Context final: public PARSER::NODE##Context, \
                              public GCObject \
-  {};
+  {                                          \
+    public:                                                             \
+    NODE##Context(antlr4::ParserRuleContext* ctx, int state):           \
+      PARSER::NODE##Context(ctx, state) {}                              \
+  };
+
+#define MAPPING_CONTEXT_TO_GC_REALM(LANG, PARSER, ENTRY, NODE)  \
+  template<>                                                    \
+  struct TypeMapping <PARSER::NODE##Context> {                   \
+    using type = Base::GC::Antlr::LANG::NODE##Context;                \
+  };
+
+#include "antlr4-runtime.h"
+
+namespace Base::GC::Antlr {
+
+class TerminalNodeImpl final: public antlr4::tree::TerminalNodeImpl,
+                              public GCObject
+{
+  public:
+
+  explicit TerminalNodeImpl(antlr4::Token* symbol):
+    antlr4::tree::TerminalNodeImpl(symbol) {}
+
+};
+
+} // Base::GC::Antlr
+
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -21,6 +51,11 @@ TEST_LANG_CONTEXTS(DECLARE_AS_GC_OBJECT);
 
 } // Base::GC::Antlr::TestLang
 
+namespace Utility {
+
+TEST_LANG_CONTEXTS(MAPPING_CONTEXT_TO_GC_REALM);
+
+} // Utility
 
 /////////////////////////////////////////////////////////////////////////////
 //                               GC For WGSL                               //
@@ -33,5 +68,12 @@ namespace Base::GC::Antlr::WGSL {
 WGSL_CONTEXTS(DECLARE_AS_GC_OBJECT);
 
 } // Base::GC:Antlr::WGSL
+
+namespace Utility {
+
+WGSL_CONTEXTS(MAPPING_CONTEXT_TO_GC_REALM)
+
+} // Utility
+
 
 #endif // GENERIC_PARSETREE_ANTLR4_GC_H_
