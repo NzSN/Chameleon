@@ -101,4 +101,25 @@ struct Plus: public TransEngine::Expression::Function {
   }
 };
 
+/////////////////////////////////////////////////////////////////////////////
+//                                   WGSL                                  //
+/////////////////////////////////////////////////////////////////////////////
+#define WGSL_FUNCTIONS(V) \
+  V(RandomIdent)
+
+struct RandomIdent: public TransEngine::Expression::Function {
+
+  std::unique_ptr<TransEngine::Expression::Value> operator()(
+    TransEngine::Expression::Arguments* args,
+    TransEngine::Rewrite::Environment<Base::Antlr4Node>* env) {
+
+    TransEngine::Expression::Term* term = dynamic_cast<TransEngine::Expression::Term*>(
+      args->args[0].get());
+    std::unique_ptr<TransEngine::Expression::Value> term_ = term->duplicate();
+
+    return term_;
+  }
+};
+
+
 #endif /* FUNCTIONS_H */

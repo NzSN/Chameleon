@@ -68,6 +68,11 @@ public:
     }
   }
 
+  std::unique_ptr<GenericParseTree> clone() const {
+    return this->Treelayer::mapping<T, Utility::DYNAMIC>(
+      *meta)
+  }
+
   GenericParseTree& addChild(
     std::unique_ptr<GenericParseTree>&& child) {
     child->parent = this;
@@ -132,6 +137,9 @@ private:
   const T& metaRef;
 
   Childs childs_;
+
+  // For clone purposes
+  std::unique_ptr<T> metaUnique_;
 };
 
 } // Base

@@ -156,8 +156,10 @@ TEST(ChameleonsParserMainTest, MainWithWhere) {
     "TARGET: WGSL \n"
     "RULES: \n"
     "Commutative: {| a = __b + __c; |} => {| a = __c + __b; |}"
-    " where __b := Random(__b);"
+    " where __b := RandomIdent(__b);"
   };
+
+  registerFunctions(Base::GptSupportLang::WGSL);
 
   ChameleonsMain main(&rule_config, &target_codes);
 

@@ -37,7 +37,7 @@ COMMA: ',';
 STRING: '"' [a-zA-Z0-9 ]+ '"';
 
 
-WHERE_IDENTIFIER: [a-zA-Z]+;
+WHERE_IDENTIFIER: [_a-zA-Z]+;
 
 WS_WHERE: [ \t\r\n]+ -> skip;
 //----------------------------------------------------------------

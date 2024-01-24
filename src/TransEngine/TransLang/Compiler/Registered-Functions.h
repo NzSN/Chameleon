@@ -23,6 +23,8 @@ inline void registerFunctions(Base::GptSupportLang lang) {
     // Register all TestLang Functions
     TESTLANG_FUNCTIONS(REGISTER_FUNCTIONS);
     break;
+  case Base::GptSupportLang::WGSL:
+    WGSL_FUNCTIONS(REGISTER_FUNCTIONS);
   default:
     return;
   }
