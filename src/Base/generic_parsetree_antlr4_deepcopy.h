@@ -1,13 +1,11 @@
 /* This file contains tools to generate deep copy listener
- * for antlr trees.
- *
- * TODO: Resource leaks may occurs if user don't manage
- *       life time of copy nodes. Need a GC ? */
+ * for antlr trees. */
 
 #ifndef GENERIC_PARSETREE_ANTLR4_DEEPCOPY_H
 #define GENERIC_PARSETREE_ANTLR4_DEEPCOPY_H
 
 #include "Base/config.h"
+#include "Base/defines.h"
 
 #include <iostream>
 #include <functional>
@@ -145,72 +143,41 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
 
 #define _NSS(X) Antlr4DeepCopy::X
 #define _C(CTX) CTX##Context
-
-#if ENABLE_GC
-#define __C(PARSER, CTX, LANG) Base::GC::Antlr::LANG::_C(CTX)
-
-// CTOR_CTOR is a Constructor to create constructor
-// used to create context.
-//
-// CTOR :: antlr4::ParserRuleContext *
-//      -> Int
-//      -> CTX
-#define CTOR_CTOR(PARSER,CTX,LANG) (                                    \
-    [](antlr4::ParserRuleContext* ctx, int state) {                     \
-      return cppgc::MakeGarbageCollected<__C(PARSER,CTX,LANG)>(         \
-        Base::GC::Process::gc_heap->GetAllocationHandle(), ctx, state); \
-    })
-#define TERMINAL_CTOR (                                               \
-  [](antlr4::Token* token) {                                \
-    return cppgc::MakeGarbageCollected<Base::GC::Antlr::TerminalNodeImpl>( \
-      Base::GC::Process::gc_heap->GetAllocationHandle(), token);                                               \
-  })
-#else
 #define __C(PARSER, CTX, LANG) PARSER::_C(CTX)
-#define CTOR_CTOR(PARSER,CTX,LANG) (                \
-    [](antlr4::ParserRuleContext* ctx, int state) { \
-      return new __C(PARSER,CTX,LANG)(ctx, state);  \
-    })
-#define TERMINAL_CTOR (                                       \
-  [](antlr4::Token* token) {                        \
-    return new antlr4::tree::TerminalNodeImpl(token); \
-  })
-#endif
-
 #define __C_PTR(PARSER, CTX, LANG) __C(PARSER,CTX,LANG)*
+#define __NEW(T, ...) Base::genericNew<T>(__VA_ARGS__)
+#define _MAP(T) Utility::TypeMapping<T>::type
 
-#define COPY_ANTLR4_NON_TERMINAL(LANG, PARSER, ENTRY, CTX)            \
-  void enter##CTX(PARSER::_C(CTX) *ctx) {                             \
-    __C_PTR(PARSER,CTX,LANG) copy;                                    \
-    if (std::string(#ENTRY) == std::string(#CTX)) {                   \
-      /* ENTRY should has no parent. */                               \
-      copy = CTOR_CTOR(PARSER, CTX, LANG)(nullptr, -1);               \
-      /* Build mapping between them */                                \
-      _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);           \
-    } else {                                                          \
-      auto node = _NSS(CopyRealm)<_NSS(TreeNode)*>(ctx->parent)();    \
-      if (node.has_value()) {                                         \
-        copy = CTOR_CTOR(PARSER,CTX,LANG)(                            \
-          dynamic_cast<antlr4::ParserRuleContext*>(node.value()),     \
-          ctx->invokingState);                                        \
-        /* Mapping should be made before buildup connect to parent */ \
-        /* otherwise violate precondition of buildUpConnect() */      \
-        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);         \
-        _NSS(buildUpConnect)(ctx, copy);                              \
-      } else {                                                        \
-        copy = CTOR_CTOR(PARSER,CTX,LANG)(                            \
-          nullptr,                                                    \
-          ctx->invokingState);                                        \
-        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);         \
-      }                                                               \
-    }                                                                 \
-  }                                                                   \
+#define COPY_ANTLR4_NON_TERMINAL(LANG, PARSER, ENTRY, CTX)                     \
+  void enter##CTX(PARSER::_C(CTX) *ctx) {                                      \
+    __C_PTR(PARSER,CTX,LANG) copy;                                             \
+    if (std::string(#ENTRY) == std::string(#CTX)) {                            \
+      /* ENTRY should has no parent. */                                        \
+      copy = __NEW(_MAP(__C(PARSER,CTX,LANG)), nullptr, -1);                   \
+      /* Build mapping between them */                                         \
+      _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);                    \
+    } else {                                                                   \
+      auto node = _NSS(CopyRealm)<_NSS(TreeNode)*>(ctx->parent)();             \
+      if (node.has_value()) {                                                  \
+        copy = __NEW(_MAP(__C(PARSER,CTX,LANG)),                               \
+                     dynamic_cast<antlr4::ParserRuleContext*>(node.value()),   \
+                     ctx->invokingState);                                      \
+        /* Mapping should be made before buildup connect to parent */          \
+        /* otherwise violate precondition of buildUpConnect() */               \
+        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);                  \
+        _NSS(buildUpConnect)(ctx, copy);                                       \
+      } else {                                                                 \
+        copy = __NEW(_MAP(__C(PARSER,CTX,LANG)), nullptr, ctx->invokingState); \
+        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);                  \
+      }                                                                        \
+    }                                                                          \
+  }                                                                            \
   void exit##CTX(PARSER::CTX##Context *ctx) {}
 
 #define COPY_ANTLR4_TERMINAL                                           \
   void visitTerminal(antlr4::tree::TerminalNode *node) {               \
     antlr4::tree::TerminalNodeImpl* copy =                             \
-      TERMINAL_CTOR(node->getSymbol());           \
+      __NEW(_MAP(antlr4::tree::TerminalNodeImpl), node->getSymbol());  \
     std::optional<_NSS(TreeNode)*> parent =                            \
       _NSS(CopyRealm)<_NSS(TreeNode)*>(node->parent)();                \
     if (parent.has_value()) {                                          \

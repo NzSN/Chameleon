@@ -37,6 +37,14 @@ class TerminalNodeImpl final: public antlr4::tree::TerminalNodeImpl,
 
 } // Base::GC::Antlr
 
+namespace Utility {
+
+template<>
+struct TypeMapping<antlr4::tree::TerminalNodeImpl> {
+  using type = Base::GC::Antlr::TerminalNodeImpl;
+};
+
+} // Utility
 
 
 /////////////////////////////////////////////////////////////////////////////
