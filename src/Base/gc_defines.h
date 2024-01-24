@@ -18,7 +18,7 @@ inline cppgc::Heap* gc_heap = nullptr;
 
 
 struct GC {
-  GC(): platform_{std::make_shared<cppgc::DefaultPlatform>()} {
+  GC() {
     cppgc::InitializeProcess(platform_->GetPageAllocator());
     heap_ = cppgc::Heap::Create(platform_);
 
@@ -30,12 +30,13 @@ struct GC {
   }
 
   ~GC() {
-    cppgc::ShutdownProcess();
     Process::gc_heap = nullptr;
+    cppgc::ShutdownProcess();
   }
 
 private:
-  std::shared_ptr<cppgc::DefaultPlatform> platform_;
+  inline static std::shared_ptr<cppgc::DefaultPlatform> platform_ =
+    std::make_shared<cppgc::DefaultPlatform>();
   std::unique_ptr<cppgc::Heap> heap_;
 };
 

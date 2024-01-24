@@ -127,6 +127,7 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
   if (!binded) {
     parentMaybe.value()->children.push_back(copy);
 
+    #if ENABLE_GC
     // Handle GC Reference
     Base::GC::GCObject* parentGC =
       dynamic_cast<Base::GC::GCObject*>(parent);
@@ -136,6 +137,7 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
     if (!parentGC && !copyGC) {
       parentGC->reach(copyGC);
     }
+    #endif
   }
 
   return true;

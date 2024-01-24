@@ -3,6 +3,8 @@
 
 #include <optional>
 
+#include "Base/config.h"
+
 #include "Base/generic_parsetree_antlr4.h"
 #include "Analysis/analyzer.h"
 #include "GenericTypes.h"
@@ -71,8 +73,10 @@ public:
     // Spawn Rule Compiler
     Compiler compiler;
 
+    #if ENABLE_GC
     // Initialize GC
     Base::GC::GC gc{};
+    #endif
 
     // Compiling Rule into program
     std::unique_ptr<Program> program =

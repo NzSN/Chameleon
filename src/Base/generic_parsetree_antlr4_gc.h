@@ -3,8 +3,11 @@
 
 #include <concepts>
 
+#include "config.h"
 #include "utility.h"
 #include "gc_defines.h"
+
+#if ENABLE_GC
 
 #define DECLARE_AS_GC_OBJECT(LANG, PARSER, ENTRY, NODE) \
   class NODE##Context final: public PARSER::NODE##Context, \
@@ -83,5 +86,6 @@ WGSL_CONTEXTS(MAPPING_CONTEXT_TO_GC_REALM)
 
 } // Utility
 
+#endif
 
 #endif // GENERIC_PARSETREE_ANTLR4_GC_H_
