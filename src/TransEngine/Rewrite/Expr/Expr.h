@@ -323,7 +323,8 @@ struct Arguments {
 };
 
 struct Function {
-  virtual std::unique_ptr<Value> operator()(Arguments* args) = 0;
+  virtual std::unique_ptr<Value> operator()(
+    Arguments* args, Environment<Adapter>* env) = 0;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -334,7 +335,7 @@ struct Expr {
 
   static std::unique_ptr<Value> eval(
     std::unique_ptr<Expr>& expr,
-    Environment<Base::Antlr4Node>* env) {
+    Environment<Adapter>* env) {
 
     return (*expr)(env);
   }
@@ -521,7 +522,7 @@ public:
       arguments.args.push_back(std::move(v));
     }
 
-    return (*f_)(&arguments);
+    return (*f_)(&arguments, env);
   }
 private:
   std::unique_ptr<Function> f_;

@@ -7,6 +7,7 @@
 #include <algorithm>
 
 
+#include "utility.h"
 #include "Term.h"
 #include "Strategy.h"
 #include "Parser/Parser-inl.h"
@@ -94,8 +95,15 @@ struct WhereStra: public Strategy<T> {
       env.bindings().clear();
       env.setMatchTerm(nullptr);
     }
+
+    // FIXME: Currently, only where clause use environment to
+    //        hold resources. So clear resources here is fine
+    //        but it may be an invalid oepration in the future.
+
     return rule;
   }
+private:
+  std::vector<Utility::HeapResourceHolder> resources;
 };
 
 // Build right side pattern on Environment<T>::buildTerm_
@@ -106,6 +114,10 @@ struct BuildStra: public Strategy<T> {
 
   ~BuildStra() {}
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
+    Utility::CallAtExit guard{[&env] {
+      env.clearResource();
+    }};
+
     // Make sure there are matches need to be tramsform
     if (!env.matchTerm()) {
       return rule;

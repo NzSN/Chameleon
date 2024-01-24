@@ -57,7 +57,8 @@ TEST(ExpressionTest, EqualExpression) {
 // This function will checkging whether all of
 // it's arguments has same type.
 struct CheckEquality: public Function {
-  std::unique_ptr<Value> operator()(Arguments* args) override {
+  std::unique_ptr<Value> operator()(
+    Arguments* args, Environment<Base::Antlr4Node>* env) override {
 
     Value& first = *args->args[0];
     for (auto& c: args->args) {
@@ -267,7 +268,10 @@ TEST(ExpressionTest, LogicalOr) {
 
 struct IDENTITY: public Function {
   IDENTITY(): Function{} {}
-  std::unique_ptr<Value> operator()(Arguments* args) {
+  std::unique_ptr<Value> operator()(
+    Arguments* args,
+    Environment<Base::Antlr4Node>* env) {
+
     if (args->args.size() != 1) {
       return nullptr;
     }

@@ -16,16 +16,13 @@
 #define TESTLANG_FUNCTIONS(V) \
   V(Plus)
 
-// FIXME: Debug purposes
-inline std::unique_ptr<Base::Antlr4Node> A;
-inline std::unique_ptr<Base::GenericParseTree<Base::Antlr4Node>> B;
-
 // Plus :: Term -> Term
 struct Plus: public TransEngine::Expression::Function {
   Plus() {}
 
   std::unique_ptr<TransEngine::Expression::Value> operator()(
-    TransEngine::Expression::Arguments* args) {
+    TransEngine::Expression::Arguments* args,
+    TransEngine::Rewrite::Environment<Base::Antlr4Node>* env) {
 
     if (args->args.size() != 1) {
       return nullptr;
@@ -97,8 +94,8 @@ struct Plus: public TransEngine::Expression::Function {
     // Create Term from gptCopy.
     TransEngine::Rewrite::Term<Base::Antlr4Node> rTerm{*gptCopy};
 
-    A = std::move(metaCopy);
-    B = std::move(gptCopy);
+    env->holdResource(std::move(metaCopy));
+    env->holdResource(std::move(gptCopy));
 
     return std::make_unique<TransEngine::Expression::Term>(rTerm);
   }

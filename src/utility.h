@@ -22,6 +22,19 @@ enum ALLOC_STORAGE_DURATION {
   DYNAMIC,
 };
 
+struct CallAtExit {
+  CallAtExit(std::function<void()> f) {
+    f_ = f;
+  }
+
+  ~CallAtExit() {
+    f_();
+  }
+
+private:
+  std::function<void()> f_;
+};
+
 template<ALLOC_STORAGE_DURATION duration>
 concept isAutoStorage = duration == ALLOC_STORAGE_DURATION::AUTOMATIC;
 
@@ -134,30 +147,13 @@ struct TypeErasureWrapper {
   template<typename _Ty>
   TypeErasureWrapper(_Ty src): _inner(new inner<_Ty>(std::forward<_Ty>(src))) {}
 
-  TypeErasureWrapper(const TypeErasureWrapper& src): _inner(src._inner->clone()) {}
-
-  template<typename _Ty>
-  TypeErasureWrapper& operator=(_Ty src) {
-    _inner = std::make_unique<inner<_Ty>>(std::forward<_Ty>(src));
-    return *this;
-  }
-
-  TypeErasureWrapper& operator=(const TypeErasureWrapper& src) {
-    TypeErasureWrapper oTmp(src);
-    std::swap(oTmp._inner, this->_inner);
-    return *this;
-  }
-
   struct inner_base {
     using ptr = std::unique_ptr<inner_base>;
     virtual ~inner_base() {}
-    virtual inner_base* clone() const = 0;
   };
   template<typename _Ty> struct inner: inner_base {
-    inner(_Ty newval): _value(newval) {}
-    virtual inner_base* clone() const override {
-      return new inner(_value);
-    }
+    inner(_Ty& newval): _value(newval) {}
+    inner(_Ty&& newval): _value(std::move(newval)) {}
   private:
     _Ty _value;
   };
@@ -170,8 +166,11 @@ private:
 // used by Environment.
 struct HeapResourceHolder: public Utility::TypeErasureWrapper {
   template<typename T>
-  HeapResourceHolder(T t):
+  HeapResourceHolder(T& t):
     Utility::TypeErasureWrapper{t} {}
+  template<typename T>
+  HeapResourceHolder(T&& t):
+    Utility::TypeErasureWrapper{std::move(t)} {}
 };
 
 } // Utility

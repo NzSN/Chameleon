@@ -11,6 +11,13 @@
 
 namespace Base {
 
+struct FAILED_TO_CLONE_ANTLR_NODE: public std::exception {
+  ~FAILED_TO_CLONE_ANTLR_NODE() {}
+  const char* what() {
+    return "Failed to clone Antlr4Node...";
+  }
+};
+
 #define LANGS(V)                                \
   /* FIELDS : Namespace | LANG_ENUM */          \
   V(TestLang, TESTLANG)                         \
@@ -29,7 +36,7 @@ namespace Base {
   switch (LANG) {                                           \
     LANGS(ANTLR_COPY_LANG_SPECIFIC);                        \
   default:                                                  \
-    throw std::runtime_error("Failed to clone Antlr4Node"); \
+    throw FAILED_TO_CLONE_ANTLR_NODE{};                     \
   }
 
 // Deep copy

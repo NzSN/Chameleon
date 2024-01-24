@@ -148,5 +148,25 @@ TEST(ChameleonsParserMainTest, Main) {
   EXPECT_TRUE(codes.value() == "fnmain(){a=c+b;}");
 }
 
+TEST(ChameleonsParserMainTest, MainWithWhere) {
+ std::istringstream target_codes{
+    "fn main() { a = b + c; }" };
+
+  std::istringstream rule_config{
+    "TARGET: WGSL \n"
+    "RULES: \n"
+    "Commutative: {| a = __b + __c; |} => {| a = __c + __b; |}"
+    " where __b := Random(__b);"
+  };
+
+  ChameleonsMain main(&rule_config, &target_codes);
+
+  std::optional<std::string> codes = main();
+
+  EXPECT_TRUE(codes.has_value());
+  EXPECT_TRUE(codes.value() != "fnmain(){a=c+b;}");
+}
+
+
 } // Compiler
 } // TransEngine

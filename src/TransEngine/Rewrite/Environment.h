@@ -106,6 +106,18 @@ public:
     return analysisData_;
   }
 
+  void holdResource(Utility::HeapResourceHolder& resource) {
+    resources_.push_back(resource);
+  }
+
+  void holdResource(Utility::HeapResourceHolder&& resource) {
+    resources_.push_back(std::move(resource));
+  }
+
+  void clearResource() {
+    resources_.clear();
+  }
+
 private:
   // Target Term is the Term to be transformed.
   Base::GenericParseTree<T>* targetTerm_;
@@ -113,7 +125,7 @@ private:
   Base::GenericParseTree<T>* matchTerm_;
 
   Bindings<T> bindings_;
-  std::vector<Utility::HeapResourceHolder> resources;
+  std::vector<Utility::HeapResourceHolder> resources_;
   const AnalysisData* analysisData_;
 };
 
