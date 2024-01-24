@@ -3,6 +3,9 @@
 
 #include "utility.h"
 
+#include "Base/config.h"
+#include "Base/generic_parsetree_antlr4_gc.h"
+
 #include "TransEngine/Rewrite/Expr/Expr.h"
 #include "TransEngine/Rewrite/Environment.h"
 
@@ -70,8 +73,9 @@ struct Plus: public TransEngine::Expression::Function {
     // gpt->setNode(*gptCopy);
 
     // The type of underlying tree node should be antlr4::tree::ExprContext.
-    if (typeid(*gptCopy->getMetaMutable().tree())
-        != typeid(TestLangParser::ExprContext)) {
+    const std::type_info& type = typeid(*gptCopy->getMetaMutable().tree());
+    if (type != typeid(TestLangParser::ExprContext) &&
+        type != typeid(Utility::TypeMapping<TestLangParser::ExprContext>::type)) {
       return nullptr;
     }
 
@@ -93,7 +97,6 @@ struct Plus: public TransEngine::Expression::Function {
     // Create Term from gptCopy.
     TransEngine::Rewrite::Term<Base::Antlr4Node> rTerm{*gptCopy};
 
-    // FIXME: Debug purposes
     A = std::move(metaCopy);
     B = std::move(gptCopy);
 
