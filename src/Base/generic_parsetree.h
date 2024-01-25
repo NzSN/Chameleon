@@ -68,11 +68,6 @@ public:
     }
   }
 
-  std::unique_ptr<GenericParseTree> clone() const {
-    return this->Treelayer::mapping<T, Utility::DYNAMIC>(
-      *meta)
-  }
-
   GenericParseTree& addChild(
     std::unique_ptr<GenericParseTree>&& child) {
     child->parent = this;
@@ -114,6 +109,22 @@ public:
     return const_cast<T&>(metaRef).setNode(other.getMeta());
   }
 
+  std::unique_ptr<GenericParseTree> clone() const
+    requires requires(T t) {
+      { t.clone() } -> std::same_as<std::unique_ptr<T>>;
+    }
+  {
+    std::unique_ptr<T> metaCopy = metaRef.clone();
+
+    std::unique_ptr<GenericParseTree> copy =
+      this->template mapping<T, Utility::DYNAMIC>(
+        *metaCopy);
+    copy->metaUnique_ = std::move(metaCopy);
+
+    return copy;
+  }
+
+
   // For convenience, GenericParseTree will require that
   //
   std::string getText() const {
@@ -134,6 +145,7 @@ public:
 
 private:
   friend struct GenericParseTreeTest;
+
   const T& metaRef;
 
   Childs childs_;

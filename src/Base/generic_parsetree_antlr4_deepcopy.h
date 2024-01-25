@@ -150,30 +150,30 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
 #define __NEW(T, ...) Base::genericNew<T>(__VA_ARGS__)
 #define _MAP(T) Utility::TypeMapping<T>::type
 
-#define COPY_ANTLR4_NON_TERMINAL(LANG, PARSER, ENTRY, CTX)                     \
-  void enter##CTX(PARSER::_C(CTX) *ctx) {                                      \
-    __C_PTR(PARSER,CTX,LANG) copy;                                             \
-    if (std::string(#ENTRY) == std::string(#CTX)) {                            \
-      /* ENTRY should has no parent. */                                        \
-      copy = __NEW(_MAP(__C(PARSER,CTX,LANG)), nullptr, -1);                   \
-      /* Build mapping between them */                                         \
-      _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);                    \
-    } else {                                                                   \
-      auto node = _NSS(CopyRealm)<_NSS(TreeNode)*>(ctx->parent)();             \
-      if (node.has_value()) {                                                  \
-        copy = __NEW(_MAP(__C(PARSER,CTX,LANG)),                               \
-                     dynamic_cast<antlr4::ParserRuleContext*>(node.value()),   \
-                     ctx->invokingState);                                      \
-        /* Mapping should be made before buildup connect to parent */          \
-        /* otherwise violate precondition of buildUpConnect() */               \
-        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);                  \
-        _NSS(buildUpConnect)(ctx, copy);                                       \
-      } else {                                                                 \
-        copy = __NEW(_MAP(__C(PARSER,CTX,LANG)), nullptr, ctx->invokingState); \
-        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);                  \
-      }                                                                        \
-    }                                                                          \
-  }                                                                            \
+#define COPY_ANTLR4_NON_TERMINAL(LANG, PARSER, ENTRY, CTX)                   \
+  void enter##CTX(PARSER::_C(CTX) *ctx) {                                    \
+    __C_PTR(PARSER,CTX,LANG) copy;                                           \
+    if (std::string(#ENTRY) == std::string(#CTX)) {                                              \
+      /* ENTRY should has no parent. */                                      \
+      copy = __NEW(_MAP(__C(PARSER,CTX,LANG)), nullptr, -1);                       \
+      /* Build mapping between them */                                       \
+      _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);                  \
+    } else {                                                                 \
+      auto node = _NSS(CopyRealm)<_NSS(TreeNode)*>(ctx->parent)();           \
+      if (node.has_value()) {                                                \
+        copy = __NEW(_MAP(__C(PARSER,CTX,LANG)),                             \
+                     dynamic_cast<antlr4::ParserRuleContext*>(node.value()), \
+                     ctx->invokingState);                                    \
+        /* Mapping should be made before buildup connect to parent */        \
+        /* otherwise violate precondition of buildUpConnect() */             \
+        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);                \
+        _NSS(buildUpConnect)(ctx, copy);                                     \
+      } else {                                                               \
+        copy = __NEW(_MAP(__C(PARSER,CTX,LANG)), nullptr, ctx->invokingState);     \
+        _NSS(CopyRealm)<_NSS(TreeNode)*>::mapping(ctx, copy);                \
+      }                                                                      \
+    }                                                                        \
+  }                                                                          \
   void exit##CTX(PARSER::CTX##Context *ctx) {}
 
 #define COPY_ANTLR4_TERMINAL                                           \
