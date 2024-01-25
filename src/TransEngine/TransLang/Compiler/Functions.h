@@ -9,6 +9,43 @@
 #include "TransEngine/Rewrite/Expr/Expr.h"
 #include "TransEngine/Rewrite/Environment.h"
 
+using ExprTerm = TransEngine::Expression::Term;
+using ExprVal  = TransEngine::Expression::Value;
+using ExprArg  = TransEngine::Expression::Arguments;
+using ExprFunc = TransEngine::Expression::Function;
+
+template<Base::GPTMeta T>
+using RewriteTerm = TransEngine::Rewrite::Term<T>;
+
+///////////////////////////////////////////////////////////////////////////////
+//                              Common Functions                             //
+///////////////////////////////////////////////////////////////////////////////
+template<Base::GPTMeta T>
+Base::GenericParseTree<T>* gptFromExprTerm(ExprTerm* term) {
+  return &term->term->tree.get();
+}
+
+template<typename... EXPECT>
+bool typeCheckUnion(EXPECT&...);
+
+template<>
+inline bool typeCheckUnion(const std::type_info& type) {
+  return false;
+}
+
+template<typename T, typename... EXPECTS>
+bool typeCheckUnion(const std::type_info& type) {
+  std::cout << typeid(T).name() << std::endl;
+  return (type == typeid(T)) || typeCheckUnion<EXPECTS...>(type);
+}
+
+template<typename... EXPECTS>
+bool assertMetaType(Base::GenericParseTree<Base::Antlr4Node>* node) {
+  const std::type_info& type = typeid(*node->getMetaMutable().tree());
+
+  return typeCheckUnion<EXPECTS...>(type);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //                            TestLang Functions                           //
 /////////////////////////////////////////////////////////////////////////////
@@ -30,15 +67,13 @@ struct Plus: public TransEngine::Expression::Function {
 
     // Try to convert the text presentation to integer,
     // no effects if failed to convert.
-    if (!TransEngine::Expression::Value::isTerm(*args->args[0])) {
+    if (!ExprVal::isTerm(*args->args[0])) {
       return nullptr;
     }
 
-    TransEngine::Expression::Term* term = dynamic_cast<TransEngine::Expression::Term*>(
-      args->args[0].get());
-
     Base::GenericParseTree<Base::Antlr4Node>* gpt =
-      &term->term->tree.get();
+      gptFromExprTerm<Base::Antlr4Node>(
+        dynamic_cast<ExprTerm*>(args->args[0].get()));
 
     int number{};
     std::string numberMaybe = gpt->getText();
@@ -53,14 +88,8 @@ struct Plus: public TransEngine::Expression::Function {
     }
 
     // After that reconstruct a Term from the new number
-    //
-    // FIXME: Need a backing store to manage those resource allocated
-    //        during evaluation of WhereClause otherwise segfault.
-    std::unique_ptr<Base::Antlr4Node> metaCopy = gpt->getMeta().clone();
     std::unique_ptr<Base::GenericParseTree<Base::Antlr4Node>>
-      gptCopy =
-      Base::GenericParseTree<Base::Antlr4Node>
-      ::mapping<Base::Antlr4Node, Utility::DYNAMIC>(*metaCopy);
+      gptCopy = gpt->clone();
 
     // Replace the original node by the copy node
     //
@@ -70,9 +99,11 @@ struct Plus: public TransEngine::Expression::Function {
     // gpt->setNode(*gptCopy);
 
     // The type of underlying tree node should be antlr4::tree::ExprContext.
-    const std::type_info& type = typeid(*gptCopy->getMetaMutable().tree());
-    if (type != typeid(TestLangParser::ExprContext) &&
-        type != typeid(Utility::TypeMapping<TestLangParser::ExprContext>::type)) {
+    bool isCorrectType = assertMetaType<
+      TestLangParser::ExprContext,
+      Utility::TypeMapping<TestLangParser::ExprContext>::type>(gptCopy.get());
+
+    if (!isCorrectType) {
       return nullptr;
     }
 
@@ -92,12 +123,11 @@ struct Plus: public TransEngine::Expression::Function {
     token->setText(std::to_string(number));
 
     // Create Term from gptCopy.
-    TransEngine::Rewrite::Term<Base::Antlr4Node> rTerm{*gptCopy};
+    RewriteTerm<Base::Antlr4Node> rTerm{*gptCopy};
 
-    env->holdResource(std::move(metaCopy));
     env->holdResource(std::move(gptCopy));
 
-    return std::make_unique<TransEngine::Expression::Term>(rTerm);
+    return std::make_unique<ExprTerm>(rTerm);
   }
 };
 
@@ -107,18 +137,55 @@ struct Plus: public TransEngine::Expression::Function {
 #define WGSL_FUNCTIONS(V) \
   V(RandomIdent)
 
-struct RandomIdent: public TransEngine::Expression::Function {
+using WGSLTree = Base::Antlr4Node;
+using WGSLGpt  = Base::GenericParseTree<WGSLTree>;
 
-  std::unique_ptr<TransEngine::Expression::Value> operator()(
-    TransEngine::Expression::Arguments* args,
-    TransEngine::Rewrite::Environment<Base::Antlr4Node>* env) {
+struct RandomIdent: public ExprFunc {
+  std::unique_ptr<ExprVal> operator()(
+    ExprArg* args,
+    TransEngine::Rewrite::Environment<WGSLTree>* env) {
 
-    TransEngine::Expression::Term* term = dynamic_cast<TransEngine::Expression::Term*>(
-      args->args[0].get());
-    std::unique_ptr<TransEngine::Expression::Value> term_ = term->duplicate();
+    WGSLGpt* gpt = gptFromExprTerm<WGSLTree>(
+      dynamic_cast<ExprTerm*>(args->args[0].get()));
+    std::unique_ptr<WGSLGpt> copy = gpt->clone();
 
-    return term_;
+    bool isCorrectType = assertMetaType<
+      WGSLParser::IdentContext,
+      Utility::TypeMapping<WGSLParser::IdentContext>::type>(copy.get());
+    if (!isCorrectType) {
+      return nullptr;
+    }
+
+    WGSLParser::IdentContext* context =
+      dynamic_cast<WGSLParser::IdentContext*>(
+        copy->getMetaMutable().tree());
+    antlr4::CommonToken* token =
+      dynamic_cast<antlr4::CommonToken*>(
+        context->Ident_pattern_token()->getSymbol());
+    token->setText(gen_random(5));
+
+    RewriteTerm<WGSLTree> term{*copy};
+    env->holdResource(std::move(copy));
+
+    return std::make_unique<ExprTerm>(term);
   }
+
+private:
+std::string gen_random(const int len) {
+    srand((unsigned)time(NULL) * getpid());
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    std::string tmp_s;
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i) {
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+
+    return tmp_s;
+}
 };
 
 

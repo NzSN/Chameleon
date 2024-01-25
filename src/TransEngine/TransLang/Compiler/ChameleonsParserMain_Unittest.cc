@@ -166,6 +166,7 @@ TEST(ChameleonsParserMainTest, MainWithWhere) {
   std::optional<std::string> codes = main();
 
   EXPECT_TRUE(codes.has_value());
+
   EXPECT_TRUE(codes.value() != "fnmain(){a=c+b;}");
 }
 
