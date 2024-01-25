@@ -141,6 +141,8 @@ Antlr4_GenParseTree(std::istream& stream, Entry entry) {
 
 std::string testLangRandomExpr(unsigned numOfOperands);
 
+std::string gen_random(const int len);
+
 
 // Type-Erasure Wrapper
 struct TypeErasureWrapper {

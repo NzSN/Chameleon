@@ -35,4 +35,4 @@ Next == \E s \in Sentence: Parsing(s) \/ ParseDone
 
 Spec == Init /\ [][Next]_<<parser>>
 
-=======================
+========================
