@@ -1,7 +1,7 @@
 --------- MODULE Strategy ---------
-CONSTANTS ParseTree, Rule, Env
+CONSTANTS ParseTree, Rule
 
-Strategy == [Rule \X ParseTree \X Env -> Rule \X ParseTree \X Env]
+Strategies == [Rule \X ParseTree -> Rule \X ParseTree]
 
 MatchStra[rule \in Rule,
           ast  \in ParseTree,
