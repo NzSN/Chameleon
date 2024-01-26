@@ -2,10 +2,8 @@
 CONSTANTS NULL, Rule, ParseTree, RuleConfig
 VARIABLES parser, transformer, state
 
-
 LOCAL INSTANCE TLC
 LOCAL INSTANCE Naturals
-LOCAL INSTANCE TreeSamples WITH NULL <- NULL
 
 Sentence == 1..3
 
