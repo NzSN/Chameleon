@@ -106,6 +106,30 @@ RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, Traverse, ()) {
   RC_ASSERT(node_counter == N);
 }
 
+RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, Depth, ()) {
+  const int N = *rc::gen::inRange(0, 100);
+  if (N == 0) return;
+
+  GenericParseTree<int> root = genTreeWithN(N);
+  size_t count = 0;
+
+  root.traverse([&](GenericParseTree<int>& node) -> bool {
+    if ((node.parent != nullptr)) {
+      if (node.getDepth() == node.parent->getDepth() + 1) {
+        ++count;
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // Root node
+      ++count;
+      return true;
+    }
+  });
+  RC_ASSERT(count == N);
+}
+
 RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
   // Check basic case
   GenericParseTree<int> terminal{1};
@@ -138,12 +162,11 @@ struct Antlr4GPTTests: public ::testing::Test {
     std::function<std::string(unsigned)>
     randomSentences = [&](unsigned numOfOperands) -> std::string {
       constexpr int NumOfOperators = 5;
-      static std::string operators[] ={
+      static std::string operators[] = {
         "+", "-", "*", "/", "\n"
       };
 
       if (numOfOperands == 0) return {};
-
 
       std::string sentence = std::to_string(*rc::gen::inRange(0, 100));
       --numOfOperands;

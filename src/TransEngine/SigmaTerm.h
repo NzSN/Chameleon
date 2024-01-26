@@ -30,6 +30,20 @@ struct Pattern: public TreeLayer<Pattern<T>> {
     // Pattern will build it's own children.
     meta_{meta} {}
 
+  std::unique_ptr<Pattern> clone() const
+    requires requires(T t) {
+      { t.clone() } -> std::same_as<std::unique_ptr<T>>;
+    }
+  {
+    std::unique_ptr<T> metaCopy = meta_.clone();
+    std::unique_ptr<Pattern> copy =
+      this->template mapping<T, Utility::DYNAMIC>(
+        *metaCopy);
+    copy->metaUnique_ = std::move(metaCopy);
+
+    return copy;
+  }
+
   ~Pattern() {}
 
   bool isTermVar() const {
@@ -123,6 +137,9 @@ struct Pattern: public TreeLayer<Pattern<T>> {
   }
 
 private:
+
+  std::unique_ptr<T> metaUnique_;
+
   const T& meta_;
   Children children_;
 };

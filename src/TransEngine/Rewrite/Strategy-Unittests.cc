@@ -226,5 +226,113 @@ TEST_F(StrategySuccess, FailedOnWhereExpr) {
   build(*rule, env);
 }
 
+struct StrategyMulti: public ::testing::Test {
+  StrategyMulti():
+     tCodes{"1+2+3"}, lCodes{"a+b"}, rCodes{"b+a+1"} {}
+
+  void SetUp() override {
+    target = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Node,
+    GPT::TESTLANG>
+    ::parse<GPT, Utility::DYNAMIC>(&tCodes);
+
+    lPattern = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Node,
+    GPT::TESTLANG>
+    ::parse<PatternT, Utility::DYNAMIC>(&lCodes);
+
+    rPattern = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Node,
+    GPT::TESTLANG>
+    ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
+
+    rule = std::make_unique<RuleT>(
+      "R",
+      *lPattern,
+      *rPattern,
+      GPT::TESTLANG);
+  }
+
+  std::istringstream tCodes;
+  std::istringstream lCodes;
+  std::istringstream rCodes;
+
+  std::unique_ptr<GPT> target;
+
+  std::unique_ptr<PatternT> lPattern;
+  std::unique_ptr<PatternT> rPattern;
+
+  std::unique_ptr<RuleT> rule;
+};
+
+TEST_F(StrategyMulti, MultiMatch) {
+  Environment<Node> env{};
+  env.setTargetTerm(target.get());
+
+  ASSERT_TRUE(env.matchTerms().size() == 0);
+
+  MatchMultiStra<Node>{}(*rule, env);
+
+  ASSERT_TRUE(env.matchTerms().size() > 0);
+  ASSERT_TRUE(env.targetTerm() == target.get());
+
+  // Match result assert
+
+  // First match
+  Environment<Node>::MatchTerms::iterator iter =
+    env.matchTerms().begin();
+
+  Base::GenericParseTree<Node>* tree = std::get<0>(*iter);
+  Bindings<Node>& bindings = std::get<1>(*iter);
+  ASSERT_TRUE(tree->getText() == "1+2+3");
+  ASSERT_TRUE(bindings.size() == 2);
+  ASSERT_TRUE(bindings.isBinded("a"));
+  ASSERT_TRUE(bindings["a"].tree.get().getText() == "1+2");
+  ASSERT_TRUE(bindings.isBinded("b"));
+  ASSERT_TRUE(bindings["b"].tree.get().getText() == "3");
+  // Second match
+  Base::GenericParseTree<Node>* tree2 = std::get<0>(*++iter);
+  Bindings<Node>& bindings2 = std::get<1>(*iter);
+  ASSERT_TRUE(tree2->getText() == "1+2");
+  ASSERT_TRUE(bindings2.size() == 2);
+  ASSERT_TRUE(bindings2.isBinded("a"));
+  ASSERT_TRUE(bindings2["a"].tree.get().getText() == "1");
+  ASSERT_TRUE(bindings2.isBinded("b"));
+  ASSERT_TRUE(bindings2["b"].tree.get().getText() == "2");
+}
+
+TEST_F(StrategyMulti, WhereMulti) {
+ Environment<Node> env{};
+  env.setTargetTerm(target.get());
+
+  // Condition expression to fail all
+  // matchs.
+  CondExpr expr{
+    std::make_unique<Expression::Constant>(
+      std::make_unique<Expression::Bool>(false))};
+  rule->appendCond(expr);
+
+  MatchMultiStra<Node>{}(*rule, env);
+  WhereMultiStra<Node>{}(*rule, env);
+
+  ASSERT_TRUE(env.matchTerms().size() == 0);
+}
+
+TEST_F(StrategyMulti, BuildMulti) {
+  Environment<Node> env{};
+  env.setTargetTerm(target.get());
+
+  MatchMultiStra<Node>{}(*rule, env);
+  BuildMultiStra<Node>{}(*rule, env);
+
+  ASSERT_TRUE(target->getText() == "3+2+1+1+1");
+}
+
 } // Rewrite
 } // TransEngine

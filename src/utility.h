@@ -236,14 +236,45 @@ struct Functor {
 
   T a;
 };
+} // Utility
 
 /////////////////////////////////////////////////////////////////////////////
 //                                  CONFIG                                 //
 /////////////////////////////////////////////////////////////////////////////
+namespace Utility {
+
 template<typename T>
 struct TypeMapping {
   using type = T;
 };
+
+
+} // Utility
+
+///////////////////////////////////////////////////////////////////////////////
+//                             Compile Time Stuff                            //
+///////////////////////////////////////////////////////////////////////////////
+namespace Utility {
+
+template<typename T, typename F>
+requires std::invocable<F, T>
+void for_loop(F f) {}
+
+template<typename T, typename F, T arg, T... args>
+requires std::invocable<F, T>
+void for_loop(F f) {
+  f(arg);
+  for_loop<T, F, args...>(f);
+}
+
+template<typename T, template<T t> typename F>
+void for_loop() {}
+
+template<typename T, template<T t> typename F, T arg, T... args>
+void for_loop() {
+  F<arg>();
+  for_loop<T, F, args...>();
+}
 
 } // Utility
 

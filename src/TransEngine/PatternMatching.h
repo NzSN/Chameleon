@@ -78,7 +78,7 @@ template<Base::GPTMeta T,
          MatchAlgor algor = MatchAlgor::NORMAL>
 requires PATTERMATCH_ALGO_NAIVE<algor>
 std::vector<Match<T>>
-doPatternMatching(
+patternMatchingTermCaptureMulti(
   const TransEngine::Pattern<T>& pattern,
   Base::GenericParseTree<T>& subjectTree) {
 
@@ -94,7 +94,7 @@ doPatternMatching(
 
   auto& children = Concepts::NAryTree::getChildren(subjectTree);
   for (auto& child: children) {
-    auto matches_child = doPatternMatching<T>(pattern, *child);
+    auto matches_child = patternMatchingTermCaptureMulti<T>(pattern, *child);
     matchs.insert(matchs.end(), matches_child.begin(), matches_child.end());
   }
 

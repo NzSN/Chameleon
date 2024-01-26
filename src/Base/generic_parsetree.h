@@ -60,7 +60,7 @@ public:
   GenericParseTree(const T& meta):
     parent{nullptr}, metaRef{meta} {}
   GenericParseTree(const GenericParseTree& other):
-    metaRef(other.metaRef) {
+    parent{other.parent}, metaRef(other.metaRef) {
 
     for (auto& c: other.childs_) {
       this->addChild(
@@ -71,7 +71,9 @@ public:
   GenericParseTree& addChild(
     std::unique_ptr<GenericParseTree>&& child) {
     child->parent = this;
+    child->setDepth(this->getDepth() + 1);
     childs_.push_back(std::move(child));
+
     return *childs_.back();
   }
 
@@ -126,7 +128,6 @@ public:
 
 
   // For convenience, GenericParseTree will require that
-  //
   std::string getText() const {
     return const_cast<T&>(metaRef).getText();
   }

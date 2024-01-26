@@ -1,7 +1,8 @@
 
 filegroup(
     name = "concepts_srcs",
-    srcs = ["n_ary_tree.h"],
+    srcs = ["n_ary_tree.h",
+            "concepts.h"],
     visibility = ["//visibility:public"],
 )
 

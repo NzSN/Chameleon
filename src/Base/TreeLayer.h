@@ -10,7 +10,17 @@
 
 template<typename T>
 struct TreeLayer {
+  TreeLayer(): depth_{0} {}
+
   T& addChild(T type);
+
+  void setDepth(size_t depth) {
+    depth_ = depth;
+  }
+
+  size_t getDepth() const {
+    return depth_;
+  }
 
   template<Concepts::NAryTree::NAryTree U,
            Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC>
@@ -28,7 +38,6 @@ struct TreeLayer {
 
     return tree;
   }
-
 
   // Cases that every nodes of generated Treelayer
   // is dynamics, with type std::unique_ptr<T>.
@@ -50,6 +59,8 @@ struct TreeLayer {
     return tree;
   }
 
+private:
+  size_t depth_;
 };
 
 #endif /* TREELAYER_H */

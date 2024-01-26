@@ -161,7 +161,7 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch, ()) {
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
 
-  auto matches = doPatternMatching<Base::Antlr4Node>(
+  auto matches = patternMatchingTermCaptureMulti<Base::Antlr4Node>(
     *t.lowerAsPossible(), t2);
   RC_ASSERT(matches.size() == 2);
   RC_ASSERT(matches[0].matched->getText() == "1+2+3");
@@ -186,10 +186,9 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch_Failed, ()) {
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
 
-  auto matches = doPatternMatching<Base::Antlr4Node>(
+  auto matches = patternMatchingTermCaptureMulti<Base::Antlr4Node>(
     *t.lowerAsPossible(), t2);
   RC_ASSERT(matches.size() == 0);
-  RC_ASSERT(matches[1].matched->getText() == "1+2");
 }
 
 
@@ -218,14 +217,13 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch_Case1, ()) {
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
 
-  auto matches_1 = doPatternMatching<Base::Antlr4Node>(
-    *p1.lowerAsPossible(), t);
+  auto matches_1 = patternMatchingTermCaptureMulti(*p1.lowerAsPossible(), t);
   RC_ASSERT(matches_1.size() == 2);
   RC_ASSERT(matches_1[0].matched->getText() == "3*8");
   RC_ASSERT(matches_1[1].matched->getText() == "2*6");
 
 
-  auto matches_2 = doPatternMatching<Base::Antlr4Node>(
+  auto matches_2 = patternMatchingTermCaptureMulti<Base::Antlr4Node>(
     *p2.lowerAsPossible(), t);
   RC_ASSERT(matches_2.size() == 3);
   RC_ASSERT(matches_2[0].matched->getText() == "1+2+3*8+2*6");

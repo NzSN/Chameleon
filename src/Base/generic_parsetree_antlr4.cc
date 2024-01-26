@@ -112,6 +112,8 @@ bool Antlr4Node::operator==(const Antlr4Node& node) const {
              antlr4::tree::ParseTreeType::TERMINAL) {
     return this->tree_->getText() == node.tree_->getText();
   }
+
+  return false;
 }
 
 SrcRange Antlr4Node::sourceRange() const {
@@ -210,6 +212,8 @@ Antlr4Node* lowerAsPossible_WGSL(Antlr4Node* node) {
       std::unreachable();
     }
   }
+
+  return node;
 }
 
 }

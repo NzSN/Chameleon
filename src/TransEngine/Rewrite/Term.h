@@ -20,6 +20,9 @@ template<Base::GPTMeta T>
 struct Term {
   Term() {}
 
+  Term(std::unique_ptr<Base::GenericParseTree<T>>&& t):
+    dangleTree_{std::move(t)}, tree{dangleTree_} {}
+
   Term(Base::GenericParseTree<T>& t):
     tree{t} {}
   Term(const Term& other):
@@ -45,9 +48,16 @@ struct Term {
     return tree.get() != other.tree.get();
   }
 
+
   using RefWrapperGPT =
     std::reference_wrapper<
     Base::GenericParseTree<T>>;
+
+
+private:
+  std::unique_ptr<Base::GenericParseTree<T>> dangleTree_;
+
+public:
   RefWrapperGPT tree;
 
   // Users should use Term as value.
