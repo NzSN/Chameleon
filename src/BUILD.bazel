@@ -30,6 +30,7 @@ cc_test(
         ],
     copts = [
           "-Isrc",
+          "-DENABLE_GC=false"
           ],
     deps = [
          "@com_google_googletest//:gtest_main",

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <rapidcheck/gtest.h>
 #include <sstream>
+#include <format>
 
 #include "PatternMatching.h"
 #include "SigmaTerm.h"
@@ -141,5 +142,97 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, CaptureTermVar, ()) {
             .get()
             .getText() == "2");
 }
+
+RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch, ()) {
+  std::istringstream codes{"a+a"};
+  std::istringstream codes2{"1+2+3"};
+
+  auto t = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
+
+  auto t2 = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+
+  auto matches = doPatternMatching<Base::Antlr4Node>(
+    *t.lowerAsPossible(), t2);
+  RC_ASSERT(matches.size() == 2);
+  RC_ASSERT(matches[0].matched->getText() == "1+2+3");
+  RC_ASSERT(matches[1].matched->getText() == "1+2");
+}
+
+RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch_Failed, ()) {
+  std::istringstream codes{"a*a"};
+  std::istringstream codes2{"1+2+3"};
+
+  auto t = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
+
+  auto t2 = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+
+  auto matches = doPatternMatching<Base::Antlr4Node>(
+    *t.lowerAsPossible(), t2);
+  RC_ASSERT(matches.size() == 0);
+  RC_ASSERT(matches[1].matched->getText() == "1+2");
+}
+
+
+RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch_Case1, ()) {
+  std::istringstream pattern_1{"a*a"};
+  std::istringstream pattern_2{"a+a"};
+  std::istringstream codes2{"1+2+3*8+2*6"};
+
+  auto p1 = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&pattern_1);
+  auto p2 = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&pattern_2);
+
+  auto t = Parser::Parser<
+    antlr4::tree::ParseTree*,
+    Parser::TestLangExt,
+    Base::Antlr4Node,
+    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+
+  auto matches_1 = doPatternMatching<Base::Antlr4Node>(
+    *p1.lowerAsPossible(), t);
+  RC_ASSERT(matches_1.size() == 2);
+  RC_ASSERT(matches_1[0].matched->getText() == "3*8");
+  RC_ASSERT(matches_1[1].matched->getText() == "2*6");
+
+
+  auto matches_2 = doPatternMatching<Base::Antlr4Node>(
+    *p2.lowerAsPossible(), t);
+  RC_ASSERT(matches_2.size() == 3);
+  RC_ASSERT(matches_2[0].matched->getText() == "1+2+3*8+2*6");
+  RC_ASSERT(matches_2[1].matched->getText() == "1+2+3*8");
+  RC_ASSERT(matches_2[2].matched->getText() == "1+2");
+}
+
+
 
 } // Algorithms

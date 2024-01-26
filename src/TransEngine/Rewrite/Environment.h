@@ -94,6 +94,10 @@ public:
     matchTerm_ = t;
   }
 
+  void addMatchTerms(Base::GenericParseTree<T>* t) {
+    matchTerms_.push_back(t);
+  }
+
   Bindings<T>& bindings() {
     return bindings_;
   }
@@ -121,8 +125,11 @@ public:
 private:
   // Target Term is the Term to be transformed.
   Base::GenericParseTree<T>* targetTerm_;
-  // The parts that match by left side patterns.
+
+  // The part that match by left side patterns.
   Base::GenericParseTree<T>* matchTerm_;
+
+  std::vector<Base::GenericParseTree<T>*> matchTerms_;
 
   Bindings<T> bindings_;
   std::vector<Utility::HeapResourceHolder> resources_;

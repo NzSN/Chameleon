@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <optional>
 #include <cassert>
+#include <ranges>
 
 #include "Concepts/n_ary_tree.h"
 #include "SigmaTerm.h"
@@ -20,14 +21,89 @@ enum MatchAlgor {
   NORMAL
 };
 
+enum MatchMode {
+  FIRST_MATCH,
+  MATCH_ALL,
+};
+
 template<MatchAlgor A>
 concept PATTERMATCH_ALGO_NAIVE = A == MatchAlgor::NORMAL;
+template<MatchMode M>
+concept PATTERNMATCH_MODE_FIRST_MATCH = M == MatchMode::FIRST_MATCH;
+template<MatchMode M>
+concept PATTERNMATCH_MODE_MATCH_ALL = M == MatchMode::MATCH_ALL;
 
 template<Base::GPTMeta T>
-using CaptureTerms = std::unordered_map<
-  typename TransEngine::Pattern<T>::TermID,
-  Base::GenericParseTree<T>*>;
+struct Match {
+  using TermIdent = TransEngine::Rewrite::Bindings<T>::TermIdent;
+  using MatchTerms = std::vector<std::tuple<TermIdent, Term<T>>>;
+  // The tree be matched
+  Base::GenericParseTree<T>* matched;
+  MatchTerms termVars;
+};
 
+template<Base::GPTMeta T>
+bool matching(const TransEngine::Pattern<T>& pattern,
+             const Base::GenericParseTree<T>& subjectTree,
+             typename Match<T>::MatchTerms* termVars) {
+
+  return Concepts::NAryTree::equal<TransEngine::Pattern<T>,
+                              Base::GenericParseTree<T>>
+    (pattern, subjectTree,
+     // Equality predicate
+     [termVars](const TransEngine::Pattern<T>& lhs,
+                 const Base::GenericParseTree<T>& rhs) {
+       if (lhs.isTermVar()) {
+         if (termVars) {
+           termVars->push_back(
+             std::make_tuple(
+               lhs.termID(),
+               Term(const_cast<Base::GenericParseTree<T>&>(rhs)))
+             );
+         }
+         return true;
+       } else {
+         return lhs.getMeta() == rhs.getMeta();
+       }
+     },
+     // Bottom condition, stop when a TermVar is matched.
+     [](const TransEngine::Pattern<T>& lhs,
+        const Base::GenericParseTree<T>& rhs)
+       { return lhs.isTermVar(); }
+      );
+}
+
+template<Base::GPTMeta T,
+         MatchMode mode = MatchMode::MATCH_ALL,
+         MatchAlgor algor = MatchAlgor::NORMAL>
+requires PATTERMATCH_ALGO_NAIVE<algor>
+std::vector<Match<T>>
+doPatternMatching(
+  const TransEngine::Pattern<T>& pattern,
+  Base::GenericParseTree<T>& subjectTree) {
+
+  std::vector<Match<T>> matchs{};
+
+  Match<T> match{&subjectTree};
+  if (matching(pattern, subjectTree, &match.termVars)) {
+    matchs.push_back(match);
+    if (PATTERNMATCH_MODE_FIRST_MATCH<mode>) {
+      return matchs;
+    }
+  }
+
+  auto& children = Concepts::NAryTree::getChildren(subjectTree);
+  for (auto& child: children) {
+    auto matches_child = doPatternMatching<T>(pattern, *child);
+    matchs.insert(matchs.end(), matches_child.begin(), matches_child.end());
+  }
+
+  return matchs;
+}
+
+// FIXME: Remove side effect in matching,
+//        so the argument Environment<T> can also
+//        be removed.
 template<Base::GPTMeta T,
          MatchAlgor algor = MatchAlgor::NORMAL>
 requires PATTERMATCH_ALGO_NAIVE<algor>
@@ -47,11 +123,6 @@ patternMatchingTermCapture(
           pattern, subjectTree,
           [&env](const TransEngine::Pattern<T>& lhs,
                  const Base::GenericParseTree<T>& rhs) {
-
-            TransEngine::Pattern<T>& lhsMut =
-              const_cast<TransEngine::Pattern<T>&>(lhs);
-            Base::GenericParseTree<T>& rhsMut =
-              const_cast<Base::GenericParseTree<T>&>(rhs);
 
             if (lhs.isTermVar()) {
               // Capture Term Variables
@@ -91,7 +162,6 @@ patternMatchingTermCapture(
 
   return std::nullopt;
 }
-
 
 template<Base::GPTMeta T,
          MatchAlgor algor = MatchAlgor::NORMAL>
