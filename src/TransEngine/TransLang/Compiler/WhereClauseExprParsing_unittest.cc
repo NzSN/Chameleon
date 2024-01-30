@@ -41,7 +41,6 @@ TEST_F(WhereClauseTest, introduce) {
     Concepts::NAryTree::search<antlr4::tree::ParseTree>(
       *tree,
       [](antlr4::tree::ParseTree& t) -> bool {
-        std::cout << typeid(t).name() << std::endl;
         if (typeid(t) ==
             typeid(ChameleonsParser::CondExprContext)) {
           return true;

@@ -170,6 +170,28 @@ TEST(ChameleonsParserMainTest, MainWithWhere) {
   EXPECT_TRUE(codes.value() != "fnmain(){a=c+b;}");
 }
 
+TEST(ChameleonsParserMainTest, MainMultiMatch) {
+ std::istringstream target_codes{
+    "fn main() { a = b + c; c = d + e; }" };
+
+  std::istringstream rule_config{
+    "TARGET: WGSL \n"
+    "RULES: \n"
+    "Commutative: {| __a = __b + __c; |} => {| __a = __c + __b; |}"
+    " where __b := RandomIdent(__b);"
+  };
+
+  registerFunctions(Base::GptSupportLang::WGSL);
+
+  ChameleonsMain main(&rule_config, &target_codes);
+
+  std::optional<std::string> codes = main();
+
+  EXPECT_TRUE(codes.has_value());
+  // Don't know how to assert those random result.
+}
+
+
 
 } // Compiler
 } // TransEngine

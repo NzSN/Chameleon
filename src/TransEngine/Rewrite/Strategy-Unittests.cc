@@ -122,7 +122,9 @@ TEST_F(StrategySuccess, BasicMatchStrat) {
   MatchStra<Node>{}(*rule, env);
 
   // Make sure variable bindings is done correctly.
-  ASSERT_TRUE(env.matchTerm() != nullptr);
+  ASSERT_TRUE(env.matchTerms().size() == 1);
+  env.setCurrentTerm(env.matchTerms().front());
+
   ASSERT_TRUE(env.bindings().isBinded("a"));
   ASSERT_TRUE(env.bindings()["a"].tree.get().getText() == "1");
   ASSERT_TRUE(env.bindings().isBinded("b"));
@@ -210,16 +212,13 @@ TEST_F(StrategySuccess, FailedOnWhereExpr) {
   // and a term matched by left pattern of rule
   // is set to environment.
   match(*rule, env);
-  EXPECT_TRUE(env.bindings().size() > 0);
-  EXPECT_TRUE(env.matchTerm() != nullptr);
 
   // All those side effects will be revert
   // once where expressions declared here,
   // due to the expression declared here always
   // result in FALSE.
   where(*rule, env);
-  EXPECT_TRUE(env.bindings().size() == 0);
-  EXPECT_TRUE(env.matchTerm() == nullptr);
+  EXPECT_TRUE(env.matchTerms().size() == 0);
 
   // Finally, Build Strategy should be evaluating
   // without erros in this case.

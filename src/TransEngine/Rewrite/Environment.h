@@ -141,7 +141,7 @@ public:
   using MatchTermCompare =
     std::function<bool(const MatchTerm&, const MatchTerm&)>;
 
-  template<bool isAscending = true>
+template<bool isAscending = true>
   requires Concepts::isAscending<isAscending>
   void sortMatchTerms(MatchTermCompare compare) {
     matchTerms().sort(compare);
@@ -191,6 +191,7 @@ private:
   Bindings<T>  bindingsDefault;
 
   MatchTerms matchTerms_;
+
   MatchTerm* currentTerm_;
 
   std::vector<Utility::HeapResourceHolder> resources_;

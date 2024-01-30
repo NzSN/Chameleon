@@ -35,7 +35,6 @@ inline bool typeCheckUnion(const std::type_info& type) {
 
 template<typename T, typename... EXPECTS>
 bool typeCheckUnion(const std::type_info& type) {
-  std::cout << typeid(T).name() << std::endl;
   return (type == typeid(T)) || typeCheckUnion<EXPECTS...>(type);
 }
 
