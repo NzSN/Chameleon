@@ -21,16 +21,12 @@ namespace Base {
 template<typename T>
 concept Layer = std::equality_comparable<T>;
 
-using CharPosition = std::tuple<int, int>;
-using SrcRange = std::tuple<CharPosition, CharPosition>;
-
 template<typename T>
 concept GPTMappable =
   Layer<T> &&
   Concepts::NAryTree::NAryTree<T> &&
   requires(T t) {
     // Source information
-    { t.sourceRange() } -> std::same_as<SrcRange>;
     { t.getText() } -> std::same_as<std::string>;
     { t.setNode(t) } -> std::same_as<bool>;
 };
@@ -129,10 +125,6 @@ public:
   // For convenience, ParseTree will require that
   std::string getText() const {
     return const_cast<T&>(metaRef).getText();
-  }
-
-  SrcRange getPos() {
-    return metaRef.sourceRange();
   }
 
   const T& getMeta() const {

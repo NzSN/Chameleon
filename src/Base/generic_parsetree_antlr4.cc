@@ -116,22 +116,6 @@ bool Antlr4Node::operator==(const Antlr4Node& node) const {
   return false;
 }
 
-SrcRange Antlr4Node::sourceRange() const {
-  antlr4::ParserRuleContext* rctx =
-    static_cast<antlr4::ParserRuleContext*>(tree_);
-
-  return {
-    // Get position of first token.
-    { rctx->getStart()->getLine(),
-      rctx->getStart()->getCharPositionInLine(),
-    },
-    // Get position of stop token.
-    {
-      rctx->getStop()->getLine(),
-      rctx->getStop()->getCharPositionInLine(),
-    }};
-}
-
 bool Antlr4Node::setNode(const Antlr4Node& other) {
   if (tree_ == nullptr || other.tree_ == nullptr) {
     return false;

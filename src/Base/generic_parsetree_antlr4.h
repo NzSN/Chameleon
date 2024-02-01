@@ -34,8 +34,6 @@ public:
 
   ~Antlr4Node() {}
 
-  SrcRange sourceRange() const;
-
   Children& getChildren() {
     return children_;
   };
