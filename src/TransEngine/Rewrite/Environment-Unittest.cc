@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include <rapidcheck/gtest.h>
 
-#include <utility>
-#include "utility.h"
 #include "Environment.h"
 #include "Base/generic_parsetree.h"
 

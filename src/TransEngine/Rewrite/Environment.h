@@ -5,17 +5,17 @@
 #include <vector>
 #include <unordered_map>
 #include <stdexcept>
-#include <optional>
+#include <list>
 
-#include "Concepts/concepts.h"
+#include "Base/Concepts/concepts.h"
 
 #include "Term.h"
-#include "Base/generic_parsetree_inl.h"
 #include "utility.h"
 #include "Analysis/analyzer.h"
 
 namespace TransEngine {
 namespace Rewrite {
+
 
 // INVARIANT:
 //  1.For all a,b in TermIdent, if both a and b are binded
@@ -165,10 +165,6 @@ template<bool isAscending = true>
 
   const AnalysisData* getAnalysisData() const {
     return analysisData_;
-  }
-
-  void holdResource(Utility::HeapResourceHolder& resource) {
-    resources_.push_back(resource);
   }
 
   void holdResource(Utility::HeapResourceHolder&& resource) {

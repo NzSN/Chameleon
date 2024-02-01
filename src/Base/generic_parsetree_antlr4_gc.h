@@ -1,11 +1,10 @@
 #ifndef GENERIC_PARSETREE_ANTLR4_GC_H_
 #define GENERIC_PARSETREE_ANTLR4_GC_H_
 
-#include <concepts>
-
-#include "config.h"
 #include "utility.h"
 #include "gc_defines.h"
+
+#include "antlr4-runtime.h"
 
 #if ENABLE_GC
 
@@ -24,7 +23,6 @@
     using type = Base::GC::Antlr::LANG::NODE##Context;                \
   };
 
-#include "antlr4-runtime.h"
 
 namespace Base::GC::Antlr {
 

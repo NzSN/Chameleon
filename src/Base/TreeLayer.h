@@ -1,10 +1,7 @@
 #ifndef TREELAYER_H
 #define TREELAYER_H
 
-#include <concepts>
-#include <type_traits>
-
-#include "Concepts/n_ary_tree.h"
+#include "Base/Concepts/n_ary_tree.h"
 
 namespace Base {
 

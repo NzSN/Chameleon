@@ -1,14 +1,8 @@
 #ifndef CONDEXPR_H
 #define CONDEXPR_H
 
-#include <vector>
-
 #include "Environment.h"
-#include "Base/generic_parsetree.h"
 #include "Expr/Expr.h"
-
-#include "TransEngine/SigmaTerm.h"
-
 
 namespace TransEngine {
 namespace Rewrite {

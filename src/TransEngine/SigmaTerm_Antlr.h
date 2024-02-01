@@ -1,12 +1,9 @@
 #ifndef SIGMATERM_ANTLR_H
 #define SIGMATERM_ANTLR_H
 
-#include <format>
-#include <type_traits>
 #include <string>
 #include <typeinfo>
 
-#include "utility.h"
 #include "Base/langs.h"
 #include "Base/generic_parsetree_antlr4.h"
 #include "Misc/testLanguage/TestLangParser.h"

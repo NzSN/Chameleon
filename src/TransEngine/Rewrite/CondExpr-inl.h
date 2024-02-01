@@ -1,7 +1,6 @@
 #ifndef CONDEXPR_INL_H
 #define CONDEXPR_INL_H
 
-#include <stdexcept>
 #include "CondExpr.h"
 
 namespace TransEngine {

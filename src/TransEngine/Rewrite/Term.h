@@ -2,7 +2,6 @@
 #define TERM_H
 
 #include <string>
-#include <functional>
 
 #include "class_prop.h"
 #include "Base/generic_parsetree_inl.h"

@@ -7,13 +7,8 @@
 #include "Base/config.h"
 #include "Base/defines.h"
 
-#include <iostream>
 #include <functional>
-#include <string.h>
-#include <map>
 #include <exception>
-#include <tuple>
-#include <concepts>
 #include <optional>
 
 #include "utility.h"
@@ -174,7 +169,6 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
       }                                                                      \
     }                                                                        \
   }                                                                          \
-  void exit##CTX(PARSER::CTX##Context *ctx) {}
 
 #define COPY_ANTLR4_TERMINAL                                           \
   void visitTerminal(antlr4::tree::TerminalNode *node) {               \

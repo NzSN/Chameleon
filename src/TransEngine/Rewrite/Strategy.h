@@ -1,7 +1,6 @@
 #ifndef STRATEGY_H
 #define STRATEGY_H
 
-#include <type_traits>
 #include <set>
 #include <vector>
 #include "Rule.h"

@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <rapidcheck/gtest.h>
 #include <sstream>
-#include <format>
 
 #include "PatternMatching.h"
 #include "SigmaTerm.h"
@@ -9,8 +8,6 @@
 #include "Base/generic_parsetree_antlr4.h"
 #include "Parser/Parser-inl.h"
 #include "Parser/ExternalParser.h"
-#include "Misc/testLanguage/TestLangLexer.h"
-#include "Misc/testLanguage/TestLangParser.h"
 
 namespace Algorithms {
 
@@ -28,15 +25,11 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MapPatternToGPT, ()) {
   std::istringstream codes2{testExpr};
 
   TransEngine::Pattern<Base::Antlr4Node> t =
-    Parser::Parser<
-      antlr4::tree::ParseTree*, Parser::TestLangExt,
-      Base::Antlr4Node, Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
   Base::ParseTree<Base::Antlr4Node> t2 =
-    Parser::Parser<
-      antlr4::tree::ParseTree*, Parser::TestLangExt,
-      Base::Antlr4Node, Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
 
@@ -49,15 +42,11 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, Matching, ()) {
   std::istringstream codes2{testExpr};
 
   TransEngine::Pattern<Base::Antlr4Node> t =
-     Parser::Parser<
-      antlr4::tree::ParseTree*, Parser::TestLangExt,
-      Base::Antlr4Node, Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+     Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
   Base::ParseTree<Base::Antlr4Node> t2 =
-    Parser::Parser<
-      antlr4::tree::ParseTree*, Parser::TestLangExt,
-      Base::Antlr4Node, Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
   // Try to matching the pattern and the sigmaterm
@@ -71,18 +60,10 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithTermVar, ()) {
   std::istringstream codes{"a+b+1"};
   std::istringstream codes2{"1+1+1"};
 
-  auto t = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
-  auto t2 = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t2 = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
 
@@ -110,18 +91,10 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, CaptureTermVar, ()) {
   std::istringstream codes{"a+b+1"};
   std::istringstream codes2{"1+2+1"};
 
-  auto t = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
-  auto t2 = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t2 = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
 
@@ -147,18 +120,10 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch, ()) {
   std::istringstream codes{"a+a"};
   std::istringstream codes2{"1+2+3"};
 
-  auto t = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
-  auto t2 = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t2 = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
   auto matches = patternMatchingTermCaptureMulti<Base::Antlr4Node>(
@@ -172,18 +137,10 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch_Failed, ()) {
   std::istringstream codes{"a*a"};
   std::istringstream codes2{"1+2+3"};
 
-  auto t = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
-  auto t2 = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t2 = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
   auto matches = patternMatchingTermCaptureMulti<Base::Antlr4Node>(
@@ -197,24 +154,12 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch_Case1, ()) {
   std::istringstream pattern_2{"a+a"};
   std::istringstream codes2{"1+2+3*8+2*6"};
 
-  auto p1 = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto p1 = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&pattern_1);
-  auto p2 = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto p2 = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&pattern_2);
 
-  auto t = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
   auto matches_1 = patternMatchingTermCaptureMulti(*p1.lowerAsPossible(), t);

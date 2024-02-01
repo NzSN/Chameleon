@@ -3,7 +3,6 @@
 
 #include "utility.h"
 
-#include "Base/config.h"
 #include "Base/generic_parsetree_antlr4_gc.h"
 
 #include "TransEngine/Rewrite/Expr/Expr.h"

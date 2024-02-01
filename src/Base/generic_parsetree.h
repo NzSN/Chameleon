@@ -2,15 +2,7 @@
 #ifndef GENERIC_PARSETREE_H
 #define GENERIC_PARSETREE_H
 
-#include <type_traits>
 #include <memory>
-#include <ranges>
-#include <tuple>
-#include <vector>
-#include <concepts>
-#include <functional>
-
-#include "Concepts/n_ary_tree.h"
 #include "TreeLayer.h"
 
 namespace Base {
@@ -120,7 +112,6 @@ public:
 
     return copy;
   }
-
 
   // For convenience, ParseTree will require that
   std::string getText() const {

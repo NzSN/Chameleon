@@ -3,13 +3,11 @@
 #define SIGMATERM_H
 
 #include <memory>
-#include <iostream>
 #include <string>
 
 #include "Base/langs.h"
 #include "Rewrite/Term.h"
-#include "utility.h"
-#include "Concepts/n_ary_tree.h"
+#include "Base/Concepts/n_ary_tree.h"
 #include "Base/generic_parsetree.h"
 
 #include "Base/TreeLayer.h"

@@ -3,16 +3,13 @@
 #include <plog/Formatters/TxtFormatter.h>
 #include <gtest/gtest.h>
 #include <sstream>
-#include <utility>
 
-#include "Base/config.h"
 #include "Base/gc_defines.h"
 
 #include "ChameleonsParserMain-inl.h"
 #include "Base/generic_parsetree_antlr4.h"
 
 #include "Parser/Parser-inl.h"
-#include "Parser/ExternalParser.h"
 
 #include "Registered-Functions.h"
 
@@ -30,7 +27,7 @@ TEST(ChameleonsParserMainTest, Spec) {
   std::istringstream target_codes{"1 + 2 + 3"};
   Base::ParseTree<Adapter> t =
     Parser
-    ::ParserSelect<GPTAntlr4::TESTLANG>
+    ::ParserSelect<GET_LANG_TYPE(TESTLANG)>
     ::parser
     ::parse<GPTAntlr4>(&target_codes);
 
@@ -65,7 +62,7 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   std::istringstream target_codes{"1 + 2 + 3"};
   Base::ParseTree<Adapter> t =
     Parser
-    ::ParserSelect<GPTAntlr4::TESTLANG>
+    ::ParserSelect<GET_LANG_TYPE(TESTLANG)>
     ::parser
     ::parse<GPTAntlr4>(&target_codes);
 
@@ -106,7 +103,7 @@ TEST(ChameleonsParserMainTest, WGSL) {
     "fn main() { a = b + c; }" };
   Base::ParseTree<Adapter> t =
     Parser
-    ::ParserSelect<Base::SUPPORTED_LANGUAGE::WGSL>
+    ::ParserSelect<GET_LANG_TYPE(WGSL)>
     ::parser
     ::parse<GPTAntlr4>(&target_codes);
 

@@ -2,16 +2,14 @@
 #include <rapidcheck/gtest.h>
 #include <memory>
 #include <string>
-#include <istream>
 #include <sstream>
-#include <iostream>
 
 #include "Parser-inl.h"
 #include "Base/generic_parsetree_antlr4.h"
 #include "utility.h"
 #include "Misc/testLanguage/TestLangLexer.h"
 #include "Misc/testLanguage/TestLangParser.h"
-#include "Concepts/n_ary_tree.h"
+#include "Base/Concepts/n_ary_tree.h"
 #include "ExternalParser.h"
 #include "TransEngine/SigmaTerm.h"
 
@@ -26,21 +24,17 @@ struct ParserTests: public ::testing::Test {
   std::string expression;
 };
 
-
 RC_GTEST_FIXTURE_PROP(ParserTests, IsomorphicToExtTree, ()) {
   std::istringstream codes{expression};
 
-  auto t = Parser<
-    antlr4::tree::ParseTree*,
-    TestLangExt,
-    Base::Antlr4Node,
-    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+  auto t =
+    Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<Base::ParseTree<Base::Antlr4Node>,
             Base::DYNAMIC>(&codes);
 
   Base::Antlr4Node nodes {
     Base::ParseTree<Base::Antlr4Node>::TESTLANG,
-    TestLangExt::tree};
+    t->getMetaMutable().tree()};
 
   using GPT = Base::ParseTree<Base::Antlr4Node>;
   auto isEqual = Concepts::NAryTree::equal<GPT, Base::Antlr4Node>(
@@ -59,13 +53,13 @@ RC_GTEST_FIXTURE_PROP(ParserTests, DoubleDynamicAlloc, ()) {
   std::istringstream codes3{"c+b+a"};
 
   std::unique_ptr<TransEngine::Pattern<Base::Antlr4Node>>
-    t = ParserSelect<2>
+    t = ParserSelect<GET_LANG_TYPE(TESTLANG)>
     ::parser
     ::template parse<TransEngine::Pattern<Base::Antlr4Node>,
                      Base::DYNAMIC>(&codes);
 
   std::unique_ptr<TransEngine::Pattern<Base::Antlr4Node>>
-    t2 = ParserSelect<2>
+    t2 = ParserSelect<GET_LANG_TYPE(TESTLANG)>
     ::parser
     ::template parse<TransEngine::Pattern<Base::Antlr4Node>,
                      Base::DYNAMIC>(&codes2);

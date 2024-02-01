@@ -1,12 +1,14 @@
 #ifndef EXTERNALPARSER_H
 #define EXTERNALPARSER_H
 
-#include <string>
-#include <vector>
 #include <memory>
+#include <list>
+#include <map>
 
 #include "Base/langs.h"
 #include "utility.h"
+
+#include "Base/generic_parsetree_antlr4.h"
 
 #include "Misc/testLanguage/TestLangLexer.h"
 #include "Misc/testLanguage/TestLangParser.h"
@@ -16,31 +18,66 @@
 
 namespace Parser {
 
-#define EXTERNAL_PARSER_WRAPPING(                              \
-  NSS, LANG_ENUM, EXT_PARSER, LEXER,                           \
-  PARSER, ENTRY, ENTRY_MEMBER)                                 \
-                                                               \
-  struct EXT_PARSER {                                          \
-    using Entry = PARSER::ENTRY##Context * (PARSER::*)();      \
-    using Env = Utility::Antlr4ParseEnv<LEXER, PARSER, Entry>; \
-    using EnvPtr = std::unique_ptr<Env>;                       \
-                                                               \
-    static antlr4::tree::ParseTree*                            \
-    parse(std::istream *s) {                                   \
-      Entry entry = &PARSER::ENTRY_MEMBER;                     \
-                                                               \
-      std::unique_ptr<Env> env =                               \
-        Utility::Antlr4_GenParseTree<LEXER, PARSER>(           \
-          *s, entry);                                          \
-      tree = env->tree;                                        \
-      envs.push_back(std::move(env));                          \
-      return tree;                                             \
-    }                                                          \
-    inline static antlr4::tree::ParseTree* tree{nullptr};      \
-    inline static std::vector<EnvPtr> envs{};                  \
-  };
+template<Base::isLangType T>
+struct ParseArg;
 
-SUPPORTED_LANG_LIST(EXTERNAL_PARSER_WRAPPING);
+#define DEFINE_PARSE_ARG(__NSS, __LANG, __EXT, __L, __P, __E, __EM) \
+  template<>                                                        \
+  struct ParseArg<GET_LANG_TYPE(__LANG)> {                          \
+    using Entry = __P::__E##Context * (__P::*)();                   \
+    using Env = Utility::Antlr4ParseEnv<__L, __P, Entry>;           \
+    using Lexer = __L;                                              \
+    using Parser = __P;                                             \
+    using Adapter = Base::Antlr4Node;                               \
+    inline static Entry entry = &__P::__EM;                         \
+  };
+SUPPORTED_LANG_LIST(DEFINE_PARSE_ARG);
+
+// Currently, only support Antlr4
+template<Base::isLangType T>
+class ExternalParser {
+public:
+  using Arg = ParseArg<T>;
+  using Env = typename Arg::Env;
+  using Lexer = typename Arg::Lexer;
+  using Parser = typename Arg::Parser;
+
+  [[nodiscard]] static antlr4::tree::ParseTree*
+  parse(std::istream *s) {
+    if (!s) { return nullptr; }
+
+    std::unique_ptr<Env> env = Utility::Antlr4_GenParseTree<Lexer, Parser>(
+        *s, Arg::entry);
+
+    if (!env->tree) { return nullptr; }
+    else {
+      resources.push_back(std::move(env));
+      auto iter = --resources.end();
+      auto key = reinterpret_cast<uintptr_t>(env->tree);
+      resourceTrack[key] = iter;
+
+      return env->tree;
+    }
+  }
+
+  void release(uintptr_t ptr) {
+    if (!resourceTrack.contains(ptr)) {
+      return;
+    } else {
+      auto iter = resourceTrack[ptr];
+      resources.erase(iter);
+      resourceTrack.erase(ptr);
+    }
+  }
+
+  size_t numOfResInTracked() const {
+    return resourceTrack.size();
+  }
+private:
+  using Resources = std::list<Utility::HeapResourceHolder>;
+  inline static Resources resources;
+  inline static std::map<uintptr_t, Resources::const_iterator> resourceTrack;
+};
 
 } // Parser
 

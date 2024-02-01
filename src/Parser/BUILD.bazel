@@ -15,6 +15,7 @@ filegroup(
     name = "parser_unittest_src",
     srcs = [":parser_source",
             ":external_parser_src",
-            "Parser_unittests.cc"],
+            "Parser_unittests.cc",
+            "ExternalParser_Unittests.cc"],
     visibility = ["//visibility:public"]
 )

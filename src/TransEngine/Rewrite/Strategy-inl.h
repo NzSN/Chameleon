@@ -1,7 +1,6 @@
 #ifndef STRATEGY_INL_H
 #define STRATEGY_INL_H
 
-#include <iostream>
 #include <plog/Log.h>
 #include <stdexcept>
 #include <algorithm>
@@ -10,11 +9,8 @@
 #include "utility.h"
 #include "Term.h"
 #include "Strategy.h"
-#include "Parser/Parser-inl.h"
 #include "TransEngine/PatternMatching.h"
 
-#include "Misc/testLanguage/TestLangLexer.h"
-#include "Misc/testLanguage/TestLangParser.h"
 
 namespace TransEngine {
 namespace Rewrite {

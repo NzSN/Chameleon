@@ -7,6 +7,7 @@
 
 namespace Base {
 
+#if ENABLE_GC
 template<typename T,
          Config::Configs gcState = Config::Configs::GC,
          typename ...ARGS>
@@ -16,6 +17,7 @@ T* genericNew(ARGS ...args) {
     Base::GC::Process::gc_heap->GetAllocationHandle(),
     args...);
 }
+#endif
 
 template<typename T,
          Config::Configs gcState = Config::Configs::GC,

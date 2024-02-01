@@ -1,7 +1,6 @@
 #ifndef WHERECLAUSEEXPR_H
 #define WHERECLAUSEEXPR_H
 
-#include "TransEngine/Rewrite/Rule.h"
 #include "TransEngine/Rewrite/Expr/Expr.h"
 #include "../ChameleonsLexer.h"
 #include "../ChameleonsParser.h"

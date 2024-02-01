@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 #include "Strategy-inl.h"
 
-#include <iostream>
 #include <memory>
 #include <sstream>
 #include <Base/generic_parsetree_antlr4.h>
@@ -25,25 +24,13 @@ struct StrategySuccess: public ::testing::Test {
      tCodes{"1+2+1"}, lCodes{"a+b+1"}, rCodes{"b+a+1"} {}
 
   void SetUp() override {
-    target = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+    target = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<GPT, Base::DYNAMIC>(&tCodes);
 
-    lPattern = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+    lPattern = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<PatternT, Base::DYNAMIC>(&lCodes);
 
-    rPattern = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+    rPattern = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<PatternT, Base::DYNAMIC>(&rCodes);
 
     rule = std::make_unique<RuleT>(
@@ -70,25 +57,13 @@ struct StrategyFailed: public ::testing::Test {
      tCodes{"1*2*1"}, lCodes{"a+b+1"}, rCodes{"b+a+1"} {}
 
   void SetUp() override {
-    target = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+    target = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<GPT, Base::DYNAMIC>(&tCodes);
 
-    lPattern = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+    lPattern = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<PatternT, Base::DYNAMIC>(&lCodes);
 
-    rPattern = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+    rPattern = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<PatternT, Base::DYNAMIC>(&rCodes);
 
     rule = std::make_unique<RuleT>(
@@ -175,11 +150,7 @@ TEST_F(StrategySuccess, TRYCASE) {
   Environment<Node> env{};
   env.setTargetTerm(target.get());
 
-  rPattern = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+  rPattern = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<PatternT, Base::DYNAMIC>(&rCodes);
 
   auto* t = const_cast<Node&>(target->getMeta()).tree();
@@ -230,25 +201,13 @@ struct StrategyMulti: public ::testing::Test {
      tCodes{"1+2+3"}, lCodes{"a+b"}, rCodes{"b+a+1"} {}
 
   void SetUp() override {
-    target = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+    target = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<GPT, Base::DYNAMIC>(&tCodes);
 
-    lPattern = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+    lPattern = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<PatternT, Base::DYNAMIC>(&lCodes);
 
-    rPattern = Parser::Parser<
-    antlr4::tree::ParseTree*,
-    Parser::TestLangExt,
-    Node,
-    GPT::TESTLANG>
+    rPattern = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
     ::parse<PatternT, Base::DYNAMIC>(&rCodes);
 
     rule = std::make_unique<RuleT>(

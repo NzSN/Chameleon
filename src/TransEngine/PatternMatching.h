@@ -2,12 +2,10 @@
 #ifndef PATTERNMATCHING_H
 #define PATTERNMATCHING_H
 
-#include <unordered_map>
 #include <optional>
 #include <cassert>
-#include <ranges>
 
-#include "Concepts/n_ary_tree.h"
+#include "Base/Concepts/n_ary_tree.h"
 #include "SigmaTerm.h"
 
 #include "Rewrite/Environment.h"

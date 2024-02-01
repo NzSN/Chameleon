@@ -6,11 +6,11 @@
 #include "Base/config.h"
 
 #include "Base/generic_parsetree_antlr4.h"
-#include "Analysis/analyzer.h"
 #include "GenericTypes.h"
 
-#include "TransEngine/Rewrite/Strategy-inl.h"
 #include "Base/gc_defines.h"
+
+#include "Parser/Parser-inl.h"
 
 namespace TransEngine {
 namespace Compiler {
@@ -87,9 +87,9 @@ public:
     std::optional<std::string> transedProg = ([&] {
       switch (lang) {
       case SUPPORTED_LANG::TESTLANG:
-        return transform<SUPPORTED_LANG::TESTLANG>(program.get());
+        return transform<GET_LANG_TYPE(TESTLANG)>(program.get());
       case SUPPORTED_LANG::WGSL:
-        return transform<SUPPORTED_LANG::WGSL>(program.get());
+        return transform<GET_LANG_TYPE(WGSL)>(program.get());
       default:
         std::unreachable();
       }
@@ -99,32 +99,19 @@ public:
   }
 
 private:
-  template<SUPPORTED_LANG lang = SUPPORTED_LANG::TESTLANG>
-  requires Base::isTestLang<lang>
+  template<Base::isLangType L>
   Base::GptGeneric parse(std::istream* s) {
     return
       Parser
-      ::ParserSelect<Base::SUPPORTED_LANGUAGE::TESTLANG>
+      ::ParserSelect<L>
       ::parser
-      ::parse<Base::ParseTree<Base::Antlr4Node>>(s);
+      ::template parse<Base::ParseTree<Base::Antlr4Node>>(s);
   }
 
-  template<SUPPORTED_LANG lang = SUPPORTED_LANG::TESTLANG>
-  requires Base::isWGSL<lang>
-  Base::GptGeneric parse(std::istream* s) {
-    return
-      Parser
-      ::ParserSelect<Base::SUPPORTED_LANGUAGE::WGSL>
-      ::parser
-      ::parse<Base::ParseTree<Base::Antlr4Node>>(s);
-  }
-
-  template<SUPPORTED_LANG lang = SUPPORTED_LANG::TESTLANG>
-  requires Base::isTestLang<lang> ||
-           Base::isWGSL<lang>
+  template<Base::isLangType L>
   std::optional<std::string> transform(Program* program) {
     using Tree = Base::ParseTree<Base::Antlr4Node>;
-    Base::GptGeneric tree = parse<lang>(targetCodes_);
+    Base::GptGeneric tree = parse<L>(targetCodes_);
 
     Tree t = std::get<Tree>(tree);
 

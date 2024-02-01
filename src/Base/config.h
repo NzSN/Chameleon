@@ -1,8 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "gc_defines.h"
-
 // Enable GC by default
 #ifndef ENABLE_GC
 #define ENABLE_GC true

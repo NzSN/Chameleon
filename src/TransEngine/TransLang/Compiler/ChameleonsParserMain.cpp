@@ -2,18 +2,14 @@
 
 #include "Base/langs.h"
 #include <utility>
-#include <type_traits>
 #include <optional>
-#include <ranges>
 #include <unordered_map>
 #include <stdexcept>
 
-#include "TransEngine/Rewrite/Environment.h"
 #include "TransEngine/Rewrite/Rule.h"
 #include "ChameleonsParserMain-inl.h"
 
 #include "WhereClauseExprParsing-inl.h"
-#include "Registered-Functions.h"
 
 namespace TransEngine {
 namespace Compiler {
@@ -127,7 +123,7 @@ bool createWhereExpressions(
   return true;
 }
 
-template<Base::Layer T, int lang>
+template<Base::Layer T, Base::isLangType L>
 std::optional<Rewrite::Rule<T>>
 strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
 
@@ -137,14 +133,14 @@ strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
   std::istringstream ls{rCtx->sourcePattern()->getText()};
   std::unique_ptr<Pattern<T>> leftSide =
     Parser
-    ::ParserSelect<lang>
+    ::ParserSelect<L>
     ::parser
     ::template parse<Pattern<T>, Base::DYNAMIC>(&ls);
 
   std::istringstream rs{rCtx->targetPattern()->getText()};
   std::unique_ptr<Pattern<T>> rightSide =
      Parser
-    ::ParserSelect<lang>
+    ::ParserSelect<L>
     ::parser
     ::template parse<Pattern<T>, Base::DYNAMIC>(&rs);
 
@@ -152,7 +148,7 @@ strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
     rCtx->IDENTIFIER()->getText(),
     std::move(leftSide),
     std::move(rightSide),
-    lang};
+    L::typeEnum};
 
   PLOG_DEBUG << "Parsing Where Clause...";
 
@@ -178,7 +174,7 @@ strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
   return rule;
 }
 
-template<Base::Layer T, int lang>
+template<Base::Layer T, Base::isLangType L>
 std::optional<Rewrite::StrategySeq<T>>
 strategiesFromRules(ChameleonsParser::RewriteRulesContext* rCtx) {
 
@@ -187,7 +183,7 @@ strategiesFromRules(ChameleonsParser::RewriteRulesContext* rCtx) {
   }
 
   // Generate Rule from RewriteRuleContext
-  return strategyFromRule<T, lang>(rCtx->rewriteRule())
+  return strategyFromRule<T, L>(rCtx->rewriteRule())
     // Then break the rule down into strategies
     .transform(
       [](auto&& rule) {
@@ -195,7 +191,7 @@ strategiesFromRules(ChameleonsParser::RewriteRulesContext* rCtx) {
       })
     // Parsing remaining rewrite rules
     .and_then([&](auto&& seq) -> std::optional<Rewrite::StrategySeq<T>> {
-      return strategiesFromRules<T, lang>(rCtx->rewriteRules())
+      return strategiesFromRules<T, L>(rCtx->rewriteRules())
         .transform(
           [&](auto&& seq_) {
             seq.insert(seq.end(),
@@ -223,7 +219,7 @@ programFromRules(ChameleonsParser::RewriteRulesContext* rCtx,
 #define LANGS_CASES(                                             \
   NSS, LANG_ENUM, EXT, LEXER, PARSER, ENTRY, ENTRY_MEMBER)       \
   case LANGS::LANG_ENUM: {                                        \
-    return strategiesFromRules<Adapter, LANGS::LANG_ENUM>(rCtx)   \
+    return strategiesFromRules<Adapter, GET_LANG_TYPE(LANG_ENUM)>(rCtx)   \
       .transform([lang](auto&& stra) {                           \
         return std::make_unique<Program>(                        \
           lang,                                                  \

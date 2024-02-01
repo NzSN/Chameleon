@@ -3,7 +3,6 @@
 
 #include <plog/Log.h>
 #include <vector>
-#include <type_traits>
 #include "Refl.h"
 #include "WhereClauseExprParsing.h"
 

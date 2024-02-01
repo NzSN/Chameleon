@@ -3,16 +3,10 @@
 
 #include <vector>
 #include <tuple>
-#include <optional>
-#include <concepts>
-#include <ranges>
-#include <concepts>
 #include <functional>
 #include <type_traits>
 
-#include "Base/langs.h"
 #include "antlr4-runtime.h"
-
 #include "Base/config.h"
 
 namespace Utility {
@@ -155,9 +149,6 @@ private:
 // Wrapper to hold all heap allocated resources that
 // used by Environment.
 struct HeapResourceHolder: public Utility::TypeErasureWrapper {
-  template<typename T>
-  HeapResourceHolder(T& t):
-    Utility::TypeErasureWrapper{t} {}
   template<typename T>
   HeapResourceHolder(T&& t):
     Utility::TypeErasureWrapper{std::move(t)} {}

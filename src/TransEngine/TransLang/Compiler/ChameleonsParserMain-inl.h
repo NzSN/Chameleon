@@ -4,11 +4,9 @@
 #include <memory>
 
 #include "ChameleonsParserMain.h"
-#include "../ChameleonsLexer.h"
 #include "../ChameleonsParser.h"
 #include "../ChameleonsParserBaseListener.h"
 
-#include "TransEngine/Rewrite/Environment.h"
 
 namespace TransEngine {
 namespace Compiler {

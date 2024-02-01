@@ -1,9 +1,7 @@
 #include <gtest/gtest.h>
 #include <rapidcheck/gtest.h>
-#include <iostream>
 
 #include "Term.h"
-#include "Base/generic_parsetree_inl.h"
 
 namespace TransEngine {
 namespace Rewrite {

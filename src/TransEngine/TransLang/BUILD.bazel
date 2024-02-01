@@ -24,7 +24,7 @@ cc_test(
     srcs = [":chameleons_parser_srcs",
             "ChameleonsParser_unittests.cc",
             "//src:utility_src",
-            "//src/Concepts:concepts_srcs",
+            "//src/Base/Concepts:concepts_srcs",
             "//src/Misc/testLanguage:testLang_parser_srcs",
             "//src/Base:base_srcs"],
     copts = [
@@ -43,7 +43,7 @@ cc_test(
     srcs = [":chameleons_parser_srcs",
             ":chameleons_compiler_srcs",
 
-            "//src/Concepts:concepts_srcs",
+            "//src/Base/Concepts:concepts_srcs",
             "//src/Misc/testLanguage:testLang_parser_srcs",
             "//src/Analysis:analyzer_src",
             "//src/TransEngine/Rewrite:rewrite_srcs",
@@ -76,7 +76,7 @@ cc_test(
             "//src:utility_src",
             "//src/TransEngine/Rewrite:rewrite_srcs",
             "//src/Base:base_srcs",
-            "//src/Concepts:concepts_srcs",
+            "//src/Base/Concepts:concepts_srcs",
             "//src/Misc/testLanguage:testLang_parser_srcs",
             "//src/TransEngine:pattern_matching",
             "//src/Analysis:analyzer_src",

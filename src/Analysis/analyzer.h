@@ -6,12 +6,11 @@
 #include <functional>
 #include <vector>
 #include <map>
-#include <numeric>
 #include <cstdlib>
 #include <functional>
 #include <algorithm>
 #include "plog/Log.h"
-#include "Concepts/n_ary_tree.h"
+#include "Base/Concepts/n_ary_tree.h"
 
 
 namespace Analyzer {

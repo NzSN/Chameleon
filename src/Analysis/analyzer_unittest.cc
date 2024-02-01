@@ -162,11 +162,7 @@ struct AnalyzerTests: public ::testing::Test {
     expression = Utility::testLangRandomExpr(numOfOperand);
     std::istringstream codes{expression};
 
-    parsetree = Parser::Parser<
-      antlr4::tree::ParseTree*,
-      Parser::TestLangExt,
-      Base::Antlr4Node,
-      Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    parsetree = Parser::Parser<GET_LANG_TYPE(TESTLANG)>
       ::parse<Base::ParseTree<Base::Antlr4Node>,
               Base::DYNAMIC>(&codes);
   }

@@ -1,12 +1,9 @@
 #include <gtest/gtest.h>
 #include <rapidcheck/gtest.h>
-#include <typeinfo>
 #include <plog/Log.h>
 #include <plog/Initializers/ConsoleInitializer.h>
 #include <plog/Formatters/TxtFormatter.h>
-#include "generic_parsetree_inl.h"
 #include "generic_parsetree_antlr4.h"
-#include <iostream>
 #include <sstream>
 #include <vector>
 #include <optional>
@@ -18,8 +15,7 @@
 #include "Parser/Parser-inl.h"
 
 #include "utility.h"
-#include "misc/Interval.h"
-#include "Concepts/n_ary_tree.h"
+#include "Base/Concepts/n_ary_tree.h"
 
 namespace Base {
 
@@ -260,7 +256,7 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToParseTree, ()) {
 RC_GTEST_PROP(ParseTreeTest_NAry, Clone, ()) {
   std::istringstream codes{"a+1+2"};
   ParseTree<Antlr4Node> t =
-      Parser::ParserSelect<ParseTree<Antlr4Node>::TESTLANG>
+      Parser::ParserSelect<GET_LANG_TYPE(TESTLANG)>
       ::parser::parse<ParseTree<Antlr4Node>>(&codes);
 
   Antlr4Node::Node copy_meta = t.getMeta().clone();
@@ -273,7 +269,7 @@ RC_GTEST_PROP(ParseTreeTest_NAry, Clone, ()) {
 RC_GTEST_PROP(ParseTreeTest_NAry, SetNode, ()) {
   std::istringstream codes{"a+1+2"};
   ParseTree<Antlr4Node> t =
-    Parser::ParserSelect<ParseTree<Antlr4Node>::TESTLANG>
+    Parser::ParserSelect<GET_LANG_TYPE(TESTLANG)>
     ::parser::parse<ParseTree<Antlr4Node>>(&codes);
 
 
