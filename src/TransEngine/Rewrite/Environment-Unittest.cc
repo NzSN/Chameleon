@@ -20,7 +20,7 @@ TEST_F(BindingsTests, Basics) {
   Bindings<int> binds;
 
   // Add bindins
-  auto t = Base::GenericParseTree<int>(1);
+  auto t = Base::ParseTree<int>(1);
   Term<int> term{t};
   binds.bind("id1", term);
 
@@ -35,9 +35,9 @@ TEST(EnvironmentTests, MatchTermsSorted) {
   Environment<int> env;
 
   int a = 1, b = 2, c = 3;
-  Base::GenericParseTree<int> one{a};
-  Base::GenericParseTree<int> two{b};
-  Base::GenericParseTree<int> three{c};
+  Base::ParseTree<int> one{a};
+  Base::ParseTree<int> two{b};
+  Base::ParseTree<int> three{c};
   env.addMatchTerms(Environment<int>::MatchTerm{
       &three, Bindings<int>()});
   env.addMatchTerms(Environment<int>::MatchTerm{

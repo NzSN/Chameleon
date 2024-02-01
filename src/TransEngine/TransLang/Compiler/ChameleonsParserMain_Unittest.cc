@@ -20,7 +20,7 @@ namespace TransEngine {
 namespace Compiler {
 
 using Meta = Base::Antlr4Node;
-using GPTAntlr4 = Base::GenericParseTree<Meta>;
+using GPTAntlr4 = Base::ParseTree<Meta>;
 
 TEST(ChameleonsParserMainTest, Spec) {
   Compiler compiler;
@@ -28,7 +28,7 @@ TEST(ChameleonsParserMainTest, Spec) {
   Base::GC::GC gc{};
 
   std::istringstream target_codes{"1 + 2 + 3"};
-  Base::GenericParseTree<Adapter> t =
+  Base::ParseTree<Adapter> t =
     Parser
     ::ParserSelect<GPTAntlr4::TESTLANG>
     ::parser
@@ -63,7 +63,7 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   Base::GC::GC gc{};
 
   std::istringstream target_codes{"1 + 2 + 3"};
-  Base::GenericParseTree<Adapter> t =
+  Base::ParseTree<Adapter> t =
     Parser
     ::ParserSelect<GPTAntlr4::TESTLANG>
     ::parser
@@ -104,7 +104,7 @@ TEST(ChameleonsParserMainTest, WGSL) {
 
   std::istringstream target_codes{
     "fn main() { a = b + c; }" };
-  Base::GenericParseTree<Adapter> t =
+  Base::ParseTree<Adapter> t =
     Parser
     ::ParserSelect<Base::SUPPORTED_LANGUAGE::WGSL>
     ::parser

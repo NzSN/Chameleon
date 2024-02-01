@@ -31,7 +31,7 @@ concept NodeAdapter =
 // into ParseTree. Those tree unable to directly
 // used by Analyzer and Transformer in Chameleons
 // so will be wrap by NodeAdapter and then mapping to
-// GenericParseTree.
+// ParseTree.
 template<typename ExtNode,
          ExtParser<ExtNode> P,
          NodeAdapter<ExtNode> A,

@@ -547,8 +547,8 @@ public:
 
     // First, check the validity of assignment.
     if (!env->bindings().isBinded(termRef_l->ID())) {
-      // The Term is not binded with an GenericParseTree,
-      // a term without binding with GenericParseTree is not
+      // The Term is not binded with an ParseTree,
+      // a term without binding with ParseTree is not
       // valid in assignment due to the semantic of assignment.
       return nullptr;
     } else {

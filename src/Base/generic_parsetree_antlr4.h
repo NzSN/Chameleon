@@ -17,7 +17,7 @@ namespace Base {
 // an adapter is required.
 //
 // With Antlr4Node, user able to spawn a
-// GenericParseTree from Antlr4Node by calling to
+// ParseTree from Antlr4Node by calling to
 // method Antlr4GPT::mapping().
 class Antlr4Node {
 public:
@@ -68,7 +68,7 @@ private:
 
   Children children_;
 };
-using Antlr4GPT = GenericParseTree<Antlr4Node>;
+using Antlr4GPT = ParseTree<Antlr4Node>;
 
 } // Base
 

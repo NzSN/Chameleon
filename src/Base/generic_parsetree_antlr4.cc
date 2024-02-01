@@ -24,11 +24,11 @@ struct FAILED_TO_CLONE_ANTLR_NODE: public std::exception {
   V(WGSL, WGSL)
 
 #define ANTLR_COPY_LANG_SPECIFIC(NAMESPACE, LANG_ENUM)         \
-  case GenericParseTree<Antlr4Node>::LANG_ENUM: {              \
+  case ParseTree<Antlr4Node>::LANG_ENUM: {              \
     antlr4::tree::ParseTree* copy =                            \
       NAMESPACE::clone(const_cast<Antlr4Node*>(this)->tree()); \
     return std::make_unique<Antlr4Node>(                       \
-      GenericParseTree<Antlr4Node>::LANG_ENUM,                 \
+      ParseTree<Antlr4Node>::LANG_ENUM,                 \
       copy);                                                   \
   }
 

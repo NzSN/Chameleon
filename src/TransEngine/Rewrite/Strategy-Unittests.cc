@@ -18,7 +18,7 @@ namespace Rewrite {
 using Node = Base::Antlr4Node;
 using RuleT = Rule<Node>;
 using PatternT = Pattern<Node>;
-using GPT = Base::GenericParseTree<Node>;
+using GPT = Base::ParseTree<Node>;
 
 struct StrategySuccess: public ::testing::Test {
   StrategySuccess():
@@ -287,7 +287,7 @@ TEST_F(StrategyMulti, MultiMatch) {
   Environment<Node>::MatchTerms::iterator iter =
     env.matchTerms().begin();
 
-  Base::GenericParseTree<Node>* tree = std::get<0>(*iter);
+  Base::ParseTree<Node>* tree = std::get<0>(*iter);
   Bindings<Node>& bindings = std::get<1>(*iter);
   ASSERT_TRUE(tree->getText() == "1+2+3");
   ASSERT_TRUE(bindings.size() == 2);
@@ -296,7 +296,7 @@ TEST_F(StrategyMulti, MultiMatch) {
   ASSERT_TRUE(bindings.isBinded("b"));
   ASSERT_TRUE(bindings["b"].tree.get().getText() == "3");
   // Second match
-  Base::GenericParseTree<Node>* tree2 = std::get<0>(*++iter);
+  Base::ParseTree<Node>* tree2 = std::get<0>(*++iter);
   Bindings<Node>& bindings2 = std::get<1>(*iter);
   ASSERT_TRUE(tree2->getText() == "1+2");
   ASSERT_TRUE(bindings2.size() == 2);

@@ -30,14 +30,14 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MapPatternToGPT, ()) {
   TransEngine::Pattern<Base::Antlr4Node> t =
     Parser::Parser<
       antlr4::tree::ParseTree*, Parser::TestLangExt,
-      Base::Antlr4Node, Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+      Base::Antlr4Node, Base::ParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
-  Base::GenericParseTree<Base::Antlr4Node> t2 =
+  Base::ParseTree<Base::Antlr4Node> t2 =
     Parser::Parser<
       antlr4::tree::ParseTree*, Parser::TestLangExt,
-      Base::Antlr4Node, Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+      Base::Antlr4Node, Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
 
   // Assert that a pattern from a concrete parsetree
@@ -51,14 +51,14 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, Matching, ()) {
   TransEngine::Pattern<Base::Antlr4Node> t =
      Parser::Parser<
       antlr4::tree::ParseTree*, Parser::TestLangExt,
-      Base::Antlr4Node, Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+      Base::Antlr4Node, Base::ParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
-  Base::GenericParseTree<Base::Antlr4Node> t2 =
+  Base::ParseTree<Base::Antlr4Node> t2 =
     Parser::Parser<
       antlr4::tree::ParseTree*, Parser::TestLangExt,
-      Base::Antlr4Node, Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+      Base::Antlr4Node, Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
   // Try to matching the pattern and the sigmaterm
   RC_ASSERT(patternMatching<Base::Antlr4Node>(
@@ -75,15 +75,15 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, WithTermVar, ()) {
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
   auto t2 = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
 
   std::vector<std::unique_ptr<TransEngine::Pattern<Base::Antlr4Node>>>&
@@ -114,15 +114,15 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, CaptureTermVar, ()) {
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
   auto t2 = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
 
   Environment<Base::Antlr4Node> env;
@@ -151,15 +151,15 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch, ()) {
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
   auto t2 = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
   auto matches = patternMatchingTermCaptureMulti<Base::Antlr4Node>(
     *t.lowerAsPossible(), t2);
@@ -176,15 +176,15 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch_Failed, ()) {
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&codes);
 
   auto t2 = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
   auto matches = patternMatchingTermCaptureMulti<Base::Antlr4Node>(
     *t.lowerAsPossible(), t2);
@@ -201,21 +201,21 @@ RC_GTEST_FIXTURE_PROP(PatternMatchingTests, MultipleMatch_Case1, ()) {
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&pattern_1);
   auto p2 = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<TransEngine::Pattern<Base::Antlr4Node>>(&pattern_2);
 
   auto t = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse<Base::GenericParseTree<Base::Antlr4Node>>(&codes2);
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::ParseTree<Base::Antlr4Node>>(&codes2);
 
   auto matches_1 = patternMatchingTermCaptureMulti(*p1.lowerAsPossible(), t);
   RC_ASSERT(matches_1.size() == 2);

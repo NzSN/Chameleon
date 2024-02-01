@@ -7,8 +7,8 @@
 
 namespace Base {
 
-using GenericParseTreeT_DYNAMIC = std::variant<
-  std::unique_ptr<GenericParseTree<Antlr4Node>>
+using ParseTreeT_DYNAMIC = std::variant<
+  std::unique_ptr<ParseTree<Antlr4Node>>
   >;
 
 } // Base

@@ -11,7 +11,7 @@ namespace Rewrite {
 struct TermTests: public ::testing::Test {
   TermTests(): tree{1} {}
 
-  Base::GenericParseTree<int> tree;
+  Base::ParseTree<int> tree;
 };
 
 TEST_F(TermTests, Assignable) {

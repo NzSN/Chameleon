@@ -20,7 +20,7 @@ namespace TransEngine {
 namespace Rewrite {
 
 // PRECONDITION:
-//   1.*Environment<T>::targetTerm_ in GenericParseTree<T>
+//   1.*Environment<T>::targetTerm_ in ParseTree<T>
 //   2.Cardinality of Environment<T>::bindings_ is 0.
 // POSTCONDITION(success):
 //   1.Environment<T>::matchTerm_ != nullptr
@@ -166,7 +166,7 @@ struct BuildMultiStra: public Strategy<T> {
         // Replace the matched tree with the tree the
         // just builded.
         env.matchTerm()->setNode(
-          *Base::GenericParseTree<T>
+          *Base::ParseTree<T>
            ::template mapping<T, Base::DYNAMIC>(copy->getMetaMut()));
       } else {
         // The entire tree is required to be

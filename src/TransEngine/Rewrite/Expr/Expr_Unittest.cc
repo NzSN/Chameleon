@@ -178,7 +178,7 @@ struct Antlr4ParseTreeStub: public antlr4::tree::ParseTree {
 TEST(ExpressionTest, TermRef) {
   Antlr4ParseTreeStub stub{"123"};
   Base::Antlr4Node node{2, &stub};
-  Base::GenericParseTree<Base::Antlr4Node> tree{node};
+  Base::ParseTree<Base::Antlr4Node> tree{node};
   Rewrite::Term<Base::Antlr4Node> t{tree};
 
   // Create a term
@@ -287,7 +287,7 @@ TEST(ExpressionTest, Assignment) {
   // which should be a TermRef expression.
   Antlr4ParseTreeStub stub{"123"};
   Base::Antlr4Node node{2, &stub};
-  Base::GenericParseTree<Base::Antlr4Node> tree{node};
+  Base::ParseTree<Base::Antlr4Node> tree{node};
   Rewrite::Term<Base::Antlr4Node> t{tree};
   env.bindings().bind("ID", t);
 
@@ -299,7 +299,7 @@ TEST(ExpressionTest, Assignment) {
   // a Term Value.
   Antlr4ParseTreeStub stub2{"1234"};
   Base::Antlr4Node node2{2, &stub2};
-  Base::GenericParseTree<Base::Antlr4Node> tree2{node2};
+  Base::ParseTree<Base::Antlr4Node> tree2{node2};
   Rewrite::Term<Base::Antlr4Node> t2{tree2};
 
   std::vector<std::unique_ptr<Expr>> args;

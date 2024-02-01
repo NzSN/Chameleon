@@ -37,10 +37,10 @@ concept GPTMappable =
 
 
 /////////////////////////////////////////////////////////////////////////////
-//                             GenericParseTree                            //
+//                             ParseTree                            //
 /////////////////////////////////////////////////////////////////////////////
 template<Layer T>
-class GenericParseTree: public TreeLayer<GenericParseTree<T>> {
+class ParseTree: public TreeLayer<ParseTree<T>> {
 public:
   enum SUPPORTED_LANGUAGE {
     MINIMUM_LANG_INDEX = 0,
@@ -52,23 +52,23 @@ public:
     NUM_OF_LANG_SUPPORTED,
   };
 
-  using Childs = std::vector<std::unique_ptr<GenericParseTree>>;
+  using Childs = std::vector<std::unique_ptr<ParseTree>>;
   using GPTIterator = Childs::iterator;
 
   // Terminal
-  GenericParseTree(const T& meta):
+  ParseTree(const T& meta):
     parent{nullptr}, metaRef{meta} {}
-  GenericParseTree(const GenericParseTree& other):
+  ParseTree(const ParseTree& other):
     parent{other.parent}, metaRef(other.metaRef) {
 
     for (auto& c: other.childs_) {
       this->addChild(
-        std::make_unique<GenericParseTree>(*c));
+        std::make_unique<ParseTree>(*c));
     }
   }
 
-  GenericParseTree& addChild(
-    std::unique_ptr<GenericParseTree>&& child) {
+  ParseTree& addChild(
+    std::unique_ptr<ParseTree>&& child) {
     child->parent = this;
     child->setDepth(this->getDepth() + 1);
     childs_.push_back(std::move(child));
@@ -76,13 +76,13 @@ public:
     return *childs_.back();
   }
 
-  GenericParseTree* parent;
+  ParseTree* parent;
 
   Childs& getChildren() {
     return childs_;
   };
 
-  std::optional<GenericParseTree*> getChild(int i) {
+  std::optional<ParseTree*> getChild(int i) {
     if (childs_.size() < i) {
       return std::nullopt;
     } else {
@@ -90,18 +90,18 @@ public:
     }
   }
 
-  bool operator==(const GenericParseTree& other) const;
+  bool operator==(const ParseTree& other) const;
 
-  GenericParseTree* select(
-    std::function<bool(GenericParseTree&)> predicate);
+  ParseTree* select(
+    std::function<bool(ParseTree&)> predicate);
 
   void traverse(
-    std::function<bool(GenericParseTree&)> proc);
+    std::function<bool(ParseTree&)> proc);
 
   // This procedure require modification to
   // underlaying tree.
   // Only when T is NAryTree with setNode().
-  bool setNode(const GenericParseTree& other)
+  bool setNode(const ParseTree& other)
     requires Concepts::NAryTree::NAryTree<T> &&
              requires(T t, const T arg) {
                { t.setNode(arg) } -> std::convertible_to<bool>;
@@ -110,14 +110,14 @@ public:
     return const_cast<T&>(metaRef).setNode(other.getMeta());
   }
 
-  std::unique_ptr<GenericParseTree> clone() const
+  std::unique_ptr<ParseTree> clone() const
     requires requires(T t) {
       { t.clone() } -> std::same_as<std::unique_ptr<T>>;
     }
   {
     std::unique_ptr<T> metaCopy = metaRef.clone();
 
-    std::unique_ptr<GenericParseTree> copy =
+    std::unique_ptr<ParseTree> copy =
       this->template mapping<T, Base::DYNAMIC>(
         *metaCopy);
     copy->metaUnique_ = std::move(metaCopy);
@@ -126,7 +126,7 @@ public:
   }
 
 
-  // For convenience, GenericParseTree will require that
+  // For convenience, ParseTree will require that
   std::string getText() const {
     return const_cast<T&>(metaRef).getText();
   }
@@ -144,7 +144,7 @@ public:
   }
 
 private:
-  friend struct GenericParseTreeTest;
+  friend struct ParseTreeTest;
 
   const T& metaRef;
 

@@ -8,14 +8,14 @@
 namespace Base {
 
 template<Layer T>
-bool GenericParseTree<T>::operator==(
-  const GenericParseTree& other) const {
-  // GenericParseTree is recursive type which requrie that
+bool ParseTree<T>::operator==(
+  const ParseTree& other) const {
+  // ParseTree is recursive type which requrie that
   // equality check should be recursive too.
-  std::function<bool(const GenericParseTree& l,
-    const GenericParseTree& r)>
+  std::function<bool(const ParseTree& l,
+    const ParseTree& r)>
     equality_check = [&equality_check](
-      const GenericParseTree& l, const GenericParseTree& r) {
+      const ParseTree& l, const ParseTree& r) {
       // Check node type
       if (!(l.metaRef == r.metaRef)) {
         return false;
@@ -30,25 +30,25 @@ bool GenericParseTree<T>::operator==(
           return l.metaRef == r.metaRef;
         }
 
-        std::vector<GenericParseTree*> l_children(l.childs_.size());
-        std::vector<GenericParseTree*> r_children(r.childs_.size());
+        std::vector<ParseTree*> l_children(l.childs_.size());
+        std::vector<ParseTree*> r_children(r.childs_.size());
 
         std::transform(l.childs_.begin(),
                        l.childs_.end(),
                        l_children.begin(),
-                       [](const std::unique_ptr<GenericParseTree>& c) {
+                       [](const std::unique_ptr<ParseTree>& c) {
                          return c.get();
                        });
 
         std::transform(r.childs_.begin(),
                        r.childs_.end(),
                        r_children.begin(),
-                       [](const std::unique_ptr<GenericParseTree>& c) {
+                       [](const std::unique_ptr<ParseTree>& c) {
                          return c.get();
                        });
 
         auto zipped = Utility::zip_vector<
-          GenericParseTree*>(l_children, r_children);
+          ParseTree*>(l_children, r_children);
         if (zipped.size() == 0) { return false; }
 
         for (auto& [thisChilds, otherChilds]: zipped) {
@@ -63,8 +63,8 @@ bool GenericParseTree<T>::operator==(
 }
 
 template<Layer T>
-void GenericParseTree<T>::traverse(
-  std::function<bool(GenericParseTree&)> proc) {
+void ParseTree<T>::traverse(
+  std::function<bool(ParseTree&)> proc) {
 
   if (!proc(*this)) return;
   for (auto& c: childs_) {
@@ -74,11 +74,11 @@ void GenericParseTree<T>::traverse(
 
 
 template<Layer T>
-GenericParseTree<T>* GenericParseTree<T>::select(
-  std::function<bool(GenericParseTree&)> predicate) {
+ParseTree<T>* ParseTree<T>::select(
+  std::function<bool(ParseTree&)> predicate) {
 
-  GenericParseTree* tree = NULL;
-  traverse([&](GenericParseTree& node) {
+  ParseTree* tree = NULL;
+  traverse([&](ParseTree& node) {
     if (predicate(node)) {
       tree = &node;
       return false;

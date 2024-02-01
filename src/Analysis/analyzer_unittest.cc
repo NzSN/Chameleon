@@ -17,7 +17,7 @@
 #include "Misc/testLanguage/TestLangParser.h"
 
 namespace Analyzer {
-using Antlr4GenericParseTree = Base::GenericParseTree<Base::Antlr4Node>;
+using Antlr4ParseTree = Base::ParseTree<Base::Antlr4Node>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //                           AnalyzeData Unittests                           //
@@ -123,25 +123,25 @@ RC_GTEST_FIXTURE_PROP(AnalyzeDataTests, InvariantCheck, ()) {
 struct NodeAnalyzerStub {
 
   std::tuple<
-    AnalyzeState, AnalyzeData<Antlr4GenericParseTree>>
-  operator()(Base::GenericParseTree<Base::Antlr4Node>& node) {
+    AnalyzeState, AnalyzeData<Antlr4ParseTree>>
+  operator()(Base::ParseTree<Base::Antlr4Node>& node) {
     auto& raw_node = *const_cast<Base::Antlr4Node&>(
       node.getMeta()).tree();
 
     auto ret = std::make_tuple<AnalyzeState>(
-      {AnalyzeState::Analyzing}, AnalyzeData<Antlr4GenericParseTree>());
+      {AnalyzeState::Analyzing}, AnalyzeData<Antlr4ParseTree>());
 
     size_t nodeTypeID = typeid(raw_node).hash_code();
     if (nodeTypeID == typeid(TestLangParser::ExprContext).hash_code()) {
       auto& data = std::get<1>(ret).data;
       if (!data.contains("EXPR")) {
-        auto set = AnalyzeData<Antlr4GenericParseTree>::DataSet{
-          std::reference_wrapper<Antlr4GenericParseTree>(node)};
+        auto set = AnalyzeData<Antlr4ParseTree>::DataSet{
+          std::reference_wrapper<Antlr4ParseTree>(node)};
         data.insert({"EXPR", set});
       } else {
         data["EXPR"].insert(
-          std::reference_wrapper<Antlr4GenericParseTree>(
-            const_cast<Antlr4GenericParseTree&>(node)));
+          std::reference_wrapper<Antlr4ParseTree>(
+            const_cast<Antlr4ParseTree&>(node)));
       }
     } else if (nodeTypeID == typeid(TestLangParser::ProgContext).hash_code()) {
       /* Do nothing */
@@ -166,15 +166,15 @@ struct AnalyzerTests: public ::testing::Test {
       antlr4::tree::ParseTree*,
       Parser::TestLangExt,
       Base::Antlr4Node,
-      Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-      ::parse<Base::GenericParseTree<Base::Antlr4Node>,
+      Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+      ::parse<Base::ParseTree<Base::Antlr4Node>,
               Base::DYNAMIC>(&codes);
   }
 
   int numOfOperand;
   std::string expression;
   std::unique_ptr<
-    Base::GenericParseTree<
+    Base::ParseTree<
       Base::Antlr4Node>> parsetree;
 };
 
@@ -184,8 +184,8 @@ struct AnalyzerTests: public ::testing::Test {
 
 //   // Do analyzing.
 //   NodeAnalyzerStub analyzer{} ;
-//   AnalyzeData<Antlr4GenericParseTree> info =
-//     Analyzer<Antlr4GenericParseTree, NodeAnalyzerStub>::Analyze(
+//   AnalyzeData<Antlr4ParseTree> info =
+//     Analyzer<Antlr4ParseTree, NodeAnalyzerStub>::Analyze(
 //     *parsetree, analyzer);
 
 //   // Assert that only expr info reside in

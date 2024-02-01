@@ -81,10 +81,10 @@ template<Base::Layer T>
 class Environment {
 public:
   /* Alias types for Match and its basis */
-  using MatchTerm = std::tuple<Base::GenericParseTree<T>*, Bindings<T>>;
+  using MatchTerm = std::tuple<Base::ParseTree<T>*, Bindings<T>>;
   using MatchTerms = std::list<MatchTerm>;
 
-  const Base::GenericParseTree<T>* getTree(const MatchTerm& term) {
+  const Base::ParseTree<T>* getTree(const MatchTerm& term) {
     return std::get<0>(term);
   }
 
@@ -95,7 +95,7 @@ public:
 
 
   using AnalysisData =
-    Analyzer::AnalyzeData<Base::GenericParseTree<T>>;
+    Analyzer::AnalyzeData<Base::ParseTree<T>>;
 
   Environment():
     targetTerm_{nullptr}, matchTerm_{nullptr},
@@ -104,15 +104,15 @@ public:
     bindings_ = &bindingsDefault;
   }
 
-  Base::GenericParseTree<T>* targetTerm() {
+  Base::ParseTree<T>* targetTerm() {
     return targetTerm_;
   }
 
-  void setTargetTerm(Base::GenericParseTree<T>* t) {
+  void setTargetTerm(Base::ParseTree<T>* t) {
     targetTerm_ = t;
   }
 
-  Base::GenericParseTree<T>* matchTerm() {
+  Base::ParseTree<T>* matchTerm() {
     return matchTerm_;
   }
 
@@ -120,7 +120,7 @@ public:
     return matchTerms_;
   }
 
-  void setMatchTerm(Base::GenericParseTree<T>* t) {
+  void setMatchTerm(Base::ParseTree<T>* t) {
     matchTerm_ = t;
   }
 
@@ -181,10 +181,10 @@ template<bool isAscending = true>
 
 private:
   // Target Term is the Term to be transformed.
-  Base::GenericParseTree<T>* targetTerm_;
+  Base::ParseTree<T>* targetTerm_;
 
   // The part that match by left side patterns.
-  Base::GenericParseTree<T>* matchTerm_;
+  Base::ParseTree<T>* matchTerm_;
   Bindings<T>* bindings_;
   // For compatibility, a default bindings is requried
   // to make bindings_ point to valid area of memory.

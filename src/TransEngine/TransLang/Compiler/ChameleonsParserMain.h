@@ -43,8 +43,8 @@ public:
   // program run in this case, without metainfo,
   // has no syntax and semantcis knowledge about
   // target parsetree.
-  std::optional<Base::GenericParseTree<Adapter>>
-  operator()(Base::GenericParseTree<Adapter>& tree);
+  std::optional<Base::ParseTree<Adapter>>
+  operator()(Base::ParseTree<Adapter>& tree);
 
 private:
   Base::GptSupportLang lang_;
@@ -106,7 +106,7 @@ private:
       Parser
       ::ParserSelect<Base::SUPPORTED_LANGUAGE::TESTLANG>
       ::parser
-      ::parse<Base::GenericParseTree<Base::Antlr4Node>>(s);
+      ::parse<Base::ParseTree<Base::Antlr4Node>>(s);
   }
 
   template<SUPPORTED_LANG lang = SUPPORTED_LANG::TESTLANG>
@@ -116,14 +116,14 @@ private:
       Parser
       ::ParserSelect<Base::SUPPORTED_LANGUAGE::WGSL>
       ::parser
-      ::parse<Base::GenericParseTree<Base::Antlr4Node>>(s);
+      ::parse<Base::ParseTree<Base::Antlr4Node>>(s);
   }
 
   template<SUPPORTED_LANG lang = SUPPORTED_LANG::TESTLANG>
   requires Base::isTestLang<lang> ||
            Base::isWGSL<lang>
   std::optional<std::string> transform(Program* program) {
-    using Tree = Base::GenericParseTree<Base::Antlr4Node>;
+    using Tree = Base::ParseTree<Base::Antlr4Node>;
     Base::GptGeneric tree = parse<lang>(targetCodes_);
 
     Tree t = std::get<Tree>(tree);

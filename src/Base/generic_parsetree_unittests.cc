@@ -23,18 +23,18 @@
 
 namespace Base {
 
-struct GenericParseTreeTest: public ::testing::Test {
+struct ParseTreeTest: public ::testing::Test {
   // Generate arbitary parsetree contains
   // only N nodes (include the root node).
-GenericParseTree<int> genTreeWithN(const int n) {
-    GenericParseTree<int> root{1};
+ParseTree<int> genTreeWithN(const int n) {
+    ParseTree<int> root{1};
 
-    std::function<void(GenericParseTree<int>*,int)>
-      genSubTreeWithN = [&](GenericParseTree<int>* root, int nsubs) {
+    std::function<void(ParseTree<int>*,int)>
+      genSubTreeWithN = [&](ParseTree<int>* root, int nsubs) {
         while (nsubs > 0) {
           // Create directly child
-          GenericParseTree<int>& child = root->addChild(
-            std::make_unique<GenericParseTree<int>>(1));
+          ParseTree<int>& child = root->addChild(
+            std::make_unique<ParseTree<int>>(1));
           nsubs -= 1;
           if (nsubs == 0) {
             return;
@@ -53,9 +53,9 @@ GenericParseTree<int> genTreeWithN(const int n) {
     return root;
   }
 
-  int traverseN(GenericParseTree<int>& tree) {
+  int traverseN(ParseTree<int>& tree) {
     const auto& counting =
-      [&](GenericParseTree<int>& tree) -> bool {
+      [&](ParseTree<int>& tree) -> bool {
         ++node_counter;
         return true;
     };
@@ -64,11 +64,11 @@ GenericParseTree<int> genTreeWithN(const int n) {
     return node_counter;
   }
 
-  GenericParseTree<int>& getNodeRandomly(GenericParseTree<int>& tree) {
+  ParseTree<int>& getNodeRandomly(ParseTree<int>& tree) {
     int counter = *rc::gen::inRange(100, 1000);
 
     const auto& selectNode =
-      [&](GenericParseTree<int>& tree) -> bool {
+      [&](ParseTree<int>& tree) -> bool {
         --counter;
         if (counter == 0) {
           return true;
@@ -76,7 +76,7 @@ GenericParseTree<int> genTreeWithN(const int n) {
         return false;
       };
 
-    GenericParseTree<int>* node = NULL;
+    ParseTree<int>* node = NULL;
     while (!node) {
       node = tree.select(selectNode);
     }
@@ -87,33 +87,33 @@ GenericParseTree<int> genTreeWithN(const int n) {
   std::vector<void*> nodes;
 };
 
-RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, Basic, ()) {
-  GenericParseTree<int> root{1};
+RC_GTEST_FIXTURE_PROP(ParseTreeTest, Basic, ()) {
+  ParseTree<int> root{1};
   auto& child = root.addChild(
-    std::make_unique<GenericParseTree<int>>(2));
-  child.addChild(std::make_unique<GenericParseTree<int>>(3));
+    std::make_unique<ParseTree<int>>(2));
+  child.addChild(std::make_unique<ParseTree<int>>(3));
 
   traverseN(root);
   RC_ASSERT(node_counter == 3);
 }
 
-RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, Traverse, ()) {
+RC_GTEST_FIXTURE_PROP(ParseTreeTest, Traverse, ()) {
   const int N = *rc::gen::inRange(0, 100);
   if (N == 0) return;
 
-  GenericParseTree<int> root = genTreeWithN(N);
+  ParseTree<int> root = genTreeWithN(N);
   traverseN(root);
   RC_ASSERT(node_counter == N);
 }
 
-RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, Depth, ()) {
+RC_GTEST_FIXTURE_PROP(ParseTreeTest, Depth, ()) {
   const int N = *rc::gen::inRange(0, 100);
   if (N == 0) return;
 
-  GenericParseTree<int> root = genTreeWithN(N);
+  ParseTree<int> root = genTreeWithN(N);
   size_t count = 0;
 
-  root.traverse([&](GenericParseTree<int>& node) -> bool {
+  root.traverse([&](ParseTree<int>& node) -> bool {
     if ((node.parent != nullptr)) {
       if (node.getDepth() == node.parent->getDepth() + 1) {
         ++count;
@@ -130,22 +130,22 @@ RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, Depth, ()) {
   RC_ASSERT(count == N);
 }
 
-RC_GTEST_FIXTURE_PROP(GenericParseTreeTest, EqReflexivity, ()) {
+RC_GTEST_FIXTURE_PROP(ParseTreeTest, EqReflexivity, ()) {
   // Check basic case
-  GenericParseTree<int> terminal{1};
+  ParseTree<int> terminal{1};
   RC_ASSERT(terminal == terminal);
 
   // Assume ParseTree with N node satisfy
   // reflexivity.
-  std::optional<GenericParseTree<int>> root =
+  std::optional<ParseTree<int>> root =
     genTreeWithN(*rc::gen::inRange(1, 100));
   RC_ASSERT(root.value() == root.value());
 
   // Check N + 1 case
   // Select a place to add
   // a node randomly.
-  GenericParseTree<int>& node = getNodeRandomly(root.value());
-  node.addChild(std::make_unique<GenericParseTree<int>>(1));
+  ParseTree<int>& node = getNodeRandomly(root.value());
+  node.addChild(std::make_unique<ParseTree<int>>(1));
   RC_ASSERT(root.value() == root.value());
 }
 
@@ -197,7 +197,7 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToAntlr4Node, ()) {
   RC_ASSERT_FALSE(env->tree == nullptr);
 
   Antlr4Node nodes{
-    GenericParseTree<Antlr4Node>::TESTLANG,
+    ParseTree<Antlr4Node>::TESTLANG,
     env->tree };
 
   // Check equality between generated Antlr4Node
@@ -217,7 +217,7 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, Clone, ()) {
   RC_ASSERT_FALSE(env->tree == nullptr);
 
   Antlr4Node nodes{
-    GenericParseTree<Antlr4Node>::TESTLANG,
+    ParseTree<Antlr4Node>::TESTLANG,
     env->tree };
 
   Antlr4Node::Node copy = nodes.clone();
@@ -236,18 +236,18 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, Clone, ()) {
   RC_ASSERT(!isEqual);
 }
 
-RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToGenericParseTree, ()) {
+RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToParseTree, ()) {
   RC_ASSERT_FALSE(env->tree == nullptr);
 
   // Antlr4Node works as adapter
   Antlr4Node nodes{
-    GenericParseTree<Antlr4Node>::TESTLANG,
+    ParseTree<Antlr4Node>::TESTLANG,
     env->tree };
 
-  GenericParseTree<Antlr4Node> gpt =
-    GenericParseTree<Antlr4Node>::mapping(nodes);
+  ParseTree<Antlr4Node> gpt =
+    ParseTree<Antlr4Node>::mapping(nodes);
 
-  using GPT = GenericParseTree<Antlr4Node>;
+  using GPT = ParseTree<Antlr4Node>;
   auto isEqual =
     Concepts::NAryTree::equal<GPT, Antlr4Node>(
       gpt, nodes, [](const GPT& l, const Antlr4Node& r) {
@@ -257,45 +257,45 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToGenericParseTree, ()) {
   RC_ASSERT(isEqual);
 }
 
-RC_GTEST_PROP(GenericParseTreeTest_NAry, Clone, ()) {
+RC_GTEST_PROP(ParseTreeTest_NAry, Clone, ()) {
   std::istringstream codes{"a+1+2"};
-  GenericParseTree<Antlr4Node> t =
-      Parser::ParserSelect<GenericParseTree<Antlr4Node>::TESTLANG>
-      ::parser::parse<GenericParseTree<Antlr4Node>>(&codes);
+  ParseTree<Antlr4Node> t =
+      Parser::ParserSelect<ParseTree<Antlr4Node>::TESTLANG>
+      ::parser::parse<ParseTree<Antlr4Node>>(&codes);
 
   Antlr4Node::Node copy_meta = t.getMeta().clone();
-  GenericParseTree<Antlr4Node> copy =
-    GenericParseTree<Antlr4Node>::mapping(
+  ParseTree<Antlr4Node> copy =
+    ParseTree<Antlr4Node>::mapping(
       *copy_meta);
   RC_ASSERT(copy.getText() == t.getText());
 }
 
-RC_GTEST_PROP(GenericParseTreeTest_NAry, SetNode, ()) {
+RC_GTEST_PROP(ParseTreeTest_NAry, SetNode, ()) {
   std::istringstream codes{"a+1+2"};
-  GenericParseTree<Antlr4Node> t =
-    Parser::ParserSelect<GenericParseTree<Antlr4Node>::TESTLANG>
-    ::parser::parse<GenericParseTree<Antlr4Node>>(&codes);
+  ParseTree<Antlr4Node> t =
+    Parser::ParserSelect<ParseTree<Antlr4Node>::TESTLANG>
+    ::parser::parse<ParseTree<Antlr4Node>>(&codes);
 
 
-  auto v = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(
+  auto v = Concepts::NAryTree::search<ParseTree<Antlr4Node>>(
     t,
-    [](GenericParseTree<Antlr4Node>& node) -> bool {
+    [](ParseTree<Antlr4Node>& node) -> bool {
       return const_cast<Antlr4Node&>(node.getMeta())
         .tree()->getTreeType() == antlr4::tree::ParseTreeType::TERMINAL
         && node.getText() == "a";
     });
 
-  auto v2 = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(
+  auto v2 = Concepts::NAryTree::search<ParseTree<Antlr4Node>>(
     t,
-    [](GenericParseTree<Antlr4Node>& node) -> bool {
+    [](ParseTree<Antlr4Node>& node) -> bool {
       return const_cast<Antlr4Node&>(node.getMeta())
         .tree()->getTreeType() == antlr4::tree::ParseTreeType::TERMINAL
         && node.getText() == "1";
     });
 
-  auto v3 = Concepts::NAryTree::search<GenericParseTree<Antlr4Node>>(
+  auto v3 = Concepts::NAryTree::search<ParseTree<Antlr4Node>>(
     t,
-    [](GenericParseTree<Antlr4Node>& node) -> bool {
+    [](ParseTree<Antlr4Node>& node) -> bool {
       return const_cast<Antlr4Node&>(node.getMeta())
         .tree()->getTreeType() == antlr4::tree::ParseTreeType::TERMINAL
         && node.getText() == "2";

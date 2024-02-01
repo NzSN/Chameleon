@@ -20,10 +20,10 @@ template<Base::Layer T>
 struct Term {
   Term() {}
 
-  Term(std::unique_ptr<Base::GenericParseTree<T>>&& t):
+  Term(std::unique_ptr<Base::ParseTree<T>>&& t):
     dangleTree_{std::move(t)}, tree{dangleTree_} {}
 
-  Term(Base::GenericParseTree<T>& t):
+  Term(Base::ParseTree<T>& t):
     tree{t} {}
   Term(const Term& other):
     tree{other.tree} {}
@@ -51,11 +51,11 @@ struct Term {
 
   using RefWrapperGPT =
     std::reference_wrapper<
-    Base::GenericParseTree<T>>;
+    Base::ParseTree<T>>;
 
 
 private:
-  std::unique_ptr<Base::GenericParseTree<T>> dangleTree_;
+  std::unique_ptr<Base::ParseTree<T>> dangleTree_;
 
 public:
   RefWrapperGPT tree;

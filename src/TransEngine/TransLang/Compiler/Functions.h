@@ -21,7 +21,7 @@ using RewriteTerm = TransEngine::Rewrite::Term<T>;
 //                              Common Functions                             //
 ///////////////////////////////////////////////////////////////////////////////
 template<Base::Layer T>
-Base::GenericParseTree<T>* gptFromExprTerm(ExprTerm* term) {
+Base::ParseTree<T>* gptFromExprTerm(ExprTerm* term) {
   return &term->term->tree.get();
 }
 
@@ -39,7 +39,7 @@ bool typeCheckUnion(const std::type_info& type) {
 }
 
 template<typename... EXPECTS>
-bool assertMetaType(Base::GenericParseTree<Base::Antlr4Node>* node) {
+bool assertMetaType(Base::ParseTree<Base::Antlr4Node>* node) {
   const std::type_info& type = typeid(*node->getMetaMutable().tree());
 
   return typeCheckUnion<EXPECTS...>(type);
@@ -70,7 +70,7 @@ struct Plus: public TransEngine::Expression::Function {
       return nullptr;
     }
 
-    Base::GenericParseTree<Base::Antlr4Node>* gpt =
+    Base::ParseTree<Base::Antlr4Node>* gpt =
       gptFromExprTerm<Base::Antlr4Node>(
         dynamic_cast<ExprTerm*>(args->args[0].get()));
 
@@ -87,7 +87,7 @@ struct Plus: public TransEngine::Expression::Function {
     }
 
     // After that reconstruct a Term from the new number
-    std::unique_ptr<Base::GenericParseTree<Base::Antlr4Node>>
+    std::unique_ptr<Base::ParseTree<Base::Antlr4Node>>
       gptCopy = gpt->clone();
 
     // Replace the original node by the copy node
@@ -137,7 +137,7 @@ struct Plus: public TransEngine::Expression::Function {
   V(RandomIdent)
 
 using WGSLTree = Base::Antlr4Node;
-using WGSLGpt  = Base::GenericParseTree<WGSLTree>;
+using WGSLGpt  = Base::ParseTree<WGSLTree>;
 
 struct RandomIdent: public ExprFunc {
   std::unique_ptr<ExprVal> operator()(

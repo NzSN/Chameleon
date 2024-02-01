@@ -26,7 +26,7 @@ struct Pattern: public Base::TreeLayer<Pattern<T>> {
   Pattern(const Pattern& other):
     meta_{other.meta_} {}
   Pattern(const T& meta):
-    // Prevent copy children from GenericParseTree,
+    // Prevent copy children from ParseTree,
     // Pattern will build it's own children.
     meta_{meta} {}
 
@@ -48,9 +48,9 @@ struct Pattern: public Base::TreeLayer<Pattern<T>> {
 
   bool isTermVar() const {
     switch (meta_.lang()) {
-      case Base::GenericParseTree<int>::TESTLANG:
+      case Base::ParseTree<int>::TESTLANG:
         return SIGMA_TERM::isTermVar(const_cast<T&>(meta_));
-      case Base::GenericParseTree<int>::WGSL:
+      case Base::ParseTree<int>::WGSL:
         return SIGMA_TERM::isTermVar<Base::SUPPORTED_LANGUAGE::WGSL>(
           const_cast<T&>(meta_));
     default:

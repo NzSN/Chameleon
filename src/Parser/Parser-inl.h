@@ -35,10 +35,10 @@ SUPPORTED_LANG_LIST(PARSER_SELECT_IMPL);
 
 // Dynamic Parser Selecter
 using ParserT = std::variant<
-  ParserSelect<Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>::parser
+  ParserSelect<Base::ParseTree<Base::Antlr4Node>::TESTLANG>::parser
   >;
 
-std::optional<Base::GenericParseTreeT_DYNAMIC>
+std::optional<Base::ParseTreeT_DYNAMIC>
 ParserRuntimeSelect(unsigned lang, std::istringstream& sentences);
 
 } // Parser

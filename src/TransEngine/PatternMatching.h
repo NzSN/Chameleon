@@ -38,27 +38,27 @@ struct Match {
   using TermIdent = TransEngine::Rewrite::Bindings<T>::TermIdent;
   using MatchTerms = std::vector<std::tuple<TermIdent, Term<T>>>;
   // The tree be matched
-  Base::GenericParseTree<T>* matched;
+  Base::ParseTree<T>* matched;
   MatchTerms termVars;
 };
 
 template<Base::Layer T>
 bool matching(const TransEngine::Pattern<T>& pattern,
-             const Base::GenericParseTree<T>& subjectTree,
+             const Base::ParseTree<T>& subjectTree,
              typename Match<T>::MatchTerms* termVars) {
 
   return Concepts::NAryTree::equal<TransEngine::Pattern<T>,
-                              Base::GenericParseTree<T>>
+                              Base::ParseTree<T>>
     (pattern, subjectTree,
      // Equality predicate
      [termVars](const TransEngine::Pattern<T>& lhs,
-                 const Base::GenericParseTree<T>& rhs) {
+                 const Base::ParseTree<T>& rhs) {
        if (lhs.isTermVar()) {
          if (termVars) {
            termVars->push_back(
              std::make_tuple(
                lhs.termID(),
-               Term(const_cast<Base::GenericParseTree<T>&>(rhs)))
+               Term(const_cast<Base::ParseTree<T>&>(rhs)))
              );
          }
          return true;
@@ -68,7 +68,7 @@ bool matching(const TransEngine::Pattern<T>& pattern,
      },
      // Bottom condition, stop when a TermVar is matched.
      [](const TransEngine::Pattern<T>& lhs,
-        const Base::GenericParseTree<T>& rhs)
+        const Base::ParseTree<T>& rhs)
        { return lhs.isTermVar(); }
       );
 }
@@ -80,7 +80,7 @@ requires PATTERMATCH_ALGO_NAIVE<algor>
 std::vector<Match<T>>
 patternMatchingTermCaptureMulti(
   const TransEngine::Pattern<T>& pattern,
-  Base::GenericParseTree<T>& subjectTree) {
+  Base::ParseTree<T>& subjectTree) {
 
   std::vector<Match<T>> matchs{};
 
@@ -107,29 +107,29 @@ patternMatchingTermCaptureMulti(
 template<Base::Layer T,
          MatchAlgor algor = MatchAlgor::NORMAL>
 requires PATTERMATCH_ALGO_NAIVE<algor>
-std::optional<Base::GenericParseTree<T>*>
+std::optional<Base::ParseTree<T>*>
 patternMatchingTermCapture(
   const TransEngine::Pattern<T>& pattern,
-  Base::GenericParseTree<T>& subjectTree, Environment<T>* env) {
+  Base::ParseTree<T>& subjectTree, Environment<T>* env) {
 
   const auto matching =
     [](const TransEngine::Pattern<T>& pattern,
-       const Base::GenericParseTree<T>& subjectTree,
+       const Base::ParseTree<T>& subjectTree,
        Environment<T>* env) -> bool {
 
       return Concepts::NAryTree::equal<
         TransEngine::Pattern<T>,
-        Base::GenericParseTree<T>>(
+        Base::ParseTree<T>>(
           pattern, subjectTree,
           [&env](const TransEngine::Pattern<T>& lhs,
-                 const Base::GenericParseTree<T>& rhs) {
+                 const Base::ParseTree<T>& rhs) {
 
             if (lhs.isTermVar()) {
               // Capture Term Variables
               if (env != nullptr) {
                 env->bindings().bind(
                  lhs.termID(),
-                  Term(const_cast<Base::GenericParseTree<T>&>(rhs)));
+                  Term(const_cast<Base::ParseTree<T>&>(rhs)));
               } else {
                 return true;
               }
@@ -142,7 +142,7 @@ patternMatchingTermCapture(
           // in this case, the extra condition is reach a TermVar
           // of a pattern.
           [](const TransEngine::Pattern<T>& lhs,
-             const Base::GenericParseTree<T>& rhs) {
+             const Base::ParseTree<T>& rhs) {
             return lhs.isTermVar();
           });
     };
@@ -166,9 +166,9 @@ patternMatchingTermCapture(
 template<Base::Layer T,
          MatchAlgor algor = MatchAlgor::NORMAL>
 requires PATTERMATCH_ALGO_NAIVE<algor>
-std::optional<Base::GenericParseTree<T>*>
+std::optional<Base::ParseTree<T>*>
 patternMatching(TransEngine::Pattern<T>& pattern,
-                Base::GenericParseTree<T>& subjectTree) {
+                Base::ParseTree<T>& subjectTree) {
   return patternMatchingTermCapture<T>(
     pattern, subjectTree, nullptr);
 }

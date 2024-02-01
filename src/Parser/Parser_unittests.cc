@@ -34,15 +34,15 @@ RC_GTEST_FIXTURE_PROP(ParserTests, IsomorphicToExtTree, ()) {
     antlr4::tree::ParseTree*,
     TestLangExt,
     Base::Antlr4Node,
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
-    ::parse<Base::GenericParseTree<Base::Antlr4Node>,
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG>
+    ::parse<Base::ParseTree<Base::Antlr4Node>,
             Base::DYNAMIC>(&codes);
 
   Base::Antlr4Node nodes {
-    Base::GenericParseTree<Base::Antlr4Node>::TESTLANG,
+    Base::ParseTree<Base::Antlr4Node>::TESTLANG,
     TestLangExt::tree};
 
-  using GPT = Base::GenericParseTree<Base::Antlr4Node>;
+  using GPT = Base::ParseTree<Base::Antlr4Node>;
   auto isEqual = Concepts::NAryTree::equal<GPT, Base::Antlr4Node>(
     *t, nodes,
     [](const GPT& l, const Base::Antlr4Node& r) {

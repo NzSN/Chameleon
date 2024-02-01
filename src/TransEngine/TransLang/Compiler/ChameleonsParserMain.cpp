@@ -25,8 +25,8 @@ Program::operator()(Base::GptGeneric& tree,
   return std::nullopt;
 }
 
-std::optional<Base::GenericParseTree<Adapter>>
-doEvalStrategies(Base::GenericParseTree<Adapter>& tree,
+std::optional<Base::ParseTree<Adapter>>
+doEvalStrategies(Base::ParseTree<Adapter>& tree,
                  Rewrite::StrategySeq<Adapter>& straSeq) {
   // Checking that all strategies are binded with
   // rules.
@@ -52,8 +52,8 @@ doEvalStrategies(Base::GenericParseTree<Adapter>& tree,
   return tree;
 }
 
-std::optional<Base::GenericParseTree<Adapter>>
-Program::operator()(Base::GenericParseTree<Adapter>& tree) {
+std::optional<Base::ParseTree<Adapter>>
+Program::operator()(Base::ParseTree<Adapter>& tree) {
   return doEvalStrategies(tree, strategies_);
 }
 

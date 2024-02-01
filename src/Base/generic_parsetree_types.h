@@ -7,7 +7,7 @@ namespace Base {
 using GptGeneric =
   std::variant<
   // Antlr4 Parsers
-  GenericParseTree<Antlr4Node>
+  ParseTree<Antlr4Node>
   >;
 
 using GptSupportLang = SUPPORTED_LANGUAGE;
