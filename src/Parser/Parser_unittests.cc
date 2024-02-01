@@ -36,7 +36,7 @@ RC_GTEST_FIXTURE_PROP(ParserTests, IsomorphicToExtTree, ()) {
     Base::Antlr4Node,
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
     ::parse<Base::GenericParseTree<Base::Antlr4Node>,
-            Utility::DYNAMIC>(&codes);
+            Base::DYNAMIC>(&codes);
 
   Base::Antlr4Node nodes {
     Base::GenericParseTree<Base::Antlr4Node>::TESTLANG,
@@ -62,13 +62,13 @@ RC_GTEST_FIXTURE_PROP(ParserTests, DoubleDynamicAlloc, ()) {
     t = ParserSelect<2>
     ::parser
     ::template parse<TransEngine::Pattern<Base::Antlr4Node>,
-                     Utility::DYNAMIC>(&codes);
+                     Base::DYNAMIC>(&codes);
 
   std::unique_ptr<TransEngine::Pattern<Base::Antlr4Node>>
     t2 = ParserSelect<2>
     ::parser
     ::template parse<TransEngine::Pattern<Base::Antlr4Node>,
-                     Utility::DYNAMIC>(&codes2);
+                     Base::DYNAMIC>(&codes2);
 
   RC_ASSERT(
     const_cast<Base::Antlr4Node&>(t.get()->getMeta()).lang() ==

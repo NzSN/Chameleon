@@ -19,7 +19,7 @@
 namespace TransEngine {
 
 template<Base::GPTMeta T>
-struct Pattern: public TreeLayer<Pattern<T>> {
+struct Pattern: public Base::TreeLayer<Pattern<T>> {
   using TermID = std::string;
   using Children = std::vector<std::unique_ptr<Pattern>>;
 
@@ -37,7 +37,7 @@ struct Pattern: public TreeLayer<Pattern<T>> {
   {
     std::unique_ptr<T> metaCopy = meta_.clone();
     std::unique_ptr<Pattern> copy =
-      this->template mapping<T, Utility::DYNAMIC>(
+      this->template mapping<T, Base::DYNAMIC>(
         *metaCopy);
     copy->metaUnique_ = std::move(metaCopy);
 

@@ -11,7 +11,6 @@
 #include <functional>
 
 #include "Concepts/n_ary_tree.h"
-#include "utility.h"
 #include "TreeLayer.h"
 
 namespace Base {
@@ -119,7 +118,7 @@ public:
     std::unique_ptr<T> metaCopy = metaRef.clone();
 
     std::unique_ptr<GenericParseTree> copy =
-      this->template mapping<T, Utility::DYNAMIC>(
+      this->template mapping<T, Base::DYNAMIC>(
         *metaCopy);
     copy->metaUnique_ = std::move(metaCopy);
 

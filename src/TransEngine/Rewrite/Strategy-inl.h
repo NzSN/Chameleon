@@ -167,7 +167,7 @@ struct BuildMultiStra: public Strategy<T> {
         // just builded.
         env.matchTerm()->setNode(
           *Base::GenericParseTree<T>
-           ::template mapping<T, Utility::DYNAMIC>(copy->getMetaMut()));
+           ::template mapping<T, Base::DYNAMIC>(copy->getMetaMut()));
       } else {
         // The entire tree is required to be
         // replaced.

@@ -30,21 +30,21 @@ struct StrategySuccess: public ::testing::Test {
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<GPT, Utility::DYNAMIC>(&tCodes);
+    ::parse<GPT, Base::DYNAMIC>(&tCodes);
 
     lPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<PatternT, Utility::DYNAMIC>(&lCodes);
+    ::parse<PatternT, Base::DYNAMIC>(&lCodes);
 
     rPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
+    ::parse<PatternT, Base::DYNAMIC>(&rCodes);
 
     rule = std::make_unique<RuleT>(
       "R",
@@ -75,21 +75,21 @@ struct StrategyFailed: public ::testing::Test {
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<GPT, Utility::DYNAMIC>(&tCodes);
+    ::parse<GPT, Base::DYNAMIC>(&tCodes);
 
     lPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<PatternT, Utility::DYNAMIC>(&lCodes);
+    ::parse<PatternT, Base::DYNAMIC>(&lCodes);
 
     rPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
+    ::parse<PatternT, Base::DYNAMIC>(&rCodes);
 
     rule = std::make_unique<RuleT>(
       "R",
@@ -180,7 +180,7 @@ TEST_F(StrategySuccess, TRYCASE) {
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
+    ::parse<PatternT, Base::DYNAMIC>(&rCodes);
 
   auto* t = const_cast<Node&>(target->getMeta()).tree();
   t->children = const_cast<Node&>(rPattern->getMeta()).tree()->children;
@@ -235,21 +235,21 @@ struct StrategyMulti: public ::testing::Test {
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<GPT, Utility::DYNAMIC>(&tCodes);
+    ::parse<GPT, Base::DYNAMIC>(&tCodes);
 
     lPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<PatternT, Utility::DYNAMIC>(&lCodes);
+    ::parse<PatternT, Base::DYNAMIC>(&lCodes);
 
     rPattern = Parser::Parser<
     antlr4::tree::ParseTree*,
     Parser::TestLangExt,
     Node,
     GPT::TESTLANG>
-    ::parse<PatternT, Utility::DYNAMIC>(&rCodes);
+    ::parse<PatternT, Base::DYNAMIC>(&rCodes);
 
     rule = std::make_unique<RuleT>(
       "R",

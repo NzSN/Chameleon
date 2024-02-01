@@ -5,7 +5,19 @@
 #include <type_traits>
 
 #include "Concepts/n_ary_tree.h"
-#include "utility.h"
+
+namespace Base {
+
+enum ALLOC_STORAGE_DURATION {
+  AUTOMATIC,
+  DYNAMIC,
+};
+
+template<ALLOC_STORAGE_DURATION duration>
+concept isAutoStorage = duration == ALLOC_STORAGE_DURATION::AUTOMATIC;
+
+template<ALLOC_STORAGE_DURATION duration>
+concept isDynamicStorage = duration == ALLOC_STORAGE_DURATION::DYNAMIC;
 
 
 template<typename T>
@@ -23,12 +35,12 @@ struct TreeLayer {
   }
 
   template<Concepts::NAryTree::NAryTree U,
-           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC>
-  requires Utility::isAutoStorage<Storage>
+           ALLOC_STORAGE_DURATION Storage = AUTOMATIC>
+  requires isAutoStorage<Storage>
   static T mapping(const U& o) {
     T tree = T(o);
     for (auto& c: Concepts::NAryTree::getChildren(o)) {
-      tree.addChild(mapping<U, Utility::DYNAMIC>(
+      tree.addChild(mapping<U, DYNAMIC>(
                       Concepts::NAryTree::derefMaybe(c)));
     }
 
@@ -42,13 +54,13 @@ struct TreeLayer {
   // Cases that every nodes of generated Treelayer
   // is dynamics, with type std::unique_ptr<T>.
   template<Concepts::NAryTree::NAryTree U,
-           Utility::ALLOC_STORAGE_DURATION Storage = Utility::AUTOMATIC>
-  requires Utility::isDynamicStorage<Storage>
+           ALLOC_STORAGE_DURATION Storage = AUTOMATIC>
+  requires isDynamicStorage<Storage>
   static std::unique_ptr<T>
   mapping(const U& o) {
     std::unique_ptr<T> tree = std::make_unique<T>(o);
     for (auto& c: Concepts::NAryTree::getChildren(o)) {
-      tree->addChild(mapping<U, Utility::DYNAMIC>(
+      tree->addChild(mapping<U, DYNAMIC>(
                        Concepts::NAryTree::derefMaybe(c)));
     }
 
@@ -62,5 +74,9 @@ struct TreeLayer {
 private:
   size_t depth_;
 };
+
+
+} // Base
+
 
 #endif /* TREELAYER_H */

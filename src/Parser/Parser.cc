@@ -12,7 +12,7 @@ ParserRuntimeSelect(unsigned lang, std::istringstream& sentences) {
       t = ParserSelect<Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
       ::parser::parse<
         Base::GenericParseTree<Base::Antlr4Node>,
-        Utility::DYNAMIC>(&sentences);
+        Base::DYNAMIC>(&sentences);
 
     return std::move(t);
   }

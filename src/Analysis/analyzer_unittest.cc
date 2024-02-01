@@ -168,7 +168,7 @@ struct AnalyzerTests: public ::testing::Test {
       Base::Antlr4Node,
       Base::GenericParseTree<Base::Antlr4Node>::TESTLANG>
       ::parse<Base::GenericParseTree<Base::Antlr4Node>,
-              Utility::DYNAMIC>(&codes);
+              Base::DYNAMIC>(&codes);
   }
 
   int numOfOperand;

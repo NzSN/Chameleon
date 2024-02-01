@@ -139,14 +139,14 @@ strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
     Parser
     ::ParserSelect<lang>
     ::parser
-    ::template parse<Pattern<T>, Utility::DYNAMIC>(&ls);
+    ::template parse<Pattern<T>, Base::DYNAMIC>(&ls);
 
   std::istringstream rs{rCtx->targetPattern()->getText()};
   std::unique_ptr<Pattern<T>> rightSide =
      Parser
     ::ParserSelect<lang>
     ::parser
-    ::template parse<Pattern<T>, Utility::DYNAMIC>(&rs);
+    ::template parse<Pattern<T>, Base::DYNAMIC>(&rs);
 
   Rewrite::Rule<T> rule{
     rCtx->IDENTIFIER()->getText(),
