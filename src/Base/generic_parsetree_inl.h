@@ -7,7 +7,7 @@
 
 namespace Base {
 
-template<GPTMeta T>
+template<Layer T>
 bool GenericParseTree<T>::operator==(
   const GenericParseTree& other) const {
   // GenericParseTree is recursive type which requrie that
@@ -62,7 +62,7 @@ bool GenericParseTree<T>::operator==(
   return equality_check(*this, other);
 }
 
-template<GPTMeta T>
+template<Layer T>
 void GenericParseTree<T>::traverse(
   std::function<bool(GenericParseTree&)> proc) {
 
@@ -73,7 +73,7 @@ void GenericParseTree<T>::traverse(
 }
 
 
-template<GPTMeta T>
+template<Layer T>
 GenericParseTree<T>* GenericParseTree<T>::select(
   std::function<bool(GenericParseTree&)> predicate) {
 

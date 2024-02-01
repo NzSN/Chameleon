@@ -11,7 +11,7 @@
 namespace TransEngine {
 namespace Rewrite {
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct Rule {
   Rule():
     label{}, leftSide{nullptr},

@@ -28,7 +28,7 @@ namespace Rewrite {
 //     bigger than 0 if there are TermVar in left side pattern.
 // otherwise left the Environment UNCHANGED.
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 Environment<T>::MatchTerms toEnvMatchs(
   std::vector<Algorithms::Match<T>>& matchs) {
 
@@ -49,7 +49,7 @@ Environment<T>::MatchTerms toEnvMatchs(
   return terms;
 }
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct MatchMultiStra: public Strategy<T> {
   MatchMultiStra() = default;
   MatchMultiStra(Rule<T> r): Strategy<T>{r} {}
@@ -82,7 +82,7 @@ struct FAILED_TO_EVALUATE_WHERE: public std::exception {
   }
 };
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct WhereMultiStra: public Strategy<T> {
   WhereMultiStra() = default;
   WhereMultiStra(Rule<T> r): Strategy<T>{r} {}
@@ -120,7 +120,7 @@ struct WhereMultiStra: public Strategy<T> {
   }
 };
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct BuildMultiStra: public Strategy<T> {
   BuildMultiStra() = default;
   BuildMultiStra(Rule<T> r): Strategy<T>{r} {}
@@ -182,15 +182,15 @@ struct BuildMultiStra: public Strategy<T> {
   }
 };
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 using MatchStra = MatchMultiStra<T>;
-template<Base::GPTMeta T>
+template<Base::Layer T>
 using WhereStra = WhereMultiStra<T>;
-template<Base::GPTMeta T>
+template<Base::Layer T>
 using BuildStra = BuildMultiStra<T>;
 
 // Without Where clause
-template<Base::GPTMeta T>
+template<Base::Layer T>
 StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
   // A rule is breakdown into Strategy language:
   //   match(r); where(r) /* Optional */; build(r);

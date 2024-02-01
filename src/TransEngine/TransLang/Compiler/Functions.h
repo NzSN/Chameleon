@@ -14,13 +14,13 @@ using ExprVal  = TransEngine::Expression::Value;
 using ExprArg  = TransEngine::Expression::Arguments;
 using ExprFunc = TransEngine::Expression::Function;
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 using RewriteTerm = TransEngine::Rewrite::Term<T>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //                              Common Functions                             //
 ///////////////////////////////////////////////////////////////////////////////
-template<Base::GPTMeta T>
+template<Base::Layer T>
 Base::GenericParseTree<T>* gptFromExprTerm(ExprTerm* term) {
   return &term->term->tree.get();
 }

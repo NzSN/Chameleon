@@ -13,7 +13,7 @@
 namespace Base {
 
 // Due to antlr4::tree::ParseTree does not
-// satisfy the constraint of GPTMeta then
+// satisfy the constraint of Layer then
 // an adapter is required.
 //
 // With Antlr4Node, user able to spawn a

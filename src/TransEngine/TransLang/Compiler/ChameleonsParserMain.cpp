@@ -72,7 +72,7 @@ toLangID(std::string langID) {
 }
 
 // Transform CondExprContext to
-template<Base::GPTMeta T>
+template<Base::Layer T>
 bool createCondExpr(
   ChameleonsParser::CondExprContext* rCtx,
   Rewrite::Rule<T>& rule) {
@@ -92,7 +92,7 @@ bool createCondExpr(
   return true;
 }
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 bool createCondExprs(
   ChameleonsParser::CondExprsContext* rCtx,
   Rewrite::Rule<T>& rule) {
@@ -109,7 +109,7 @@ bool createCondExprs(
 
 // Traverse the tree of where expressions
 // and spawn expressions.
-template<Base::GPTMeta T>
+template<Base::Layer T>
 bool createWhereExpressions(
   ChameleonsParser::WhereExprsContext* rCtx,
   Rewrite::Rule<T>& rule) {
@@ -127,7 +127,7 @@ bool createWhereExpressions(
   return true;
 }
 
-template<Base::GPTMeta T, int lang>
+template<Base::Layer T, int lang>
 std::optional<Rewrite::Rule<T>>
 strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
 
@@ -178,7 +178,7 @@ strategyFromRule(ChameleonsParser::RewriteRuleContext* rCtx) {
   return rule;
 }
 
-template<Base::GPTMeta T, int lang>
+template<Base::Layer T, int lang>
 std::optional<Rewrite::StrategySeq<T>>
 strategiesFromRules(ChameleonsParser::RewriteRulesContext* rCtx) {
 

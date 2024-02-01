@@ -33,7 +33,7 @@ concept PATTERNMATCH_MODE_FIRST_MATCH = M == MatchMode::FIRST_MATCH;
 template<MatchMode M>
 concept PATTERNMATCH_MODE_MATCH_ALL = M == MatchMode::MATCH_ALL;
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct Match {
   using TermIdent = TransEngine::Rewrite::Bindings<T>::TermIdent;
   using MatchTerms = std::vector<std::tuple<TermIdent, Term<T>>>;
@@ -42,7 +42,7 @@ struct Match {
   MatchTerms termVars;
 };
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 bool matching(const TransEngine::Pattern<T>& pattern,
              const Base::GenericParseTree<T>& subjectTree,
              typename Match<T>::MatchTerms* termVars) {
@@ -73,7 +73,7 @@ bool matching(const TransEngine::Pattern<T>& pattern,
       );
 }
 
-template<Base::GPTMeta T,
+template<Base::Layer T,
          MatchMode mode = MatchMode::MATCH_ALL,
          MatchAlgor algor = MatchAlgor::NORMAL>
 requires PATTERMATCH_ALGO_NAIVE<algor>
@@ -104,7 +104,7 @@ patternMatchingTermCaptureMulti(
 // FIXME: Remove side effect in matching,
 //        so the argument Environment<T> can also
 //        be removed.
-template<Base::GPTMeta T,
+template<Base::Layer T,
          MatchAlgor algor = MatchAlgor::NORMAL>
 requires PATTERMATCH_ALGO_NAIVE<algor>
 std::optional<Base::GenericParseTree<T>*>
@@ -163,7 +163,7 @@ patternMatchingTermCapture(
   return std::nullopt;
 }
 
-template<Base::GPTMeta T,
+template<Base::Layer T,
          MatchAlgor algor = MatchAlgor::NORMAL>
 requires PATTERMATCH_ALGO_NAIVE<algor>
 std::optional<Base::GenericParseTree<T>*>

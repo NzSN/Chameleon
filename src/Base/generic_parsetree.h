@@ -19,14 +19,14 @@ namespace Base {
 //                                 Concepts                                //
 /////////////////////////////////////////////////////////////////////////////
 template<typename T>
-concept GPTMeta = std::equality_comparable<T>;
+concept Layer = std::equality_comparable<T>;
 
 using CharPosition = std::tuple<int, int>;
 using SrcRange = std::tuple<CharPosition, CharPosition>;
 
 template<typename T>
 concept GPTMappable =
-  GPTMeta<T> &&
+  Layer<T> &&
   Concepts::NAryTree::NAryTree<T> &&
   requires(T t) {
     // Source information
@@ -39,7 +39,7 @@ concept GPTMappable =
 /////////////////////////////////////////////////////////////////////////////
 //                             GenericParseTree                            //
 /////////////////////////////////////////////////////////////////////////////
-template<GPTMeta T>
+template<Layer T>
 class GenericParseTree: public TreeLayer<GenericParseTree<T>> {
 public:
   enum SUPPORTED_LANGUAGE {

@@ -18,7 +18,7 @@
 
 namespace TransEngine {
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct Pattern: public Base::TreeLayer<Pattern<T>> {
   using TermID = std::string;
   using Children = std::vector<std::unique_ptr<Pattern>>;

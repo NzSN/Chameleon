@@ -11,29 +11,29 @@
 namespace TransEngine {
 namespace Rewrite {
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct Rule;
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct Strategy;
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 using StrategyUnique = std::unique_ptr<Strategy<T>>;
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 using StrategySet = std::set<StrategyUnique<T>>;
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 using StrategySeq = std::vector<StrategyUnique<T>>;
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct StrategyBase {
   virtual ~StrategyBase() {}
   virtual Rule<T>& operator()(
     Rule<T>& rule, Environment<T>&) = 0;
 };
 
-template<Base::GPTMeta T>
+template<Base::Layer T>
 struct Strategy: public StrategyBase<T> {
 
   Strategy() {}
@@ -50,7 +50,7 @@ struct Strategy: public StrategyBase<T> {
 // Break down a transform rule into Strategies
 // due to this system use Strategy language
 // low-level core language to describe transformations.
-template<Base::GPTMeta T>
+template<Base::Layer T>
 StrategySeq<T> ruleBreakDown(Rule<T>& rule);
 
 } // Rewrite

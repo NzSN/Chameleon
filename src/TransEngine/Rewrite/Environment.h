@@ -20,7 +20,7 @@ namespace Rewrite {
 // INVARIANT:
 //  1.For all a,b in TermIdent, if both a and b are binded
 //    then a != b. (TermIdent Uniqueness)
-template<Base::GPTMeta T>
+template<Base::Layer T>
 class Bindings {
 public:
 
@@ -77,7 +77,7 @@ private:
 };
 
 /* Environment is a collection of Variable bindings. */
-template<Base::GPTMeta T>
+template<Base::Layer T>
 class Environment {
 public:
   /* Alias types for Match and its basis */
