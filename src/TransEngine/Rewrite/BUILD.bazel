@@ -37,7 +37,7 @@ cc_test(
             "Environment.h",
             "//src/TransEngine/TransLang:chameleons_parser_srcs",
             "//src/Analysis:analyzer_src",
-            "//src/Base:generic_parsetree",
+            "//src/Base:base_srcs",
             "//src/Concepts:concepts_srcs",
             "//src:utility_src",
             "//src/Misc/testLanguage:testLang_parser_srcs"],

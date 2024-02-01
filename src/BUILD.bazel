@@ -40,6 +40,7 @@ cc_test(
          "//parsers:ts_parser",
          "//parsers:wgsl_parser",
          ],
+    visibility = ["//:__pkg__"]
 )
 
 cc_test(

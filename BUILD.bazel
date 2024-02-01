@@ -1,0 +1,8 @@
+cc_test(
+    name = "all_unittests",
+    deps = ["//src:interpreter_unittests",
+            "//src/TransEngine/TransLang:chameleonsmain_unittest",
+            "//src/TransEngine/TransLang:chameleons_parser_unittest",
+            "//src/TransEngine/TransLang:where_clause_unittest",
+            "@com_google_googletest//:gtest_main"]
+)

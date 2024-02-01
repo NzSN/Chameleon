@@ -1,6 +1,5 @@
-
 filegroup(
-    name = "generic_parsetree",
+    name = "base_srcs",
     srcs = [
          "generic_parsetree_antlr4.cc",
          "generic_parsetree_antlr4.h",
@@ -26,8 +25,7 @@ filegroup(
 filegroup(
     name = "language_unittests_src",
     srcs = [
-         # Generic ParseTree
-         ":generic_parsetree",
+         ":base_srcs",
          "generic_parsetree_unittests.cc",
          "generic_parsetree_antlr4_unittests.cc",
          "//src/Misc/testLanguage:testLang_parser_srcs"],

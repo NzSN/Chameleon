@@ -23,14 +23,19 @@ cc_test(
     name = "chameleons_parser_unittest",
     srcs = [":chameleons_parser_srcs",
             "ChameleonsParser_unittests.cc",
-            "//src:utility_src"],
+            "//src:utility_src",
+            "//src/Concepts:concepts_srcs",
+            "//src/Misc/testLanguage:testLang_parser_srcs",
+            "//src/Base:base_srcs"],
     copts = [
           "-Isrc"],
-    linkopts = ["-lglog", "-lfmt"],
     deps = [
+         "@oilpan//:cppgc",
          "@antlr4_runtime//:antlr4_runtime",
+         "//parsers:wgsl_parser",
          "@com_google_googletest//:gtest_main",
          "@rapidcheck//:rapidcheck"],
+    visibility = ["//:__pkg__"],
 )
 
 cc_test(
@@ -42,7 +47,7 @@ cc_test(
             "//src/Misc/testLanguage:testLang_parser_srcs",
             "//src/Analysis:analyzer_src",
             "//src/TransEngine/Rewrite:rewrite_srcs",
-            "//src/Base:generic_parsetree",
+            "//src/Base:base_srcs",
             "//src:utility_src",
             "//src/TransEngine:pattern_matching",
             "//src/Parser:parser_source",
@@ -58,6 +63,7 @@ cc_test(
          "//parsers:wgsl_parser",
          "@oilpan//:cppgc",
          ],
+    visibility = ["//:__pkg__"],
 )
 
 cc_test(
@@ -69,11 +75,12 @@ cc_test(
             "Compiler/WhereClauseExprParsing_unittest.cc",
             "//src:utility_src",
             "//src/TransEngine/Rewrite:rewrite_srcs",
-            "//src/Base:generic_parsetree",
+            "//src/Base:base_srcs",
             "//src/Concepts:concepts_srcs",
             "//src/Misc/testLanguage:testLang_parser_srcs",
             "//src/TransEngine:pattern_matching",
             "//src/Analysis:analyzer_src",
+            "//src:refl_src",
          ],
     copts = [
           "-Isrc"],
@@ -81,5 +88,8 @@ cc_test(
          "@antlr4_runtime//:antlr4_runtime",
          "@com_google_googletest//:gtest_main",
          "@plog//:plog",
+         "@oilpan//:cppgc",
+         "//parsers:wgsl_parser",
          "@rapidcheck//:rapidcheck"],
+    visibility = ["//:__pkg__"],
 )
