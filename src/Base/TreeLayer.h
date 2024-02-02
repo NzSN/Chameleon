@@ -1,6 +1,7 @@
 #ifndef TREELAYER_H
 #define TREELAYER_H
 
+#include <memory>
 #include "Base/Concepts/n_ary_tree.h"
 
 namespace Base {
@@ -15,7 +16,6 @@ concept isAutoStorage = duration == ALLOC_STORAGE_DURATION::AUTOMATIC;
 
 template<ALLOC_STORAGE_DURATION duration>
 concept isDynamicStorage = duration == ALLOC_STORAGE_DURATION::DYNAMIC;
-
 
 template<typename T>
 struct TreeLayer {
@@ -72,6 +72,18 @@ private:
   size_t depth_;
 };
 
+template<typename T, typename Lower>
+struct BindableLayer {
+  void bindLayer(std::unique_ptr<Lower>&& lower) {
+    lower_ = std::move(lower);
+  }
+
+  std::unique_ptr<Lower> unbindLayer() {
+    return std::move(lower_);
+  }
+private:
+  std::unique_ptr<Lower> lower_;
+};
 
 } // Base
 

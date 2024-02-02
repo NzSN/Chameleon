@@ -75,8 +75,8 @@ public:
   }
 private:
   using Resources = std::list<Utility::HeapResourceHolder>;
-  inline static Resources resources;
-  inline static std::map<uintptr_t, Resources::const_iterator> resourceTrack;
+  inline static Resources resources{};
+  inline static std::map<uintptr_t, Resources::const_iterator> resourceTrack{};
 };
 
 } // Parser

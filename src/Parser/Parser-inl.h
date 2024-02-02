@@ -14,10 +14,6 @@
 
 namespace Parser {
 
-template<Base::isLangType L>
-std::vector<std::unique_ptr<typename ParseArg<L>::Adapter>>
-Parser<L>::adapters_ {};
-
 // Static Parser Selecter
 template<Base::isLangType L> struct ParserSelect;
 

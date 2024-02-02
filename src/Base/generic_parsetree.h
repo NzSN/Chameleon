@@ -28,7 +28,8 @@ concept GPTMappable =
 //                             ParseTree                            //
 /////////////////////////////////////////////////////////////////////////////
 template<Layer T>
-class ParseTree: public TreeLayer<ParseTree<T>> {
+class ParseTree: public BindableLayer<ParseTree<T>, T>,
+                 public TreeLayer<ParseTree<T>> {
 public:
   enum SUPPORTED_LANGUAGE {
     MINIMUM_LANG_INDEX = 0,
@@ -108,9 +109,17 @@ public:
     std::unique_ptr<ParseTree> copy =
       this->template mapping<T, Base::DYNAMIC>(
         *metaCopy);
-    copy->metaUnique_ = std::move(metaCopy);
-
+    copy->Base
+      ::template BindableLayer<ParseTree<T>, T>
+      ::bindLayer(std::move(metaCopy));
     return copy;
+  }
+
+  template<typename ExtTree>
+  requires requires(T t) {
+    { t.tree() } -> std::same_as<ExtTree*>; }
+  ExtTree* getExternalTree() {
+    return getMetaMutable().tree();
   }
 
   // For convenience, ParseTree will require that
@@ -132,9 +141,6 @@ private:
   const T& metaRef;
 
   Childs childs_;
-
-  // For clone purposes
-  std::unique_ptr<T> metaUnique_;
 };
 
 } // Base

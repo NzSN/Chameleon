@@ -43,10 +43,12 @@ struct Parser {
            Base::ALLOC_STORAGE_DURATION Storage = Base::AUTOMATIC>
   requires Base::isAutoStorage<Storage>
   static T parse(std::istream* input) {
-    adapters_.emplace_back(
-      std::make_unique<Adapter>(
-        L::typeEnum, ExternalParser<L>::parse(input)));
-    return T::template mapping<Adapter, Base::AUTOMATIC>(*adapters_.back());
+      auto adapter = std::make_unique<Adapter>(
+        L::typeEnum, ExternalParser<L>::parse(input));
+      auto tree = T::template mapping<Adapter, Base::AUTOMATIC>(*adapter);
+      tree.bindLayer(std::move(adapter));
+
+      return tree;
   }
 
   template<Concepts::NAryTree::NAryTree T,
@@ -54,15 +56,15 @@ struct Parser {
   requires Base::isDynamicStorage<Storage>
   static std::unique_ptr<T>
   parse(std::istream* input) {
-    adapters_.emplace_back(
-      std::make_unique<Adapter>(L::typeEnum,
-                                ExternalParser<L>::parse(input)));
-    return T::template mapping<Adapter, Base::DYNAMIC>(*adapters_.back());
+      auto adapter = std::make_unique<Adapter>(
+        L::typeEnum, ExternalParser<L>::parse(input));
+      auto tree = T::template mapping<Adapter, Base::DYNAMIC>(*adapter);
+      tree->bindLayer(std::move(adapter));
+
+      return tree;
   }
 
 private:
-  static std::vector<std::unique_ptr<Adapter>> adapters_;
-
   UNINSTANTIALIZABLE(Parser);
 };
 

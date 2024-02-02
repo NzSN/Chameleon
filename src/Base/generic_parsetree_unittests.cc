@@ -256,20 +256,23 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToParseTree, ()) {
 RC_GTEST_PROP(ParseTreeTest_NAry, Clone, ()) {
   std::istringstream codes{"a+1+2"};
   ParseTree<Antlr4Node> t =
-      Parser::ParserSelect<GET_LANG_TYPE(TESTLANG)>
-      ::parser::parse<ParseTree<Antlr4Node>>(&codes);
+    Parser::ParserSelect<GET_LANG_TYPE(TESTLANG)>
+    ::parser
+    ::parse<ParseTree<Antlr4Node>>(&codes);
+
+  t.getExternalTree<antlr4::tree::ParseTree>();
 
   Antlr4Node::Node copy_meta = t.getMeta().clone();
   ParseTree<Antlr4Node> copy =
-    ParseTree<Antlr4Node>::mapping(
-      *copy_meta);
+    ParseTree<Antlr4Node>::mapping(*copy_meta);
   RC_ASSERT(copy.getText() == t.getText());
 }
 
 RC_GTEST_PROP(ParseTreeTest_NAry, SetNode, ()) {
   std::istringstream codes{"a+1+2"};
   ParseTree<Antlr4Node> t =
-    Parser::ParserSelect<GET_LANG_TYPE(TESTLANG)>
+    Parser
+    ::ParserSelect<GET_LANG_TYPE(TESTLANG)>
     ::parser::parse<ParseTree<Antlr4Node>>(&codes);
 
 

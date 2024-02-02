@@ -17,7 +17,8 @@
 namespace TransEngine {
 
 template<Base::Layer T>
-struct Pattern: public Base::TreeLayer<Pattern<T>> {
+struct Pattern: public Base::TreeLayer<Pattern<T>>,
+                public Base::BindableLayer<Pattern<T>, T> {
   using TermID = std::string;
   using Children = std::vector<std::unique_ptr<Pattern>>;
 
@@ -37,8 +38,9 @@ struct Pattern: public Base::TreeLayer<Pattern<T>> {
     std::unique_ptr<Pattern> copy =
       this->template mapping<T, Base::DYNAMIC>(
         *metaCopy);
-    copy->metaUnique_ = std::move(metaCopy);
-
+    copy->Base
+      ::template BindableLayer<Pattern<T>, T>
+      ::bindLayer(std::move(metaCopy));
     return copy;
   }
 
@@ -135,9 +137,6 @@ struct Pattern: public Base::TreeLayer<Pattern<T>> {
   }
 
 private:
-
-  std::unique_ptr<T> metaUnique_;
-
   const T& meta_;
   Children children_;
 };
