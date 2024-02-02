@@ -6,19 +6,9 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
-cc_library(
-    name = "concepts_lib",
-    srcs = [":concepts_srcs"],
+filegroup(
+    name = "concepts_unittests_srcs",
+    srcs = [":concepts_srcs",
+            "concepts_unittests.cc"],
     visibility = ["//visibility:public"],
-)
-
-cc_test(
-    name = "concepts_unittests",
-    srcs = [
-         "concepts_unittests.cc",
-         ":concepts_srcs"],
-    deps = [
-         "@com_google_googletest//:gtest_main",
-         "@rapidcheck//:rapidcheck"
-         ]
 )

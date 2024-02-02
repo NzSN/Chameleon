@@ -17,7 +17,7 @@ cc_test(
         ":utility_src",
         "utility_unittests.cc",
         "//src/Base:language_unittests_src",
-        "//src/Base/Concepts:concepts_srcs",
+        "//src/Base/Concepts:concepts_unittests_srcs",
         "//src/Parser:parser_unittest_src",
         "//src/Analysis:analyzer_unittest_src",
         "//src/TransEngine:transformer_unittest_srcs",

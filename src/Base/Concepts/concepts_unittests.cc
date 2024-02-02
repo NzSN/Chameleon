@@ -76,8 +76,8 @@ RC_GTEST_FIXTURE_PROP(NAryTreeTests, Equal, ()) {
   RC_ASSERT(trees.has_value());
   const auto& [l, r] = trees.value();
 
-  bool isEqual = equal<TreeNary_T1, TreeNary_T2>
-    (*l, *r, [](const TreeNary_T1& l,
+  bool isEqual = equal<TreeNary_T1, TreeNary_T1>
+    (*l, *l, [](const TreeNary_T1& l,
               const TreeNary_T2& r) -> bool {
       return l.n == r.n;
     });

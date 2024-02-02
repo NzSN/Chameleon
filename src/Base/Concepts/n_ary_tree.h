@@ -25,7 +25,9 @@ concept Children_t =
 
 template<typename T>
 concept WalkByFunction =
-  requires(T t) {{ t.getChildren() } -> Children_t<T>; };
+  requires(T t) {
+    { t.getChildren() } -> Children_t<T>;
+  };
 
 template<typename T>
 concept WalkByDataMember = requires(T t) {
