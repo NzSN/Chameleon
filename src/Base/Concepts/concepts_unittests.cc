@@ -13,6 +13,7 @@ namespace NAryTree {
 struct NAryTreeTests: public ::testing::Test {
   struct TreeNary_T1 {
     int n;
+    TreeNary_T1* parent;
     std::vector<TreeNary_T1>& getChildren() {
       return c;
     }
@@ -20,6 +21,7 @@ struct NAryTreeTests: public ::testing::Test {
   };
   struct TreeNary_T2 {
     int n;
+    TreeNary_T2* parent;
     std::vector<TreeNary_T2> children;
   };
   struct UpperLayerOfT1 {
@@ -76,9 +78,9 @@ RC_GTEST_FIXTURE_PROP(NAryTreeTests, Equal, ()) {
   RC_ASSERT(trees.has_value());
   const auto& [l, r] = trees.value();
 
-  bool isEqual = equal<TreeNary_T1, TreeNary_T1>
-    (*l, *l, [](const TreeNary_T1& l,
-              const TreeNary_T2& r) -> bool {
+  bool isEqual = equal<TreeNary_T1, TreeNary_T2>
+    (*l, *r, [](const TreeNary_T1& l,
+                const TreeNary_T2& r) -> bool {
       return l.n == r.n;
     });
   RC_ASSERT(isEqual);

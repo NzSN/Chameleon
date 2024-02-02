@@ -43,6 +43,7 @@ struct TestTree {
   }
 
   int value;
+  TestTree* parent;
   std::array<TestTree*, TOTAL_NUM_OF_DATA> children;
 };
 

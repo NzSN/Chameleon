@@ -3,11 +3,9 @@
 
 #include <memory>
 #include <cassert>
-#include <iostream>
 #include <ranges>
 #include <concepts>
 #include <functional>
-#include <utility>
 #include <vector>
 #include <type_traits>
 
@@ -27,6 +25,7 @@ template<typename T>
 concept WalkByFunction =
   requires(T t) {
     { t.getChildren() } -> Children_t<T>;
+    { t.parent } -> std::convertible_to<T*>;
   };
 
 template<typename T>
