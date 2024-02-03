@@ -2,6 +2,7 @@
 #ifndef GENERIC_PARSETREE_H
 #define GENERIC_PARSETREE_H
 
+#include <iostream>
 #include <memory>
 #include "TreeLayer.h"
 
@@ -46,15 +47,26 @@ public:
 
   // Terminal
   ParseTree(const T& meta):
-    parent{nullptr}, metaRef{meta} {}
+    parent{nullptr}, metaRef{meta}, childs_{} {}
   ParseTree(const ParseTree& other):
-    parent{other.parent}, metaRef(other.metaRef) {
+    parent{other.parent}, metaRef(other.metaRef), childs_{} {
 
     for (auto& c: other.childs_) {
       this->addChild(
         std::make_unique<ParseTree>(*c));
     }
   }
+
+  ParseTree(ParseTree&& other) noexcept :
+    BindableLayer<ParseTree<T>, T>{std::move(other)},
+    parent{other.parent},
+    metaRef{other.metaRef},
+    childs_{} {
+
+    childs_ = std::move(other.childs_);
+  }
+
+  ~ParseTree() {}
 
   ParseTree& addChild(
     std::unique_ptr<ParseTree>&& child) {
@@ -139,7 +151,6 @@ private:
   friend struct ParseTreeTest;
 
   const T& metaRef;
-
   Childs childs_;
 };
 

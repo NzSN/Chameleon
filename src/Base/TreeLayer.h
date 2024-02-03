@@ -74,6 +74,10 @@ private:
 
 template<typename T, typename Lower>
 struct BindableLayer {
+  BindableLayer() = default;
+  BindableLayer(BindableLayer&& other) noexcept :
+    lower_{std::move(other.lower_)} {}
+
   void bindLayer(std::unique_ptr<Lower>&& lower) {
     lower_ = std::move(lower);
   }

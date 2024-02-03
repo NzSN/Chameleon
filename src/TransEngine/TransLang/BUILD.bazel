@@ -54,7 +54,7 @@ cc_test(
             "//src/Parser:external_parser_src",
             "//src:refl_src",
             ],
-    copts = ["-Isrc"],
+    copts = ["-Isrc", "-DENABLE_GC=false"],
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
          "@com_google_googletest//:gtest_main",

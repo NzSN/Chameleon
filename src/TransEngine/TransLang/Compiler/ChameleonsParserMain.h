@@ -101,8 +101,7 @@ public:
 private:
   template<Base::isLangType L>
   Base::GptGeneric parse(std::istream* s) {
-    return
-      Parser
+    return Parser
       ::ParserSelect<L>
       ::parser
       ::template parse<Base::ParseTree<Base::Antlr4Node>>(s);
@@ -113,10 +112,10 @@ private:
     using Tree = Base::ParseTree<Base::Antlr4Node>;
     Base::GptGeneric tree = parse<L>(targetCodes_);
 
-    Tree t = std::get<Tree>(tree);
+    Tree& t = std::get<Tree>(tree);
 
     return (*program)(t).transform(
-      [](auto&& tree) {
+      [](auto tree) {
         return tree.getText();
       });
   }
