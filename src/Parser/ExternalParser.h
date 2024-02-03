@@ -51,12 +51,13 @@ public:
 
     if (!env->tree) { return nullptr; }
     else {
+      auto tree = env->tree;
       resources.push_back(std::move(env));
       auto iter = --resources.end();
-      auto key = reinterpret_cast<uintptr_t>(env->tree);
+      auto key = reinterpret_cast<uintptr_t>(tree);
       resourceTrack[key] = iter;
 
-      return env->tree;
+      return tree;
     }
   }
 
@@ -68,6 +69,11 @@ public:
       resources.erase(iter);
       resourceTrack.erase(ptr);
     }
+  }
+
+  void releaseAll() {
+    resources.clear();
+    resourceTrack.clear();
   }
 
   size_t numOfResInTracked() const {

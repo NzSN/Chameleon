@@ -8,6 +8,8 @@ namespace Parser {
 TEST(ExternalParserUnittests, Basic) {
   ExternalParser<GET_LANG_TYPE(TESTLANG)> extParser;
 
+  extParser.releaseAll();
+
   std::istringstream s {"1+2+3"};
   auto* tree = extParser.parse(&s);
 
@@ -20,6 +22,7 @@ TEST(ExternalParserUnittests, Basic) {
 
 TEST(ExternalParserUnittests, Empty) {
   ExternalParser<GET_LANG_TYPE(TESTLANG)> extParser;
+  extParser.releaseAll();
 
   extParser.release(0);
   EXPECT_TRUE(extParser.numOfResInTracked() == 0);
