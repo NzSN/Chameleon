@@ -22,8 +22,8 @@ struct WhereClauseTest: public ::testing::Test {
     env = Utility::Antlr4_GenParseTree<ChameleonsLexer, ChameleonsParser>(
       "TARGET: TestLang \n"
       "RULES: \n"
-      "R: {| a+0 |} => {| a |}"
-      "where a = 0;",
+      "R: {| a + 0 |} => {| a |}"
+      " where a := a;",
       entry);
   }
 
@@ -41,15 +41,11 @@ TEST_F(WhereClauseTest, introduce) {
     Concepts::NAryTree::search<antlr4::tree::ParseTree>(
       *tree,
       [](antlr4::tree::ParseTree& t) -> bool {
-        if (typeid(t) ==
-            typeid(ChameleonsParser::CondExprContext)) {
-          return true;
-        } else {
-          return false;
-        }
-    });
+        return typeid(t) ==
+          typeid(ChameleonsParser::CondExprContext);
+      });
 
-  EXPECT_TRUE(result.size() == 3);
+  EXPECT_TRUE(result.size() == 2);
 
   std::unique_ptr<Expression::Expr> expr =
     WhereClause::toExpr(

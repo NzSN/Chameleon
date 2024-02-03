@@ -539,7 +539,8 @@ public:
   // replace of Rewrite::Term in Environment which TermID
   // specified by left value(left value is force to TermRef).
   std::unique_ptr<Value> operator()(Environment<Adapter>* env) {
-    if (typeid(*left_) != (typeid(TermRef))) {
+    if (typeid(*left_) != typeid(TermRef) ||
+        env == nullptr) {
       return nullptr;
     }
 
