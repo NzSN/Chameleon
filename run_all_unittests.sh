@@ -1,1 +1,1 @@
-bazel test $(bazel query //...) --build_tests_only
+bazel test $(bazel query //...) -c dbg --build_tests_only
