@@ -1,6 +1,7 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include <cassert>
 #include <vector>
 #include <tuple>
 #include <functional>
@@ -10,6 +11,8 @@
 #include "Base/config.h"
 
 namespace Utility {
+
+#define assertm(exp, msg) assert(((void)msg, exp))
 
 struct CallAtExit {
   CallAtExit(std::function<void()> f) {

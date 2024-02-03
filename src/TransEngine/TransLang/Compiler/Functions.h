@@ -1,6 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include <cassert>
 #include "utility.h"
 
 #include "Base/generic_parsetree_antlr4_gc.h"
@@ -142,6 +143,8 @@ struct RandomIdent: public ExprFunc {
   std::unique_ptr<ExprVal> operator()(
     ExprArg* args,
     TransEngine::Rewrite::Environment<WGSLTree>* env) {
+
+    assertm(args && env, "null pointer");
 
     WGSLGpt* gpt = gptFromExprTerm<WGSLTree>(
       dynamic_cast<ExprTerm*>(args->args[0].get()));

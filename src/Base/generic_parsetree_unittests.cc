@@ -308,12 +308,12 @@ RC_GTEST_PROP(ParseTreeTest_NAry, SetNode, ()) {
 
   // Replace node 'a' with node '1'
   // by setNode.
-  // RC_ASSERT(v[0]->setNode(
-  //             const_cast<Antlr4Node&>(*(v2[0]->getMeta().clone()))));
-  // RC_ASSERT(t.getText() == "1+1+2");
-  // RC_ASSERT(v[0]->setNode(
-  //             const_cast<Antlr4Node&>(*(v3[0]->getMeta()).clone())));
-  // RC_ASSERT(t.getText() == "2+1+2");
+  RC_ASSERT(v[0]->setNode(
+              const_cast<Antlr4Node&>(*(v2[0]->getMeta().clone()))));
+  RC_ASSERT(t.getText() == "1+1+2");
+  RC_ASSERT(v[0]->setNode(
+              const_cast<Antlr4Node&>(*(v3[0]->getMeta()).clone())));
+  RC_ASSERT(t.getText() == "2+1+2");
 }
 
 

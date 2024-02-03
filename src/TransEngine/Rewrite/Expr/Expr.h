@@ -1,14 +1,12 @@
 #ifndef EXPR_H
 #define EXPR_H
 
-#include <type_traits>
 #include <typeinfo>
 #include <memory>
-#include <variant>
 #include <stdexcept>
 
+#include "utility.h"
 #include "Base/generic_parsetree_antlr4.h"
-
 #include "TransEngine/Rewrite/Term.h"
 #include "TransEngine/Rewrite/Environment.h"
 #include "TransEngine/TransLang/ChameleonsLexer.h"
@@ -539,10 +537,9 @@ public:
   // replace of Rewrite::Term in Environment which TermID
   // specified by left value(left value is force to TermRef).
   std::unique_ptr<Value> operator()(Environment<Adapter>* env) {
-    if (typeid(*left_) != typeid(TermRef) ||
-        env == nullptr) {
-      return nullptr;
-    }
+    assertm(env != nullptr, "env is null in Assignment()");
+    assertm(typeid(*left_) == typeid(TermRef),
+            "You can only assign to a Term");
 
     TermRef* termRef_l = dynamic_cast<TermRef*>(left_.get());
 
@@ -555,11 +552,8 @@ public:
     } else {
       // Evaluating the right hand side expression.
       std::unique_ptr<Value> v = Expr::eval(right_, env);
-
-      if (v == nullptr) {
-        throw std::runtime_error(
-          "Failed to evaluate right expression of assignment expr");
-      }
+      assertm(v != nullptr && typeid(*v) == typeid(Term),
+              "Failed to evaluate right side of Assignment");
 
       if (typeid(*v) != typeid(Term)) {
         // Assignment is an operator of Term, which type is

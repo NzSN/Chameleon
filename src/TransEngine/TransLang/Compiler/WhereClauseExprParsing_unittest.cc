@@ -50,8 +50,7 @@ TEST_F(WhereClauseTest, introduce) {
   std::unique_ptr<Expression::Expr> expr =
     WhereClause::toExpr(
       dynamic_cast<ChameleonsParser::CondExprContext*>(result[0]));
-
-  (*expr)(nullptr);
+  EXPECT_TRUE(expr != nullptr);
 }
 
 
