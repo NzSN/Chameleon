@@ -38,7 +38,7 @@ cc_test(
             "//src/TransEngine/TransLang:chameleons_parser_srcs",
             "//src/Analysis:analyzer_src",
             "//src/Base:base_srcs",
-            "//src/Concepts:concepts_srcs",
+            "//src/Base/Concepts:concepts_srcs",
             "//src:utility_src",
             "//src/Misc/testLanguage:testLang_parser_srcs"],
     copts = [
@@ -50,6 +50,8 @@ cc_test(
          "@com_google_googletest//:gtest_main",
          "@antlr4_runtime//:antlr4_runtime",
          "@rapidcheck//:rapidcheck",
+         "@oilpan//:cppgc",
+         "//parsers:wgsl_parser",
          "@plog//:plog",
          ]
 )
