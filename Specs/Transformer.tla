@@ -5,43 +5,30 @@ VARIABLES transformer
 LOCAL INSTANCE Sequences
 LOCAL INSTANCE Naturals
 LOCAL INSTANCE Strategy
-
-ToStrategies[rule \in Rule] ==
-  LET toStrategies_[n \in Nat] ==
-        IF n = 0
-        THEN <<>>
-        ELSE <<CHOOSE s \in Strategies: TRUE>> \o toStrategies_[n-1]
-      N == CHOOSE N \in 1..100: TRUE
-  IN toStrategies_[N]
+LOCAL INSTANCE Rule
+LOCAL INSTANCE Tree
 
 \* RuleConfig -> Seq(Rule)
 ParseConfig[config \in RuleConfig] ==
-  LET N == CHOOSE n \in 1..3: TRUE
-      ToRules[n \in Nat] ==
-        IF n = 0
-        THEN <<>>
-        ELSE
-          LET r == CHOOSE r \in Rule: TRUE
-              seq == <<r>>
-          IN  seq \o ToRules[n-1]
-  IN ToRules[N]
+  <<RuleInst(Tree[0], Tree[1])>>
 
 \* ParseTree -> ParseTree
 Transform[ast \in ParseTree,
           rule \in Rule] ==
-  LET S == ToStrategies[rule] \* Break the Rule into Strategies
+  LET S == BasicStrategies \* Break the Rule into Strategies
       ApplyStrategies[ss \in Seq(Strategies),
                       rule_ \in Rule,
-                      ast_ \in ParseTree] ==
+                      ast_ \in ParseTree,
+                      env_ \in Seq(ParseTree)] ==
         IF ss = <<>>
         THEN <<rule_, ast_>>
         ELSE
           LET s == Head(ss)
-              r == s[<<rule_,ast_>>]
-          IN  ApplyStrategies[Tail(ss), r[1], r[2]]
+              r == s[<<rule_,ast_, env_>>]
+          IN  ApplyStrategies[Tail(ss), r[1], r[2], env_]
   \* Do transformation by apply each of strategies
   \* to rule.
-  IN ApplyStrategies[S, rule, ast][2]
+  IN ApplyStrategies[S, rule, ast, <<>>][2]
 
 TransRules[ast \in ParseTree, rules \in Seq(Rule)] ==
   IF rules = <<>>
