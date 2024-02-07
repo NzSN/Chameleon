@@ -4,7 +4,7 @@ LOCAL INSTANCE Tree
 
 Rules == {<<l, r>>: l \in Trees, r \in Trees}
 RuleInst(l,r) == <<l,r>>
-LeftPattern(t) == t[1]
-RightPattern(t) == t[2]
+LeftPattern(r) == r[1]
+RightPattern(r) == r[2]
 
 ===========================

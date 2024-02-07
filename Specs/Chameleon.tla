@@ -58,7 +58,7 @@ Transforming ==
   /\ UNCHANGED <<parser>>
 
 TransDone ==
-  /\ TransformerInst!TransDone
+  /\ TransformerInst!TransDone(transformer.out, transformer.config)
   /\ transformer.out \in ParseTree
   /\ state = TRANSFORMING
   /\ state' = TRANSFORMED

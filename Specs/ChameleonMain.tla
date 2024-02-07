@@ -6,7 +6,7 @@ LOCAL INSTANCE Naturals
 LOCAL INSTANCE Tree
 LOCAL INSTANCE Rule
 
-ParseTree == {Tree[0], Tree[1]}
+ParseTree == {Tree[0], Tree[1], Tree[2]}
 RuleSamples == {
          \* Left side pattern is Tree[0]
          \* Right side pattern is Tree[1]
