@@ -2,15 +2,17 @@
 #include <stdexcept>
 #include <optional>
 #include <memory>
+#include <algorithm>
 
+#include "Base/langs.h"
 #include "ChameleonsParserMain.h"
 #include "../ChameleonsParser.h"
 #include "../ChameleonsParserBaseListener.h"
 
+#include "TransEngine/TransLang/Compiler/WhereClauseExprParsing-inl.h"
 
 namespace TransEngine {
 namespace Compiler {
-
 /////////////////////////////////////////////////////////////////////////////
 //                                 Compiler                                //
 /////////////////////////////////////////////////////////////////////////////
@@ -20,6 +22,37 @@ toLangID(std::string);
 std::optional<std::unique_ptr<Program>>
 programFromRules(ChameleonsParser::RewriteRulesContext *rCtx,
                  Base::GptSupportLang lang);
+
+// Construct first rule a given Chameleon Script.
+template<Base::isLangType L, Base::Layer T>
+struct RuleConstructListener: public ChameleonsParserBaseListener {
+
+  void enterRewriteRule(ChameleonsParser::RewriteRuleContext *ctx) {
+    assertm(ctx->sourcePattern(), "No Source Pattern found in Rewrite Rule");
+    assertm(ctx->targetPattern(), "No Target Pattern found in Rewrite Rule");
+
+    std::string sourcePattern = ctx->sourcePattern()->getText();
+    std::string targetPattern = ctx->targetPattern()->getText();
+
+    Rewrite::Rule<T> rule = Rewrite::Rule<T>::template makeRule<L>(
+      "", sourcePattern, targetPattern);
+
+    if (ctx->whereExprs()) {
+      std::vector<WhereClause::Expr_uptr> exprs =
+        WhereClause::toExprs(*ctx->whereExprs());
+      std::vector<Rewrite::CondExpr> condExprs(exprs.size());
+      std::transform(exprs.begin(), exprs.end(), condExprs.begin(),
+                     [](WhereClause::Expr_uptr& expr) {
+                       return Rewrite::CondExpr(std::move(expr));
+                     });
+      rule.setConds(std::move(condExprs));
+    }
+
+    rules.push_back(rule);
+  }
+
+  std::vector<Rewrite::Rule<T>> rules;
+};
 
 struct CompileListener: public ChameleonsParserBaseListener {
 
@@ -98,6 +131,34 @@ struct CompileListener: public ChameleonsParserBaseListener {
   StrategeMode mode;
   Base::GptSupportLang targetLang;
 };
+
+template<Base::isLangType L>
+std::vector<Rewrite::Rule<Adapter>>
+Compiler::compileToRule(std::istream& input) {
+  std::vector<Rewrite::Rule<Adapter>> rules;
+
+  PLOG_DEBUG << "Compiling (compileToRule)...";
+
+  auto env = Utility::Antlr4Parse<
+  ChameleonsLexer, ChameleonsParser>(input);
+
+  antlr4::tree::ParseTree *tree = env->parser.prog();
+  if (!tree) {
+    PLOG_DEBUG << "Failed to parse...";
+    return rules;
+  }
+
+  RuleConstructListener<L, typename Base::LangArg<L>::Adapter>
+    rulesCtor;
+
+  antlr4::tree::ParseTreeWalker::DEFAULT.walk(&rulesCtor, tree);
+  assertm(!rulesCtor.rules.empty(),
+          "Compiler::compileToRule: failed to parse rule from given script");
+  rules = std::move(rulesCtor.rules);
+
+  return rules;
+}
+
 
 } // Compiler
 } // TransEngine

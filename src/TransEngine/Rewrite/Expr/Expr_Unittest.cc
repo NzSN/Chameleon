@@ -328,5 +328,88 @@ TEST(ExpressionTest, Assignment) {
   EXPECT_TRUE(env.bindings()["ID"].tree.get().getText() == "1234");
 }
 
+TEST(ExpressionTest, Equality) {
+  // TermRef
+  EXPECT_TRUE(TermRef("TID") == TermRef("TID"));
+  // Constant
+  EXPECT_TRUE(Constant(std::make_unique<Unit>()) ==
+              Constant(std::make_unique<Unit>()));
+  EXPECT_TRUE(Constant(std::make_unique<Bool>()) ==
+              Constant(std::make_unique<Bool>()));
+  EXPECT_FALSE(Constant(std::make_unique<Bool>(true)) ==
+               Constant(std::make_unique<Bool>(false)));
+  // LogicAndExpr
+  EXPECT_TRUE(
+    LogiAndExpr(
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true))) ==
+    LogiAndExpr(
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true)))
+    );
+
+  EXPECT_FALSE(
+    LogiAndExpr(
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true))) ==
+    LogiAndExpr(
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true)))
+    );
+
+  // LogicOrExpr
+  EXPECT_TRUE(
+    LogiOrExpr(
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true))) ==
+    LogiOrExpr(
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true)))
+    );
+
+  EXPECT_FALSE(
+    LogiOrExpr(
+      std::make_unique<Constant>(std::make_unique<Bool>(false)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true))) ==
+    LogiOrExpr(
+      std::make_unique<Constant>(std::make_unique<Bool>(true)),
+      std::make_unique<Constant>(std::make_unique<Bool>(true)))
+    );
+
+  // Call
+  auto make_unique_arg = [](int a) {
+    std::vector<std::unique_ptr<Expr>> args;
+
+    if (a == 0 || a == 2) {
+      args.emplace_back(
+        // Constant Expression
+        std::make_unique<Constant>(
+          std::make_unique<Unit>())
+        );
+    }
+
+    if (a == 1 || a == 2) {
+      args.emplace_back(
+        // Constant Expression
+        std::make_unique<Constant>(
+          std::make_unique<Unit>())
+        );
+    }
+    return args;
+  };
+
+  EXPECT_TRUE(
+    Call(std::make_unique<CheckEquality>(), make_unique_arg(0)) ==
+    Call(std::make_unique<CheckEquality>(), make_unique_arg(0)));
+
+  EXPECT_FALSE(
+    Call(std::make_unique<CheckEquality>(), make_unique_arg(1)) ==
+    Call(std::make_unique<CheckEquality>(), make_unique_arg(2)));
+
+  EXPECT_FALSE(
+    Call(std::make_unique<CheckEquality>(), make_unique_arg(0)) ==
+    Call(std::make_unique<CheckEquality>(), {}));
+}
+
 } // Expression
 } // TransEngine

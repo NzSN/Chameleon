@@ -33,6 +33,21 @@ TEST(CondExprTest, CopySemantic) {
   EXPECT_TRUE(!cond2.isEmpty() && !cond.isEmpty());
 }
 
+TEST(CondExprTest, Equality) {
+  {
+    // Empty
+    CondExpr cond;
+    CondExpr cond_;
+
+    EXPECT_TRUE(cond != cond_);
+  }
+
+  {
+    // With Exprs
+    CondExpr cond;
+    CondExpr cond_;
+  }
+}
 
 } // Rewrite
 } // TransEngine

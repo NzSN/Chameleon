@@ -136,6 +136,14 @@ struct Pattern: public Base::TreeLayer<Pattern<T>>,
     return result[0];
   }
 
+  bool operator==(const Pattern& other) const {
+    return Concepts::NAryTree::equal<Pattern,Pattern>(
+      *this, other,
+      [](const Pattern& l, const Pattern& r) {
+        return l.meta_ == r.meta_;
+      });
+  }
+
 private:
   const T& meta_;
   Children children_;

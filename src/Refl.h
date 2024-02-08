@@ -5,7 +5,6 @@
 #include <vector>
 #include <optional>
 #include <algorithm>
-#include <typeindex>
 
 namespace Utility {
 

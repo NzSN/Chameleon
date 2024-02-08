@@ -11,7 +11,7 @@ namespace Compiler {
 // Register functions of correspond lang to reflect system.
 inline void registerFunctions(Base::GptSupportLang lang) {
 
-#define REGISTER_FUNCTIONS(F)                       \
+#define REGISTER_FUNCTION(F)                       \
   Utility::Reflection::registering(                 \
     Stringify(F),                                   \
     []() -> Utility::Var {                          \
@@ -21,15 +21,15 @@ inline void registerFunctions(Base::GptSupportLang lang) {
   switch (lang) {
   case Base::GptSupportLang::TESTLANG:
     // Register all TestLang Functions
-    TESTLANG_FUNCTIONS(REGISTER_FUNCTIONS);
+    TESTLANG_FUNCTIONS(REGISTER_FUNCTION);
     break;
   case Base::GptSupportLang::WGSL:
-    WGSL_FUNCTIONS(REGISTER_FUNCTIONS);
+    WGSL_FUNCTIONS(REGISTER_FUNCTION);
   default:
     return;
   }
 
-#undef REGISTER_FUNCTIONS
+#undef REGISTER_FUNCTION
 }
 
 } // Compiler

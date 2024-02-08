@@ -16,6 +16,9 @@ public:
   CondExpr(const CondExpr& ce):
     condition_{ce.condition_} {}
 
+  CondExpr(CondExpr&& ce):
+    condition_{ce.condition_} {}
+
   CondExpr(std::unique_ptr<Expression::Expr>&& condition):
     condition_{std::move(condition)} {}
 
@@ -25,8 +28,19 @@ public:
 
   inline bool operator()(Environment<Base::Antlr4Node>* env);
 
-private:
+  CondExpr& operator=(const CondExpr& expr) {
+    condition_ = expr.condition_;
+    return *this;
+  }
 
+  bool operator==(const CondExpr& expr) const {
+    if (!condition_ || !expr.condition_) {
+      return false;
+    }
+    return *condition_ == *expr.condition_;
+  }
+
+private:
   // Shared ownership here due to rule is copyable
   // which imply that CondExpr should also copyable.
   std::shared_ptr<Expression::Expr> condition_;

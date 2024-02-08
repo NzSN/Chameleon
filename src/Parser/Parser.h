@@ -5,6 +5,8 @@
 #include <istream>
 #include <string>
 #include <vector>
+
+#include "Base/langsInfo.h"
 #include "class_prop.h"
 #include "Base/generic_parsetree_inl.h"
 #include "Base/Concepts/n_ary_tree.h"
@@ -37,7 +39,7 @@ concept NodeAdapter =
 template<Base::isLangType L>
 struct Parser {
 
-  using Adapter = typename ParseArg<L>::Adapter;
+  using Adapter = typename Base::LangArg<L>::Adapter;
 
   template<Concepts::NAryTree::NAryTree T,
            Base::ALLOC_STORAGE_DURATION Storage = Base::AUTOMATIC>

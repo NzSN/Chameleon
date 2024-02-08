@@ -108,7 +108,24 @@ public:
                { t.setNode(arg) } -> std::convertible_to<bool>;
              }
   {
-    return const_cast<T&>(metaRef).setNode(other.getMeta());
+    if (!const_cast<T&>(metaRef).setNode(other.getMeta())) {
+      return false;
+    } else {
+      // Update tree layout
+      childs_.clear();
+
+      for (auto& c: const_cast<T&>(metaRef).getChildren()) {
+        auto child = this->TreeLayer<ParseTree<T>>
+          ::template mapping<T, DYNAMIC>(*c);
+        childs_.push_back(std::move(child));
+      }
+
+      for (auto& c: childs_) {
+        c->parent = this;
+      }
+
+      return true;
+    }
   }
 
   std::unique_ptr<ParseTree> clone() const

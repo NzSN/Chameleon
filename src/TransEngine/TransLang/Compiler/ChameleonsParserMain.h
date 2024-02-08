@@ -17,6 +17,16 @@ namespace Compiler {
 
 using Adapter = Base::Antlr4Node;
 
+inline std::string SingleRuleTemplate(
+  std::string targetLang, std::string lpattern,
+  std::string where, std::string rpattern) {
+
+  return "TARGET: " + targetLang + " \n "
+    "RULES: \n R: {| " + lpattern + " |} => {| " + rpattern + " |} \n"
+    " where " + where;
+}
+
+
 // Program is consist of sequence of strategies.
 class Program {
 public:
@@ -56,9 +66,11 @@ private:
 // program that do transformation onto
 // ParseTree of target languages.
 struct Compiler {
-
   std::unique_ptr<Program> compile(std::istream& input);
 
+
+  template<Base::isLangType L>
+  std::vector<Rewrite::Rule<Adapter>> compileToRule(std::istream& input);
 };
 
 class ChameleonsMain {

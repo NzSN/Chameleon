@@ -54,12 +54,15 @@ Program::operator()(Base::ParseTree<Adapter>& tree) {
 }
 
 std::unordered_map<std::string, Base::GptSupportLang> langs = {
-  {"TestLang", Base::GptSupportLang::TESTLANG},
+  {"TESTLANG", Base::GptSupportLang::TESTLANG},
   {"WGSL", Base::GptSupportLang::WGSL}
 };
 
 std::optional<Base::GptSupportLang>
 toLangID(std::string langID) {
+
+  for (auto& c: langID) { c = toupper(c); }
+
   if (langs.contains(langID)) {
     return langs[langID];
   } else {
@@ -222,7 +225,7 @@ programFromRules(ChameleonsParser::RewriteRulesContext* rCtx,
     return strategiesFromRules<Adapter, GET_LANG_TYPE(LANG_ENUM)>(rCtx)   \
       .transform([lang](auto&& stra) {                           \
         return std::make_unique<Program>(                        \
-          lang,                                                  \
+          lang,                                                 \
           std::move(stra));                                      \
       });                                                        \
   }

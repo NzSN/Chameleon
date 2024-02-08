@@ -42,15 +42,16 @@ struct Match {
 
 template<Base::Layer T>
 bool matching(const TransEngine::Pattern<T>& pattern,
-             const Base::ParseTree<T>& subjectTree,
-             typename Match<T>::MatchTerms* termVars) {
+           const Base::ParseTree<T>& subjectTree,
+           typename Match<T>::MatchTerms* termVars) {
 
   return Concepts::NAryTree::equal<TransEngine::Pattern<T>,
                               Base::ParseTree<T>>
     (pattern, subjectTree,
      // Equality predicate
      [termVars](const TransEngine::Pattern<T>& lhs,
-                 const Base::ParseTree<T>& rhs) {
+                const Base::ParseTree<T>& rhs) {
+
        if (lhs.isTermVar()) {
          if (termVars) {
            termVars->push_back(

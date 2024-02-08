@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include <memory>
 #include <stdexcept>
+#include <algorithm>
 
 #include "utility.h"
 #include "Base/generic_parsetree_antlr4.h"
@@ -321,6 +322,7 @@ struct Arguments {
 };
 
 struct Function {
+  virtual ~Function() {}
   virtual std::unique_ptr<Value> operator()(
     Arguments* args, Environment<Adapter>* env) = 0;
 };
@@ -328,6 +330,26 @@ struct Function {
 /////////////////////////////////////////////////////////////////////////////
 //                                Expression                               //
 /////////////////////////////////////////////////////////////////////////////
+#define EXPR_EQUAL_IMPL(__CONCRETE)                             \
+  bool operator==(const Expr& other) const {                       \
+    const __CONCRETE* t = dynamic_cast<const __CONCRETE*>(&other); \
+    if (!t) {                                                  \
+      return false;                                                      \
+    } else {                                                    \
+      return *t == *this;                                            \
+    }                                                           \
+  }
+
+#define BINARY_OP_EQUAL_IMPL(__OP, __LHS, __RHS)           \
+  bool operator==(const __OP& expr) const {                   \
+    if (!__LHS || !__RHS || !expr.__LHS || !expr.__RHS) { \
+      return false;                                                 \
+    } else {                                               \
+      return *__LHS == *expr.__LHS && *__RHS == *expr.__RHS;     \
+    }                                                      \
+  }
+
+
 struct Expr {
   virtual ~Expr() {}
 
@@ -340,6 +362,10 @@ struct Expr {
 
   virtual std::unique_ptr<Value> operator()(
     Environment<Adapter>*) = 0;
+
+  virtual bool operator==(const Expr& other) const {
+    assertm(false, "operator== of Expr should not be called directly");
+  };
 };
 
 /* Expression to to gain the Term reside in
@@ -367,6 +393,12 @@ public:
     return tid_;
   }
 
+  bool operator==(const TermRef& other) const {
+    return tid_ == other.tid_;
+  }
+
+  EXPR_EQUAL_IMPL(TermRef);
+
 private:
   Rewrite::TermID tid_;
 };
@@ -387,6 +419,11 @@ public:
 
     return copy;
   }
+
+  bool operator==(const Constant& other) const {
+    return *v_ == *other.v_;
+  }
+  EXPR_EQUAL_IMPL(Constant);
 
   std::unique_ptr<Value> v_;
 };
@@ -412,6 +449,9 @@ public:
     return std::make_unique<Bool>(
       *dynamic_cast<Bool*>(loperand.get()) && *roperand);
   }
+
+  BINARY_OP_EQUAL_IMPL(LogiAndExpr, lhs_, rhs_);
+  EXPR_EQUAL_IMPL(LogiAndExpr);
 
 private:
   std::unique_ptr<Expr> lhs_;
@@ -440,6 +480,10 @@ public:
       *dynamic_cast<Bool*>(loperand.get()) || *roperand);
   }
 
+
+  BINARY_OP_EQUAL_IMPL(LogiOrExpr, lhs_, rhs_);
+  EXPR_EQUAL_IMPL(LogiOrExpr);
+
 private:
   std::unique_ptr<Expr> lhs_;
   std::unique_ptr<Expr> rhs_;
@@ -463,6 +507,15 @@ public:
     return op(*loperand, *roperand);
   }
 
+  bool operator==(const OrderExpr& other) const {
+    if (!lhs_ || !rhs_ || other.lhs_ || other.rhs_) {
+      return false;
+    } else {
+      return lhs_ == other.lhs_ && rhs_ == other.rhs_;
+    }
+  }
+
+  EXPR_EQUAL_IMPL(OrderExpr);
 
   bool operator==(const Value& other) const {
     return true;
@@ -522,6 +575,22 @@ public:
 
     return (*f_)(&arguments, env);
   }
+
+  bool operator==(const Call& other) const {
+    return typeid(*f_) == typeid(*other.f_) &&
+      args_.size() == other.args_.size() &&
+      // Check equality of arguments
+      std::ranges::equal(
+        args_.begin(), args_.end(),
+        other.args_.begin(), other.args_.end(),
+        [&](const std::unique_ptr<Expr>& lhs,
+            const std::unique_ptr<Expr>& rhs) -> bool {
+
+          return *lhs == *rhs;
+        });;
+  }
+
+  EXPR_EQUAL_IMPL(Call);
 private:
   std::unique_ptr<Function> f_;
   std::vector<std::unique_ptr<Expr>> args_;
@@ -532,6 +601,9 @@ public:
   Assignment(std::unique_ptr<Expr> left,
          std::unique_ptr<Expr> right):
     left_{std::move(left)}, right_{std::move(right)} {}
+
+  BINARY_OP_EQUAL_IMPL(Assignment, left_, right_);
+  EXPR_EQUAL_IMPL(Assignment);
 
   // Evaluating of Assignment expression is result in
   // replace of Rewrite::Term in Environment which TermID

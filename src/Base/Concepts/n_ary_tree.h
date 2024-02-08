@@ -94,6 +94,11 @@ T& derefMaybe(T& t) {
   return t;
 }
 
+template<NAryTree T>
+void treePrint(T& t) {
+
+}
+
 /* Algorithms */
 template<NAryTree T>
 std::vector<T*> search(const T& t, std::function<bool(T&)> p) {

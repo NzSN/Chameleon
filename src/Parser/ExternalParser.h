@@ -6,6 +6,7 @@
 #include <map>
 
 #include "Base/langs.h"
+#include "Base/langsInfo.h"
 #include "utility.h"
 
 #include "Base/generic_parsetree_antlr4.h"
@@ -18,26 +19,11 @@
 
 namespace Parser {
 
-template<Base::isLangType T>
-struct ParseArg;
-
-#define DEFINE_PARSE_ARG(__NSS, __LANG, __EXT, __L, __P, __E, __EM) \
-  template<>                                                        \
-  struct ParseArg<GET_LANG_TYPE(__LANG)> {                          \
-    using Entry = __P::__E##Context * (__P::*)();                   \
-    using Env = Utility::Antlr4ParseEnv<__L, __P, Entry>;           \
-    using Lexer = __L;                                              \
-    using Parser = __P;                                             \
-    using Adapter = Base::Antlr4Node;                               \
-    inline static Entry entry = &__P::__EM;                         \
-  };
-SUPPORTED_LANG_LIST(DEFINE_PARSE_ARG);
-
 // Currently, only support Antlr4
 template<Base::isLangType T>
 class ExternalParser {
 public:
-  using Arg = ParseArg<T>;
+  using Arg = Base::LangArg<T>;
   using Env = typename Arg::Env;
   using Lexer = typename Arg::Lexer;
   using Parser = typename Arg::Parser;

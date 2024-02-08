@@ -1,0 +1,37 @@
+filegroup(
+    name = "api_srcs",
+    srcs = ["Rule.h", "Program.h", "Transformer.h"],
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "api_unittests",
+    srcs = [":api_srcs",
+            "Api_Unittests.cc",
+            "//src/Parser:parser_source",
+            "//src/Parser:external_parser_src",
+            "//src/TransEngine/Rewrite:rewrite_srcs",
+            "//src/Base:base_srcs",
+            "//src/Base/Concepts:concepts_srcs",
+            "//src:utility_src",
+            "//src/Misc/testLanguage:testLang_parser_srcs",
+            "//src/Analysis:analyzer_src",
+            "//src/TransEngine/TransLang:chameleons_parser_srcs",
+            "//src/TransEngine/TransLang:chameleons_compiler_srcs",
+            "//src/TransEngine:pattern_matching",
+            "//src:refl_src",
+            ],
+    copts = ["-Isrc",
+             "-DENABLE_GC=false",
+             "-Wall",
+             "-Wextra",
+             "-Werror=unused-result"],
+    deps = [
+         "@com_google_googletest//:gtest_main",
+         "@antlr4_runtime//:antlr4_runtime",
+         "@oilpan//:cppgc",
+         "@rapidcheck//:rapidcheck",
+         "@plog//:plog",
+         "//parsers:wgsl_parser",
+         ]
+)

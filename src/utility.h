@@ -59,7 +59,7 @@ RT zip(T l, T r) {
 
 template<std::derived_from<antlr4::Lexer> Lexer,
          std::derived_from<antlr4::Parser> Parser,
-         typename Entry>
+         typename Entry = int>
 struct Antlr4ParseEnv {
   Antlr4ParseEnv(std::string sentences, Entry entry):
     inputSStream{sentences},
@@ -82,6 +82,14 @@ struct Antlr4ParseEnv {
     tree = (parser.*(entry))();
   }
 
+  Antlr4ParseEnv(std::istream& istream):
+    inputStream(istream),
+    input{inputStream},
+    tokens{&lexer},
+    lexer{&input},
+    parser{&tokens},
+    tree{nullptr} {}
+
   /* Caution: Order is important here, don't
    *          change the order of those declarations
    *          unless you know what you are doing. */
@@ -102,7 +110,7 @@ const auto& zip_vector =
 
 template<std::derived_from<antlr4::Lexer> Lexer,
          std::derived_from<antlr4::Parser> Parser,
-         typename Entry>
+         typename Entry = int>
 using Antlr4ParseEnvUniquePtr = std::unique_ptr<Antlr4ParseEnv<Lexer, Parser, Entry>>;
 
 template<std::derived_from<antlr4::Lexer> Lexer,
@@ -123,6 +131,12 @@ Antlr4_GenParseTree(std::istream& stream, Entry entry) {
     Antlr4ParseEnv<Lexer, Parser, Entry>>(stream, entry);
 }
 
+template<std::derived_from<antlr4::Lexer> Lexer,
+         std::derived_from<antlr4::Parser> Parser>
+Antlr4ParseEnvUniquePtr<Lexer, Parser>
+Antlr4Parse(std::istream& stream) {
+  return std::make_unique<Antlr4ParseEnv<Lexer, Parser>>(stream);
+}
 
 std::string testLangRandomExpr(unsigned numOfOperands);
 

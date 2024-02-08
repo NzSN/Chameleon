@@ -18,7 +18,8 @@ filegroup(
          "config.h",
          "defines.h",
          "TreeLayer.h",
-         "langs.h"],
+         "langs.h",
+         "langsInfo.h"],
     visibility = ["//visibility:public"],
 )
 

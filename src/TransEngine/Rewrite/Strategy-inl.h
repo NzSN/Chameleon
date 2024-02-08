@@ -172,6 +172,8 @@ struct BuildMultiStra: public Strategy<T> {
         //       match term.
         std::unreachable();
       }
+
+      env.bindings().clear();
     }
 
     return rule;

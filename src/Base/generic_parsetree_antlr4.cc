@@ -116,6 +116,9 @@ bool Antlr4Node::operator==(const Antlr4Node& node) const {
   return false;
 }
 
+// BUG: Inconsistent between layer after setNode is called
+//      due to Antlr4Node not update it self after underlying
+//      tree structure is changed.
 bool Antlr4Node::setNode(const Antlr4Node& other) {
   if (tree_ == nullptr || other.tree_ == nullptr) {
     return false;
@@ -143,6 +146,19 @@ bool Antlr4Node::setNode(const Antlr4Node& other) {
 
   other.tree_->parent = tree_->parent;
   tree_ = other.tree_;
+
+  // Update current layer to keep
+  // consistent between layers.
+  children_.clear();
+
+  for (auto c: tree_->children) {
+    children_.push_back(
+      std::make_unique<Antlr4Node>(lang_, c));
+  }
+  for (auto& c: children_) {
+    c->parent = this;
+  }
+
   return true;
 }
 

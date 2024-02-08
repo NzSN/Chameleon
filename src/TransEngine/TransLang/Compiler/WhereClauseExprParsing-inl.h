@@ -212,7 +212,7 @@ inline Expr_uptr toExpr(P::CondExprContext* ctx) {
 
 #define TRANS_EXPR(__E)                              \
   if (type == Expression::__E) {                     \
-    return CALL_PARSING_FUNCTION(__E, ctx);          \
+    return CALL_PARSING_FUNCTION(__E, ctx);               \
   }
 
   EXPR_LIST(TRANS_EXPR);
@@ -220,6 +220,19 @@ inline Expr_uptr toExpr(P::CondExprContext* ctx) {
 
   PLOG_DEBUG << "Parsing condition expressions...Failed";
   return nullptr;
+}
+
+inline std::vector<Expr_uptr> toExprs(P::WhereExprsContext& ctx) {
+  std::vector<Expr_uptr> exprs;
+
+  auto* current = ctx.condExprs();
+  while (current) {
+    exprs.emplace_back(toExpr(current->condExpr()));
+
+    current = current->condExprs();
+  }
+
+  return exprs;
 }
 
 #undef DEFINE_PARSING_FUNCTION
