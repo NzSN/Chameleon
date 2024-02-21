@@ -8,13 +8,23 @@
 
 #if ENABLE_GC
 
-#define DECLARE_AS_GC_OBJECT(LANG, PARSER, ENTRY, NODE) \
-  class NODE##Context final: public PARSER::NODE##Context, \
-                             public GCObject \
-  {                                          \
-    public:                                                             \
-    NODE##Context(antlr4::ParserRuleContext* ctx, int state):           \
-      PARSER::NODE##Context(ctx, state) {}                              \
+namespace Chameleon::Base::GC {
+
+struct ContextInfo {
+  ContextInfo(std::string typeName_): typeName{typeName_} {}
+  std::string typeName;
+};
+
+} // Chameleon::Base::GC
+
+#define DECLARE_AS_GC_OBJECT(LANG, PARSER, ENTRY, NODE)                                       \
+  class NODE##Context final:  public GCObject,                                                \
+                              public ContextInfo,                                             \
+                              public PARSER::NODE##Context                                    \
+  {                                                                                           \
+public:                                                                                       \
+    NODE##Context(antlr4::ParserRuleContext* ctx, int state):                                   \
+      PARSER::NODE##Context(ctx, state), ContextInfo(typeid(PARSER::NODE##Context).name()) {} \
   };
 
 #define MAPPING_CONTEXT_TO_GC_REALM(LANG, PARSER, ENTRY, NODE)  \
@@ -26,8 +36,8 @@
 
 namespace Chameleon::Base::GC::Antlr {
 
-class TerminalNodeImpl final: public antlr4::tree::TerminalNodeImpl,
-                              public GCObject
+class TerminalNodeImpl final: public GCObject,                         \
+                              public antlr4::tree::TerminalNodeImpl  \
 {
   public:
 

@@ -42,6 +42,7 @@ private:
 
 class GCObject: public cppgc::GarbageCollected<GCObject> {
 public:
+  virtual ~GCObject() {}
   void Trace(cppgc::Visitor* visitor) const {
     for (auto& o: objs_) {
       visitor->Trace(o);
@@ -49,6 +50,9 @@ public:
   }
   void reach(GCObject *obj) {
     objs_.push_back(obj);
+  }
+  auto& objs() {
+    return objs_;
   }
 private:
   std::list<cppgc::Member<GCObject>> objs_;

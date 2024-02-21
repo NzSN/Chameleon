@@ -7,6 +7,9 @@
 #include "Misc/testLanguage/TestLangParser.h"
 #include "Base/Concepts/n_ary_tree.h"
 
+#include "gc_defines.h"
+#include "generic_parsetree_antlr4_gc.h"
+
 
 using TreeNode = antlr4::tree::ParseTree;
 using TerminalNode = antlr4::tree::TerminalNodeImpl;
@@ -34,6 +37,10 @@ struct AntlrDeepCopy: public ::testing::Test {
 
 
 RC_GTEST_FIXTURE_PROP(AntlrDeepCopy, Basic, ()) {
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
   TreeNode* copy = TestLang::clone(env->tree);
 
   bool equal = Concepts::NAryTree::equal<TreeNode, TreeNode>(
@@ -45,12 +52,27 @@ RC_GTEST_FIXTURE_PROP(AntlrDeepCopy, Basic, ()) {
     });
   RC_ASSERT(equal);
   RC_ASSERT(copy->getText() == env->tree->getText());
-
-  return;
 }
 
+RC_GTEST_FIXTURE_PROP(AntlrDeepCopy, KeepAlive, ()) {
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
+  TreeNode* copy = TestLang::clone(env->tree);
+  Base::GC::Process::gc_heap->ForceGarbageCollectionSlow("AntlrDeepCopy", "Test");
+
+  EXPECT_TRUE(copy->getText().size() > 0);
+}
+
+#if ENABLE_GC
 TEST(WGSLDeepCopy, Basics) {
+  using T = Utility::TypeMapping<WGSLParser::Type_specifierContext>::type;
+  T t{nullptr, 0};
+  Base::GC::GCObject* gcObj = dynamic_cast<Base::GC::GCObject*>(&t);
 
+  EXPECT_TRUE(gcObj);
 }
+#endif
 
 } // TestLang

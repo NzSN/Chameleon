@@ -122,6 +122,10 @@ TEST_F(StrategyFailed, FailedToMatched) {
 }
 
 TEST_F(StrategySuccess, Build) {
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
   Environment<Node> env{};
   env.setTargetTerm(target.get());
 
@@ -133,6 +137,10 @@ TEST_F(StrategySuccess, Build) {
 }
 
 TEST_F(StrategySuccess, RuleBreakDown) {
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
   Environment<Node> env{};
   env.setTargetTerm(target.get());
 
@@ -230,6 +238,10 @@ struct StrategyMulti: public ::testing::Test {
 };
 
 TEST_F(StrategyMulti, MultiMatch) {
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
   Environment<Node> env{};
   env.setTargetTerm(target.get());
 
@@ -266,6 +278,10 @@ TEST_F(StrategyMulti, MultiMatch) {
 }
 
 TEST_F(StrategyMulti, WhereMulti) {
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
  Environment<Node> env{};
   env.setTargetTerm(target.get());
 
@@ -283,6 +299,10 @@ TEST_F(StrategyMulti, WhereMulti) {
 }
 
 TEST_F(StrategyMulti, BuildMulti) {
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
   Environment<Node> env{};
   env.setTargetTerm(target.get());
 

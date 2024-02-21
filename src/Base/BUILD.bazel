@@ -57,3 +57,10 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
+cc_test(
+    name = "gc_unittests",
+    srcs = ["gc_defines.h", "gc_unittests.cc"],
+    deps = ["@oilpan//:cppgc",
+            "@com_google_googletest//:gtest_main",
+            ],
+)

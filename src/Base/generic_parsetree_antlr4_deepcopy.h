@@ -129,8 +129,12 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
     Base::GC::GCObject* copyGC =
       dynamic_cast<Base::GC::GCObject*>(copy);
 
-    if (!parentGC && !copyGC) {
+    if (parentGC && copyGC) {
       parentGC->reach(copyGC);
+    } else {
+      std::string msg = "Non-GCObject is used as copy node with ENABLE_GC "
+              "macro enable is not allowed";
+      assertm(false, msg);
     }
     #endif
   }

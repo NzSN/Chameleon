@@ -107,7 +107,28 @@ bool Antlr4Node::operator==(const Antlr4Node& node) const {
 
   if (this->tree_->getTreeType() ==
       antlr4::tree::ParseTreeType::RULE) {
-    return typeid(*this->tree_) == typeid(*node.tree_);
+
+    const std::type_info& leftTypeInfo = typeid(*this->tree_);
+    const std::type_info& rightTypeInfo = typeid(*node.tree_);
+
+    bool isEqual = leftTypeInfo == rightTypeInfo;
+
+    #if ENABLE_GC
+    if (!isEqual) {
+      auto* lhs = dynamic_cast<GC::ContextInfo*>(this->tree_);
+      auto* rhs = dynamic_cast<GC::ContextInfo*>(node.tree_);
+
+      if (lhs && rhs) {
+        return isEqual;
+      } else if (lhs) {
+        return lhs->typeName == rightTypeInfo.name();
+      } else if (rhs) {
+        return rhs->typeName == leftTypeInfo.name();
+      }
+    }
+    #endif
+
+    return isEqual;
   } else if (this->tree_->getTreeType() ==
              antlr4::tree::ParseTreeType::TERMINAL) {
     return this->tree_->getText() == node.tree_->getText();

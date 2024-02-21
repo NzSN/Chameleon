@@ -212,6 +212,10 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToAntlr4Node, ()) {
 RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, Clone, ()) {
   RC_ASSERT_FALSE(env->tree == nullptr);
 
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
   Antlr4Node nodes{
     ParseTree<Antlr4Node>::TESTLANG,
     env->tree };
@@ -254,6 +258,10 @@ RC_GTEST_FIXTURE_PROP(Antlr4GPTTests, MapToParseTree, ()) {
 }
 
 RC_GTEST_PROP(ParseTreeTest_NAry, Clone, ()) {
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
   std::istringstream codes{"a+1+2"};
   ParseTree<Antlr4Node> t =
     Parser::ParserSelect<GET_LANG_TYPE(TESTLANG)>
@@ -269,6 +277,10 @@ RC_GTEST_PROP(ParseTreeTest_NAry, Clone, ()) {
 }
 
 RC_GTEST_PROP(ParseTreeTest_NAry, SetNode, ()) {
+#if ENABLE_GC
+  Base::GC::GC gc{};
+#endif
+
   std::istringstream codes{"a+1+2"};
   ParseTree<Antlr4Node> t =
     Parser

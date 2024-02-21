@@ -34,7 +34,7 @@ cc_test(
         ],
     copts = [
           "-Isrc",
-          "-DENABLE_GC=false",
+          "-DENABLE_GC=true",
           "-Wall",
           "-Wextra",
           "-Werror=unused-result"
