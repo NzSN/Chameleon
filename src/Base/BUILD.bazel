@@ -24,6 +24,30 @@ filegroup(
 )
 
 filegroup(
+    name = "base_hdrs",
+    srcs = [
+         "generic_parsetree_antlr4.h",
+         "generic_parsetree_antlr4_testlang.h",
+         "generic_parsetree_antlr4_wgsl.h",
+         "generic_parsetree_antlr4_gc.h",
+         "generic_parsetree_antlr4_testlang_deepcopy.h",
+         "generic_parsetree_antlr4_wgsl_deepcopy.h",
+         "generic_parsetree_antlr4_deepcopy.h",
+         "generic_parsetree_inl.h",
+         "generic_parsetree.h",
+         "generic_parsetree_concrete.h",
+         "generic_parsetree_types.h",
+         "gc_defines.h",
+         "config.h",
+         "defines.h",
+         "TreeLayer.h",
+         "langs.h",
+         "langsInfo.h"
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
     name = "language_unittests_src",
     srcs = [
          ":base_srcs",

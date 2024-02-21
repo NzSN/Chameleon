@@ -4,6 +4,11 @@ filegroup(
             "GenericTypes.h"],
     visibility = ["//visibility:public"],
 )
+filegroup(
+    name = "utility_hdrs",
+    srcs = ["utility.h", "class_prop.h"],
+    visibility = ["//visibility:public"],
+)
 
 filegroup(
     name = "refl_src",

@@ -6,8 +6,20 @@ filegroup(
 )
 
 filegroup(
+    name = "parser_hdrs",
+    srcs = ["Parser.h", "Parser-inl.h"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
     name = "external_parser_src",
     srcs = ["ExternalParser.h", "ExternalParser.cc"],
+    visibility = ["//visibility:public"]
+)
+
+filegroup(
+    name = "external_parser_hdrs",
+    srcs = ["ExternalParser.h"],
     visibility = ["//visibility:public"]
 )
 

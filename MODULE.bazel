@@ -6,8 +6,9 @@
 ###############################################################################
 
 module(
-    name = "chameleons",
+    name = "chameleon",
     version = "0.1",
+    compatibility_level = 1,
 )
 
 bazel_dep(name = "googletest", version = "1.14.0", repo_name = "com_google_googletest")
@@ -18,21 +19,21 @@ bazel_dep(name = "platforms", version = "0.0.8")
 # External repositories
 
 # Antlr4
-antlr4_dep = use_extension("//:bazel/extensions.bzl", "antlr4_dep")
+antlr4_dep = use_extension("@chameleon//:bazel/extensions.bzl", "antlr4_dep")
 use_repo(antlr4_dep, "antlr4_runtime")
 
 # Rapidcheck
-rapidcheck_dep = use_extension("//:bazel/extensions.bzl", "rapidcheck_dep")
+rapidcheck_dep = use_extension("@chameleon//:bazel/extensions.bzl", "rapidcheck_dep")
 use_repo(rapidcheck_dep, "rapidcheck")
 
 # Plog
-plog_dep = use_extension("//:bazel/extensions.bzl", "plog_dep")
+plog_dep = use_extension("@chameleon//:bazel/extensions.bzl", "plog_dep")
 use_repo(plog_dep, "plog")
 
 # TreeSitter
-tree_sitter_dep = use_extension("//:bazel/extensions.bzl", "treesitter_dep")
+tree_sitter_dep = use_extension("@chameleon//:bazel/extensions.bzl", "treesitter_dep")
 use_repo(tree_sitter_dep, "tree_sitter")
 
 # Oilpan
-oilpan_dep = use_extension("//:bazel/extensions.bzl", "oilpan_dep")
+oilpan_dep = use_extension("@chameleon//:bazel/extensions.bzl", "oilpan_dep")
 use_repo(oilpan_dep, "oilpan")

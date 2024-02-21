@@ -1,8 +1,8 @@
-load("//:bazel/repositories.bzl", "antlr4_repo")
-load("//:bazel/repositories.bzl", "rapidcheck_repo")
-load("//:bazel/repositories.bzl", "plog_repo")
-load("//:bazel/repositories.bzl", "tree_sitter_repo")
-load("//:bazel/repositories.bzl", "oilpan_repo")
+load("@chameleon//:bazel/repositories.bzl", "antlr4_repo")
+load("@chameleon//:bazel/repositories.bzl", "rapidcheck_repo")
+load("@chameleon//:bazel/repositories.bzl", "plog_repo")
+load("@chameleon//:bazel/repositories.bzl", "tree_sitter_repo")
+load("@chameleon//:bazel/repositories.bzl", "oilpan_repo")
 
 # Antlr4
 def _antlr4_dep_impl(_ctx):
