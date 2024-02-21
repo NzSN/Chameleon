@@ -9,6 +9,8 @@
 #include "TransEngine/Rewrite/Expr/Expr.h"
 #include "TransEngine/Rewrite/Environment.h"
 
+namespace Chameleon {
+
 using ExprTerm = TransEngine::Expression::Term;
 using ExprVal  = TransEngine::Expression::Value;
 using ExprArg  = TransEngine::Expression::Arguments;
@@ -176,5 +178,6 @@ struct RandomIdent: public ExprFunc {
 private:
 };
 
+} // Chameleon
 
 #endif /* FUNCTIONS_H */

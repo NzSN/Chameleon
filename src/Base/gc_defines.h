@@ -10,7 +10,7 @@
 #include "cppgc/member.h"
 #include "cppgc/visitor.h"
 
-namespace Base::GC {
+namespace Chameleon::Base::GC {
 
 namespace Process {
 inline cppgc::Heap* gc_heap = nullptr;

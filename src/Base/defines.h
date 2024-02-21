@@ -5,7 +5,7 @@
 #include "gc_defines.h"
 #endif
 
-namespace Base {
+namespace Chameleon::Base {
 
 #if ENABLE_GC
 template<typename T,

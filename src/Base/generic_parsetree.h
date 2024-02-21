@@ -6,7 +6,7 @@
 #include <memory>
 #include "TreeLayer.h"
 
-namespace Base {
+namespace Chameleon::Base {
 
 /////////////////////////////////////////////////////////////////////////////
 //                                 Concepts                                //

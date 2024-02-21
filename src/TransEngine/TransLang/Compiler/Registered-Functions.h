@@ -5,6 +5,7 @@
 #include "Functions.h"
 #include "GenericTypes.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Compiler {
 
@@ -34,5 +35,6 @@ inline void registerFunctions(Base::GptSupportLang lang) {
 
 } // Compiler
 } // TransEngine
+} // Chameleon
 
 #endif /* REGISTERED_FUNCTIONS_H */

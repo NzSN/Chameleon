@@ -12,6 +12,7 @@
 
 #include "Parser/Parser-inl.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Compiler {
 
@@ -139,5 +140,6 @@ private:
 
 } // Compiler
 } // TransEngine
+} // Chameleon
 
 #endif /* CHAMELEONSPARSERMAIN_H */

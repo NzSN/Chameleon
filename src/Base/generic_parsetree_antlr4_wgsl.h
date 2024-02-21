@@ -1,7 +1,7 @@
 #ifndef GENERIC_PARSETREE_ANTLR4_WGSL_H_
 #define GENERIC_PARSETREE_ANTLR4_WGSL_H_
 
-namespace WGSL {
+namespace Chameleon::WGSL {
 
 #define WGSL_CONTEXTS(V)                                                       \
   V(WGSL, WGSLParser, Translation_unit, Template_args_start)                         \

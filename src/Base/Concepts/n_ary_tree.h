@@ -11,7 +11,7 @@
 
 #include "utility.h"
 
-namespace Concepts::NAryTree {
+namespace Chameleon::Concepts::NAryTree {
 
 template<typename T, typename V>
 concept Children_t =

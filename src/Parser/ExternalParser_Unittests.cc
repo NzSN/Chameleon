@@ -3,7 +3,7 @@
 #include <sstream>
 #include "ExternalParser.h"
 
-namespace Parser {
+namespace Chameleon::Parser {
 
 TEST(ExternalParserUnittests, Basic) {
   ExternalParser<GET_LANG_TYPE(TESTLANG)> extParser;

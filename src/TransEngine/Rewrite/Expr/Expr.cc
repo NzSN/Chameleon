@@ -1,5 +1,6 @@
 #include "Expr.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Expression {
 
@@ -22,3 +23,4 @@ bool Value::isTerm(Value &v) {
 
 } // Expression
 } // TransEngine
+} // Chameleon

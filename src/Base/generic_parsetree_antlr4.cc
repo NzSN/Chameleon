@@ -9,7 +9,7 @@
 #include "generic_parsetree_antlr4.h"
 #include "Misc/testLanguage/TestLangParser.h"
 
-namespace Base {
+namespace Chameleon::Base {
 
 struct FAILED_TO_CLONE_ANTLR_NODE: public std::exception {
   ~FAILED_TO_CLONE_ANTLR_NODE() {}

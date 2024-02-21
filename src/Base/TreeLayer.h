@@ -4,7 +4,7 @@
 #include <memory>
 #include "Base/Concepts/n_ary_tree.h"
 
-namespace Base {
+namespace Chameleon::Base {
 
 enum ALLOC_STORAGE_DURATION {
   AUTOMATIC,

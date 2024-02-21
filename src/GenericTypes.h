@@ -13,6 +13,10 @@
 //                            Analyzer Generics                            //
 /////////////////////////////////////////////////////////////////////////////
 #include "Analysis/analyzer.h"
+#include "TransEngine/Rewrite/Strategy-inl.h"
+#include "TransEngine/Rewrite/Rule.h"
+
+namespace Chameleon {
 namespace Analyzer {
 
 using AnalyzeDataGeneric =
@@ -25,7 +29,6 @@ using AnalyzeDataGeneric =
 /////////////////////////////////////////////////////////////////////////////
 //                            Strategy Generics                            //
 /////////////////////////////////////////////////////////////////////////////
-#include "TransEngine/Rewrite/Strategy-inl.h"
 
 namespace TransEngine {
 namespace Rewrite {
@@ -50,8 +53,6 @@ using StrategySetGeneric =
 /////////////////////////////////////////////////////////////////////////////
 //                                   Rule                                  //
 /////////////////////////////////////////////////////////////////////////////
-#include "TransEngine/Rewrite/Rule.h"
-
 namespace TransEngine {
 namespace Rewrite {
 
@@ -62,6 +63,7 @@ using RuleGeneric =
 
 } // Rewrite
 } // TransEngine
+} // Chameleon
 
 
 

@@ -11,7 +11,7 @@
 #include "Strategy.h"
 #include "TransEngine/PatternMatching.h"
 
-
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -210,5 +210,6 @@ StrategySeq<T> ruleBreakDown(Rule<T>& rule) {
 
 } // Rewrite
 } // TransEngine
+} // Chameleon
 
 #endif /* STRATEGY_INL_H */

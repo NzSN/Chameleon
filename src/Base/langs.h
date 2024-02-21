@@ -3,6 +3,7 @@
 
 #include <type_traits>
 
+namespace Chameleon {
 namespace Base {
 
 enum SUPPORTED_LANGUAGE {
@@ -48,5 +49,6 @@ SUPPORTED_LANG_LIST(DEFINE_LANG_TYPE)
 #undef LANG_TYPE_IMPL
 
 } // Base
+} // Chameleon
 
 #endif /* LANGS_H */

@@ -10,7 +10,7 @@
 #include "../ChameleonsLexer.h"
 #include "../ChameleonsParser.h"
 
-namespace TransEngine::Compiler::WhereClause {
+namespace Chameleon::TransEngine::Compiler::WhereClause {
 
 struct WhereClauseTest: public ::testing::Test {
   using Entry =

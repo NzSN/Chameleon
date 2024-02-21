@@ -11,6 +11,7 @@
 
 #include "WhereClauseExprParsing-inl.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Compiler {
 
@@ -36,7 +37,7 @@ doEvalStrategies(Base::ParseTree<Adapter>& tree,
   }
 
   // Setup environment
-  Environment<Adapter> env{};
+  Rewrite::Environment<Adapter> env{};
   env.setTargetTerm(&tree);
 
   // Evaluating all strategies with
@@ -265,3 +266,4 @@ std::unique_ptr<Program> Compiler::compile(std::istream& stream) {
 
 } // Compiler
 } // TransEngine
+} // Chameleon

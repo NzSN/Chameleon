@@ -1,7 +1,7 @@
 #ifndef CONCEPTS_H
 #define CONCEPTS_H
 
-namespace Concepts {
+namespace Chameleon::Concepts {
 
 template<bool isAscending_>
 concept isAscending = isAscending_;

@@ -11,6 +11,7 @@
 
 #include "TransEngine/TransLang/Compiler/WhereClauseExprParsing-inl.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Compiler {
 /////////////////////////////////////////////////////////////////////////////
@@ -162,3 +163,4 @@ Compiler::compileToRule(std::istream& input) {
 
 } // Compiler
 } // TransEngine
+} // Chameleon

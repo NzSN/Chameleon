@@ -13,7 +13,7 @@
 #include "ExternalParser.h"
 #include "TransEngine/SigmaTerm.h"
 
-namespace Parser {
+namespace Chameleon::Parser {
 
 struct ParserTests: public ::testing::Test {
   void SetUp() final {

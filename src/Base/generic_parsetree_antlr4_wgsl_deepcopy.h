@@ -5,7 +5,7 @@
 #include "generic_parsetree_antlr4_deepcopy.h"
 #include "parsers/wgsl/WGSLBaseListener.h"
 
-namespace WGSL {
+namespace Chameleon::WGSL {
 
 DEEPCOPY_IMPL(
   WGSLBaseListener,

@@ -13,6 +13,7 @@
 #include "TransEngine/TransLang/ChameleonsLexer.h"
 #include "TransEngine/TransLang/ChameleonsParser.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Expression {
 
@@ -659,5 +660,6 @@ private:
 
 } // Expression
 } // TransEngine
+} // Chameleon
 
 #endif /* EXPR_H */

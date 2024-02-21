@@ -1,7 +1,7 @@
 #include <memory>
 #include "Parser-inl.h"
 
-namespace Parser {
+namespace Chameleon::Parser {
 
 std::optional<Base::ParseTreeT_DYNAMIC>
 ParserRuntimeSelect(unsigned lang, std::istringstream& sentences) {

@@ -13,7 +13,7 @@
 #include "parsers/wgsl/WGSLParser.h"
 
 
-namespace Base {
+namespace Chameleon::Base {
 
 template<Base::isLangType T>
 struct LangArg;

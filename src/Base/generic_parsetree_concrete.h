@@ -5,7 +5,7 @@
 #include <variant>
 #include "generic_parsetree_antlr4.h"
 
-namespace Base {
+namespace Chameleon::Base {
 
 using ParseTreeT_DYNAMIC = std::variant<
   std::unique_ptr<ParseTree<Antlr4Node>>

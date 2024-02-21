@@ -10,7 +10,7 @@
 #include "Misc/testLanguage/TestLangLexer.h"
 #include "Misc/testLanguage/TestLangParser.h"
 
-
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -294,3 +294,4 @@ TEST_F(StrategyMulti, BuildMulti) {
 
 } // Rewrite
 } // TransEngine
+} // Chameleon

@@ -7,6 +7,7 @@
 #include "Environment.h"
 #include "Base/generic_parsetree.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -54,5 +55,6 @@ StrategySeq<T> ruleBreakDown(Rule<T>& rule);
 
 } // Rewrite
 } // TransEngine
+} // Chameleon
 
 #endif /* STRATEGY_H */

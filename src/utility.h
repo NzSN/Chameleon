@@ -10,6 +10,7 @@
 #include "antlr4-runtime.h"
 #include "Base/config.h"
 
+namespace Chameleon {
 namespace Utility {
 
 #define assertm(exp, msg) assert(((void)msg, exp))
@@ -273,5 +274,6 @@ void for_loop() {
 }
 
 } // Utility
+} // Chameleon
 
 #endif /* UTILITY_H */

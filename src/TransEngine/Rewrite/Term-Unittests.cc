@@ -3,6 +3,7 @@
 
 #include "Term.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -29,3 +30,4 @@ TEST_F(TermTests, Comparable) {
 
 } // Rewrite
 } // TransEngine
+} // Chameleon

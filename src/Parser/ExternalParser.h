@@ -17,7 +17,7 @@
 #include "parsers/wgsl/WGSLLexer.h"
 #include "parsers/wgsl/WGSLParser.h"
 
-namespace Parser {
+namespace Chameleon::Parser {
 
 // Currently, only support Antlr4
 template<Base::isLangType T>

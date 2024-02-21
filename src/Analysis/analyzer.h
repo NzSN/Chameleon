@@ -13,6 +13,7 @@
 #include "Base/Concepts/n_ary_tree.h"
 
 
+namespace Chameleon {
 namespace Analyzer {
 
 using Concepts::NAryTree::NAryTree;
@@ -163,6 +164,7 @@ private:
 };
 
 } // Analyzer
+}
 
 
 #endif /* ANALYZER_H */

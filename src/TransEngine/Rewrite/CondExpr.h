@@ -4,6 +4,7 @@
 #include "Environment.h"
 #include "Expr/Expr.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -48,5 +49,6 @@ private:
 
 } // Rewrite
 } // TransEngine
+} // Chameleon
 
 #endif /* CONDEXPR_H */

@@ -12,7 +12,7 @@ using TreeNode = antlr4::tree::ParseTree;
 using TerminalNode = antlr4::tree::TerminalNodeImpl;
 
 /* Checkt deep copy on TestLang ParseTrees */
-namespace TestLang {
+namespace Chameleon::TestLang {
 
 struct AntlrDeepCopy: public ::testing::Test {
 

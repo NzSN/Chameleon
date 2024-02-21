@@ -24,7 +24,7 @@
   };
 
 
-namespace Base::GC::Antlr {
+namespace Chameleon::Base::GC::Antlr {
 
 class TerminalNodeImpl final: public antlr4::tree::TerminalNodeImpl,
                               public GCObject
@@ -38,7 +38,7 @@ class TerminalNodeImpl final: public antlr4::tree::TerminalNodeImpl,
 
 } // Base::GC::Antlr
 
-namespace Utility {
+namespace Chameleon::Utility {
 
 template<>
 struct TypeMapping<antlr4::tree::TerminalNodeImpl> {
@@ -54,13 +54,13 @@ struct TypeMapping<antlr4::tree::TerminalNodeImpl> {
 #include "src/Misc/testLanguage/TestLangParser.h"
 #include "generic_parsetree_antlr4_testlang.h"
 
-namespace Base::GC::Antlr::TestLang {
+namespace Chameleon::Base::GC::Antlr::TestLang {
 
 TEST_LANG_CONTEXTS(DECLARE_AS_GC_OBJECT);
 
 } // Base::GC::Antlr::TestLang
 
-namespace Utility {
+namespace Chameleon::Utility {
 
 TEST_LANG_CONTEXTS(MAPPING_CONTEXT_TO_GC_REALM);
 
@@ -72,13 +72,13 @@ TEST_LANG_CONTEXTS(MAPPING_CONTEXT_TO_GC_REALM);
 #include "parsers/wgsl/WGSLParser.h"
 #include "generic_parsetree_antlr4_wgsl.h"
 
-namespace Base::GC::Antlr::WGSL {
+namespace Chameleon::Base::GC::Antlr::WGSL {
 
 WGSL_CONTEXTS(DECLARE_AS_GC_OBJECT);
 
 } // Base::GC:Antlr::WGSL
 
-namespace Utility {
+namespace Chameleon::Utility {
 
 WGSL_CONTEXTS(MAPPING_CONTEXT_TO_GC_REALM)
 

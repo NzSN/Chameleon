@@ -10,7 +10,7 @@
 #include "generic_parsetree_antlr4_wgsl_deepcopy.h"
 
 
-namespace Base {
+namespace Chameleon::Base {
 
 // Due to antlr4::tree::ParseTree does not
 // satisfy the constraint of Layer then

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "CondExpr-inl.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -51,3 +52,4 @@ TEST(CondExprTest, Equality) {
 
 } // Rewrite
 } // TransEngine
+} // Chameleon

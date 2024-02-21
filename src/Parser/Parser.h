@@ -13,7 +13,7 @@
 
 #include "ExternalParser.h"
 
-namespace Parser {
+namespace Chameleon::Parser {
 
 enum TREE_PROP {
   TREE_INDEPENDENT

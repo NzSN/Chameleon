@@ -9,7 +9,7 @@
 #include "Parser/Parser-inl.h"
 #include "Parser/ExternalParser.h"
 
-namespace Algorithms {
+namespace Chameleon::Algorithms {
 
 struct PatternMatchingTests: public ::testing::Test {
   void SetUp() final {

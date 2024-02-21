@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <concepts>
 
-namespace CLASSPROP {
+namespace Chameleon::CLASSPROP {
 
 // For expresive purposes only
 

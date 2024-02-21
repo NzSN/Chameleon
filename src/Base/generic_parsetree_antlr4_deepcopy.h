@@ -16,7 +16,7 @@
 
 #include "Base/generic_parsetree_antlr4_gc.h"
 
-namespace Antlr4DeepCopy {
+namespace Chameleon::Antlr4DeepCopy {
 
 struct FAILED_TO_MAPPING_TO_CAT_THECOPY: std::exception {
   ~FAILED_TO_MAPPING_TO_CAT_THECOPY() {}

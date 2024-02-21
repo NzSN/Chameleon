@@ -7,7 +7,7 @@
 
 using P = ChameleonsParser;
 
-namespace TransEngine::Compiler::WhereClause {
+namespace Chameleon::TransEngine::Compiler::WhereClause {
 
 std::unique_ptr<Expression::Expr> toExpr(P::CondExprContext* ctx);
 

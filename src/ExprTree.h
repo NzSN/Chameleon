@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <tuple>
 
-namespace Utility {
+namespace Chameleon::Utility {
 namespace {
 template<
   typename V,

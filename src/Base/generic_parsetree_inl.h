@@ -5,7 +5,7 @@
 #include "generic_parsetree.h"
 #include "utility.h"
 
-namespace Base {
+namespace Chameleon::Base {
 
 template<Layer T>
 bool ParseTree<T>::operator==(

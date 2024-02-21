@@ -18,6 +18,14 @@ filegroup(
 )
 
 filegroup(
+    name = "rewrite_hdrs",
+    srcs = ["Term.h", "Environment.h", "Strategy.h",
+            "Strategy-inl.h", "Rule.h", "Expr/Expr.h",
+            "CondExpr.h", "CondExpr-inl.h"],
+    visibility = ["//visibility:public"]
+)
+
+filegroup(
     name = "rewrite_unittest_srcs",
     srcs = [":rewrite_srcs",
             # Unittests

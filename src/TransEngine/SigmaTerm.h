@@ -14,7 +14,7 @@
 
 #include "SigmaTerm_Antlr.h"
 
-namespace TransEngine {
+namespace Chameleon::TransEngine {
 
 template<Base::Layer T>
 struct Pattern: public Base::TreeLayer<Pattern<T>>,

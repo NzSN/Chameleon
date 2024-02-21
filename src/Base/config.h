@@ -7,7 +7,7 @@
 #endif
 
 /* Macros that enforce to define */
-namespace Config {
+namespace Chameleon::Config {
 
 enum Configs {
   GC = ENABLE_GC

@@ -5,6 +5,8 @@
 
 #include "Refl.h"
 
+namespace Chameleon {
+
 struct Base {
   virtual int value() const { return 0; }
   virtual ~Base() {}
@@ -37,3 +39,5 @@ TEST(ReflTests, Basics_new) {
   Base* b = vMaybe.value().convert<Base>();
   EXPECT_TRUE(b->value() == 1);
 }
+
+} // Chameleon

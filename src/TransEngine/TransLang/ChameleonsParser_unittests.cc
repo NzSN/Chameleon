@@ -4,6 +4,8 @@
 #include "ChameleonsLexer.h"
 #include "ChameleonsParser.h"
 
+namespace Chameleon {
+
 struct ChameleonsTest: public ::testing::Test {
   using Entry = ChameleonsParser::ProgContext* (ChameleonsParser::*)();
   std::string GetParseTree(std::string prog, bool pretty = false) {
@@ -179,3 +181,5 @@ TEST_F(ChameleonsTest, WhereCondition_CallExpr) {
       "(condExpr (callExpr RD ( (arguments T) ))))) ;))))))"
       ));
 }
+
+} // Chameleon

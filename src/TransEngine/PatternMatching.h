@@ -11,10 +11,12 @@
 #include "Rewrite/Environment.h"
 #include "Rewrite/Term.h"
 
+
+namespace Chameleon::Algorithms {
+
 using TransEngine::Rewrite::Environment;
 using TransEngine::Rewrite::Term;
 
-namespace Algorithms {
 enum MatchAlgor {
   NORMAL
 };

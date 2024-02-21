@@ -3,7 +3,7 @@
 
 #include "ExprTree.h"
 
-namespace Utility {
+namespace Chameleon::Utility {
 
 struct IntegerOP {
   virtual ~IntegerOP() {};

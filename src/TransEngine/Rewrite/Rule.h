@@ -11,6 +11,7 @@
 #include "Parser/Parser-inl.h"
 #include "CondExpr-inl.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -150,6 +151,7 @@ struct Rule {
 
 } // Rewrite
 } // TransEngine
+} // Chameleon
 
 
 #endif /* RULE_H */

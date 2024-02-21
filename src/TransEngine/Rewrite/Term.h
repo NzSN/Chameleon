@@ -6,7 +6,7 @@
 #include "class_prop.h"
 #include "Base/generic_parsetree_inl.h"
 
-
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -65,5 +65,6 @@ public:
 
 } // Rewrite
 } // TransEngine
+} // Chameleon
 
 #endif /* TERM_H */

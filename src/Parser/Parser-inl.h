@@ -12,7 +12,7 @@
 
 #include "Base/langs.h"
 
-namespace Parser {
+namespace Chameleon::Parser {
 
 // Static Parser Selecter
 template<Base::isLangType L> struct ParserSelect;

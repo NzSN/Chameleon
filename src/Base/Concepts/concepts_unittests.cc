@@ -7,6 +7,7 @@
 #include <optional>
 
 
+namespace Chameleon {
 namespace Concepts {
 namespace NAryTree {
 
@@ -100,3 +101,4 @@ RC_GTEST_FIXTURE_PROP(NAryTreeTests, Isomorphic, ()) {
 
 } // NAryTree
 } // Concepts
+} // Chameleon

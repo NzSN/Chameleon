@@ -6,7 +6,7 @@
 
 #include "generic_parsetree_antlr4_testlang.h"
 
-namespace TestLang {
+namespace Chameleon::TestLang {
 
 DEEPCOPY_IMPL(
   TestLangBaseListener,

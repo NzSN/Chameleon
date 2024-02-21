@@ -4,6 +4,7 @@
 
 #include "Base/generic_parsetree_antlr4.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Expression {
 
@@ -413,3 +414,4 @@ TEST(ExpressionTest, Equality) {
 
 } // Expression
 } // TransEngine
+} // Chameleon

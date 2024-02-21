@@ -4,6 +4,7 @@
 #include "Environment.h"
 #include "Base/generic_parsetree.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -83,3 +84,4 @@ TEST(EnvironmentTests, MatchTermsSorted) {
 
 } // Rewrite
 } // TransEngine
+} // Chameleon

@@ -13,6 +13,7 @@
 #include "utility.h"
 #include "Analysis/analyzer.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -197,5 +198,6 @@ private:
 
 } // Rewrite
 } // TransEngine
+} // Chameleon
 
 #endif /* ENVIRONMENT_H */

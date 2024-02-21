@@ -16,7 +16,7 @@
 #include "Misc/testLanguage/TestLangLexer.h"
 #include "Misc/testLanguage/TestLangParser.h"
 
-namespace Analyzer {
+namespace Chameleon::Analyzer {
 using Antlr4ParseTree = Base::ParseTree<Base::Antlr4Node>;
 
 ///////////////////////////////////////////////////////////////////////////////

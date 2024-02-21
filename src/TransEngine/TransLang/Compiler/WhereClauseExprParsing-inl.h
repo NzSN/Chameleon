@@ -8,7 +8,7 @@
 
 #include "TransEngine/TransLang/ChameleonsParser.h"
 
-namespace TransEngine::Compiler::WhereClause {
+namespace Chameleon::TransEngine::Compiler::WhereClause {
 
 using Expr_uptr = std::unique_ptr<Expression::Expr>;
 

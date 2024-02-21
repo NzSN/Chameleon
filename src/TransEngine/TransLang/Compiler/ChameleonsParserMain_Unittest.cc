@@ -13,6 +13,7 @@
 
 #include "Registered-Functions.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Compiler {
 
@@ -192,3 +193,4 @@ TEST(ChameleonsParserMainTest, MainMultiMatch) {
 
 } // Compiler
 } // TransEngine
+} // Chameleon

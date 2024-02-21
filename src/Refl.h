@@ -6,7 +6,7 @@
 #include <optional>
 #include <algorithm>
 
-namespace Utility {
+namespace Chameleon::Utility {
 
 /////////////////////////////////////////////////////////////////////////////
 //               A Simple reflection to mapping string to objects          //

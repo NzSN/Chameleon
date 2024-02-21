@@ -10,7 +10,7 @@
 #include "parsers/wgsl/WGSLParser.h"
 #include "Base/generic_parsetree_antlr4_gc.h"
 
-namespace SIGMA_TERM {
+namespace Chameleon::SIGMA_TERM {
 
 template<Base::SUPPORTED_LANGUAGE LANG = Base::SUPPORTED_LANGUAGE::TESTLANG>
 requires Base::isTestLang<LANG>

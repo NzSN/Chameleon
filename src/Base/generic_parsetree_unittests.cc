@@ -17,7 +17,7 @@
 #include "utility.h"
 #include "Base/Concepts/n_ary_tree.h"
 
-namespace Base {
+namespace Chameleon::Base {
 
 struct ParseTreeTest: public ::testing::Test {
   // Generate arbitary parsetree contains

@@ -3,6 +3,7 @@
 
 #include "CondExpr.h"
 
+namespace Chameleon {
 namespace TransEngine {
 namespace Rewrite {
 
@@ -24,6 +25,6 @@ inline bool CondExpr::operator()(Environment<Base::Antlr4Node>* env) {
 
 } // Rewrite
 } // TransEngine
-
+} // Chameleon
 
 #endif /* CONDEXPR-INL_H */

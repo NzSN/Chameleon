@@ -4,7 +4,7 @@
 #include <tuple>
 #include "utility.h"
 
-namespace Utility {
+namespace Chameleon::Utility {
 
 struct ZipTest: public ::testing::Test {
   std::vector<int> rdValVector(int size) {

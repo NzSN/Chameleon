@@ -4,7 +4,7 @@
 #include <type_traits>
 
 
-namespace Utility {
+namespace Chameleon::Utility {
 
 std::string testLangRandomExpr(unsigned numOfOperands) {
   constexpr int NumOfOperators = 4;
