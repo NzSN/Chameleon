@@ -62,6 +62,10 @@ public:
       ::parser
       ::template parse<TargetTree>(&s);
 
+    #if ENABLE_GC
+    Base::GC::GC gc{};
+    #endif
+
     auto transedTree = prog(tree);
     return transedTree->getText();
   }

@@ -22,7 +22,7 @@ cc_test(
             "//src:refl_src",
             ],
     copts = ["-Isrc",
-             "-DENABLE_GC=false",
+             "-DENABLE_GC=true",
              "-Wall",
              "-Wextra",
              "-Werror=unused-result"],

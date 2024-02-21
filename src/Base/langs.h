@@ -34,7 +34,7 @@ concept isLangType = std::is_base_of_v<LangTypeBase, T>;
   struct LANG_TYPE_NAME(L): public LangTypeBase { \
     inline static auto typeEnum = L;              \
   }
-#define GET_LANG_TYPE(L) Base::LANG_TYPE_NAME(L)
+#define GET_LANG_TYPE(L) Chameleon::Base::LANG_TYPE_NAME(L)
 
 // FIELD DESCRIPTIONS
 // | Namespace | LANG ENUM (LANG TYPE NAME) | EXTERNAL PARSER | LEXER | PARSER | ENTRY | ENTRY_MEMBER |
