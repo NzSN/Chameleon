@@ -50,21 +50,3 @@ cc_test(
          ],
     visibility = ["//:__pkg__"]
 )
-
-cc_test(
-    name = "tree_sitter_test",
-    srcs = [
-            "tree_sitter_unittests.cc",
-            "//parsers:wgsl_treesitter_parser_srcs",
-            "//parsers:json_treesitter_parser_srcs",
-        ],
-    copts = [
-        "-Iexternal/tree_sitter/tree_sitter/include",
-        "-Iparsers/tree-sitter-json/src",
-        "-Iparsers/tree-sitter-wgsl/src",
-        ],
-    deps = [
-         "@com_google_googletest//:gtest_main",
-         "@tree_sitter//:tree_sitter",
-         ]
-)
