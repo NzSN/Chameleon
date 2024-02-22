@@ -7,7 +7,7 @@
 
 module(
     name = "chameleon",
-    version = "0.1",
+    version = "0.0.1",
     compatibility_level = 1,
 )
 
