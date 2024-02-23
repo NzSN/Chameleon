@@ -30,11 +30,13 @@ cc_test(
     copts = [
           "-Isrc"],
     deps = [
-         "@oilpan//:cppgc",
          "@antlr4_runtime//:antlr4_runtime",
          "//parsers:wgsl_parser",
          "@com_google_googletest//:gtest_main",
-         "@rapidcheck//:rapidcheck"],
+         "@rapidcheck//:rapidcheck"] + select({
+            "@chameleon//:with_gc"    : ["@oilpan//:cppgc"],
+            "@chameleon//:without_gc" : [],
+         }),
     visibility = ["//:__pkg__"],
 )
 
@@ -55,15 +57,20 @@ cc_test(
             "//src/Parser:external_parser_src",
             "//src:refl_src",
             ],
-    copts = ["-Isrc", "-DENABLE_GC=false"],
+    copts = ["-Isrc"] + select({
+        "@chameleon//:with_gc" : ["-DENABLE_GC=true"],
+        "@chameleon//:without_gc" : ["-DENABLE_GC=false"],
+    }),
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
          "@com_google_googletest//:gtest_main",
          "@plog//:plog",
          "@rapidcheck//:rapidcheck",
          "//parsers:wgsl_parser",
-         "@oilpan//:cppgc",
-         ],
+         ]  + select({
+            "@chameleon//:with_gc"    : ["@oilpan//:cppgc"],
+            "@chameleon//:without_gc" : [],
+        }),
     visibility = ["//:__pkg__"],
 )
 
@@ -89,8 +96,10 @@ cc_test(
          "@antlr4_runtime//:antlr4_runtime",
          "@com_google_googletest//:gtest_main",
          "@plog//:plog",
-         "@oilpan//:cppgc",
          "//parsers:wgsl_parser",
-         "@rapidcheck//:rapidcheck"],
+         "@rapidcheck//:rapidcheck"] + select({
+            "@chameleon//:with_gc"    : ["@oilpan//:cppgc"],
+            "@chameleon//:without_gc" : [],
+         }),
     visibility = ["//:__pkg__"],
 )

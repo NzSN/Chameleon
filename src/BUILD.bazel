@@ -44,9 +44,11 @@ cc_test(
          "@rapidcheck//:rapidcheck",
          "@antlr4_runtime//:antlr4_runtime",
          "@plog//:plog",
-         "@oilpan//:cppgc",
          "//parsers:ts_parser",
          "//parsers:wgsl_parser",
-         ],
+         ] + select({
+            "@chameleon//:with_gc"    : ["@oilpan//:cppgc"],
+            "@chameleon//:without_gc" : [],
+         }),
     visibility = ["//:__pkg__"]
 )

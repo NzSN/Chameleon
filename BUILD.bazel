@@ -1,3 +1,24 @@
+load("@chameleon//:bazel/build_settings.bzl", "gc_switch")
+
+gc_switch(
+    name = "gc",
+    build_setting_default = "enable",
+)
+
+config_setting(
+    name = "with_gc",
+    flag_values = {
+        ":gc" : "enable",
+    }
+)
+
+config_setting(
+    name = "without_gc",
+    flag_values = {
+        ":gc" : "disable",
+    }
+)
+
 cc_library(
     name = "chameleon",
     srcs = ["//src/Base:base_srcs",
@@ -27,11 +48,17 @@ cc_library(
             ],
     deps  = ["@antlr4_runtime//:antlr4_runtime",
              "@com_google_googletest//:gtest_main",
-             "@oilpan//:cppgc",
              "//parsers:wgsl_parser",
              "@rapidcheck//:rapidcheck",
              "@plog//:plog",
-            ],
+            ] + select({
+                "with_gc"    : ["@oilpan//:cppgc"],
+                "without_gc" : [],
+            }),
+    copts = select({
+        "with_gc"    : ["-DENABLE_GC=true"],
+        "without_gc" : ["-DENABLE_GC=false"],
+    }),
     includes = ["src"],
     visibility = ["//visibility:public"]
 )

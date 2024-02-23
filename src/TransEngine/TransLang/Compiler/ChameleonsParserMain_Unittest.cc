@@ -23,7 +23,9 @@ using GPTAntlr4 = Base::ParseTree<Meta>;
 TEST(ChameleonsParserMainTest, Spec) {
   Compiler compiler;
 
+  #if ENABLE_GC
   Base::GC::GC gc{};
+  #endif
 
   std::istringstream target_codes{"1 + 2 + 3"};
   Base::ParseTree<Adapter> t =
@@ -58,7 +60,9 @@ TEST(ChameleonsParserMainTest, Spec) {
 TEST(ChameleonsParserMainTest, WhereClause_Condition) {
   Compiler compiler;
 
+  #if ENABLE_GC
   Base::GC::GC gc{};
+  #endif
 
   std::istringstream target_codes{"1 + 2 + 3"};
   Base::ParseTree<Adapter> t =
@@ -98,7 +102,9 @@ TEST(ChameleonsParserMainTest, WhereClause_Condition) {
 TEST(ChameleonsParserMainTest, WGSL) {
   Compiler compiler;
 
+  #if ENABLE_GC
   Base::GC::GC gc{};
+  #endif
 
   std::istringstream target_codes{
     "fn main() { a = b + c; }" };
