@@ -80,7 +80,8 @@ TransDone(transed_ast, config) ==
   /\ transformer.out # NULL
   \* Assert that the AST has already
   \* been transformed into right side
-  \* pattern of rule.
+  \* pattern of rule otherwise no rule to
+  \* match the given AST.
   /\ IsAlreadyTransformed[transed_ast, config] \/
      (~IsAlreadyTransformed[transed_ast, config] /\
       ~IsAnyRuleMatch[transed_ast, config])

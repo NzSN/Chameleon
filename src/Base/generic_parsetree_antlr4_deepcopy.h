@@ -132,9 +132,7 @@ inline bool buildUpConnect(TreeNode* orig, TreeNode* copy) {
     if (parentGC && copyGC) {
       parentGC->reach(copyGC);
     } else {
-      std::string msg = "Non-GCObject is used as copy node with ENABLE_GC "
-              "macro enable is not allowed";
-      assertm(false, msg);
+      assertF("Deepcopy with non-GCObject when ENABLE_GC enable is not allowed");
     }
     #endif
   }

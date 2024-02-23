@@ -14,6 +14,7 @@ namespace Chameleon {
 namespace Utility {
 
 #define assertm(exp, msg) assert(((void)msg, exp))
+#define assertF(msg) assertm(false, msg)
 
 struct CallAtExit {
   CallAtExit(std::function<void()> f) {

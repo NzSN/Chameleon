@@ -13,6 +13,9 @@ namespace Chameleon::api {
 template<Base::isLangType lang>
 class Transformer {
 public:
+  using Tree = Base::ParseTree<
+    typename Base::LangArg<lang>::Adapter>;
+
   Transformer(std::initializer_list<Rule<lang>> rules):
     prog{rules} {
 
@@ -54,13 +57,10 @@ public:
   std::optional<std::string> operator()(std::string input) {
     std::istringstream s{input};
 
-    using TargetTree = Base::ParseTree<
-      typename Base::LangArg<lang>::Adapter>;
-
     auto tree = Parser
       ::ParserSelect<lang>
       ::parser
-      ::template parse<TargetTree>(&s);
+      ::template parse<Tree>(&s);
 
     #if ENABLE_GC
     Base::GC::GC gc{};
@@ -75,6 +75,9 @@ private:
 
   std::vector<Rule<lang>> rules_;
   Program<lang> prog;
+
+  std::unique_ptr<Tree> SourcePattern;
+  std::unique_ptr<Tree> TargetPattern;
 };
 
 
