@@ -39,30 +39,31 @@ IsAnyRuleMatch[t \in Trees, config \in RuleConfig] ==
 
 
 \* ParseTree -> ParseTree
-Transform[ast \in ParseTree,
-          rule \in Rule] ==
-  LET S == BasicStrategies \* Break the Rule into Strategies
-      ApplyStrategies[ss \in Seq(Strategies),
-                      rule_ \in Rule,
-                      ast_ \in ParseTree,
-                      env_ \in Seq(ParseTree)] ==
-        IF ss = <<>>
-        THEN <<rule_, ast_>>
-        ELSE
-          LET s == Head(ss)
-              r == s[<<rule_,ast_, env_>>]
-          IN  ApplyStrategies[Tail(ss), r[1], r[2], r[3]]
-  \* Do transformation by apply each of strategies
-  \* to rule.
-  IN ApplyStrategies[S, rule, ast, <<>>][2]
+\* Transform(ast,rule) ==
+\*   LET S == BasicStrategies \* Break the Rule into Strategies
+\*       ApplyStrategies[ss \in Seq(Strategies),
+\*                       rule_ \in Rule,
+\*                       ast_ \in ParseTree,
+\*                       env_ \in Seq(ParseTree)] ==
+\*         IF ss = <<>>
+\*         THEN <<rule_, ast_>>
+\*         ELSE
+\*           LET s == Head(ss)
+\*               r == s[<<rule_,ast_, env_>>]
+\*           IN  ApplyStrategies[Tail(ss), r[1], r[2], r[3]]
+\*   \* Do transformation by apply each of strategies
+\*   \* to rule.
+\*   IN ApplyStrategies[S, rule, ast, <<>>][2]
 
-TransRules[ast \in ParseTree, rules \in Seq(Rule)] ==
+RECURSIVE TransRules(_,_)
+TransRules(ast,rules) ==
   IF rules = <<>>
   THEN ast
   ELSE
     LET currentRule == Head(rules)
-        ast_    == Transform[ast, currentRule]
-    IN TransRules[ast_, Tail(rules)]
+        R1   == MatchStrategy(currentRule,ast,<<>>)
+        ast_ == BuildStrategy(R1[1], R1[2], R1[3])[2]
+    IN TransRules(ast_, Tail(rules))
 
 TypeInvariant ==
   transformer = [out |-> NULL, config |-> NULL]
@@ -73,7 +74,7 @@ Init ==
 Transforming(ast, config) ==
   /\ ast \in ParseTree
   /\ transformer' = [transformer EXCEPT
-                     !.out = TransRules[ast,ParseConfig[config]],
+                     !.out = TransRules(ast,ParseConfig[config]),
                      !.config = config]
 
 TransDone(transed_ast, config) ==
@@ -92,5 +93,5 @@ Next == \/ \E t \in ParseTree:
         \/ \E t \in ParseTree:
            \E r \in Rule: TransDone(t, r)
 
-Spec == Init /\ [][Next]_transformer
+Spec == Init /\ [][Next]_{transformer}
 ============================

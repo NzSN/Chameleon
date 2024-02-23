@@ -52,7 +52,8 @@ ParseDone == /\ ParserInst!ParseDone
 
 Transforming ==
   /\ \E config \in RuleConfig:
-    TransformerInst!Transforming(parser.ast, config)
+     \A t \in ParseTree:
+      TransformerInst!Transforming(t, config)
   /\ state = PARSED
   /\ state' = TRANSFORMING
   /\ UNCHANGED <<parser>>
