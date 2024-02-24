@@ -60,7 +60,9 @@ filegroup(
 cc_test(
     name = "gc_unittests",
     srcs = ["gc_defines.h", "gc_unittests.cc"],
-    deps = ["@oilpan//:cppgc",
-            "@com_google_googletest//:gtest_main",
-            ],
+    deps = ["@com_google_googletest//:gtest_main"]
+           + select({
+                "@chameleon//:with_gc" : ["@oilpan//:cppgc"],
+                "@chameleon//:without_gc" : [],
+            }),
 )

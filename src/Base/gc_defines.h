@@ -1,6 +1,8 @@
 #ifndef GC_DEFINES_H
 #define GC_DEFINES_H
 
+#if ENABLE_GC
+
 #include <list>
 
 #include "cppgc/allocation.h"
@@ -60,5 +62,6 @@ private:
 
 }
 
+#endif
 
 #endif /* GC_DEFINES_H */

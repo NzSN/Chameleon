@@ -23,13 +23,13 @@ concept Children_t =
 
 template<typename T>
 concept WalkByFunction =
-  requires(T t) {
+  requires(T& t) {
     { t.getChildren() } -> Children_t<T>;
     { t.parent } -> std::convertible_to<T*>;
   };
 
 template<typename T>
-concept WalkByDataMember = requires(T t) {
+concept WalkByDataMember = requires(T& t) {
   { t.children } -> Children_t<T>;
   { t.parent } -> std::convertible_to<T*>;
 };

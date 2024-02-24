@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "gc_defines.h"
 
+#if ENABLE_GC
+
 namespace Chameleon::Base::GC {
 
 struct NumSeq : public GCObject {
@@ -46,3 +48,5 @@ TEST(GCObject, Basic) {
 
 
 } // Chameleon::Base::GC
+
+#endif
