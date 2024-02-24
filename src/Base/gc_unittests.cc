@@ -5,12 +5,13 @@
 
 namespace Chameleon::Base::GC {
 
+template<typename T>
 struct NumSeq : public GCObject {
-  NumSeq(int a): v{a} {}
-  int v;
+  NumSeq(T a): v{a} {}
+  T v;
 
-  operator int() const {
-    int num = v;
+  operator T() const {
+    T num = v;
     for (auto& s: const_cast<NumSeq*>(this)->GCObject::objs()) {
       num += dynamic_cast<NumSeq*>(s.Get())->v;
     }
@@ -33,16 +34,20 @@ TEST(GCObject, Basic) {
   {
     std::unique_ptr<cppgc::Heap> heap = cppgc::Heap::Create(cppgc_platform);
 
-    NumSeq* seq_1 = cppgc::MakeGarbageCollected<NumSeq>(
+    NumSeq<int>* seq_1 = cppgc::MakeGarbageCollected<NumSeq<int>>(
       heap->GetAllocationHandle(), 1);
-    NumSeq* seq_2 = cppgc::MakeGarbageCollected<NumSeq>(
+    NumSeq<int>* seq_2 = cppgc::MakeGarbageCollected<NumSeq<int>>(
       heap->GetAllocationHandle(), 2);
 
+    NumSeq<int>& s = *seq_1;
+
     seq_1->reach(seq_2);
+    seq_1 = nullptr;
+    seq_2 = nullptr;
 
     heap->ForceGarbageCollectionSlow("CppGC example", "Testing");
 
-    EXPECT_TRUE(*seq_1 == 3);
+    EXPECT_TRUE(s == 3);
   }
 }
 

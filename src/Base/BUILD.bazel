@@ -60,6 +60,10 @@ filegroup(
 cc_test(
     name = "gc_unittests",
     srcs = ["gc_defines.h", "gc_unittests.cc"],
+    copts = select({
+                "@chameleon//:with_gc" : ["-DENABLE_GC=true"],
+                "@chameleon//:without_gc" : ["-DENABLE_GC=false"],
+            }),
     deps = ["@com_google_googletest//:gtest_main"]
            + select({
                 "@chameleon//:with_gc" : ["@oilpan//:cppgc"],

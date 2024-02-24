@@ -125,6 +125,10 @@ struct BuildMultiStra: public Strategy<T> {
   Rule<T>& operator()(Rule<T>& rule, Environment<T>& env) {
     Utility::CallAtExit guard{[&env] {
       env.clearResource();
+      #if ENABLE_GC
+      Base::GC::Process::gc_heap->ForceGarbageCollectionSlow(
+        "BuildStrategy", "Some tree nodes may unreachable");
+      #endif
     }};
 
     // Make sure there are matches need to be tramsform
