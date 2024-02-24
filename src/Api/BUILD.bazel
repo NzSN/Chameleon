@@ -21,16 +21,23 @@ cc_test(
             "//src/TransEngine:pattern_matching",
             "//src:refl_src",
             ],
-    copts = ["-Isrc",
-             "-Wall",
+    copts = ["-Wall",
              "-Wextra",
-             "-Werror=unused-result"],
+             "-Werror=unused-result"]
+
+             + select({
+                "@chameleon//:with_gc"    : ["-DENABLE_GC=true"],
+                "@chameleon//:without_gc" : ["-DENABLE_GC=false"],
+             }),
+    includes = ["../../src"],
     deps = [
          "@com_google_googletest//:gtest_main",
          "@antlr4_runtime//:antlr4_runtime",
-         "@oilpan//:cppgc",
          "@rapidcheck//:rapidcheck",
          "@plog//:plog",
          "//parsers:wgsl_parser",
-         ]
+         ] + select({
+            "@chameleon//:with_gc"    : ["@oilpan//:cppgc"],
+            "@chameleon//:without_gc" : [],
+         })
 )
