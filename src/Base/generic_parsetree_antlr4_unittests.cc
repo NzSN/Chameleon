@@ -60,7 +60,10 @@ RC_GTEST_FIXTURE_PROP(AntlrDeepCopy, KeepAlive, ()) {
 #endif
 
   TreeNode* copy = TestLang::clone(env->tree);
+
+  #if ENABLE_GC
   Base::GC::Process::gc_heap->ForceGarbageCollectionSlow("AntlrDeepCopy", "Test");
+  #endif
 
   EXPECT_TRUE(copy->getText().size() > 0);
 }

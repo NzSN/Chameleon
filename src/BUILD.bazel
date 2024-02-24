@@ -33,12 +33,13 @@ cc_test(
         "ExprTree_unittests.cc",
         ],
     copts = [
-          "-Isrc",
-          "-DENABLE_GC=true",
           "-Wall",
           "-Wextra",
           "-Werror=unused-result"
-          ],
+          ] + select({
+            "@chameleon//:with_gc"    : ["-DENABLE_GC=true"],
+            "@chameleon//:without_gc" : ["-DENABLE_GC=false"],
+          }),
     deps = [
          "@com_google_googletest//:gtest_main",
          "@rapidcheck//:rapidcheck",
@@ -50,5 +51,6 @@ cc_test(
             "@chameleon//:with_gc"    : ["@oilpan//:cppgc"],
             "@chameleon//:without_gc" : [],
          }),
+    includes = ["../src"],
     visibility = ["//:__pkg__"]
 )

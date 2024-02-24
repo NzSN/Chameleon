@@ -27,8 +27,10 @@ cc_test(
             "//src/Base/Concepts:concepts_srcs",
             "//src/Misc/testLanguage:testLang_parser_srcs",
             "//src/Base:base_srcs"],
-    copts = [
-          "-Isrc"],
+    copts = select({
+            "@chameleon//:with_gc"    : ["-DENABLE_GC=true"],
+            "@chameleon//:without_gc" : ["-DENABLE_GC=false"],
+            }),
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
          "//parsers:wgsl_parser",
@@ -37,6 +39,7 @@ cc_test(
             "@chameleon//:with_gc"    : ["@oilpan//:cppgc"],
             "@chameleon//:without_gc" : [],
          }),
+    includes = ["../../../src"],
     visibility = ["//:__pkg__"],
 )
 
@@ -57,8 +60,8 @@ cc_test(
             "//src/Parser:external_parser_src",
             "//src:refl_src",
             ],
-    copts = ["-Isrc"] + select({
-        "@chameleon//:with_gc" : ["-DENABLE_GC=true"],
+    copts = select({
+        "@chameleon//:with_gc"    : ["-DENABLE_GC=true"],
         "@chameleon//:without_gc" : ["-DENABLE_GC=false"],
     }),
     deps = [
@@ -71,6 +74,7 @@ cc_test(
             "@chameleon//:with_gc"    : ["@oilpan//:cppgc"],
             "@chameleon//:without_gc" : [],
         }),
+    includes = ["../../../src"],
     visibility = ["//:__pkg__"],
 )
 
@@ -90,8 +94,10 @@ cc_test(
             "//src/Analysis:analyzer_src",
             "//src:refl_src",
          ],
-    copts = [
-          "-Isrc"],
+    copts = select({
+        "@chameleon//:with_gc"    : ["-DENABLE_GC=true"],
+        "@chameleon//:without_gc" : ["-DENABLE_GC=false"],
+    }),
     deps = [
          "@antlr4_runtime//:antlr4_runtime",
          "@com_google_googletest//:gtest_main",
@@ -101,5 +107,6 @@ cc_test(
             "@chameleon//:with_gc"    : ["@oilpan//:cppgc"],
             "@chameleon//:without_gc" : [],
          }),
+    includes = ["../../../src"],
     visibility = ["//:__pkg__"],
 )
