@@ -14,7 +14,6 @@ Init == /\ TypeInvariant
         /\ parser.rdy = 1
         /\ parser.sentence = NULL
         /\ parser.ast = NULL
-        /\ parseF \in [1..3 -> ParseTree]
 
 Parsing(sentence) ==
     /\ parser.rdy = 1

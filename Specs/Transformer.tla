@@ -38,23 +38,6 @@ IsAnyRuleMatch[t \in Trees, config \in RuleConfig] ==
   IN isLeftPatterns[t, rules]
 
 
-\* ParseTree -> ParseTree
-\* Transform(ast,rule) ==
-\*   LET S == BasicStrategies \* Break the Rule into Strategies
-\*       ApplyStrategies[ss \in Seq(Strategies),
-\*                       rule_ \in Rule,
-\*                       ast_ \in ParseTree,
-\*                       env_ \in Seq(ParseTree)] ==
-\*         IF ss = <<>>
-\*         THEN <<rule_, ast_>>
-\*         ELSE
-\*           LET s == Head(ss)
-\*               r == s[<<rule_,ast_, env_>>]
-\*           IN  ApplyStrategies[Tail(ss), r[1], r[2], r[3]]
-\*   \* Do transformation by apply each of strategies
-\*   \* to rule.
-\*   IN ApplyStrategies[S, rule, ast, <<>>][2]
-
 RECURSIVE TransRules(_,_)
 TransRules(ast,rules) ==
   IF rules = <<>>

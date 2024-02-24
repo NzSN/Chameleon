@@ -1,11 +1,9 @@
 ----- MODULE Chameleon -----
-CONSTANTS NULL, Rule, ParseTree, RuleConfig
+CONSTANTS NULL, Sentence, Rule, ParseTree, RuleConfig, ParseFunc
 VARIABLES parser, transformer, state
 
 LOCAL INSTANCE TLC
 LOCAL INSTANCE Naturals
-
-Sentence == 1..3
 
 \* Definition of states
 INIT         == 0
@@ -13,8 +11,6 @@ PARSING      == 1
 PARSED       == 2
 TRANSFORMING == 3
 TRANSFORMED  == 4
-
-ParseFunc[s \in Sentence] == CHOOSE t \in ParseTree: TRUE
 
 ParserInst == INSTANCE Parser WITH
   NULL <- NULL,
@@ -40,10 +36,12 @@ Init == /\ TypeInvariant
         /\ ParserInst!Init
         /\ TransformerInst!Init
 
-Parsing == /\ \E s \in Sentence: ParserInst!Parsing(s)
-           /\ state = INIT
-           /\ state' = PARSING
-           /\ UNCHANGED <<transformer>>
+Parsing ==
+  \E s \in Sentence:
+  /\ ParserInst!Parsing(s)
+  /\ state = INIT
+  /\ state' = PARSING
+  /\ UNCHANGED <<transformer>>
 
 ParseDone == /\ ParserInst!ParseDone
              /\ state = PARSING
@@ -52,8 +50,8 @@ ParseDone == /\ ParserInst!ParseDone
 
 Transforming ==
   /\ \E config \in RuleConfig:
-     \A t \in ParseTree:
-      TransformerInst!Transforming(t, config)
+     \E t \in ParseTree:
+    TransformerInst!Transforming(t, config)
   /\ state = PARSED
   /\ state' = TRANSFORMING
   /\ UNCHANGED <<parser>>
@@ -69,11 +67,14 @@ DONE ==
   /\ state = TRANSFORMED
   /\ UNCHANGED <<parser, transformer, state>>
 
-Next == \/ Parsing
-        \/ ParseDone
-        \/ Transforming
-        \/ TransDone
-        \/ DONE
+Next ==
+  \/ Parsing
+  \/ ParseDone
+  \/ Transforming
+  \/ TransDone
+  \/ DONE
 
-Spec == Init /\ [][Next]_<<parser, transformer, state>>
+Spec ==
+  /\ Init
+  /\ [][Next]_<<parser, transformer, state>>
 ==========================

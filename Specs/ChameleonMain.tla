@@ -6,7 +6,10 @@ LOCAL INSTANCE Naturals
 LOCAL INSTANCE Tree
 LOCAL INSTANCE Rule
 
+Sentence == 0..3
 ParseTree == {Tree[0], Tree[1], Tree[2], Tree[3]}
+ParseFunc[s \in Sentence] == Tree[s]
+
 RuleSamples == {
          \* Left side pattern is Tree[0]
          \* Right side pattern is Tree[1]
@@ -23,7 +26,8 @@ Prog == INSTANCE Chameleon WITH
   RuleConfig <- RuleConfig,
   parser <- parser,
   transformer <- transformer,
-  state <- state
+  state <- state,
+  Sentence <- Sentence
 
 Spec == Prog!Spec
 
