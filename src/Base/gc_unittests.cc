@@ -28,6 +28,10 @@ struct NumSeq : public GCObject {
   }
 };
 
+struct Storage {
+  std::vector<NumSeq<int>*> nums;
+};
+
 TEST(GCObject, Basic) {
   auto cppgc_platform = std::make_shared<cppgc::DefaultPlatform>();
   cppgc::InitializeProcess(cppgc_platform->GetPageAllocator());
@@ -39,15 +43,19 @@ TEST(GCObject, Basic) {
     NumSeq<int>* seq_2 = cppgc::MakeGarbageCollected<NumSeq<int>>(
       heap->GetAllocationHandle(), 2);
 
-    NumSeq<int>& s = *seq_1;
+    std::vector<Storage> storages{};
+    storages.push_back(Storage{});
+
+    storages.front().nums.push_back(seq_1);
 
     seq_1->reach(seq_2);
     seq_1 = nullptr;
     seq_2 = nullptr;
 
     heap->ForceGarbageCollectionSlow("CppGC example", "Testing");
+    seq_1 = storages.front().nums.front();
 
-    EXPECT_TRUE(s == 3);
+    EXPECT_TRUE(seq_1 == 3);
   }
 }
 
