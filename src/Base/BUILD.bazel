@@ -59,14 +59,32 @@ filegroup(
 
 cc_test(
     name = "gc_unittests",
-    srcs = ["gc_defines.h", "gc_unittests.cc"],
+    srcs = ["gc_defines.h",
+            "gc_unittests.cc",
+            ":base_srcs",
+            "//src/Base/Concepts:concepts_srcs",
+            "//src:utility_src",
+            "//src/Misc/testLanguage:testLang_parser_srcs",
+            "//src/Analysis:analyzer_src",
+            "//src/TransEngine:pattern_matching",
+            "//src/TransEngine/Rewrite:rewrite_srcs",
+            "//src/Parser:external_parser_src",
+            "//src/Parser:parser_source",
+            "//src/TransEngine/TransLang:chameleons_parser_srcs",
+            ],
     copts = select({
                 "@chameleon//:with_gc" : ["-DENABLE_GC=true"],
                 "@chameleon//:without_gc" : ["-DENABLE_GC=false"],
             }),
-    deps = ["@com_google_googletest//:gtest_main"]
+    deps = ["@com_google_googletest//:gtest_main",
+            "@antlr4_runtime//:antlr4_runtime",
+            "@rapidcheck//:rapidcheck",
+            "@plog//:plog",
+            "//parsers:wgsl_parser",
+            ]
            + select({
                 "@chameleon//:with_gc" : ["@oilpan//:cppgc"],
                 "@chameleon//:without_gc" : [],
             }),
+    includes = ["../../src"],
 )
