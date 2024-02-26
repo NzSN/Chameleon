@@ -2,7 +2,7 @@ load("@chameleon//:bazel/build_settings.bzl", "gc_switch")
 
 gc_switch(
     name = "gc",
-    build_setting_default = "enable",
+    build_setting_default = "disable",
 )
 
 config_setting(

@@ -4,7 +4,7 @@
 // Enable GC by default
 #ifndef ENABLE_GC
 #if __linux__
-#define ENABLE_GC true
+#define ENABLE_GC false
 #elif __APPLE__
 #define ENABLE_GC false
 #endif
