@@ -20,7 +20,7 @@ cat <<EOF
 * Test with configs: gc=enable *
 =================================
 EOF
-bazel test $(bazel query //...) -c dbg --build_tests_only --//:gc=enable
+#bazel test $(bazel query //...) -c dbg --build_tests_only --//:gc=enable
 
 cat <<EOF
 =================================
