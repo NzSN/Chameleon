@@ -229,6 +229,8 @@ Antlr4Node* lowerAsPossible_WGSL(Antlr4Node* node) {
       }
     } else if (ctx->statement() != nullptr) {
       return node->getChildren()[0].get();
+    } else if (ctx->expression() != nullptr) {
+      return node->getChildren()[0].get();
     } else {
       std::unreachable();
     }

@@ -1,8 +1,9 @@
 
-// Generated from ./WGSL.txt by ANTLR 4.13.0
+// Generated from ./WGSL.txt by ANTLR 4.13.1
 
 
 #include "WGSLListener.h"
+#include "WGSLVisitor.h"
 
 #include "WGSLParser.h"
 
@@ -92,7 +93,7 @@ void wgslParserInitialize() {
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,85,1019,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
+  	4,1,85,1021,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
   	7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,
   	14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,2,21,7,
   	21,2,22,7,22,2,23,7,23,2,24,7,24,2,25,7,25,2,26,7,26,2,27,7,27,2,28,7,
@@ -165,105 +166,105 @@ void wgslParserInitialize() {
   	34,1,34,1,34,1,34,3,34,898,8,34,1,34,3,34,901,8,34,1,35,1,35,1,36,1,36,
   	1,36,1,36,5,36,909,8,36,10,36,12,36,912,9,36,1,36,3,36,915,8,36,1,36,
   	1,36,3,36,919,8,36,1,37,5,37,922,8,37,10,37,12,37,925,9,37,1,37,5,37,
-  	928,8,37,10,37,12,37,931,9,37,1,37,1,37,1,38,1,38,1,38,1,38,1,38,5,38,
-  	940,8,38,10,38,12,38,943,9,38,1,38,3,38,946,8,38,1,38,1,38,3,38,950,8,
-  	38,1,39,1,39,3,39,954,8,39,1,39,1,39,1,39,1,39,1,39,1,39,1,39,1,39,1,
-  	39,1,39,3,39,966,8,39,1,40,1,40,1,40,1,40,1,40,5,40,973,8,40,10,40,12,
-  	40,976,9,40,1,40,3,40,979,8,40,1,40,1,40,3,40,983,8,40,1,40,1,40,1,41,
-  	1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,
-  	3,41,1002,8,41,1,42,1,42,1,42,1,42,1,42,1,42,1,42,1,42,1,42,1,42,1,42,
-  	1,42,1,42,3,42,1017,8,42,1,42,0,0,43,0,2,4,6,8,10,12,14,16,18,20,22,24,
-  	26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,
-  	72,74,76,78,80,82,84,0,6,1,0,63,64,1,0,65,67,2,0,4,4,73,73,2,0,74,74,
-  	76,76,1,0,70,71,2,0,75,75,77,77,1154,0,86,1,0,0,0,2,88,1,0,0,0,4,90,1,
-  	0,0,0,6,92,1,0,0,0,8,94,1,0,0,0,10,110,1,0,0,0,12,139,1,0,0,0,14,272,
-  	1,0,0,0,16,301,1,0,0,0,18,305,1,0,0,0,20,323,1,0,0,0,22,328,1,0,0,0,24,
-  	345,1,0,0,0,26,347,1,0,0,0,28,360,1,0,0,0,30,396,1,0,0,0,32,398,1,0,0,
-  	0,34,406,1,0,0,0,36,413,1,0,0,0,38,551,1,0,0,0,40,590,1,0,0,0,42,609,
-  	1,0,0,0,44,611,1,0,0,0,46,613,1,0,0,0,48,623,1,0,0,0,50,628,1,0,0,0,52,
-  	630,1,0,0,0,54,632,1,0,0,0,56,640,1,0,0,0,58,673,1,0,0,0,60,675,1,0,0,
-  	0,62,677,1,0,0,0,64,710,1,0,0,0,66,876,1,0,0,0,68,900,1,0,0,0,70,902,
-  	1,0,0,0,72,918,1,0,0,0,74,923,1,0,0,0,76,934,1,0,0,0,78,965,1,0,0,0,80,
-  	967,1,0,0,0,82,1001,1,0,0,0,84,1016,1,0,0,0,86,87,5,68,0,0,87,1,1,0,0,
-  	0,88,89,5,69,0,0,89,3,1,0,0,0,90,91,7,0,0,0,91,5,1,0,0,0,92,93,7,1,0,
-  	0,93,7,1,0,0,0,94,106,5,1,0,0,95,100,3,30,15,0,96,97,5,2,0,0,97,99,3,
-  	30,15,0,98,96,1,0,0,0,99,102,1,0,0,0,100,98,1,0,0,0,100,101,1,0,0,0,101,
-  	104,1,0,0,0,102,100,1,0,0,0,103,105,5,2,0,0,104,103,1,0,0,0,104,105,1,
-  	0,0,0,105,107,1,0,0,0,106,95,1,0,0,0,106,107,1,0,0,0,107,108,1,0,0,0,
-  	108,109,5,3,0,0,109,9,1,0,0,0,110,111,7,2,0,0,111,11,1,0,0,0,112,113,
-  	3,6,3,0,113,114,3,78,39,0,114,116,1,0,0,0,115,112,1,0,0,0,116,119,1,0,
-  	0,0,117,115,1,0,0,0,117,118,1,0,0,0,118,132,1,0,0,0,119,117,1,0,0,0,120,
-  	121,3,4,2,0,121,127,3,78,39,0,122,123,3,6,3,0,123,124,3,78,39,0,124,126,
-  	1,0,0,0,125,122,1,0,0,0,126,129,1,0,0,0,127,125,1,0,0,0,127,128,1,0,0,
-  	0,128,131,1,0,0,0,129,127,1,0,0,0,130,120,1,0,0,0,131,134,1,0,0,0,132,
-  	130,1,0,0,0,132,133,1,0,0,0,133,140,1,0,0,0,134,132,1,0,0,0,135,136,5,
-  	80,0,0,136,140,3,78,39,0,137,138,5,81,0,0,138,140,3,78,39,0,139,117,1,
-  	0,0,0,139,135,1,0,0,0,139,137,1,0,0,0,140,13,1,0,0,0,141,142,5,5,0,0,
-  	142,143,5,6,0,0,143,144,5,1,0,0,144,146,3,30,15,0,145,147,5,2,0,0,146,
-  	145,1,0,0,0,146,147,1,0,0,0,147,148,1,0,0,0,148,149,5,3,0,0,149,273,1,
-  	0,0,0,150,151,5,5,0,0,151,152,5,7,0,0,152,153,5,1,0,0,153,155,3,30,15,
-  	0,154,156,5,2,0,0,155,154,1,0,0,0,155,156,1,0,0,0,156,157,1,0,0,0,157,
-  	158,5,3,0,0,158,273,1,0,0,0,159,160,5,5,0,0,160,161,5,8,0,0,161,162,5,
-  	1,0,0,162,164,3,30,15,0,163,165,5,2,0,0,164,163,1,0,0,0,164,165,1,0,0,
-  	0,165,166,1,0,0,0,166,167,5,3,0,0,167,273,1,0,0,0,168,169,5,5,0,0,169,
-  	273,5,9,0,0,170,171,5,5,0,0,171,273,5,10,0,0,172,173,5,5,0,0,173,174,
-  	5,11,0,0,174,273,3,26,13,0,175,176,5,5,0,0,176,273,5,12,0,0,177,178,5,
-  	5,0,0,178,179,5,13,0,0,179,180,5,1,0,0,180,182,3,30,15,0,181,183,5,2,
-  	0,0,182,181,1,0,0,0,182,183,1,0,0,0,183,184,1,0,0,0,184,185,5,3,0,0,185,
-  	273,1,0,0,0,186,187,5,5,0,0,187,188,5,14,0,0,188,189,5,1,0,0,189,191,
-  	3,30,15,0,190,192,5,2,0,0,191,190,1,0,0,0,191,192,1,0,0,0,192,193,1,0,
-  	0,0,193,194,5,3,0,0,194,273,1,0,0,0,195,196,5,5,0,0,196,197,5,15,0,0,
-  	197,198,5,1,0,0,198,200,3,30,15,0,199,201,5,2,0,0,200,199,1,0,0,0,200,
-  	201,1,0,0,0,201,202,1,0,0,0,202,203,5,3,0,0,203,273,1,0,0,0,204,205,5,
-  	5,0,0,205,206,5,15,0,0,206,207,5,1,0,0,207,208,3,30,15,0,208,209,5,2,
-  	0,0,209,211,3,30,15,0,210,212,5,2,0,0,211,210,1,0,0,0,211,212,1,0,0,0,
-  	212,213,1,0,0,0,213,214,5,3,0,0,214,273,1,0,0,0,215,216,5,5,0,0,216,273,
-  	5,16,0,0,217,218,5,5,0,0,218,219,5,17,0,0,219,220,5,1,0,0,220,222,3,30,
-  	15,0,221,223,5,2,0,0,222,221,1,0,0,0,222,223,1,0,0,0,223,224,1,0,0,0,
-  	224,225,5,3,0,0,225,273,1,0,0,0,226,227,5,5,0,0,227,273,5,18,0,0,228,
-  	229,5,5,0,0,229,230,5,19,0,0,230,231,5,1,0,0,231,233,3,30,15,0,232,234,
-  	5,2,0,0,233,232,1,0,0,0,233,234,1,0,0,0,234,235,1,0,0,0,235,236,5,3,0,
-  	0,236,273,1,0,0,0,237,238,5,5,0,0,238,273,5,20,0,0,239,240,5,5,0,0,240,
-  	241,5,21,0,0,241,242,5,1,0,0,242,244,3,30,15,0,243,245,5,2,0,0,244,243,
-  	1,0,0,0,244,245,1,0,0,0,245,246,1,0,0,0,246,247,5,3,0,0,247,273,1,0,0,
-  	0,248,249,5,5,0,0,249,250,5,21,0,0,250,251,5,1,0,0,251,252,3,30,15,0,
-  	252,253,5,2,0,0,253,255,3,30,15,0,254,256,5,2,0,0,255,254,1,0,0,0,255,
-  	256,1,0,0,0,256,257,1,0,0,0,257,258,5,3,0,0,258,273,1,0,0,0,259,260,5,
-  	5,0,0,260,261,5,21,0,0,261,262,5,1,0,0,262,263,3,30,15,0,263,264,5,2,
-  	0,0,264,265,3,30,15,0,265,266,5,2,0,0,266,268,3,30,15,0,267,269,5,2,0,
-  	0,268,267,1,0,0,0,268,269,1,0,0,0,269,270,1,0,0,0,270,271,5,3,0,0,271,
-  	273,1,0,0,0,272,141,1,0,0,0,272,150,1,0,0,0,272,159,1,0,0,0,272,168,1,
-  	0,0,0,272,170,1,0,0,0,272,172,1,0,0,0,272,175,1,0,0,0,272,177,1,0,0,0,
-  	272,186,1,0,0,0,272,195,1,0,0,0,272,204,1,0,0,0,272,215,1,0,0,0,272,217,
-  	1,0,0,0,272,226,1,0,0,0,272,228,1,0,0,0,272,237,1,0,0,0,272,239,1,0,0,
-  	0,272,248,1,0,0,0,272,259,1,0,0,0,273,15,1,0,0,0,274,275,5,22,0,0,275,
-  	280,3,78,39,0,276,277,5,22,0,0,277,279,3,78,39,0,278,276,1,0,0,0,279,
-  	282,1,0,0,0,280,278,1,0,0,0,280,281,1,0,0,0,281,302,1,0,0,0,282,280,1,
-  	0,0,0,283,284,5,23,0,0,284,289,3,78,39,0,285,286,5,23,0,0,286,288,3,78,
-  	39,0,287,285,1,0,0,0,288,291,1,0,0,0,289,287,1,0,0,0,289,290,1,0,0,0,
-  	290,302,1,0,0,0,291,289,1,0,0,0,292,293,5,24,0,0,293,298,3,78,39,0,294,
-  	295,5,24,0,0,295,297,3,78,39,0,296,294,1,0,0,0,297,300,1,0,0,0,298,296,
-  	1,0,0,0,298,299,1,0,0,0,299,302,1,0,0,0,300,298,1,0,0,0,301,274,1,0,0,
-  	0,301,283,1,0,0,0,301,292,1,0,0,0,302,17,1,0,0,0,303,306,3,30,15,0,304,
-  	306,5,25,0,0,305,303,1,0,0,0,305,304,1,0,0,0,306,19,1,0,0,0,307,308,5,
-  	26,0,0,308,310,3,52,26,0,309,311,3,20,10,0,310,309,1,0,0,0,310,311,1,
-  	0,0,0,311,324,1,0,0,0,312,313,5,26,0,0,313,315,5,85,0,0,314,316,3,20,
-  	10,0,315,314,1,0,0,0,315,316,1,0,0,0,316,324,1,0,0,0,317,318,5,27,0,0,
-  	318,319,3,30,15,0,319,321,5,28,0,0,320,322,3,20,10,0,321,320,1,0,0,0,
-  	321,322,1,0,0,0,322,324,1,0,0,0,323,307,1,0,0,0,323,312,1,0,0,0,323,317,
-  	1,0,0,0,324,21,1,0,0,0,325,327,3,14,7,0,326,325,1,0,0,0,327,330,1,0,0,
-  	0,328,326,1,0,0,0,328,329,1,0,0,0,329,331,1,0,0,0,330,328,1,0,0,0,331,
-  	335,5,29,0,0,332,334,3,66,33,0,333,332,1,0,0,0,334,337,1,0,0,0,335,333,
-  	1,0,0,0,335,336,1,0,0,0,336,338,1,0,0,0,337,335,1,0,0,0,338,339,5,30,
-  	0,0,339,23,1,0,0,0,340,346,3,44,22,0,341,342,5,1,0,0,342,343,3,48,24,
-  	0,343,344,5,3,0,0,344,346,1,0,0,0,345,340,1,0,0,0,345,341,1,0,0,0,346,
-  	25,1,0,0,0,347,348,5,1,0,0,348,349,5,84,0,0,349,350,5,2,0,0,350,352,3,
-  	28,14,0,351,353,5,2,0,0,352,351,1,0,0,0,352,353,1,0,0,0,353,354,1,0,0,
-  	0,354,355,5,3,0,0,355,27,1,0,0,0,356,361,5,71,0,0,357,358,5,71,0,0,358,
-  	359,5,26,0,0,359,361,5,71,0,0,360,356,1,0,0,0,360,357,1,0,0,0,361,29,
-  	1,0,0,0,362,363,3,78,39,0,363,364,3,16,8,0,364,397,1,0,0,0,365,366,3,
-  	78,39,0,366,367,3,64,32,0,367,397,1,0,0,0,368,369,3,78,39,0,369,370,3,
-  	64,32,0,370,371,5,31,0,0,371,372,3,78,39,0,372,379,3,64,32,0,373,374,
+  	928,8,37,10,37,12,37,931,9,37,1,37,1,37,3,37,935,8,37,1,38,1,38,1,38,
+  	1,38,1,38,5,38,942,8,38,10,38,12,38,945,9,38,1,38,3,38,948,8,38,1,38,
+  	1,38,3,38,952,8,38,1,39,1,39,3,39,956,8,39,1,39,1,39,1,39,1,39,1,39,1,
+  	39,1,39,1,39,1,39,1,39,3,39,968,8,39,1,40,1,40,1,40,1,40,1,40,5,40,975,
+  	8,40,10,40,12,40,978,9,40,1,40,3,40,981,8,40,1,40,1,40,3,40,985,8,40,
+  	1,40,1,40,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,1,41,
+  	1,41,1,41,1,41,3,41,1004,8,41,1,42,1,42,1,42,1,42,1,42,1,42,1,42,1,42,
+  	1,42,1,42,1,42,1,42,1,42,3,42,1019,8,42,1,42,0,0,43,0,2,4,6,8,10,12,14,
+  	16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,
+  	62,64,66,68,70,72,74,76,78,80,82,84,0,6,1,0,63,64,1,0,65,67,2,0,4,4,73,
+  	73,2,0,74,74,76,76,1,0,70,71,2,0,75,75,77,77,1158,0,86,1,0,0,0,2,88,1,
+  	0,0,0,4,90,1,0,0,0,6,92,1,0,0,0,8,94,1,0,0,0,10,110,1,0,0,0,12,139,1,
+  	0,0,0,14,272,1,0,0,0,16,301,1,0,0,0,18,305,1,0,0,0,20,323,1,0,0,0,22,
+  	328,1,0,0,0,24,345,1,0,0,0,26,347,1,0,0,0,28,360,1,0,0,0,30,396,1,0,0,
+  	0,32,398,1,0,0,0,34,406,1,0,0,0,36,413,1,0,0,0,38,551,1,0,0,0,40,590,
+  	1,0,0,0,42,609,1,0,0,0,44,611,1,0,0,0,46,613,1,0,0,0,48,623,1,0,0,0,50,
+  	628,1,0,0,0,52,630,1,0,0,0,54,632,1,0,0,0,56,640,1,0,0,0,58,673,1,0,0,
+  	0,60,675,1,0,0,0,62,677,1,0,0,0,64,710,1,0,0,0,66,876,1,0,0,0,68,900,
+  	1,0,0,0,70,902,1,0,0,0,72,918,1,0,0,0,74,934,1,0,0,0,76,936,1,0,0,0,78,
+  	967,1,0,0,0,80,969,1,0,0,0,82,1003,1,0,0,0,84,1018,1,0,0,0,86,87,5,68,
+  	0,0,87,1,1,0,0,0,88,89,5,69,0,0,89,3,1,0,0,0,90,91,7,0,0,0,91,5,1,0,0,
+  	0,92,93,7,1,0,0,93,7,1,0,0,0,94,106,5,1,0,0,95,100,3,30,15,0,96,97,5,
+  	2,0,0,97,99,3,30,15,0,98,96,1,0,0,0,99,102,1,0,0,0,100,98,1,0,0,0,100,
+  	101,1,0,0,0,101,104,1,0,0,0,102,100,1,0,0,0,103,105,5,2,0,0,104,103,1,
+  	0,0,0,104,105,1,0,0,0,105,107,1,0,0,0,106,95,1,0,0,0,106,107,1,0,0,0,
+  	107,108,1,0,0,0,108,109,5,3,0,0,109,9,1,0,0,0,110,111,7,2,0,0,111,11,
+  	1,0,0,0,112,113,3,6,3,0,113,114,3,78,39,0,114,116,1,0,0,0,115,112,1,0,
+  	0,0,116,119,1,0,0,0,117,115,1,0,0,0,117,118,1,0,0,0,118,132,1,0,0,0,119,
+  	117,1,0,0,0,120,121,3,4,2,0,121,127,3,78,39,0,122,123,3,6,3,0,123,124,
+  	3,78,39,0,124,126,1,0,0,0,125,122,1,0,0,0,126,129,1,0,0,0,127,125,1,0,
+  	0,0,127,128,1,0,0,0,128,131,1,0,0,0,129,127,1,0,0,0,130,120,1,0,0,0,131,
+  	134,1,0,0,0,132,130,1,0,0,0,132,133,1,0,0,0,133,140,1,0,0,0,134,132,1,
+  	0,0,0,135,136,5,80,0,0,136,140,3,78,39,0,137,138,5,81,0,0,138,140,3,78,
+  	39,0,139,117,1,0,0,0,139,135,1,0,0,0,139,137,1,0,0,0,140,13,1,0,0,0,141,
+  	142,5,5,0,0,142,143,5,6,0,0,143,144,5,1,0,0,144,146,3,30,15,0,145,147,
+  	5,2,0,0,146,145,1,0,0,0,146,147,1,0,0,0,147,148,1,0,0,0,148,149,5,3,0,
+  	0,149,273,1,0,0,0,150,151,5,5,0,0,151,152,5,7,0,0,152,153,5,1,0,0,153,
+  	155,3,30,15,0,154,156,5,2,0,0,155,154,1,0,0,0,155,156,1,0,0,0,156,157,
+  	1,0,0,0,157,158,5,3,0,0,158,273,1,0,0,0,159,160,5,5,0,0,160,161,5,8,0,
+  	0,161,162,5,1,0,0,162,164,3,30,15,0,163,165,5,2,0,0,164,163,1,0,0,0,164,
+  	165,1,0,0,0,165,166,1,0,0,0,166,167,5,3,0,0,167,273,1,0,0,0,168,169,5,
+  	5,0,0,169,273,5,9,0,0,170,171,5,5,0,0,171,273,5,10,0,0,172,173,5,5,0,
+  	0,173,174,5,11,0,0,174,273,3,26,13,0,175,176,5,5,0,0,176,273,5,12,0,0,
+  	177,178,5,5,0,0,178,179,5,13,0,0,179,180,5,1,0,0,180,182,3,30,15,0,181,
+  	183,5,2,0,0,182,181,1,0,0,0,182,183,1,0,0,0,183,184,1,0,0,0,184,185,5,
+  	3,0,0,185,273,1,0,0,0,186,187,5,5,0,0,187,188,5,14,0,0,188,189,5,1,0,
+  	0,189,191,3,30,15,0,190,192,5,2,0,0,191,190,1,0,0,0,191,192,1,0,0,0,192,
+  	193,1,0,0,0,193,194,5,3,0,0,194,273,1,0,0,0,195,196,5,5,0,0,196,197,5,
+  	15,0,0,197,198,5,1,0,0,198,200,3,30,15,0,199,201,5,2,0,0,200,199,1,0,
+  	0,0,200,201,1,0,0,0,201,202,1,0,0,0,202,203,5,3,0,0,203,273,1,0,0,0,204,
+  	205,5,5,0,0,205,206,5,15,0,0,206,207,5,1,0,0,207,208,3,30,15,0,208,209,
+  	5,2,0,0,209,211,3,30,15,0,210,212,5,2,0,0,211,210,1,0,0,0,211,212,1,0,
+  	0,0,212,213,1,0,0,0,213,214,5,3,0,0,214,273,1,0,0,0,215,216,5,5,0,0,216,
+  	273,5,16,0,0,217,218,5,5,0,0,218,219,5,17,0,0,219,220,5,1,0,0,220,222,
+  	3,30,15,0,221,223,5,2,0,0,222,221,1,0,0,0,222,223,1,0,0,0,223,224,1,0,
+  	0,0,224,225,5,3,0,0,225,273,1,0,0,0,226,227,5,5,0,0,227,273,5,18,0,0,
+  	228,229,5,5,0,0,229,230,5,19,0,0,230,231,5,1,0,0,231,233,3,30,15,0,232,
+  	234,5,2,0,0,233,232,1,0,0,0,233,234,1,0,0,0,234,235,1,0,0,0,235,236,5,
+  	3,0,0,236,273,1,0,0,0,237,238,5,5,0,0,238,273,5,20,0,0,239,240,5,5,0,
+  	0,240,241,5,21,0,0,241,242,5,1,0,0,242,244,3,30,15,0,243,245,5,2,0,0,
+  	244,243,1,0,0,0,244,245,1,0,0,0,245,246,1,0,0,0,246,247,5,3,0,0,247,273,
+  	1,0,0,0,248,249,5,5,0,0,249,250,5,21,0,0,250,251,5,1,0,0,251,252,3,30,
+  	15,0,252,253,5,2,0,0,253,255,3,30,15,0,254,256,5,2,0,0,255,254,1,0,0,
+  	0,255,256,1,0,0,0,256,257,1,0,0,0,257,258,5,3,0,0,258,273,1,0,0,0,259,
+  	260,5,5,0,0,260,261,5,21,0,0,261,262,5,1,0,0,262,263,3,30,15,0,263,264,
+  	5,2,0,0,264,265,3,30,15,0,265,266,5,2,0,0,266,268,3,30,15,0,267,269,5,
+  	2,0,0,268,267,1,0,0,0,268,269,1,0,0,0,269,270,1,0,0,0,270,271,5,3,0,0,
+  	271,273,1,0,0,0,272,141,1,0,0,0,272,150,1,0,0,0,272,159,1,0,0,0,272,168,
+  	1,0,0,0,272,170,1,0,0,0,272,172,1,0,0,0,272,175,1,0,0,0,272,177,1,0,0,
+  	0,272,186,1,0,0,0,272,195,1,0,0,0,272,204,1,0,0,0,272,215,1,0,0,0,272,
+  	217,1,0,0,0,272,226,1,0,0,0,272,228,1,0,0,0,272,237,1,0,0,0,272,239,1,
+  	0,0,0,272,248,1,0,0,0,272,259,1,0,0,0,273,15,1,0,0,0,274,275,5,22,0,0,
+  	275,280,3,78,39,0,276,277,5,22,0,0,277,279,3,78,39,0,278,276,1,0,0,0,
+  	279,282,1,0,0,0,280,278,1,0,0,0,280,281,1,0,0,0,281,302,1,0,0,0,282,280,
+  	1,0,0,0,283,284,5,23,0,0,284,289,3,78,39,0,285,286,5,23,0,0,286,288,3,
+  	78,39,0,287,285,1,0,0,0,288,291,1,0,0,0,289,287,1,0,0,0,289,290,1,0,0,
+  	0,290,302,1,0,0,0,291,289,1,0,0,0,292,293,5,24,0,0,293,298,3,78,39,0,
+  	294,295,5,24,0,0,295,297,3,78,39,0,296,294,1,0,0,0,297,300,1,0,0,0,298,
+  	296,1,0,0,0,298,299,1,0,0,0,299,302,1,0,0,0,300,298,1,0,0,0,301,274,1,
+  	0,0,0,301,283,1,0,0,0,301,292,1,0,0,0,302,17,1,0,0,0,303,306,3,30,15,
+  	0,304,306,5,25,0,0,305,303,1,0,0,0,305,304,1,0,0,0,306,19,1,0,0,0,307,
+  	308,5,26,0,0,308,310,3,52,26,0,309,311,3,20,10,0,310,309,1,0,0,0,310,
+  	311,1,0,0,0,311,324,1,0,0,0,312,313,5,26,0,0,313,315,5,85,0,0,314,316,
+  	3,20,10,0,315,314,1,0,0,0,315,316,1,0,0,0,316,324,1,0,0,0,317,318,5,27,
+  	0,0,318,319,3,30,15,0,319,321,5,28,0,0,320,322,3,20,10,0,321,320,1,0,
+  	0,0,321,322,1,0,0,0,322,324,1,0,0,0,323,307,1,0,0,0,323,312,1,0,0,0,323,
+  	317,1,0,0,0,324,21,1,0,0,0,325,327,3,14,7,0,326,325,1,0,0,0,327,330,1,
+  	0,0,0,328,326,1,0,0,0,328,329,1,0,0,0,329,331,1,0,0,0,330,328,1,0,0,0,
+  	331,335,5,29,0,0,332,334,3,66,33,0,333,332,1,0,0,0,334,337,1,0,0,0,335,
+  	333,1,0,0,0,335,336,1,0,0,0,336,338,1,0,0,0,337,335,1,0,0,0,338,339,5,
+  	30,0,0,339,23,1,0,0,0,340,346,3,44,22,0,341,342,5,1,0,0,342,343,3,48,
+  	24,0,343,344,5,3,0,0,344,346,1,0,0,0,345,340,1,0,0,0,345,341,1,0,0,0,
+  	346,25,1,0,0,0,347,348,5,1,0,0,348,349,5,84,0,0,349,350,5,2,0,0,350,352,
+  	3,28,14,0,351,353,5,2,0,0,352,351,1,0,0,0,352,353,1,0,0,0,353,354,1,0,
+  	0,0,354,355,5,3,0,0,355,27,1,0,0,0,356,361,5,71,0,0,357,358,5,71,0,0,
+  	358,359,5,26,0,0,359,361,5,71,0,0,360,356,1,0,0,0,360,357,1,0,0,0,361,
+  	29,1,0,0,0,362,363,3,78,39,0,363,364,3,16,8,0,364,397,1,0,0,0,365,366,
+  	3,78,39,0,366,367,3,64,32,0,367,397,1,0,0,0,368,369,3,78,39,0,369,370,
+  	3,64,32,0,370,371,5,31,0,0,371,372,3,78,39,0,372,379,3,64,32,0,373,374,
   	5,31,0,0,374,375,3,78,39,0,375,376,3,64,32,0,376,378,1,0,0,0,377,373,
   	1,0,0,0,378,381,1,0,0,0,379,377,1,0,0,0,379,380,1,0,0,0,380,397,1,0,0,
   	0,381,379,1,0,0,0,382,383,3,78,39,0,383,384,3,64,32,0,384,385,5,32,0,
@@ -419,39 +420,40 @@ void wgslParserInitialize() {
   	0,918,919,1,0,0,0,919,73,1,0,0,0,920,922,3,40,20,0,921,920,1,0,0,0,922,
   	925,1,0,0,0,923,921,1,0,0,0,923,924,1,0,0,0,924,929,1,0,0,0,925,923,1,
   	0,0,0,926,928,3,38,19,0,927,926,1,0,0,0,928,931,1,0,0,0,929,927,1,0,0,
-  	0,929,930,1,0,0,0,930,932,1,0,0,0,931,929,1,0,0,0,932,933,3,66,33,0,933,
-  	75,1,0,0,0,934,949,3,44,22,0,935,936,3,0,0,0,936,941,3,70,35,0,937,938,
-  	5,2,0,0,938,940,3,30,15,0,939,937,1,0,0,0,940,943,1,0,0,0,941,939,1,0,
-  	0,0,941,942,1,0,0,0,942,945,1,0,0,0,943,941,1,0,0,0,944,946,5,2,0,0,945,
-  	944,1,0,0,0,945,946,1,0,0,0,946,947,1,0,0,0,947,948,3,2,1,0,948,950,1,
-  	0,0,0,949,935,1,0,0,0,949,950,1,0,0,0,950,77,1,0,0,0,951,953,3,58,29,
-  	0,952,954,3,20,10,0,953,952,1,0,0,0,953,954,1,0,0,0,954,966,1,0,0,0,955,
-  	956,5,56,0,0,956,966,3,78,39,0,957,958,5,22,0,0,958,966,3,78,39,0,959,
-  	960,5,65,0,0,960,966,3,78,39,0,961,962,5,64,0,0,962,966,3,78,39,0,963,
-  	964,5,57,0,0,964,966,3,78,39,0,965,951,1,0,0,0,965,955,1,0,0,0,965,957,
-  	1,0,0,0,965,959,1,0,0,0,965,961,1,0,0,0,965,963,1,0,0,0,966,79,1,0,0,
-  	0,967,982,5,36,0,0,968,969,3,0,0,0,969,974,3,30,15,0,970,971,5,2,0,0,
-  	971,973,3,30,15,0,972,970,1,0,0,0,973,976,1,0,0,0,974,972,1,0,0,0,974,
-  	975,1,0,0,0,975,978,1,0,0,0,976,974,1,0,0,0,977,979,5,2,0,0,978,977,1,
-  	0,0,0,978,979,1,0,0,0,979,980,1,0,0,0,980,981,3,2,1,0,981,983,1,0,0,0,
-  	982,968,1,0,0,0,982,983,1,0,0,0,983,984,1,0,0,0,984,985,3,54,27,0,985,
-  	81,1,0,0,0,986,1002,3,80,40,0,987,988,3,80,40,0,988,989,5,4,0,0,989,990,
-  	3,30,15,0,990,1002,1,0,0,0,991,992,5,10,0,0,992,993,3,54,27,0,993,994,
-  	5,4,0,0,994,995,3,30,15,0,995,1002,1,0,0,0,996,997,5,58,0,0,997,998,3,
-  	54,27,0,998,999,5,4,0,0,999,1000,3,30,15,0,1000,1002,1,0,0,0,1001,986,
-  	1,0,0,0,1001,987,1,0,0,0,1001,991,1,0,0,0,1001,996,1,0,0,0,1002,83,1,
-  	0,0,0,1003,1004,3,48,24,0,1004,1005,7,2,0,0,1005,1006,3,30,15,0,1006,
-  	1017,1,0,0,0,1007,1008,3,48,24,0,1008,1009,5,59,0,0,1009,1017,1,0,0,0,
-  	1010,1011,3,48,24,0,1011,1012,5,60,0,0,1012,1017,1,0,0,0,1013,1014,5,
-  	61,0,0,1014,1015,5,4,0,0,1015,1017,3,30,15,0,1016,1003,1,0,0,0,1016,1007,
-  	1,0,0,0,1016,1010,1,0,0,0,1016,1013,1,0,0,0,1017,85,1,0,0,0,120,100,104,
+  	0,929,930,1,0,0,0,930,935,1,0,0,0,931,929,1,0,0,0,932,935,3,66,33,0,933,
+  	935,3,30,15,0,934,923,1,0,0,0,934,932,1,0,0,0,934,933,1,0,0,0,935,75,
+  	1,0,0,0,936,951,3,44,22,0,937,938,3,0,0,0,938,943,3,70,35,0,939,940,5,
+  	2,0,0,940,942,3,30,15,0,941,939,1,0,0,0,942,945,1,0,0,0,943,941,1,0,0,
+  	0,943,944,1,0,0,0,944,947,1,0,0,0,945,943,1,0,0,0,946,948,5,2,0,0,947,
+  	946,1,0,0,0,947,948,1,0,0,0,948,949,1,0,0,0,949,950,3,2,1,0,950,952,1,
+  	0,0,0,951,937,1,0,0,0,951,952,1,0,0,0,952,77,1,0,0,0,953,955,3,58,29,
+  	0,954,956,3,20,10,0,955,954,1,0,0,0,955,956,1,0,0,0,956,968,1,0,0,0,957,
+  	958,5,56,0,0,958,968,3,78,39,0,959,960,5,22,0,0,960,968,3,78,39,0,961,
+  	962,5,65,0,0,962,968,3,78,39,0,963,964,5,64,0,0,964,968,3,78,39,0,965,
+  	966,5,57,0,0,966,968,3,78,39,0,967,953,1,0,0,0,967,957,1,0,0,0,967,959,
+  	1,0,0,0,967,961,1,0,0,0,967,963,1,0,0,0,967,965,1,0,0,0,968,79,1,0,0,
+  	0,969,984,5,36,0,0,970,971,3,0,0,0,971,976,3,30,15,0,972,973,5,2,0,0,
+  	973,975,3,30,15,0,974,972,1,0,0,0,975,978,1,0,0,0,976,974,1,0,0,0,976,
+  	977,1,0,0,0,977,980,1,0,0,0,978,976,1,0,0,0,979,981,5,2,0,0,980,979,1,
+  	0,0,0,980,981,1,0,0,0,981,982,1,0,0,0,982,983,3,2,1,0,983,985,1,0,0,0,
+  	984,970,1,0,0,0,984,985,1,0,0,0,985,986,1,0,0,0,986,987,3,54,27,0,987,
+  	81,1,0,0,0,988,1004,3,80,40,0,989,990,3,80,40,0,990,991,5,4,0,0,991,992,
+  	3,30,15,0,992,1004,1,0,0,0,993,994,5,10,0,0,994,995,3,54,27,0,995,996,
+  	5,4,0,0,996,997,3,30,15,0,997,1004,1,0,0,0,998,999,5,58,0,0,999,1000,
+  	3,54,27,0,1000,1001,5,4,0,0,1001,1002,3,30,15,0,1002,1004,1,0,0,0,1003,
+  	988,1,0,0,0,1003,989,1,0,0,0,1003,993,1,0,0,0,1003,998,1,0,0,0,1004,83,
+  	1,0,0,0,1005,1006,3,48,24,0,1006,1007,7,2,0,0,1007,1008,3,30,15,0,1008,
+  	1019,1,0,0,0,1009,1010,3,48,24,0,1010,1011,5,59,0,0,1011,1019,1,0,0,0,
+  	1012,1013,3,48,24,0,1013,1014,5,60,0,0,1014,1019,1,0,0,0,1015,1016,5,
+  	61,0,0,1016,1017,5,4,0,0,1017,1019,3,30,15,0,1018,1005,1,0,0,0,1018,1009,
+  	1,0,0,0,1018,1012,1,0,0,0,1018,1015,1,0,0,0,1019,85,1,0,0,0,121,100,104,
   	106,117,127,132,139,146,155,164,182,191,200,211,222,233,244,255,268,272,
   	280,289,298,301,305,310,315,321,323,328,335,345,352,360,379,393,396,406,
   	413,418,427,437,441,443,450,456,461,468,476,486,490,494,499,524,534,543,
   	547,551,559,570,574,583,587,590,595,602,609,617,623,628,635,640,658,662,
   	664,673,710,715,721,725,729,736,749,754,759,766,773,780,787,795,798,804,
   	812,819,827,843,847,849,873,876,884,888,891,897,900,910,914,918,923,929,
-  	941,945,949,953,965,974,978,982,1001,1016
+  	934,943,947,951,955,967,976,980,984,1003,1018
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -527,6 +529,14 @@ void WGSLParser::Template_args_startContext::exitRule(tree::ParseTreeListener *l
     parserListener->exitTemplate_args_start(this);
 }
 
+
+std::any WGSLParser::Template_args_startContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitTemplate_args_start(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Template_args_startContext* WGSLParser::template_args_start() {
   Template_args_startContext *_localctx = _tracker.createInstance<Template_args_startContext>(_ctx, getState());
   enterRule(_localctx, 0, WGSLParser::RuleTemplate_args_start);
@@ -578,6 +588,14 @@ void WGSLParser::Template_args_endContext::exitRule(tree::ParseTreeListener *lis
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitTemplate_args_end(this);
+}
+
+
+std::any WGSLParser::Template_args_endContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitTemplate_args_end(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Template_args_endContext* WGSLParser::template_args_end() {
@@ -635,6 +653,14 @@ void WGSLParser::Additive_operatorContext::exitRule(tree::ParseTreeListener *lis
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitAdditive_operator(this);
+}
+
+
+std::any WGSLParser::Additive_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitAdditive_operator(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Additive_operatorContext* WGSLParser::additive_operator() {
@@ -708,6 +734,14 @@ void WGSLParser::Multiplicative_operatorContext::exitRule(tree::ParseTreeListene
     parserListener->exitMultiplicative_operator(this);
 }
 
+
+std::any WGSLParser::Multiplicative_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitMultiplicative_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Multiplicative_operatorContext* WGSLParser::multiplicative_operator() {
   Multiplicative_operatorContext *_localctx = _tracker.createInstance<Multiplicative_operatorContext>(_ctx, getState());
   enterRule(_localctx, 6, WGSLParser::RuleMultiplicative_operator);
@@ -772,6 +806,14 @@ void WGSLParser::Argument_expression_listContext::exitRule(tree::ParseTreeListen
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitArgument_expression_list(this);
+}
+
+
+std::any WGSLParser::Argument_expression_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitArgument_expression_list(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Argument_expression_listContext* WGSLParser::argument_expression_list() {
@@ -863,6 +905,14 @@ void WGSLParser::Assignment_statementContext::exitRule(tree::ParseTreeListener *
     parserListener->exitAssignment_statement(this);
 }
 
+
+std::any WGSLParser::Assignment_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitAssignment_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Assignment_statementContext* WGSLParser::assignment_statement() {
   Assignment_statementContext *_localctx = _tracker.createInstance<Assignment_statementContext>(_ctx, getState());
   enterRule(_localctx, 10, WGSLParser::RuleAssignment_statement);
@@ -952,6 +1002,14 @@ void WGSLParser::Shift_expression_post_unary_expressionContext::exitRule(tree::P
     parserListener->exitShift_expression_post_unary_expression(this);
 }
 
+
+std::any WGSLParser::Shift_expression_post_unary_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitShift_expression_post_unary_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Shift_expression_post_unary_expressionContext* WGSLParser::shift_expression_post_unary_expression() {
   Shift_expression_post_unary_expressionContext *_localctx = _tracker.createInstance<Shift_expression_post_unary_expressionContext>(_ctx, getState());
   enterRule(_localctx, 12, WGSLParser::RuleShift_expression_post_unary_expression);
@@ -968,6 +1026,7 @@ WGSLParser::Shift_expression_post_unary_expressionContext* WGSLParser::shift_exp
     setState(139);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
+      case WGSLParser::EOF:
       case WGSLParser::T__1:
       case WGSLParser::T__2:
       case WGSLParser::T__4:
@@ -1097,6 +1156,14 @@ void WGSLParser::AttributeContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitAttribute(this);
+}
+
+
+std::any WGSLParser::AttributeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitAttribute(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::AttributeContext* WGSLParser::attribute() {
@@ -1517,6 +1584,14 @@ void WGSLParser::Bitwise_expression_post_unary_expressionContext::exitRule(tree:
     parserListener->exitBitwise_expression_post_unary_expression(this);
 }
 
+
+std::any WGSLParser::Bitwise_expression_post_unary_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitBitwise_expression_post_unary_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Bitwise_expression_post_unary_expressionContext* WGSLParser::bitwise_expression_post_unary_expression() {
   Bitwise_expression_post_unary_expressionContext *_localctx = _tracker.createInstance<Bitwise_expression_post_unary_expressionContext>(_ctx, getState());
   enterRule(_localctx, 16, WGSLParser::RuleBitwise_expression_post_unary_expression);
@@ -1637,6 +1712,14 @@ void WGSLParser::Case_selectorContext::exitRule(tree::ParseTreeListener *listene
     parserListener->exitCase_selector(this);
 }
 
+
+std::any WGSLParser::Case_selectorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitCase_selector(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Case_selectorContext* WGSLParser::case_selector() {
   Case_selectorContext *_localctx = _tracker.createInstance<Case_selectorContext>(_ctx, getState());
   enterRule(_localctx, 18, WGSLParser::RuleCase_selector);
@@ -1729,6 +1812,14 @@ void WGSLParser::Component_or_swizzle_specifierContext::exitRule(tree::ParseTree
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitComponent_or_swizzle_specifier(this);
+}
+
+
+std::any WGSLParser::Component_or_swizzle_specifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitComponent_or_swizzle_specifier(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Component_or_swizzle_specifierContext* WGSLParser::component_or_swizzle_specifier() {
@@ -1859,6 +1950,14 @@ void WGSLParser::Compound_statementContext::exitRule(tree::ParseTreeListener *li
     parserListener->exitCompound_statement(this);
 }
 
+
+std::any WGSLParser::Compound_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitCompound_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Compound_statementContext* WGSLParser::compound_statement() {
   Compound_statementContext *_localctx = _tracker.createInstance<Compound_statementContext>(_ctx, getState());
   enterRule(_localctx, 22, WGSLParser::RuleCompound_statement);
@@ -1941,6 +2040,14 @@ void WGSLParser::Core_lhs_expressionContext::exitRule(tree::ParseTreeListener *l
     parserListener->exitCore_lhs_expression(this);
 }
 
+
+std::any WGSLParser::Core_lhs_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitCore_lhs_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Core_lhs_expressionContext* WGSLParser::core_lhs_expression() {
   Core_lhs_expressionContext *_localctx = _tracker.createInstance<Core_lhs_expressionContext>(_ctx, getState());
   enterRule(_localctx, 24, WGSLParser::RuleCore_lhs_expression);
@@ -2020,6 +2127,14 @@ void WGSLParser::Diagnostic_controlContext::exitRule(tree::ParseTreeListener *li
     parserListener->exitDiagnostic_control(this);
 }
 
+
+std::any WGSLParser::Diagnostic_controlContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitDiagnostic_control(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Diagnostic_controlContext* WGSLParser::diagnostic_control() {
   Diagnostic_controlContext *_localctx = _tracker.createInstance<Diagnostic_controlContext>(_ctx, getState());
   enterRule(_localctx, 26, WGSLParser::RuleDiagnostic_control);
@@ -2092,6 +2207,14 @@ void WGSLParser::Diagnostic_rule_nameContext::exitRule(tree::ParseTreeListener *
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitDiagnostic_rule_name(this);
+}
+
+
+std::any WGSLParser::Diagnostic_rule_nameContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitDiagnostic_rule_name(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Diagnostic_rule_nameContext* WGSLParser::diagnostic_rule_name() {
@@ -2182,6 +2305,14 @@ void WGSLParser::ExpressionContext::exitRule(tree::ParseTreeListener *listener) 
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitExpression(this);
+}
+
+
+std::any WGSLParser::ExpressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitExpression(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::ExpressionContext* WGSLParser::expression() {
@@ -2321,6 +2452,14 @@ void WGSLParser::Float_literalContext::exitRule(tree::ParseTreeListener *listene
     parserListener->exitFloat_literal(this);
 }
 
+
+std::any WGSLParser::Float_literalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitFloat_literal(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Float_literalContext* WGSLParser::float_literal() {
   Float_literalContext *_localctx = _tracker.createInstance<Float_literalContext>(_ctx, getState());
   enterRule(_localctx, 32, WGSLParser::RuleFloat_literal);
@@ -2398,6 +2537,14 @@ void WGSLParser::For_initContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitFor_init(this);
+}
+
+
+std::any WGSLParser::For_initContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitFor_init(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::For_initContext* WGSLParser::for_init() {
@@ -2491,6 +2638,14 @@ void WGSLParser::For_updateContext::exitRule(tree::ParseTreeListener *listener) 
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitFor_update(this);
+}
+
+
+std::any WGSLParser::For_updateContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitFor_update(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::For_updateContext* WGSLParser::for_update() {
@@ -2637,6 +2792,14 @@ void WGSLParser::Global_declContext::exitRule(tree::ParseTreeListener *listener)
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitGlobal_decl(this);
+}
+
+
+std::any WGSLParser::Global_declContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitGlobal_decl(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Global_declContext* WGSLParser::global_decl() {
@@ -3000,6 +3163,14 @@ void WGSLParser::Global_directiveContext::exitRule(tree::ParseTreeListener *list
     parserListener->exitGlobal_directive(this);
 }
 
+
+std::any WGSLParser::Global_directiveContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitGlobal_directive(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Global_directiveContext* WGSLParser::global_directive() {
   Global_directiveContext *_localctx = _tracker.createInstance<Global_directiveContext>(_ctx, getState());
   enterRule(_localctx, 40, WGSLParser::RuleGlobal_directive);
@@ -3163,6 +3334,14 @@ void WGSLParser::Global_value_declContext::exitRule(tree::ParseTreeListener *lis
     parserListener->exitGlobal_value_decl(this);
 }
 
+
+std::any WGSLParser::Global_value_declContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitGlobal_value_decl(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Global_value_declContext* WGSLParser::global_value_decl() {
   Global_value_declContext *_localctx = _tracker.createInstance<Global_value_declContext>(_ctx, getState());
   enterRule(_localctx, 42, WGSLParser::RuleGlobal_value_decl);
@@ -3267,6 +3446,14 @@ void WGSLParser::IdentContext::exitRule(tree::ParseTreeListener *listener) {
     parserListener->exitIdent(this);
 }
 
+
+std::any WGSLParser::IdentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitIdent(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::IdentContext* WGSLParser::ident() {
   IdentContext *_localctx = _tracker.createInstance<IdentContext>(_ctx, getState());
   enterRule(_localctx, 44, WGSLParser::RuleIdent);
@@ -3332,6 +3519,14 @@ void WGSLParser::Int_literalContext::exitRule(tree::ParseTreeListener *listener)
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitInt_literal(this);
+}
+
+
+std::any WGSLParser::Int_literalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitInt_literal(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Int_literalContext* WGSLParser::int_literal() {
@@ -3407,6 +3602,14 @@ void WGSLParser::Lhs_expressionContext::exitRule(tree::ParseTreeListener *listen
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitLhs_expression(this);
+}
+
+
+std::any WGSLParser::Lhs_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitLhs_expression(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Lhs_expressionContext* WGSLParser::lhs_expression() {
@@ -3511,6 +3714,14 @@ void WGSLParser::LiteralContext::exitRule(tree::ParseTreeListener *listener) {
     parserListener->exitLiteral(this);
 }
 
+
+std::any WGSLParser::LiteralContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitLiteral(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::LiteralContext* WGSLParser::literal() {
   LiteralContext *_localctx = _tracker.createInstance<LiteralContext>(_ctx, getState());
   enterRule(_localctx, 50, WGSLParser::RuleLiteral);
@@ -3590,6 +3801,14 @@ void WGSLParser::Member_identContext::exitRule(tree::ParseTreeListener *listener
     parserListener->exitMember_ident(this);
 }
 
+
+std::any WGSLParser::Member_identContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitMember_ident(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Member_identContext* WGSLParser::member_ident() {
   Member_identContext *_localctx = _tracker.createInstance<Member_identContext>(_ctx, getState());
   enterRule(_localctx, 52, WGSLParser::RuleMember_ident);
@@ -3645,6 +3864,14 @@ void WGSLParser::Optionally_typed_identContext::exitRule(tree::ParseTreeListener
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitOptionally_typed_ident(this);
+}
+
+
+std::any WGSLParser::Optionally_typed_identContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitOptionally_typed_ident(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Optionally_typed_identContext* WGSLParser::optionally_typed_ident() {
@@ -3721,6 +3948,14 @@ void WGSLParser::ParamContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitParam(this);
+}
+
+
+std::any WGSLParser::ParamContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitParam(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::ParamContext* WGSLParser::param() {
@@ -3805,6 +4040,14 @@ void WGSLParser::Primary_expressionContext::exitRule(tree::ParseTreeListener *li
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitPrimary_expression(this);
+}
+
+
+std::any WGSLParser::Primary_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitPrimary_expression(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Primary_expressionContext* WGSLParser::primary_expression() {
@@ -3937,6 +4180,14 @@ void WGSLParser::Greater_thanContext::exitRule(tree::ParseTreeListener *listener
     parserListener->exitGreater_than(this);
 }
 
+
+std::any WGSLParser::Greater_thanContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitGreater_than(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Greater_thanContext* WGSLParser::greater_than() {
   Greater_thanContext *_localctx = _tracker.createInstance<Greater_thanContext>(_ctx, getState());
   enterRule(_localctx, 60, WGSLParser::RuleGreater_than);
@@ -3988,6 +4239,14 @@ void WGSLParser::Less_thanContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitLess_than(this);
+}
+
+
+std::any WGSLParser::Less_thanContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitLess_than(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Less_thanContext* WGSLParser::less_than() {
@@ -4065,6 +4324,14 @@ void WGSLParser::Relational_expression_post_unary_expressionContext::exitRule(tr
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitRelational_expression_post_unary_expression(this);
+}
+
+
+std::any WGSLParser::Relational_expression_post_unary_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitRelational_expression_post_unary_expression(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Relational_expression_post_unary_expressionContext* WGSLParser::relational_expression_post_unary_expression() {
@@ -4274,6 +4541,14 @@ void WGSLParser::StatementContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitStatement(this);
+}
+
+
+std::any WGSLParser::StatementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitStatement(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::StatementContext* WGSLParser::statement() {
@@ -4741,6 +5016,14 @@ void WGSLParser::Switch_clauseContext::exitRule(tree::ParseTreeListener *listene
     parserListener->exitSwitch_clause(this);
 }
 
+
+std::any WGSLParser::Switch_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitSwitch_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Switch_clauseContext* WGSLParser::switch_clause() {
   Switch_clauseContext *_localctx = _tracker.createInstance<Switch_clauseContext>(_ctx, getState());
   enterRule(_localctx, 68, WGSLParser::RuleSwitch_clause);
@@ -4857,6 +5140,14 @@ void WGSLParser::Template_arg_expressionContext::exitRule(tree::ParseTreeListene
     parserListener->exitTemplate_arg_expression(this);
 }
 
+
+std::any WGSLParser::Template_arg_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitTemplate_arg_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Template_arg_expressionContext* WGSLParser::template_arg_expression() {
   Template_arg_expressionContext *_localctx = _tracker.createInstance<Template_arg_expressionContext>(_ctx, getState());
   enterRule(_localctx, 70, WGSLParser::RuleTemplate_arg_expression);
@@ -4924,6 +5215,14 @@ void WGSLParser::Template_elaborated_ident_post_identContext::exitRule(tree::Par
   auto parserListener = dynamic_cast<WGSLListener *>(listener);
   if (parserListener != nullptr)
     parserListener->exitTemplate_elaborated_ident_post_ident(this);
+}
+
+
+std::any WGSLParser::Template_elaborated_ident_post_identContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitTemplate_elaborated_ident_post_ident(this);
+  else
+    return visitor->visitChildren(this);
 }
 
 WGSLParser::Template_elaborated_ident_post_identContext* WGSLParser::template_elaborated_ident_post_ident() {
@@ -4997,10 +5296,6 @@ WGSLParser::Translation_unitContext::Translation_unitContext(ParserRuleContext *
   : ParserRuleContext(parent, invokingState) {
 }
 
-WGSLParser::StatementContext* WGSLParser::Translation_unitContext::statement() {
-  return getRuleContext<WGSLParser::StatementContext>(0);
-}
-
 std::vector<WGSLParser::Global_directiveContext *> WGSLParser::Translation_unitContext::global_directive() {
   return getRuleContexts<WGSLParser::Global_directiveContext>();
 }
@@ -5015,6 +5310,14 @@ std::vector<WGSLParser::Global_declContext *> WGSLParser::Translation_unitContex
 
 WGSLParser::Global_declContext* WGSLParser::Translation_unitContext::global_decl(size_t i) {
   return getRuleContext<WGSLParser::Global_declContext>(i);
+}
+
+WGSLParser::StatementContext* WGSLParser::Translation_unitContext::statement() {
+  return getRuleContext<WGSLParser::StatementContext>(0);
+}
+
+WGSLParser::ExpressionContext* WGSLParser::Translation_unitContext::expression() {
+  return getRuleContext<WGSLParser::ExpressionContext>(0);
 }
 
 
@@ -5034,6 +5337,14 @@ void WGSLParser::Translation_unitContext::exitRule(tree::ParseTreeListener *list
     parserListener->exitTranslation_unit(this);
 }
 
+
+std::any WGSLParser::Translation_unitContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitTranslation_unit(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Translation_unitContext* WGSLParser::translation_unit() {
   Translation_unitContext *_localctx = _tracker.createInstance<Translation_unitContext>(_ctx, getState());
   enterRule(_localctx, 74, WGSLParser::RuleTranslation_unit);
@@ -5047,33 +5358,53 @@ WGSLParser::Translation_unitContext* WGSLParser::translation_unit() {
     exitRule();
   });
   try {
-    size_t alt;
-    enterOuterAlt(_localctx, 1);
-    setState(923);
+    setState(934);
     _errHandler->sync(this);
-    _la = _input->LA(1);
-    while ((((_la & ~ 0x3fULL) == 0) &&
-      ((1ULL << _la) & 6597069768704) != 0)) {
-      setState(920);
-      global_directive();
-      setState(925);
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 110, _ctx)) {
+    case 1: {
+      enterOuterAlt(_localctx, 1);
+      setState(923);
       _errHandler->sync(this);
       _la = _input->LA(1);
-    }
-    setState(929);
-    _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 109, _ctx);
-    while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
-      if (alt == 1) {
-        setState(926);
-        global_decl(); 
+      while ((((_la & ~ 0x3fULL) == 0) &&
+        ((1ULL << _la) & 6597069768704) != 0)) {
+        setState(920);
+        global_directive();
+        setState(925);
+        _errHandler->sync(this);
+        _la = _input->LA(1);
       }
-      setState(931);
+      setState(929);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 109, _ctx);
+      _la = _input->LA(1);
+      while ((((_la & ~ 0x3fULL) == 0) &&
+        ((1ULL << _la) & 10934986736672) != 0)) {
+        setState(926);
+        global_decl();
+        setState(931);
+        _errHandler->sync(this);
+        _la = _input->LA(1);
+      }
+      break;
     }
-    setState(932);
-    statement();
+
+    case 2: {
+      enterOuterAlt(_localctx, 2);
+      setState(932);
+      statement();
+      break;
+    }
+
+    case 3: {
+      enterOuterAlt(_localctx, 3);
+      setState(933);
+      expression();
+      break;
+    }
+
+    default:
+      break;
+    }
    
   }
   catch (RecognitionException &e) {
@@ -5132,6 +5463,14 @@ void WGSLParser::Type_specifierContext::exitRule(tree::ParseTreeListener *listen
     parserListener->exitType_specifier(this);
 }
 
+
+std::any WGSLParser::Type_specifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitType_specifier(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Type_specifierContext* WGSLParser::type_specifier() {
   Type_specifierContext *_localctx = _tracker.createInstance<Type_specifierContext>(_ctx, getState());
   enterRule(_localctx, 76, WGSLParser::RuleType_specifier);
@@ -5147,40 +5486,40 @@ WGSLParser::Type_specifierContext* WGSLParser::type_specifier() {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(934);
+    setState(936);
     ident();
-    setState(949);
+    setState(951);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == WGSLParser::Left_angle) {
-      setState(935);
+      setState(937);
       template_args_start();
-      setState(936);
+      setState(938);
       template_arg_expression();
-      setState(941);
+      setState(943);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 110, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 111, _ctx);
       while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
         if (alt == 1) {
-          setState(937);
+          setState(939);
           match(WGSLParser::T__1);
-          setState(938);
+          setState(940);
           expression(); 
         }
-        setState(943);
+        setState(945);
         _errHandler->sync(this);
-        alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 110, _ctx);
+        alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 111, _ctx);
       }
-      setState(945);
+      setState(947);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == WGSLParser::T__1) {
-        setState(944);
+        setState(946);
         match(WGSLParser::T__1);
       }
-      setState(947);
+      setState(949);
       template_args_end();
     }
    
@@ -5237,6 +5576,14 @@ void WGSLParser::Unary_expressionContext::exitRule(tree::ParseTreeListener *list
     parserListener->exitUnary_expression(this);
 }
 
+
+std::any WGSLParser::Unary_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitUnary_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Unary_expressionContext* WGSLParser::unary_expression() {
   Unary_expressionContext *_localctx = _tracker.createInstance<Unary_expressionContext>(_ctx, getState());
   enterRule(_localctx, 78, WGSLParser::RuleUnary_expression);
@@ -5250,7 +5597,7 @@ WGSLParser::Unary_expressionContext* WGSLParser::unary_expression() {
     exitRule();
   });
   try {
-    setState(965);
+    setState(967);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case WGSLParser::T__0:
@@ -5262,16 +5609,16 @@ WGSLParser::Unary_expressionContext* WGSLParser::unary_expression() {
       case WGSLParser::Hex_float_literal:
       case WGSLParser::Hex_int_literal: {
         enterOuterAlt(_localctx, 1);
-        setState(951);
-        primary_expression();
         setState(953);
+        primary_expression();
+        setState(955);
         _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == WGSLParser::T__25
 
         || _la == WGSLParser::T__26) {
-          setState(952);
+          setState(954);
           component_or_swizzle_specifier();
         }
         break;
@@ -5279,45 +5626,45 @@ WGSLParser::Unary_expressionContext* WGSLParser::unary_expression() {
 
       case WGSLParser::T__55: {
         enterOuterAlt(_localctx, 2);
-        setState(955);
+        setState(957);
         match(WGSLParser::T__55);
-        setState(956);
+        setState(958);
         unary_expression();
         break;
       }
 
       case WGSLParser::T__21: {
         enterOuterAlt(_localctx, 3);
-        setState(957);
+        setState(959);
         match(WGSLParser::T__21);
-        setState(958);
+        setState(960);
         unary_expression();
         break;
       }
 
       case WGSLParser::Star: {
         enterOuterAlt(_localctx, 4);
-        setState(959);
+        setState(961);
         match(WGSLParser::Star);
-        setState(960);
+        setState(962);
         unary_expression();
         break;
       }
 
       case WGSLParser::Minus: {
         enterOuterAlt(_localctx, 5);
-        setState(961);
+        setState(963);
         match(WGSLParser::Minus);
-        setState(962);
+        setState(964);
         unary_expression();
         break;
       }
 
       case WGSLParser::T__56: {
         enterOuterAlt(_localctx, 6);
-        setState(963);
+        setState(965);
         match(WGSLParser::T__56);
-        setState(964);
+        setState(966);
         unary_expression();
         break;
       }
@@ -5379,6 +5726,14 @@ void WGSLParser::Variable_declContext::exitRule(tree::ParseTreeListener *listene
     parserListener->exitVariable_decl(this);
 }
 
+
+std::any WGSLParser::Variable_declContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitVariable_decl(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Variable_declContext* WGSLParser::variable_decl() {
   Variable_declContext *_localctx = _tracker.createInstance<Variable_declContext>(_ctx, getState());
   enterRule(_localctx, 80, WGSLParser::RuleVariable_decl);
@@ -5394,43 +5749,43 @@ WGSLParser::Variable_declContext* WGSLParser::variable_decl() {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(967);
+    setState(969);
     match(WGSLParser::T__35);
-    setState(982);
+    setState(984);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == WGSLParser::Left_angle) {
-      setState(968);
+      setState(970);
       template_args_start();
-      setState(969);
+      setState(971);
       expression();
-      setState(974);
+      setState(976);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 115, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 116, _ctx);
       while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
         if (alt == 1) {
-          setState(970);
+          setState(972);
           match(WGSLParser::T__1);
-          setState(971);
+          setState(973);
           expression(); 
         }
-        setState(976);
+        setState(978);
         _errHandler->sync(this);
-        alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 115, _ctx);
+        alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 116, _ctx);
       }
-      setState(978);
+      setState(980);
       _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == WGSLParser::T__1) {
-        setState(977);
+        setState(979);
         match(WGSLParser::T__1);
       }
-      setState(980);
+      setState(982);
       template_args_end();
     }
-    setState(984);
+    setState(986);
     optionally_typed_ident();
    
   }
@@ -5478,6 +5833,14 @@ void WGSLParser::Variable_or_value_statementContext::exitRule(tree::ParseTreeLis
     parserListener->exitVariable_or_value_statement(this);
 }
 
+
+std::any WGSLParser::Variable_or_value_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitVariable_or_value_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Variable_or_value_statementContext* WGSLParser::variable_or_value_statement() {
   Variable_or_value_statementContext *_localctx = _tracker.createInstance<Variable_or_value_statementContext>(_ctx, getState());
   enterRule(_localctx, 82, WGSLParser::RuleVariable_or_value_statement);
@@ -5490,49 +5853,49 @@ WGSLParser::Variable_or_value_statementContext* WGSLParser::variable_or_value_st
     exitRule();
   });
   try {
-    setState(1001);
+    setState(1003);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 118, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 119, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(986);
+      setState(988);
       variable_decl();
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(987);
-      variable_decl();
-      setState(988);
-      match(WGSLParser::T__3);
       setState(989);
+      variable_decl();
+      setState(990);
+      match(WGSLParser::T__3);
+      setState(991);
       expression();
       break;
     }
 
     case 3: {
       enterOuterAlt(_localctx, 3);
-      setState(991);
-      match(WGSLParser::T__9);
-      setState(992);
-      optionally_typed_ident();
       setState(993);
-      match(WGSLParser::T__3);
+      match(WGSLParser::T__9);
       setState(994);
+      optionally_typed_ident();
+      setState(995);
+      match(WGSLParser::T__3);
+      setState(996);
       expression();
       break;
     }
 
     case 4: {
       enterOuterAlt(_localctx, 4);
-      setState(996);
-      match(WGSLParser::T__57);
-      setState(997);
-      optionally_typed_ident();
       setState(998);
-      match(WGSLParser::T__3);
+      match(WGSLParser::T__57);
       setState(999);
+      optionally_typed_ident();
+      setState(1000);
+      match(WGSLParser::T__3);
+      setState(1001);
       expression();
       break;
     }
@@ -5586,6 +5949,14 @@ void WGSLParser::Variable_updating_statementContext::exitRule(tree::ParseTreeLis
     parserListener->exitVariable_updating_statement(this);
 }
 
+
+std::any WGSLParser::Variable_updating_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<WGSLVisitor*>(visitor))
+    return parserVisitor->visitVariable_updating_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 WGSLParser::Variable_updating_statementContext* WGSLParser::variable_updating_statement() {
   Variable_updating_statementContext *_localctx = _tracker.createInstance<Variable_updating_statementContext>(_ctx, getState());
   enterRule(_localctx, 84, WGSLParser::RuleVariable_updating_statement);
@@ -5599,14 +5970,14 @@ WGSLParser::Variable_updating_statementContext* WGSLParser::variable_updating_st
     exitRule();
   });
   try {
-    setState(1016);
+    setState(1018);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 119, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 120, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(1003);
+      setState(1005);
       lhs_expression();
-      setState(1004);
+      setState(1006);
       _la = _input->LA(1);
       if (!(_la == WGSLParser::T__3 || _la == WGSLParser::Compound_assignment_operator)) {
       _errHandler->recoverInline(this);
@@ -5615,36 +5986,36 @@ WGSLParser::Variable_updating_statementContext* WGSLParser::variable_updating_st
         _errHandler->reportMatch(this);
         consume();
       }
-      setState(1005);
+      setState(1007);
       expression();
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(1007);
+      setState(1009);
       lhs_expression();
-      setState(1008);
+      setState(1010);
       match(WGSLParser::T__58);
       break;
     }
 
     case 3: {
       enterOuterAlt(_localctx, 3);
-      setState(1010);
+      setState(1012);
       lhs_expression();
-      setState(1011);
+      setState(1013);
       match(WGSLParser::T__59);
       break;
     }
 
     case 4: {
       enterOuterAlt(_localctx, 4);
-      setState(1013);
-      match(WGSLParser::T__60);
-      setState(1014);
-      match(WGSLParser::T__3);
       setState(1015);
+      match(WGSLParser::T__60);
+      setState(1016);
+      match(WGSLParser::T__3);
+      setState(1017);
       expression();
       break;
     }

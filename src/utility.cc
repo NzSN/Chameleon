@@ -1,6 +1,5 @@
 #include "utility.h"
-#include <gtest/gtest.h>
-#include <rapidcheck/gtest.h>
+#include <rapidcheck/gen/Numeric.h>
 #include <type_traits>
 
 

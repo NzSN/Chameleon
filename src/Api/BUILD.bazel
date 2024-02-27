@@ -1,6 +1,6 @@
 filegroup(
     name = "api_srcs",
-    srcs = ["Rule.h", "Program.h", "Transformer.h"],
+    srcs = ["Types.h", "Rule.h", "Program.h", "Transformer.h"],
     visibility = ["//visibility:public"],
 )
 

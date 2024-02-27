@@ -56,11 +56,14 @@ public:
 
   std::optional<std::string> operator()(std::string input) {
     std::istringstream s{input};
+    return this->operator()(&s);
+  }
 
+  std::optional<std::string> operator()(std::istream* s) {
     auto tree = Parser
       ::ParserSelect<lang>
       ::parser
-      ::template parse<Tree>(&s);
+      ::template parse<Tree>(s);
 
     #if ENABLE_GC
     Base::GC::GC gc{};
@@ -69,6 +72,7 @@ public:
     auto transedTree = prog(tree);
     return transedTree->getText();
   }
+
 
 private:
   Transformer() {}

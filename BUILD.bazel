@@ -47,7 +47,6 @@ cc_library(
             "//src/TransEngine:pattern_matching",
             ],
     deps  = ["@antlr4_runtime//:antlr4_runtime",
-             "@com_google_googletest//:gtest_main",
              "//parsers:wgsl_parser",
              "@rapidcheck//:rapidcheck",
              "@plog//:plog",

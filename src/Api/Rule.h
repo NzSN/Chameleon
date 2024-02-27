@@ -33,6 +33,11 @@ struct LayerInfo<GET_LANG_TYPE(TESTLANG)> {
   using LowerLayer = Base::Antlr4Node;
 };
 
+template<>
+struct LayerInfo<GET_LANG_TYPE(WGSL)> {
+  using LowerLayer = Base::Antlr4Node;
+};
+
 
 template<Base::isLangType lang>
 struct Rule {
