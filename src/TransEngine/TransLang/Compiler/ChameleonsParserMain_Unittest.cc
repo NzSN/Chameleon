@@ -182,7 +182,7 @@ TEST(ChameleonsParserMainTest, MainMultiMatch) {
     "TARGET: WGSL \n"
     "RULES: \n"
     "Commutative: {| __a = __b + __c; |} => {| __a = __c + __b; |}"
-    " where __b := RandomIdent(__b);"
+    " where __b := RandomIdent(__b); __c := RandomIdent(__c);"
   };
 
   registerFunctions(Base::GptSupportLang::WGSL);
