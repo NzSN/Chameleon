@@ -117,7 +117,7 @@ TEST(ChameleonsParserMainTest, WGSL) {
   std::istringstream rule_config{
     "TARGET: WGSL \n"
     "RULES: \n"
-    "Commutative: {| a = __b + __c; |} => {| a = __c + __b; |}"
+    "Commutative: {| a = b + c; |} => {| a = c + b; |}"
   };
 
   // plog
@@ -141,7 +141,7 @@ TEST(ChameleonsParserMainTest, Main) {
   std::istringstream rule_config{
     "TARGET: WGSL \n"
     "RULES: \n"
-    "Commutative: {| a = __b + __c; |} => {| a = __c + __b; |}"
+    "Commutative: {| a = b + c; |} => {| a = c + b; |}"
   };
 
   ChameleonsMain main(&rule_config, &target_codes);
@@ -154,13 +154,13 @@ TEST(ChameleonsParserMainTest, Main) {
 
 TEST(ChameleonsParserMainTest, MainWithWhere) {
  std::istringstream target_codes{
-    "fn main() { a = b + c; }" };
+    "fn main() { ident = b + c; }" };
 
   std::istringstream rule_config{
     "TARGET: WGSL \n"
     "RULES: \n"
-    "Commutative: {| a = __b + __c; |} => {| a = __c + __b; |}"
-    " where __b := RandomIdent(__b);"
+    "Commutative: {| a = b + c; |} => {| a = c + b; |}"
+    " where b := RandomIdent(b);"
   };
 
   registerFunctions(Base::GptSupportLang::WGSL);
@@ -171,7 +171,7 @@ TEST(ChameleonsParserMainTest, MainWithWhere) {
 
   EXPECT_TRUE(codes.has_value());
 
-  EXPECT_TRUE(codes.value() != "fnmain(){a=c+b;}");
+  EXPECT_TRUE(codes.value() != "fnmain(){ident=c+b;}");
 }
 
 TEST(ChameleonsParserMainTest, MainMultiMatch) {
@@ -181,8 +181,8 @@ TEST(ChameleonsParserMainTest, MainMultiMatch) {
   std::istringstream rule_config{
     "TARGET: WGSL \n"
     "RULES: \n"
-    "Commutative: {| __a = __b + __c; |} => {| __a = __c + __b; |}"
-    " where __b := RandomIdent(__b); __c := RandomIdent(__c);"
+    "Commutative: {| a = b + c; |} => {| a = c + b; |}"
+    " where b := RandomIdent(b); c := RandomIdent(c);"
   };
 
   registerFunctions(Base::GptSupportLang::WGSL);

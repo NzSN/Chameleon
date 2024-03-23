@@ -41,13 +41,11 @@ bool isTermVar(Base::Antlr4Node& node) {
 
   if (info == typeid(WGSLParser::IdentContext) ||
       info == typeid(Utility::TypeMapping<WGSLParser::IdentContext>::type)) {
-    if (literal.size() != 3) return false;
-    return literal[0] == '_' && literal[1] == '_';
+    return literal.size() == 1 && literal[0] >= 'a' && literal[0] <= 'z';
   } else {
     return false;
   }
 }
-
 
 } // SIGMA_TERM
 
