@@ -42,4 +42,4 @@ def argparse_repo():
         name = "argparse",
         remote = "https://github.com/p-ranav/argparse.git",
         branch = "master",
-        build_file = "@wgsltr//:Repos/Builds/BUILD.argparse")
+        build_file = "@chameleon//:bazel/external_builds/BUILD.argparse")

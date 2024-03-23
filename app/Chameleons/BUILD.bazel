@@ -1,0 +1,6 @@
+cc_binary(
+    name = "chameleon",
+    srcs = ["Chameleons.cc"],
+    deps = ["@chameleon//:chameleon",
+            "@argparse//:argparse"],
+)
