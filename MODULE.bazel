@@ -37,3 +37,7 @@ use_repo(tree_sitter_dep, "tree_sitter")
 # Oilpan
 oilpan_dep = use_extension("@chameleon//:bazel/extensions.bzl", "oilpan_dep")
 use_repo(oilpan_dep, "oilpan")
+
+# Argparse
+argparse_dep = use_extension("@chameleon//:bazel/extensions.bzl", "argparse_dep")
+use_repo(argparse_dep, "argparse")

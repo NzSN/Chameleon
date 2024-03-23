@@ -3,6 +3,7 @@ load("@chameleon//:bazel/repositories.bzl", "rapidcheck_repo")
 load("@chameleon//:bazel/repositories.bzl", "plog_repo")
 load("@chameleon//:bazel/repositories.bzl", "tree_sitter_repo")
 load("@chameleon//:bazel/repositories.bzl", "oilpan_repo")
+load("@chameleon//:bazel/repositories.bzl", "argparse_repo")
 
 # Antlr4
 def _antlr4_dep_impl(_ctx):
@@ -34,3 +35,9 @@ def _oilpan_dep_impl(_ctx):
     oilpan_repo()
 oilpan_dep = module_extension(
     implementation = _oilpan_dep_impl)
+
+# Argparse
+def _argparse_dep_impl(_ctx):
+    argparse_repo()
+argparse_dep = module_extension(
+    implementation = _argparse_dep_impl)

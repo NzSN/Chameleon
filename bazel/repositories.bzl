@@ -36,3 +36,10 @@ def oilpan_repo():
         name = "oilpan",
         remote = "https://github.com/oilpan-gc/cppgc.git",
         branch = "main")
+
+def argparse_repo():
+    new_git_repository(
+        name = "argparse",
+        remote = "https://github.com/p-ranav/argparse.git",
+        branch = "master",
+        build_file = "@wgsltr//:Repos/Builds/BUILD.argparse")
