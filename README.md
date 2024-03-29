@@ -13,3 +13,8 @@ IdentityPlus:
     {| a + 0 |} => {| a |}
 
 ```
+
+TODO
+====
+* Generic way to define Term functions (which can be called in where expression).
+* Implement STRATEGIES section in rule_examples.txt
