@@ -1,0 +1,10 @@
+cradle:
+  cabal:
+    - path: "src"
+      component: "lib:Chameleons"
+
+    - path: "app/Main.hs"
+      component: "Chameleons:exe:Chameleons"
+
+    - path: "test"
+      component: "Chameleons:test:Chameleons-test"
