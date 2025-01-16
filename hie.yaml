@@ -1,10 +1,13 @@
 cradle:
   cabal:
-    - path: "src"
+    - path: "ast/app/Main.hs"
+      component: "ast:exe:ast"
+
+    - path: "chameleons/src"
       component: "lib:Chameleons"
 
-    - path: "app/Main.hs"
+    - path: "chameleons/app/Main.hs"
       component: "Chameleons:exe:Chameleons"
 
-    - path: "test"
+    - path: "chameleons/test"
       component: "Chameleons:test:Chameleons-test"
